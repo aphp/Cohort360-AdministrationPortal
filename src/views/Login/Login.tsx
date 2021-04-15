@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { AxiosError } from "axios";
+// import { useDispatch } from "react-redux";
+// import { useHistory } from "react-router-dom";
+// import { AxiosError } from "axios";
 
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -12,11 +12,13 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 
+import useStyles from './styles'
+
 import logo from "../../assets/images/logo1.png";
-import { ACCES_TOKEN, REFRESH_TOKEN } from "../constants";
-import { getLoginCsrfToken, submitLogin } from "services/authentication";
-import { LoginAction } from "reducers/me";
-import { buildPartialUser } from "services/userService";
+// import { ACCES_TOKEN, REFRESH_TOKEN } from "../constants";
+// import { getLoginCsrfToken, submitLogin } from "services/authentication";
+// import { LoginAction } from "reducers/me";
+// import { buildPartialUser } from "services/userService";
 
 type ErrorDialogProps = {
     open: boolean;
@@ -45,56 +47,56 @@ type ErrorDialogProps = {
   };
   
   const Login = () => {
-    const history = useHistory();
+    // const history = useHistory();
     const classes = useStyles();
-    const dispatch = useDispatch();
+    // const dispatch = useDispatch();
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [errorLogin, setErrorLogin] = useState<boolean>(false);
   
-    const [hasCsrfCookie, setHasCsrfCookie] = React.useState(false);
-    if (!hasCsrfCookie) {
-      getLoginCsrfToken()
-        .then((res: any) => {
-          console.log("Got csrf cookie", res);
-          setHasCsrfCookie(true);
-        })
-        .catch((err: AxiosError) => {
-          console.error("Error while getting csrf cookie", err);
-        });
-    }
+    // const [hasCsrfCookie, setHasCsrfCookie] = React.useState(false);
+    // if (!hasCsrfCookie) {
+    //   getLoginCsrfToken()
+    //     .then((res: any) => {
+    //       console.log("Got csrf cookie", res);
+    //       setHasCsrfCookie(true);
+    //     })
+    //     .catch((err: AxiosError) => {
+    //       console.error("Error while getting csrf cookie", err);
+    //     });
+    // }
   
-    const login = async () => {
-      try {
-        if (!username || !password) return setErrorLogin(true);
+    // const login = async () => {
+    //   try {
+    //     if (!username || !password) return setErrorLogin(true);
   
-        const response = await submitLogin(username, password);
-        console.log("Received from login: ", response);
+    //     const response = await submitLogin(username, password);
+    //     console.log("Received from login: ", response);
   
-        if (!response) return setErrorLogin(true);
-        const { status, data } = response;
+    //     if (!response) return setErrorLogin(true);
+    //     const { status, data } = response;
   
-        if (status === 200) {
-          dispatch({
-            type: "LOGIN",
-            payload: buildPartialUser(data.provider),
-          } as LoginAction);
-          localStorage.setItem(ACCES_TOKEN, data.tokens.access);
-          localStorage.setItem(REFRESH_TOKEN, data.tokens.refresh);
+    //     if (status === 200) {
+    //       dispatch({
+    //         type: "LOGIN",
+    //         payload: buildPartialUser(data.provider),
+    //       } as LoginAction);
+    //       localStorage.setItem(ACCES_TOKEN, data.tokens.access);
+    //       localStorage.setItem(REFRESH_TOKEN, data.tokens.refresh);
   
-          history.push("/home");
-        } else {
-          setErrorLogin(true);
-        }
-      } catch (err) {
-        setErrorLogin(true);
-      }
-    };
+    //       history.push("/home");
+    //     } else {
+    //       setErrorLogin(true);
+    //     }
+    //   } catch (err) {
+    //     setErrorLogin(true);
+    //   }
+    // };
   
-    const _onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      login();
-    };
+    // const _onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    //   e.preventDefault();
+    //   login();
+    // };
   
     return (
       <>
@@ -127,7 +129,7 @@ type ErrorDialogProps = {
                 Bienvenue ! Connectez-vous.
               </Typography>
   
-              <form className={classes.form} noValidate onSubmit={_onSubmit}>
+              <form className={classes.form} noValidate /*onSubmit={_onSubmit}*/>
                 <Grid container item direction="column" alignItems="center">
                   <TextField
                     variant="outlined"
