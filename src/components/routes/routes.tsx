@@ -2,7 +2,7 @@ import React from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
 import Login from '../../views/Login/Login'
-import Providers from '../../views/Console-admin/Providers/Providers'
+import Providers from '../../views/Console-Admin/Providers/Providers'
 
 const Routes = () => {
     return (
