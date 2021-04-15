@@ -1,8 +1,8 @@
 import React from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 
-import Login from '../../views/Login/login'
-import Providers from '../../views/Console-admin/Providers/providers'
+import Login from '../../views/Login/Login'
+import Providers from '../../views/Console-admin/Providers/Providers'
 
 const Routes = () => {
     return (
