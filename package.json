@@ -10,6 +10,7 @@
     "@nuxtjs/axios": "^5.11.0",
     "@types/faker": "^4.1.12",
     "@types/lodash": "^4.14.157",
+    "axios": "^0.21.1",
     "faker": "^4.1.0",
     "material-table": "^1.69.2",
     "query-string": "^6.14.1",

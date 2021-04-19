@@ -15,17 +15,14 @@ import {
 } from "@material-ui/core";
 
 import logo from "../../assets/images/logo1.png";
-// import { ACCES_TOKEN, REFRESH_TOKEN } from "../../constants";
+import { authenticate } from '../../services/authentication'
+import { ErrorDialogProps } from '../../types'
+// import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../constants'
 // import { getLoginCsrfToken, submitLogin } from "services/authentication";
 // import { LoginAction } from "reducers/me";
 // import { buildPartialUser } from "services/userService";
 
-import useStyles from "./styles";
-
-type ErrorDialogProps = {
-  open: boolean;
-  setErrorLogin: (b: boolean) => void;
-};
+import useStyles from "./styles"
 
 const ErrorDialog: React.FC<ErrorDialogProps> = ({ open, setErrorLogin }) => {
   const _setErrorLogin = () => {
@@ -100,6 +97,32 @@ const Login = () => {
 //     login();
 //   };
 
+  const login = async () => {
+    try {
+      if (!username || !password) return setErrorLogin(true)
+
+      const response = await authenticate(username, password)
+      if (!response) return setErrorLogin(true)
+
+      const { status, data = {} } = response
+      if (status === 200) {
+        // localStorage.setItem(ACCESS_TOKEN, data.jwt.access)
+        // localStorage.setItem(REFRESH_TOKEN, data.jwt.refresh)
+        console.log(`response`, response)
+      } else {
+        setErrorLogin(true)
+      }
+    } catch (err) {
+      setErrorLogin(true)
+    }
+  }
+
+  const _onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    login();
+  };
+
+
   return (
     <>
       <Grid container component="main" className={classes.root}>
@@ -131,7 +154,7 @@ const Login = () => {
               Bienvenue ! Connectez-vous.
             </Typography>
 
-            <form className={classes.form} noValidate /*onSubmit={_onSubmit}*/>
+            <form className={classes.form} noValidate onSubmit={_onSubmit}>
               <Grid container item direction="column" alignItems="center">
                 <TextField
                   variant="outlined"
