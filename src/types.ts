@@ -4,10 +4,7 @@
 
 export type Authentication = {
     status: number
-    data: {
-        access: string
-        refresh: string
-    }
+    data: any
 }
 
 export type ErrorDialogProps = {
