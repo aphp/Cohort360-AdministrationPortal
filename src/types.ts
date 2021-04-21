@@ -8,8 +8,8 @@ export type Authentication = {
 }
 
 export type ErrorDialogProps = {
-    open: boolean;
-    setErrorLogin: (b: boolean) => void;
-  };
+    open: boolean
+    setErrorLogin: (b: boolean) => void
+  }
 
 //CONSOLE-ADMIN

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-// import { useDispatch } from "react-redux";
-// import { useHistory } from "react-router-dom";
-// import { AxiosError } from "axios";
+import React, { useState } from "react"
+// import { useDispatch } from "react-redux"
+// import { useHistory } from "react-router-dom"
+import { AxiosError } from "axios"
 
 import {
   Button,
@@ -12,24 +12,25 @@ import {
   Grid,
   TextField,
   Typography,
-} from "@material-ui/core";
+} from "@material-ui/core"
 
-import logo from "../../assets/images/logo1.png";
-import { authenticate } from '../../services/authentication'
+
+import { authenticate, getCsrfToken } from '../../services/authentication'
+import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../constants'
+import logo from "../../assets/images/logo1.png"
 import { ErrorDialogProps } from '../../types'
-// import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../constants'
-// import { getLoginCsrfToken, submitLogin } from "services/authentication";
-// import { LoginAction } from "reducers/me";
-// import { buildPartialUser } from "services/userService";
+
+// import { LoginAction } from "reducers/me"
+// import { buildPartialUser } from "services/userService"
 
 import useStyles from "./styles"
 
 const ErrorDialog: React.FC<ErrorDialogProps> = ({ open, setErrorLogin }) => {
   const _setErrorLogin = () => {
     if (setErrorLogin && typeof setErrorLogin === "function") {
-      setErrorLogin(false);
+      setErrorLogin(false)
     }
-  };
+  }
 
   return (
     <Dialog open={open}>
@@ -42,60 +43,60 @@ const ErrorDialog: React.FC<ErrorDialogProps> = ({ open, setErrorLogin }) => {
         <Button onClick={_setErrorLogin}>Ok</Button>
       </DialogActions>
     </Dialog>
-  );
-};
+  )
+}
 
 const Login = () => {
-//   const history = useHistory();
-  const classes = useStyles();
-//   const dispatch = useDispatch();
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [errorLogin, setErrorLogin] = useState<boolean>(false);
+//   const history = useHistory()
+  const classes = useStyles()
+//   const dispatch = useDispatch()
+  const [username, setUsername] = useState<string>("")
+  const [password, setPassword] = useState<string>("")
+  const [errorLogin, setErrorLogin] = useState<boolean>(false)
 
-//   const [hasCsrfCookie, setHasCsrfCookie] = React.useState(false);
-//   if (!hasCsrfCookie) {
-//     getLoginCsrfToken()
-//       .then((res: any) => {
-//         console.log("Got csrf cookie", res);
-//         setHasCsrfCookie(true);
-//       })
-//       .catch((err: AxiosError) => {
-//         console.error("Error while getting csrf cookie", err);
-//       });
-//   }
+  const [hasCsrfCookie, setHasCsrfCookie] = React.useState(false)
+  if (!hasCsrfCookie) {
+    getCsrfToken()
+      .then((res: any) => {
+        console.log("Got csrf cookie", res)
+        setHasCsrfCookie(true)
+      })
+      .catch((err: AxiosError) => {
+        console.error("Error while getting csrf cookie", err)
+      })
+  }
 
 //   const login = async () => {
 //     try {
-//       if (!username || !password) return setErrorLogin(true);
+//       if (!username || !password) return setErrorLogin(true)
 
-//       const response = await submitLogin(username, password);
-//       console.log("Received from login: ", response);
+//       const response = await submitLogin(username, password)
+//       console.log("Received from login: ", response)
 
-//       if (!response) return setErrorLogin(true);
-//       const { status, data } = response;
+//       if (!response) return setErrorLogin(true)
+//       const { status, data } = response
 
 //       if (status === 200) {
 //         dispatch({
 //           type: "LOGIN",
 //           payload: buildPartialUser(data.provider),
-//         } as LoginAction);
-//         localStorage.setItem(ACCES_TOKEN, data.tokens.access);
-//         localStorage.setItem(REFRESH_TOKEN, data.tokens.refresh);
+//         } as LoginAction)
+//         localStorage.setItem(ACCES_TOKEN, data.tokens.access)
+//         localStorage.setItem(REFRESH_TOKEN, data.tokens.refresh)
 
-//         history.push("/home");
+//         history.push("/home")
 //       } else {
-//         setErrorLogin(true);
+//         setErrorLogin(true)
 //       }
 //     } catch (err) {
-//       setErrorLogin(true);
+//       setErrorLogin(true)
 //     }
-//   };
+//   }
 
 //   const _onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-//     e.preventDefault();
-//     login();
-//   };
+//     e.preventDefault()
+//     login()
+//   }
 
   const login = async () => {
     try {
@@ -106,8 +107,8 @@ const Login = () => {
 
       const { status, data = {} } = response
       if (status === 200) {
-        // localStorage.setItem(ACCESS_TOKEN, data.jwt.access)
-        // localStorage.setItem(REFRESH_TOKEN, data.jwt.refresh)
+        localStorage.setItem(ACCESS_TOKEN, data.jwt.access)
+        localStorage.setItem(REFRESH_TOKEN, data.jwt.refresh)
         console.log(`response`, response)
       } else {
         setErrorLogin(true)
@@ -118,9 +119,9 @@ const Login = () => {
   }
 
   const _onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    login();
-  };
+    e.preventDefault()
+    login()
+  }
 
 
   return (
@@ -204,7 +205,7 @@ const Login = () => {
 
       <ErrorDialog open={errorLogin !== false} setErrorLogin={setErrorLogin} />
     </>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
