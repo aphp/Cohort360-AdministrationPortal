@@ -1,6 +1,24 @@
-//GENERAL
+// --GENERAL--
 
-//Authentication
+// State
+
+// export type IReduxStore = {
+//   me: 
+// }
+
+export type MeState = null | {
+  providerId: number
+  firstName: string | null
+  lastName: string | null
+  email: string | null
+  providerSourceValue: string
+  isMainAdmin: boolean
+  yearOfBirth: number | null
+  displayName: string | null
+  // [key: string]: number | string | boolean | Date | null
+}
+
+// Authentication
 
 export type Authentication = {
     status: number
@@ -12,4 +30,4 @@ export type ErrorDialogProps = {
     setErrorLogin: (b: boolean) => void
   }
 
-//CONSOLE-ADMIN
+// --CONSOLE-ADMIN--
