@@ -23,31 +23,13 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 
-import { ProfilesTreeRow } from "types";
-
 import SearchBar from "../../SearchBar/SearchBar";
-import AddUserDialog from "../AddProviderDialog/AddProviderDialog";
+import AddUserDialog from "../AddProviderForm/AddProviderForm";
 
 import useStyles from "./styles";
 import { submitGetProfiles } from "services/providersService";
 
-type ProvidersTableProps = {
-  profiles?: any;
-  loading?: boolean;
-  // page: number;
-  rowsPerPage?: number;
-};
-
-// const userToRow = (user: Partial<User>): ProfilesTreeRow => ({
-//   id: user.providerId?.toString() || "",
-//   objectId: user.providerId?.toString() || "",
-//   firstName: user.firstName || "",
-//   lastName: user.lastName || "",
-//   email: user.email || "",
-//   providerSourceValue: user.providerSourceValue || "",
-// });
-
-const ProvidersTable: React.FC<ProvidersTableProps> = () => {
+const ProvidersTable = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const { history } = useRouter();
@@ -59,11 +41,11 @@ const ProvidersTable: React.FC<ProvidersTableProps> = () => {
     },
     {
       label: "Nom",
-      code: "lastName",
+      code: "lastname",
     },
     {
       label: "Prénom",
-      code: "firstName",
+      code: "firstname",
     },
     {
       label: "Email",
@@ -78,11 +60,11 @@ const ProvidersTable: React.FC<ProvidersTableProps> = () => {
     },
     {
       label: "Nom",
-      code: "lastName",
+      code: "lastname",
     },
     {
       label: "Prénom",
-      code: "firstName",
+      code: "firstname",
     },
     {
       label: "Email",
@@ -95,14 +77,12 @@ const ProvidersTable: React.FC<ProvidersTableProps> = () => {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [refreshed, setRefreshed] = useState(true);
-  const [orderBy, setOrderBy] = useState<string>("lastName");
+  const [orderBy, setOrderBy] = useState<string>("lastname");
   const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc");
   const [searchInput, setSearchInput] = useState("");
   const [searchBy, setSearchBy] = useState(searchOptions[1]);
 
   const [open, setOpen] = useState(false);
-
-  const rowsPerPage = 50;
 
   console.log(`orderBy`, orderBy);
   console.log(
@@ -112,17 +92,17 @@ const ProvidersTable: React.FC<ProvidersTableProps> = () => {
   console.log(`page`, page);
   console.log(`total`, total);
   console.log(`searchBy`, searchBy);
+  console.log(`profiles`, profiles);
 
   useEffect(() => {
-    setData();
+    getData(orderBy, orderDirection, page);
   }, [orderBy, orderDirection, searchInput]); // eslint-disable-line
 
-  const setData = () => {
-    getData(orderBy, orderDirection, page);
-  };
-
-  // @ts-ignore
-  console.log(`profiles`, profiles);
+  useEffect(() => {
+    if (searchInput) {
+      getData(orderBy, orderDirection, page);
+    }
+  }, [searchBy]); // eslint-disable-line
 
   const getData = async (
     orderBy: string,
@@ -130,15 +110,11 @@ const ProvidersTable: React.FC<ProvidersTableProps> = () => {
     page?: number
   ) => {
     setLoading(true);
-    submitGetProfiles()
+    submitGetProfiles(orderBy, orderDirection, page, searchBy, searchInput)
       .then((resp) => {
         if (resp) {
           setProfiles(resp);
         }
-
-        console.log(`resp`, resp);
-
-        return resp;
       })
       .catch((error) => console.log(error))
       .finally(() => {
@@ -253,17 +229,10 @@ const ProvidersTable: React.FC<ProvidersTableProps> = () => {
                       onClick={() => window.open(`/users/${profile.id}`)}
                     >
                       <TableCell align="center">
-                        {/* {profile.providerSourceValue} */}
                         {profile.provider_source_value}
                       </TableCell>
-                      <TableCell align="center">
-                        {/* {profile.lastName} */}
-                        {profile.lastname}
-                      </TableCell>
-                      <TableCell align="center">
-                        {/* {profile.firstName} */}
-                        {profile.firstname}
-                      </TableCell>
+                      <TableCell align="center">{profile.lastname}</TableCell>
+                      <TableCell align="center">{profile.firstname}</TableCell>
                       <TableCell align="center">{profile.email}</TableCell>
                     </TableRow>
                   )
@@ -275,7 +244,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = () => {
       </TableContainer>
       <Pagination
         className={classes.pagination}
-        count={Math.ceil(total / rowsPerPage)}
+        count={Math.ceil(total / 100)}
         shape="rounded"
         // onChange={onChangePage}
         page={page}
