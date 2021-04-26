@@ -8,5 +8,7 @@ export const submitGetProfiles = async () => {
     const profiles = await axios.get(url)
 
     console.log(`profiles`, profiles)
+    
+    return profiles.data.results
 
 }

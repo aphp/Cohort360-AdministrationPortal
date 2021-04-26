@@ -119,12 +119,6 @@ const ProvidersTable: React.FC<ProvidersTableProps> = () => {
 
   const setData = () => {
     getData(orderBy, orderDirection, page);
-    // .then((dataResp) => {
-    //   // @ts-ignore
-    //   setProfiles(dataResp.data); // @ts-ignore
-    //   setPage(dataResp.page);
-    //   setTotal(dataResp.totalCount);
-    // });
   };
 
   // @ts-ignore
@@ -136,10 +130,20 @@ const ProvidersTable: React.FC<ProvidersTableProps> = () => {
     page?: number
   ) => {
     setLoading(true);
-    return submitGetProfiles().then((resp) => {
-      setLoading(false);
-      console.log(`resp`, resp);
-    });
+    submitGetProfiles()
+      .then((resp) => {
+        if (resp) {
+          setProfiles(resp);
+        }
+
+        console.log(`resp`, resp);
+
+        return resp;
+      })
+      .catch((error) => console.log(error))
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   const createSortHandler = (property: any) => (
@@ -249,10 +253,17 @@ const ProvidersTable: React.FC<ProvidersTableProps> = () => {
                       onClick={() => window.open(`/users/${profile.id}`)}
                     >
                       <TableCell align="center">
-                        {profile.providerSourceValue}
+                        {/* {profile.providerSourceValue} */}
+                        {profile.provider_source_value}
                       </TableCell>
-                      <TableCell align="center">{profile.lastName}</TableCell>
-                      <TableCell align="center">{profile.firstName}</TableCell>
+                      <TableCell align="center">
+                        {/* {profile.lastName} */}
+                        {profile.lastname}
+                      </TableCell>
+                      <TableCell align="center">
+                        {/* {profile.firstName} */}
+                        {profile.firstname}
+                      </TableCell>
                       <TableCell align="center">{profile.email}</TableCell>
                     </TableRow>
                   )
