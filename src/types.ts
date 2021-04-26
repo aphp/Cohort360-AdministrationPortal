@@ -36,6 +36,29 @@ export interface BackendUserReceived extends BackendUser{
   npi: string | null,
 }
 
+export type CdmSource =
+"MANUAL"
+| "ORBIS"
+| "GLIMS"
+| "HEGP"
+
+export type ProfilesTreeRow = {
+  id: string;
+  objectId: string;
+  providerSourceValue: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  startDate?: string | null;
+  endDate?: string | null;
+  isActive?: boolean;
+  isValid?: boolean;
+  source?: CdmSource;
+  parentId?: string;
+  parent?: ProfilesTreeRow;
+}
+
+
 // Authentication
 
 export type Authentication = {

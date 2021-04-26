@@ -23,7 +23,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 
-import { ProfilesTreeRow, User } from "types";
+import { ProfilesTreeRow } from "types";
 
 import SearchBar from "../../SearchBar/SearchBar";
 import AddUserDialog from "../AddProviderDialog/AddProviderDialog";
@@ -38,14 +38,14 @@ type ProvidersTableProps = {
   rowsPerPage?: number;
 };
 
-const userToRow = (user: Partial<User>): ProfilesTreeRow => ({
-  id: user.providerId?.toString() || "",
-  objectId: user.providerId?.toString() || "",
-  firstName: user.firstName || "",
-  lastName: user.lastName || "",
-  email: user.email || "",
-  providerSourceValue: user.providerSourceValue || "",
-});
+// const userToRow = (user: Partial<User>): ProfilesTreeRow => ({
+//   id: user.providerId?.toString() || "",
+//   objectId: user.providerId?.toString() || "",
+//   firstName: user.firstName || "",
+//   lastName: user.lastName || "",
+//   email: user.email || "",
+//   providerSourceValue: user.providerSourceValue || "",
+// });
 
 const ProvidersTable: React.FC<ProvidersTableProps> = () => {
   const classes = useStyles();
@@ -118,12 +118,13 @@ const ProvidersTable: React.FC<ProvidersTableProps> = () => {
   }, [orderBy, orderDirection, searchInput]); // eslint-disable-line
 
   const setData = () => {
-    getData(orderBy, orderDirection, page).then((dataResp) => {
-      // @ts-ignore
-      setProfiles(dataResp.data); // @ts-ignore
-      setPage(dataResp.page);
-      setTotal(dataResp.totalCount);
-    });
+    getData(orderBy, orderDirection, page);
+    // .then((dataResp) => {
+    //   // @ts-ignore
+    //   setProfiles(dataResp.data); // @ts-ignore
+    //   setPage(dataResp.page);
+    //   setTotal(dataResp.totalCount);
+    // });
   };
 
   // @ts-ignore
@@ -134,11 +135,11 @@ const ProvidersTable: React.FC<ProvidersTableProps> = () => {
     orderDirection: string,
     page?: number
   ) => {
-      setLoading(true)
-      return submitGetProfiles().then(resp => {
-          setLoading(false)
-          if (resp.)
-      })
+    setLoading(true);
+    return submitGetProfiles().then((resp) => {
+      setLoading(false);
+      console.log(`resp`, resp);
+    });
   };
 
   const createSortHandler = (property: any) => (
