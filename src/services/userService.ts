@@ -1,6 +1,6 @@
 import { BackendUserReceived, MeState } from "types"
 
-export const buildPartialUser = (responseProvider: Partial<BackendUserReceived>): MeState => {
+export const buildPartialUser = (responseProvider: BackendUserReceived): MeState => {
     return {
         providerId: responseProvider.provider_id ?? 0,
         firstName: responseProvider.firstname ?? null,

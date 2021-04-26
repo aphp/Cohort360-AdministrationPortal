@@ -79,7 +79,7 @@ const Login = () => {
         localStorage.setItem(ACCESS_TOKEN, data.jwt.access);
         localStorage.setItem(REFRESH_TOKEN, data.jwt.refresh);
 
-        history.push("/");
+        history.push("/home");
       } else {
         setErrorLogin(true);
       }
