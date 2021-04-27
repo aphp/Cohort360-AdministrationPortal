@@ -28,7 +28,7 @@ const AppNavigation = () => (
             path={route.path}
             render={(props) => {
               return (
-                <Layout>
+                <Layout {...route}>
                   <MyComponent {...props} />
                 </Layout>
               )
@@ -41,7 +41,7 @@ const AppNavigation = () => (
             path={route.path}
             render={(props) => {
               return (
-                <Layout>
+                <Layout {...route}>
                   <MyComponent {...props} />
                 </Layout>
               )

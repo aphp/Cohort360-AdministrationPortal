@@ -11,7 +11,7 @@ import ProvidersTable from "components/providers/ProvidersTable/ProvidersTable";
 
 import useStyles from "./styles";
 
-const ProfilesView = () => {
+const ProfilesView: React.FC = () => {
   const classes = useStyles();
 
   // const [selectedItems, onChangeSelectedItem] = useState([])
