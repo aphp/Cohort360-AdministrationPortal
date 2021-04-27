@@ -145,7 +145,7 @@ import { AxiosResponse } from 'axios'
 // };
 
 export const submitGetProfile = (profileId: string): Promise<AxiosResponse<any>> => {
-    return api.get(`/profiles${profileId}/`)
+    return api.get(`/profiles/?provider_id=${profileId}`)
 
 //   if (DEV_MODE) {
 //     let p = FAKE_PROFILES.find(({ provider_history_id }) => provider_history_id.toString() === profileId);

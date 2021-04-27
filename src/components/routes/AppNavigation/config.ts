@@ -15,13 +15,13 @@ const Config = [
     
   },
   /**
-   * Console-Admin Home View
+   * Console-Admin Providers View
    */
   {
     exact: true,
     displayTopBar: true,
-    path: '/home',
-    name: 'Home',
+    path: '/users',
+    name: 'Users',
     isPrivate: true,
     component: Providers
   },
@@ -31,7 +31,7 @@ const Config = [
   {
     exact: true,
     displayTopBar: true,
-    path: '/profile',
+    path: '/user-profile/:providerId',
     isPrivate: true,
     component: ProvidersHistory
   }

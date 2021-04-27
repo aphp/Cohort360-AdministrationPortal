@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { AxiosError } from "axios";
+import React, { useState } from "react"
+import { useDispatch } from "react-redux"
+import { useHistory } from "react-router-dom"
+import { AxiosError } from "axios"
 
 import {
   Button,
@@ -12,24 +12,24 @@ import {
   Grid,
   TextField,
   Typography,
-} from "@material-ui/core";
+} from "@material-ui/core"
 
-import { authenticate, getCsrfToken } from "../../services/authentication";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants";
-import logo from "../../assets/images/logo1.png";
-import { ErrorDialogProps } from "../../types";
+import { authenticate, getCsrfToken } from "../../services/authentication"
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants"
+import logo from "../../assets/images/logo1.png"
+import { ErrorDialogProps } from "../../types"
 
-import { login as loginAction } from "state/me";
-import { buildPartialUser } from "services/Console-Admin/userService";
+import { login as loginAction } from "state/me"
+import { buildPartialUser } from "services/Console-Admin/userService"
 
-import useStyles from "./styles";
+import useStyles from "./styles"
 
 const ErrorDialog: React.FC<ErrorDialogProps> = ({ open, setErrorLogin }) => {
   const _setErrorLogin = () => {
     if (setErrorLogin && typeof setErrorLogin === "function") {
-      setErrorLogin(false);
+      setErrorLogin(false)
     }
-  };
+  }
 
   return (
     <Dialog open={open}>
@@ -42,56 +42,56 @@ const ErrorDialog: React.FC<ErrorDialogProps> = ({ open, setErrorLogin }) => {
         <Button onClick={_setErrorLogin}>Ok</Button>
       </DialogActions>
     </Dialog>
-  );
-};
+  )
+}
 
 const Login = () => {
-  const history = useHistory();
-  const classes = useStyles();
-  const dispatch = useDispatch();
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [errorLogin, setErrorLogin] = useState<boolean>(false);
+  const history = useHistory()
+  const classes = useStyles()
+  const dispatch = useDispatch()
+  const [username, setUsername] = useState<string>("")
+  const [password, setPassword] = useState<string>("")
+  const [errorLogin, setErrorLogin] = useState<boolean>(false)
 
-  const [hasCsrfCookie, setHasCsrfCookie] = React.useState(false);
+  const [hasCsrfCookie, setHasCsrfCookie] = React.useState(false)
   if (!hasCsrfCookie) {
     getCsrfToken()
       .then((res: any) => {
-        console.log("Got csrf cookie", res);
-        setHasCsrfCookie(true);
+        console.log("Got csrf cookie", res)
+        setHasCsrfCookie(true)
       })
       .catch((err: AxiosError) => {
-        console.error("Error while getting csrf cookie", err);
-      });
+        console.error("Error while getting csrf cookie", err)
+      })
   }
 
   const onLogin = async () => {
     try {
-      if (!username || !password) return setErrorLogin(true);
+      if (!username || !password) return setErrorLogin(true)
 
-      const response = await authenticate(username, password);
-      if (!response) return setErrorLogin(true);
+      const response = await authenticate(username, password)
+      if (!response) return setErrorLogin(true)
 
-      const { status, data = {} } = response;
+      const { status, data = {} } = response
       if (status === 200) {
-        dispatch(loginAction(buildPartialUser(data.provider)));
+        dispatch(loginAction(buildPartialUser(data.provider)))
 
-        localStorage.setItem(ACCESS_TOKEN, data.jwt.access);
-        localStorage.setItem(REFRESH_TOKEN, data.jwt.refresh);
+        localStorage.setItem(ACCESS_TOKEN, data.jwt.access)
+        localStorage.setItem(REFRESH_TOKEN, data.jwt.refresh)
 
-        history.push("/home");
+        history.push("/users")
       } else {
-        setErrorLogin(true);
+        setErrorLogin(true)
       }
     } catch (err) {
-      setErrorLogin(true);
+      setErrorLogin(true)
     }
-  };
+  }
 
   const _onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    onLogin();
-  };
+    e.preventDefault()
+    onLogin()
+  }
 
   return (
     <>
@@ -174,7 +174,7 @@ const Login = () => {
 
       <ErrorDialog open={errorLogin !== false} setErrorLogin={setErrorLogin} />
     </>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

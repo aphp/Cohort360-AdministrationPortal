@@ -101,11 +101,11 @@ const ProvidersTable = () => {
       console.log(`urlSearch`, urlSearch)
 
       // history.push(
-      //   `/home/page=${page}&ordering=${orderDirection}${orderBy}${urlSearch}`
+      //   `/users/page=${page}&ordering=${orderDirection}${orderBy}${urlSearch}`
       // )
 
       history.push({
-        pathname: "/home",
+        pathname: "/users",
         search: `?page=${page}&ordering=${urlOrderingDirection}${orderBy}${urlSearch}`,
       })
     }
@@ -114,9 +114,7 @@ const ProvidersTable = () => {
       .then((resp) => {
         console.log(`resp`, resp)
         if (resp) {
-          setProviders(
-            resp.providers.length === 0 ? undefined : resp.providers
-          )
+          setProviders(resp.providers.length === 0 ? undefined : resp.providers)
           setTotal(resp.total)
         }
       })
@@ -138,7 +136,7 @@ const ProvidersTable = () => {
 
   const handleChangeAutocomplete = (
     event: React.ChangeEvent<{}>,
-    value: { label: string, code: string } | null
+    value: { label: string; code: string } | null
   ) => {
     if (value) setSearchBy(value)
   }
@@ -226,10 +224,12 @@ const ProvidersTable = () => {
                 return (
                   provider && (
                     <TableRow
-                      key={provider.id}
+                      key={provider.provider_id}
                       className={classes.tableBodyRows}
                       hover
-                      onClick={() => history.push(`/profile/${provider.id}`)}
+                      onClick={() =>
+                        history.push(`/user-profile/${provider.provider_id}`)
+                      }
                     >
                       <TableCell align="center">
                         {provider.provider_source_value}

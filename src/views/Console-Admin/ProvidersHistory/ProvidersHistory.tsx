@@ -10,19 +10,19 @@ const ProviderHistory: React.FC = () => {
   const classes = useStyles()
 
   const [loading, setLoading] = useState(false)
-//   const [user, setUser] = useState(undefined)
+  //   const [user, setUser] = useState(undefined)
 
-  const { userId } = useParams<{ userId: string }>()
+  const { providerId } = useParams<{ providerId: string }>()
 
   useEffect(() => {
     setLoading(true)
-    submitGetProfile(userId)
+    submitGetProfile(providerId)
       .then((userResp) => {
         // setUser(userResp)
         console.log(`userResp`, userResp)
       })
       .then(() => setLoading(false))
-  }, [userId])
+  }, [providerId])
 
   return (
     <Grid container direction="column">
