@@ -27,7 +27,7 @@ import SearchBar from "../../SearchBar/SearchBar";
 import AddUserDialog from "../AddProviderForm/AddProviderForm";
 
 import useStyles from "./styles";
-import { submitGetProfiles } from "services/providersService";
+import { submitGetProviders } from "services/providersService";
 
 const ProvidersTable = () => {
   const classes = useStyles();
@@ -53,26 +53,7 @@ const ProvidersTable = () => {
     },
   ];
 
-  const searchOptions = [
-    {
-      label: "Identifiant APH",
-      code: "providerSourceValue",
-    },
-    {
-      label: "Nom",
-      code: "lastname",
-    },
-    {
-      label: "Prénom",
-      code: "firstname",
-    },
-    {
-      label: "Email",
-      code: "email",
-    },
-  ];
-
-  const [profiles, setProfiles] = useState(undefined);
+  const [providers, setProviders] = useState(undefined);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -80,7 +61,7 @@ const ProvidersTable = () => {
   const [orderBy, setOrderBy] = useState<string>("lastname");
   const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc");
   const [searchInput, setSearchInput] = useState("");
-  const [searchBy, setSearchBy] = useState(searchOptions[1]);
+  const [searchBy, setSearchBy] = useState(columns[1]);
 
   const [open, setOpen] = useState(false);
 
@@ -92,11 +73,15 @@ const ProvidersTable = () => {
   console.log(`page`, page);
   console.log(`total`, total);
   console.log(`searchBy`, searchBy);
-  console.log(`profiles`, profiles);
+  console.log(`providers`, providers);
+
+  useEffect(() => {
+    setPage(1);
+  }, [searchInput]);
 
   useEffect(() => {
     getData(orderBy, orderDirection, page);
-  }, [orderBy, orderDirection, searchInput]); // eslint-disable-line
+  }, [orderBy, orderDirection, searchInput, page]); // eslint-disable-line
 
   useEffect(() => {
     if (searchInput) {
@@ -109,11 +94,30 @@ const ProvidersTable = () => {
     orderDirection: string,
     page?: number
   ) => {
+    if (refreshed) {
+      const urlSearch = searchInput ? `&${searchBy.code}=${searchInput}` : "";
+      const urlOrderingDirection = orderDirection === "desc" ? "-" : "";
+
+      console.log(`urlSearch`, urlSearch);
+
+      // history.push(
+      //   `/home/page=${page}&ordering=${orderDirection}${orderBy}${urlSearch}`
+      // );
+
+      history.push({
+        pathname: "/home",
+        search: `?page=${page}&ordering=${urlOrderingDirection}${orderBy}${urlSearch}`,
+      });
+    }
     setLoading(true);
-    submitGetProfiles(orderBy, orderDirection, page, searchBy, searchInput)
+    submitGetProviders(orderBy, orderDirection, page, searchBy, searchInput)
       .then((resp) => {
+        console.log(`resp`, resp);
         if (resp) {
-          setProfiles(resp);
+          setProviders(
+            resp.providers.length === 0 ? undefined : resp.providers
+          );
+          setTotal(resp.total);
         }
       })
       .catch((error) => console.log(error))
@@ -130,7 +134,6 @@ const ProvidersTable = () => {
 
     setOrderDirection(_orderDirection);
     setOrderBy(property);
-    // onSearchPatient(property, _orderDirection);
   };
 
   const handleChangeAutocomplete = (
@@ -160,7 +163,7 @@ const ProvidersTable = () => {
         </Button>
         <Grid container item xs={6} justify="flex-end" alignItems="center">
           <Autocomplete
-            options={searchOptions}
+            options={columns}
             getOptionLabel={(option) => option.label}
             onChange={handleChangeAutocomplete}
             renderInput={(params) => (
@@ -209,7 +212,7 @@ const ProvidersTable = () => {
                 </TableCell>
               </TableRow>
             ) : // @ts-ignore
-            !profiles ? (
+            !providers ? (
               <TableRow>
                 <TableCell colSpan={7}>
                   <Typography className={classes.loadingSpinnerContainer}>
@@ -219,21 +222,23 @@ const ProvidersTable = () => {
               </TableRow>
             ) : (
               // @ts-ignore
-              profiles.map((profile: any) => {
+              providers.map((provider: any) => {
                 return (
-                  profile && (
+                  provider && (
                     <TableRow
-                      key={profile.id}
+                      key={provider.id}
                       className={classes.tableBodyRows}
                       hover
-                      onClick={() => window.open(`/users/${profile.id}`)}
+                      onClick={() => window.open(`/users/${provider.id}`)}
                     >
                       <TableCell align="center">
-                        {profile.provider_source_value}
+                        {provider.provider_source_value}
                       </TableCell>
-                      <TableCell align="center">{profile.lastname}</TableCell>
-                      <TableCell align="center">{profile.firstname}</TableCell>
-                      <TableCell align="center">{profile.email}</TableCell>
+                      <TableCell align="center">{provider.lastname}</TableCell>
+                      <TableCell align="center">{provider.firstname}</TableCell>
+                      <TableCell align="center">
+                        {provider.email ?? "-"}
+                      </TableCell>
                     </TableRow>
                   )
                 );
@@ -246,7 +251,7 @@ const ProvidersTable = () => {
         className={classes.pagination}
         count={Math.ceil(total / 100)}
         shape="rounded"
-        // onChange={onChangePage}
+        onChange={(event, page: number) => setPage(page)}
         page={page}
       />
 

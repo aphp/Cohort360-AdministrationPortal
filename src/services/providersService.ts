@@ -1,7 +1,7 @@
 import axios from "axios";
 import { BACK_API_URL } from "../constants";
 
-export const submitGetProfiles = async (
+export const submitGetProviders = async (
   orderBy: string,
   orderDirection: string,
   page?: number,
@@ -11,11 +11,19 @@ export const submitGetProfiles = async (
   const baseURL = BACK_API_URL;
   const searchFilter = searchInput ? `&${searchBy.code}=${searchInput}` : ''
 
-  let url = `${baseURL}/providers/?ordering=${orderDirection === 'desc' ? '-' : ''}${orderBy}${searchFilter}`;
+  let url = `${baseURL}/providers/?page=${page}&ordering=${orderDirection === 'desc' ? '-' : ''}${orderBy}${searchFilter}`;
 
-  const profiles = await axios.get(url);
+  const providersResp = await axios.get(url);
 
-  console.log(`profiles`, profiles);
+  if (providersResp.status !== 200){
+    return {
+      providers: undefined,
+      total: 0
+    }
+  }
 
-  return profiles.data.results;
+  return {
+      providers : providersResp.data.results ?? undefined,
+      total: providersResp.data.count ?? 0
+  }
 };
