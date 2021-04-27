@@ -1,7 +1,8 @@
-import Login from '../../../views/Login/Login'
-import Providers from '../../../views/Console-Admin/Providers/Providers'
+import Login from 'views/Login/Login'
+import Providers from 'views/Console-Admin/Providers/Providers'
 
-export default [
+
+const Config = [
 	/**
   * Console-Admin Connexion Page
   */
@@ -23,4 +24,9 @@ export default [
     isPrivate: true,
     component: Providers
   }
+  /**
+   * 
+   */
 ]
+
+export default Config
