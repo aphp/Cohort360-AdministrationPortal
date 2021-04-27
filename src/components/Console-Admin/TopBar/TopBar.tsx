@@ -11,10 +11,10 @@ import {
   Toolbar,
 } from "@material-ui/core"
 
-import consoleLogo from "../../assets/images/console-white.png"
-import { ReactComponent as LogoutIcon } from "../../assets/icones/power-off.svg"
+import consoleLogo from "../../../assets/images/console-white.png"
+import { ReactComponent as LogoutIcon } from "../../../assets/icones/power-off.svg"
 
-import { logout as logoutAction } from '../../state/me'
+import { logout as logoutAction } from '../../../state/me'
 import { useAppSelector } from 'state'
 
 import useStyles from "./styles"

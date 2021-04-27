@@ -4,7 +4,7 @@ import clsx from "clsx";
 
 import { Grid, Typography } from "@material-ui/core";
 
-import ProvidersTable from "components/providers/ProvidersTable/ProvidersTable";
+import ProvidersTable from "components/Console-Admin/providers/ProvidersTable/ProvidersTable";
 
 // import { IReduxStore } from "types";
 

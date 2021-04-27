@@ -2,7 +2,7 @@ import React from 'react'
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 
 import PrivateRoute from '../PrivateRoute'
-import TopBar from '../../TopBar/TopBar'
+import TopBar from '../../Console-Admin/TopBar/TopBar'
 import Config from './config'
 
 
@@ -49,10 +49,10 @@ const AppNavigation = () => (
           />
         )
       })}
-      {/* 404 not found */}
+      {/* 404 not found
       <Route>
         <Redirect to="/" />
-      </Route>
+      </Route> */}
     </Switch>
   </Router>
 )

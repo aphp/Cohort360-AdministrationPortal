@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import * as QueryString from "query-string";
-import useRouter from "use-react-router";
+import React, { useEffect, useState } from "react"
+import { useDispatch } from "react-redux"
+import * as QueryString from "query-string"
+import { useHistory } from "react-router-dom"
 
 import {
   Button,
@@ -17,22 +17,22 @@ import {
   Typography,
   Paper,
   TextField,
-} from "@material-ui/core";
-import Pagination from "@material-ui/lab/Pagination";
-import Autocomplete from "@material-ui/lab/Autocomplete";
+} from "@material-ui/core"
+import Pagination from "@material-ui/lab/Pagination"
+import Autocomplete from "@material-ui/lab/Autocomplete"
 
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import PersonAddIcon from "@material-ui/icons/PersonAdd"
 
-import SearchBar from "../../SearchBar/SearchBar";
-import AddUserDialog from "../AddProviderForm/AddProviderForm";
+import SearchBar from "../../../SearchBar/SearchBar"
+import AddUserDialog from "../AddProviderForm/AddProviderForm"
 
-import useStyles from "./styles";
-import { submitGetProviders } from "services/providersService";
+import useStyles from "./styles"
+import { submitGetProviders } from "services/Console-Admin/providersService"
 
 const ProvidersTable = () => {
-  const classes = useStyles();
-  const dispatch = useDispatch();
-  const { history } = useRouter();
+  const classes = useStyles()
+  // const dispatch = useDispatch()
+  const history = useHistory()
 
   const columns = [
     {
@@ -51,43 +51,43 @@ const ProvidersTable = () => {
       label: "Email",
       code: "email",
     },
-  ];
+  ]
 
-  const [providers, setProviders] = useState(undefined);
-  const [page, setPage] = useState(1);
-  const [total, setTotal] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [refreshed, setRefreshed] = useState(true);
-  const [orderBy, setOrderBy] = useState<string>("lastname");
-  const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc");
-  const [searchInput, setSearchInput] = useState("");
-  const [searchBy, setSearchBy] = useState(columns[1]);
+  const [providers, setProviders] = useState(undefined)
+  const [page, setPage] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [loading, setLoading] = useState(false)
+  const [refreshed, setRefreshed] = useState(true)
+  const [orderBy, setOrderBy] = useState<string>("lastname")
+  const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc")
+  const [searchInput, setSearchInput] = useState("")
+  const [searchBy, setSearchBy] = useState(columns[1])
 
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
 
-  console.log(`orderBy`, orderBy);
+  console.log(`orderBy`, orderBy)
   console.log(
     `window.location.search`,
     QueryString.parse(window.location.search)
-  );
-  console.log(`page`, page);
-  console.log(`total`, total);
-  console.log(`searchBy`, searchBy);
-  console.log(`providers`, providers);
+  )
+  console.log(`page`, page)
+  console.log(`total`, total)
+  console.log(`searchBy`, searchBy)
+  console.log(`providers`, providers)
 
   useEffect(() => {
-    setPage(1);
-  }, [searchInput]);
+    setPage(1)
+  }, [searchInput])
 
   useEffect(() => {
-    getData(orderBy, orderDirection, page);
-  }, [orderBy, orderDirection, searchInput, page]); // eslint-disable-line
+    getData(orderBy, orderDirection, page)
+  }, [orderBy, orderDirection, searchInput, page]) // eslint-disable-line
 
   useEffect(() => {
     if (searchInput) {
-      getData(orderBy, orderDirection, page);
+      getData(orderBy, orderDirection, page)
     }
-  }, [searchBy]); // eslint-disable-line
+  }, [searchBy]) // eslint-disable-line
 
   const getData = async (
     orderBy: string,
@@ -95,53 +95,53 @@ const ProvidersTable = () => {
     page?: number
   ) => {
     if (refreshed) {
-      const urlSearch = searchInput ? `&${searchBy.code}=${searchInput}` : "";
-      const urlOrderingDirection = orderDirection === "desc" ? "-" : "";
+      const urlSearch = searchInput ? `&${searchBy.code}=${searchInput}` : ""
+      const urlOrderingDirection = orderDirection === "desc" ? "-" : ""
 
-      console.log(`urlSearch`, urlSearch);
+      console.log(`urlSearch`, urlSearch)
 
       // history.push(
       //   `/home/page=${page}&ordering=${orderDirection}${orderBy}${urlSearch}`
-      // );
+      // )
 
       history.push({
         pathname: "/home",
         search: `?page=${page}&ordering=${urlOrderingDirection}${orderBy}${urlSearch}`,
-      });
+      })
     }
-    setLoading(true);
+    setLoading(true)
     submitGetProviders(orderBy, orderDirection, page, searchBy, searchInput)
       .then((resp) => {
-        console.log(`resp`, resp);
+        console.log(`resp`, resp)
         if (resp) {
           setProviders(
             resp.providers.length === 0 ? undefined : resp.providers
-          );
-          setTotal(resp.total);
+          )
+          setTotal(resp.total)
         }
       })
       .catch((error) => console.log(error))
       .finally(() => {
-        setLoading(false);
-      });
-  };
+        setLoading(false)
+      })
+  }
 
   const createSortHandler = (property: any) => (
     event: React.MouseEvent<unknown>
   ) => {
-    const isAsc: boolean = orderBy === property && orderDirection === "asc";
-    const _orderDirection = isAsc ? "desc" : "asc";
+    const isAsc: boolean = orderBy === property && orderDirection === "asc"
+    const _orderDirection = isAsc ? "desc" : "asc"
 
-    setOrderDirection(_orderDirection);
-    setOrderBy(property);
-  };
+    setOrderDirection(_orderDirection)
+    setOrderBy(property)
+  }
 
   const handleChangeAutocomplete = (
     event: React.ChangeEvent<{}>,
-    value: { label: string; code: string } | null
+    value: { label: string, code: string } | null
   ) => {
-    if (value) setSearchBy(value);
-  };
+    if (value) setSearchBy(value)
+  }
 
   return (
     <Grid container justify="flex-end">
@@ -229,7 +229,7 @@ const ProvidersTable = () => {
                       key={provider.id}
                       className={classes.tableBodyRows}
                       hover
-                      onClick={() => window.open(`/users/${provider.id}`)}
+                      onClick={() => history.push(`/profile/${provider.id}`)}
                     >
                       <TableCell align="center">
                         {provider.provider_source_value}
@@ -241,7 +241,7 @@ const ProvidersTable = () => {
                       </TableCell>
                     </TableRow>
                   )
-                );
+                )
               })
             )}
           </TableBody>
@@ -261,7 +261,7 @@ const ProvidersTable = () => {
         onSubmit={() => setOpen(false)}
       />
     </Grid>
-  );
-};
+  )
+}
 
-export default ProvidersTable;
+export default ProvidersTable

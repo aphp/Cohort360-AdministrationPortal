@@ -20,7 +20,7 @@ import logo from "../../assets/images/logo1.png";
 import { ErrorDialogProps } from "../../types";
 
 import { login as loginAction } from "state/me";
-import { buildPartialUser } from "services/userService";
+import { buildPartialUser } from "services/Console-Admin/userService";
 
 import useStyles from "./styles";
 

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BACK_API_URL } from "../constants";
+import { BACK_API_URL } from "../../constants";
 
 export const submitGetProviders = async (
   orderBy: string,

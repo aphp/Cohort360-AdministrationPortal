@@ -1,10 +1,11 @@
 import Login from 'views/Login/Login'
 import Providers from 'views/Console-Admin/Providers/Providers'
+import ProvidersHistory from 'views/Console-Admin/ProvidersHistory/ProvidersHistory'
 
 
 const Config = [
 	/**
-  * Console-Admin Connexion Page
+  * Console-Admin Connexion View
   */
   {
     exact: true,
@@ -14,7 +15,7 @@ const Config = [
     
   },
   /**
-   * Console-Admin Home Page
+   * Console-Admin Home View
    */
   {
     exact: true,
@@ -23,10 +24,17 @@ const Config = [
     name: 'Home',
     isPrivate: true,
     component: Providers
-  }
+  },
   /**
-   * 
+   * Console-Admin ProvidersHistory View
    */
+  {
+    exact: true,
+    displayTopBar: true,
+    path: '/profile',
+    isPrivate: true,
+    component: ProvidersHistory
+  }
 ]
 
 export default Config
