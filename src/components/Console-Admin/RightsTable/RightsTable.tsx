@@ -20,7 +20,11 @@ import EditIcon from "@material-ui/icons/Edit"
 
 import useStyles from "./styles"
 
-const RightsTable: React.FC = () => {
+type RightsTableProps = {
+  right: any
+}
+
+const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
   const classes = useStyles()
 
   const [profiles, setProfiles] = useState(undefined)
@@ -31,6 +35,8 @@ const RightsTable: React.FC = () => {
   const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc")
 
   const rowsPerPage = 50
+
+  console.log(`right`, right)
 
   useEffect(() => {}, []) // eslint-disable-line
 
@@ -71,7 +77,8 @@ const RightsTable: React.FC = () => {
     <Grid container justify="flex-end">
       <Grid container justify="space-between">
         <Typography align="left" variant="h2" className={classes.title}>
-          Type de droit
+          {/* @ts-ignore */}
+          Type de droit : {right.cdm_source}
         </Typography>
         <IconButton
           size="small"
@@ -113,7 +120,7 @@ const RightsTable: React.FC = () => {
                 </TableCell>
               </TableRow>
             ) : // @ts-ignore
-            !profiles ? (
+            !right ? (
               <TableRow>
                 <TableCell colSpan={7}>
                   <Typography className={classes.loadingSpinnerContainer}>
@@ -122,26 +129,33 @@ const RightsTable: React.FC = () => {
                 </TableCell>
               </TableRow>
             ) : (
+              <TableRow>
+                <TableCell align="center">{right.perimeter}</TableCell>
+                <TableCell align="center">{right.right}</TableCell>
+                <TableCell align="center">{right.access}</TableCell>
+                <TableCell align="center">{right.creation_datetime}</TableCell>
+                <TableCell align="center">{right.is_active}</TableCell>
+              </TableRow>
               // @ts-ignore
-              profiles.map((profile: any) => {
-                return (
-                  profile && (
-                    <TableRow
-                      key={profile.id}
-                      className={classes.tableBodyRows}
-                      hover
-                      onClick={() => window.open(`/profile/${profile.id}`)}
-                    >
-                      <TableCell align="center">
-                        {profile.providerSourceValue}
-                      </TableCell>
-                      <TableCell align="center">{profile.lastName}</TableCell>
-                      <TableCell align="center">{profile.firstName}</TableCell>
-                      <TableCell align="center">{profile.email}</TableCell>
-                    </TableRow>
-                  )
-                )
-              })
+              // right.map((profile: any) => {
+              //   return (
+              //     profile && (
+              //       <TableRow
+              //         key={profile.id}
+              //         className={classes.tableBodyRows}
+              //         hover
+              //         onClick={() => window.open(`/profile/${profile.id}`)}
+              //       >
+              //         <TableCell align="center">
+              //           {profile.providerSourceValue}
+              //         </TableCell>
+              //         <TableCell align="center">{profile.lastName}</TableCell>
+              //         <TableCell align="center">{profile.firstName}</TableCell>
+              //         <TableCell align="center">{profile.email}</TableCell>
+              //       </TableRow>
+              //     )
+              //   )
+              // })
             )}
           </TableBody>
         </Table>

@@ -10,7 +10,7 @@ const ProviderHistory: React.FC = () => {
   const classes = useStyles()
 
   const [loading, setLoading] = useState(false)
-  //   const [user, setUser] = useState(undefined)
+  const [user, setUser] = useState()
 
   const { providerId } = useParams<{ providerId: string }>()
 
@@ -18,7 +18,7 @@ const ProviderHistory: React.FC = () => {
     setLoading(true)
     submitGetProfile(providerId)
       .then((userResp) => {
-        // setUser(userResp)
+        setUser(userResp)
         console.log(`userResp`, userResp)
       })
       .then(() => setLoading(false))
@@ -31,10 +31,21 @@ const ProviderHistory: React.FC = () => {
           <CircularProgress className={classes.loading} />
         ) : (
           <Grid container item xs={12} sm={9}>
-            <Typography variant="h1" color="primary" className={classes.title}>
-              Nom Prénom - id APH : 4112233
-            </Typography>
-            <RightsTable />
+            {user && (
+              <>
+                <Typography
+                  variant="h1"
+                  color="primary"
+                  className={classes.title}
+                >
+                  {user[0].provider_name} - id APH :{" "}
+                  {user[0].provider_source_value}
+                </Typography>
+                {user.map((userRight) => (
+                  <RightsTable right={userRight} />
+                ))}
+              </>
+            )}
           </Grid>
         )}
       </Grid>
