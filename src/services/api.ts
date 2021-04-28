@@ -20,9 +20,9 @@ api.interceptors.response.use(
     return response
   },
   async function (error) {
-    if ((401 || 400) === error?.response?.status) {
+    if (error?.response?.status === 403) {
       localStorage.clear()
-      window.location = '/'
+      window.location.href = '/'
     }
     return Promise.reject(error)
   }
