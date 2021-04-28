@@ -1,6 +1,5 @@
 import axios from "../api"
-
-import { BackendCareSite, /*CareSite, /*CareSiteType*/ } from "types"
+import { BackendCareSite } from "types"
 
 export const submitGetCareSites = async (): Promise<BackendCareSite> => {
     const caresiteResp = await axios.get(`/care-sites/`)
@@ -8,6 +7,6 @@ export const submitGetCareSites = async (): Promise<BackendCareSite> => {
     if (caresiteResp.status !== 200) {
         return undefined
     }
+
     return caresiteResp.data.results ?? undefined
 }
-

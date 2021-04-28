@@ -13,8 +13,8 @@ import {
 
 import { ReactComponent as LogoutIcon } from "assets/icones/power-off.svg"
 import consoleLogo from "assets/images/console-white.png"
-import { logout as logoutAction } from 'state/me'
-import { useAppSelector } from 'state'
+import { logout as logoutAction } from "state/me"
+import { useAppSelector } from "state"
 import useStyles from "./styles"
 
 const smallDrawerWidth = 52
@@ -24,8 +24,7 @@ export { smallDrawerWidth, largeDrawerWidth }
 const TopBar: React.FC = (props) => {
   const classes = useStyles()
   const history = useHistory()
-  const { me } = useAppSelector((state) => ({me: state.me}))
-
+  const { me } = useAppSelector((state) => ({ me: state.me }))
 
   const dispatch = useDispatch()
 
@@ -55,12 +54,12 @@ const TopBar: React.FC = (props) => {
             <Button
               className={clsx(
                 classes.topBarButton,
-                pathname === "/care-sites" ? classes.activeButton : ""
+                pathname === "/caresites" ? classes.activeButton : ""
               )}
-              onClick={() => history.push("/care-sites")}
+              onClick={() => history.push("/caresites")}
               style={{
                 borderBottom:
-                  pathname === "/care-sites" ? "2px solid #5BC5F2" : "none",
+                  pathname === "/caresites" ? "2px solid #5BC5F2" : "none",
               }}
             >
               Périmètres
@@ -87,7 +86,7 @@ const TopBar: React.FC = (props) => {
               onClick={() => {
                 localStorage.clear()
                 dispatch<any>(logoutAction())
-                history.push('/')
+                history.push("/")
               }}
             >
               <LogoutIcon className={classes.logoutIcon} />

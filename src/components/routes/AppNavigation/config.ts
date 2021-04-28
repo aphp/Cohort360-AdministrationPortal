@@ -1,7 +1,7 @@
 import Login from 'views/Login/Login'
 import Providers from 'views/Console-Admin/Providers/Providers'
 import ProvidersHistory from 'views/Console-Admin/ProvidersHistory/ProvidersHistory'
-
+import CareSites from 'views/Console-Admin/CareSite/CareSites'
 
 const Config = [
 	/**
@@ -34,6 +34,17 @@ const Config = [
     path: '/user-profile/:providerId',
     isPrivate: true,
     component: ProvidersHistory
+  },
+  /**
+   * Console-Admin CareSites View
+   */
+  {
+    exact: true,
+    displayTopBar: true,
+    path: '/caresites',
+    name: 'CareSites',
+    isPrivate: true,
+    component: CareSites
   }
 ]
 
