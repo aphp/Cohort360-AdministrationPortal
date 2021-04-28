@@ -37,7 +37,7 @@ const ProvidersTable = () => {
   const columns = [
     {
       label: "Identifiant APH",
-      code: "providerSourceValue",
+      code: "provider_source_value",
     },
     {
       label: "Nom",
