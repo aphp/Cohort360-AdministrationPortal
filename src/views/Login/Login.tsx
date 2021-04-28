@@ -1,8 +1,7 @@
 import React, { useState } from "react"
-import { useDispatch } from "react-redux"
 import { useHistory } from "react-router-dom"
+import { useDispatch } from "react-redux"
 import { AxiosError } from "axios"
-
 import {
   Button,
   Dialog,
@@ -14,14 +13,12 @@ import {
   Typography,
 } from "@material-ui/core"
 
-import { authenticate, getCsrfToken } from "../../services/authentication"
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants"
-import logo from "../../assets/images/logo1.png"
-import { ErrorDialogProps } from "../../types"
-
-import { login as loginAction } from "state/me"
+import { authenticate, getCsrfToken } from "services/authentication"
 import { buildPartialUser } from "services/Console-Admin/userService"
-
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants"
+import { login as loginAction } from "state/me"
+import logo from "assets/images/logo1.png"
+import { ErrorDialogProps } from "types"
 import useStyles from "./styles"
 
 const ErrorDialog: React.FC<ErrorDialogProps> = ({ open, setErrorLogin }) => {
@@ -53,7 +50,7 @@ const Login = () => {
   const [password, setPassword] = useState<string>("")
   const [errorLogin, setErrorLogin] = useState<boolean>(false)
 
-  const [hasCsrfCookie, setHasCsrfCookie] = React.useState(false)
+  const [hasCsrfCookie, setHasCsrfCookie] = useState(false)
   if (!hasCsrfCookie) {
     getCsrfToken()
       .then((res: any) => {

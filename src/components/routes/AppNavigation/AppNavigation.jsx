@@ -1,8 +1,9 @@
 import React from 'react'
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 
-import PrivateRoute from '../PrivateRoute'
+import AutoLogoutContainer from '../AutoLogoutContainer'
 import TopBar from '../../Console-Admin/TopBar/TopBar'
+import PrivateRoute from '../PrivateRoute'
 import Config from './config'
 
 
@@ -18,12 +19,13 @@ const Layout = (props) => {
 
 const AppNavigation = () => (
   <Router>
+    <AutoLogoutContainer />
     <Switch>
       {Config.map((route, index) => {
         const MyComponent = route.component
         return route.isPrivate ? (
           <PrivateRoute
-            key={index}
+            key={index}s
             exact={route.exact}
             path={route.path}
             render={(props) => {
@@ -49,10 +51,10 @@ const AppNavigation = () => (
           />
         )
       })}
-      {/* 404 not found
+      {/* 404 not found */}
       <Route>
         <Redirect to="/" />
-      </Route> */}
+      </Route>
     </Switch>
   </Router>
 )
