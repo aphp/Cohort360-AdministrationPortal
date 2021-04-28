@@ -44,3 +44,16 @@ export type BackendUserReceived = {
 // --CONSOLE-ADMIN--
 
 // Service
+
+export type CareSiteType = 
+| "AP-HP"
+| "Hopital"
+| "Groupe Hospitalier"
+
+export type BackendCareSite = undefined | {
+  care_site_id: number
+  care_site_name: string
+  care_site_short_name: string
+  parent_id?: number
+  care_site_type_source_value?: string
+}

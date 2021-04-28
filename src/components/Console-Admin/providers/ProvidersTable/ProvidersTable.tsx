@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react"
-import { useDispatch } from "react-redux"
-import * as QueryString from "query-string"
 import { useHistory } from "react-router-dom"
+import * as QueryString from "query-string"
+// import { useDispatch } from "react-redux"
+
+
 
 import {
   Button,
@@ -57,7 +59,7 @@ const ProvidersTable = () => {
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
-  const [refreshed, setRefreshed] = useState(true)
+  const [refreshed, /*setRefreshed*/] = useState(true)
   const [orderBy, setOrderBy] = useState<string>("lastname")
   const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc")
   const [searchInput, setSearchInput] = useState("")
