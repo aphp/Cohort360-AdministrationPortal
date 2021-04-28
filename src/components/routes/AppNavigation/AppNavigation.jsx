@@ -5,11 +5,16 @@ import AutoLogoutContainer from '../AutoLogoutContainer'
 import TopBar from '../../Console-Admin/TopBar/TopBar'
 import PrivateRoute from '../PrivateRoute'
 import Config from './config'
+import { useAppSelector } from 'state/index'
 
 
 const Layout = (props) => {
+
+  const me = useAppSelector((state) => state.me)
   return (
     <>
+      {me && <AutoLogoutContainer />}
+
       {props.displayTopBar && <TopBar />}
 
       {props.children}
@@ -19,7 +24,6 @@ const Layout = (props) => {
 
 const AppNavigation = () => (
   <Router>
-    <AutoLogoutContainer />
     <Switch>
       {Config.map((route, index) => {
         const MyComponent = route.component
