@@ -10,7 +10,7 @@ const ProviderHistory: React.FC = () => {
   const classes = useStyles()
 
   const [loading, setLoading] = useState(false)
-  const [user, setUser] = useState()
+  const [user, setUser] = useState<any>() // revoir le type du useState
 
   const { providerId } = useParams<{ providerId: string }>()
 
@@ -41,7 +41,7 @@ const ProviderHistory: React.FC = () => {
                   {user[0].provider_name} - id APH :{" "}
                   {user[0].provider_source_value}
                 </Typography>
-                {user.map((userRight) => (
+                {user.map((userRight: any) => ( // revoir le type de userRight
                   <RightsTable right={userRight} />
                 ))}
               </>
