@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { useHistory } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import { AxiosError } from "axios"
@@ -49,6 +49,12 @@ const Login = () => {
   const [username, setUsername] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [errorLogin, setErrorLogin] = useState<boolean>(false)
+
+  useEffect(() => {
+    localStorage.removeItem('user')
+    localStorage.removeItem('access')
+    localStorage.removeItem('refresh')
+  }, [])
 
   const [hasCsrfCookie, setHasCsrfCookie] = useState(false)
   if (!hasCsrfCookie) {
