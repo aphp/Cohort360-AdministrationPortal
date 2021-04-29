@@ -3,9 +3,10 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-d
 
 import AutoLogoutContainer from '../AutoLogoutContainer'
 import TopBar from '../../Console-Admin/TopBar/TopBar'
+import { useAppSelector } from 'state/index'
 import PrivateRoute from '../PrivateRoute'
 import Config from './config'
-import { useAppSelector } from 'state/index'
+
 
 
 const Layout = (props) => {
