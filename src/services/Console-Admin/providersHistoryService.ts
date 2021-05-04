@@ -11,6 +11,28 @@ export const submitGetProfile = async (profileId: string) => {
     return profileResp.data.results ?? undefined
 }
 
-export const submitCreateProfile = async () => {
-    
+export const submitCreateProfile = async (firstName: string, lastName: string,
+    providerSourceValue: string, email: string) => {
+    const profileData = {
+        firstname: firstName,
+        lastname: lastName,
+        provider_source_value: providerSourceValue,
+        email: email
+    }
+
+    let success
+
+    api.post(`/profiles/check/`, {provider_source_value: providerSourceValue} )
+    .then(res => { 
+        if (res.status === 200) {
+            api.post(`/profiles/`, profileData)
+            .then(res => {
+                if (res.status === 200) {
+                    success = true   
+                } else success = false
+            })
+        }
+    })
+
+    return success
 }

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react"
 
 import {
+  Button,
   CircularProgress,
   Grid,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -11,14 +13,15 @@ import {
   TableRow,
   TableSortLabel,
   Typography,
-  Paper,
-  IconButton,
 } from "@material-ui/core"
 import Pagination from "@material-ui/lab/Pagination"
 
-import EditIcon from "@material-ui/icons/Edit"
+import AddIcon from "@material-ui/icons/Add"
+import CheckIcon from "@material-ui/icons/Check"
+import CloseIcon from "@material-ui/icons/Close"
 
 import useStyles from "./styles"
+import AddAccessForm from "../providers/AddAccessForm/AddAccessForm"
 
 type RightsTableProps = {
   right: any
@@ -27,6 +30,7 @@ type RightsTableProps = {
 const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
   const classes = useStyles()
 
+  const [open, setOpen] = useState(false)
   const [profiles, setProfiles] = useState(undefined)
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
@@ -75,17 +79,22 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
 
   return (
     <Grid container justify="flex-end">
-      <Grid container justify="space-between">
+      <Grid container justify="space-between" alignItems="center">
         <Typography align="left" variant="h2" className={classes.title}>
           {/* @ts-ignore */}
           Type de droit : {right.cdm_source}
         </Typography>
-        <IconButton
-          size="small"
-          onClick={() => console.log("clic sur le bouton edit")}
-        >
-          <EditIcon />
-        </IconButton>
+        {right.cdm_source === "MANUAL" && (
+          <Button
+            variant="contained"
+            disableElevation
+            startIcon={<AddIcon height="15px" fill="#FFF" />}
+            className={classes.searchButton}
+            onClick={() => setOpen(true)}
+          >
+            Nouvel accès
+          </Button>
+        )}
       </Grid>
       <TableContainer component={Paper}>
         <Table className={classes.table}>
@@ -133,8 +142,21 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
                 <TableCell align="center">{right.perimeter}</TableCell>
                 <TableCell align="center">{right.right}</TableCell>
                 <TableCell align="center">{right.access}</TableCell>
-                <TableCell align="center">{right.creation_datetime}</TableCell>
-                <TableCell align="center">{right.is_active}</TableCell>
+                <TableCell align="center">
+                  {new Date(right.creation_datetime).toLocaleDateString(
+                    "fr-FR"
+                  )}{" "}
+                  {new Date(right.creation_datetime).toLocaleTimeString(
+                    "fr-FR",
+                    {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    }
+                  )}
+                </TableCell>
+                <TableCell align="center">
+                  {right.is_active ? <CheckIcon /> : <CloseIcon />}
+                </TableCell>
               </TableRow>
               // @ts-ignore
               // right.map((profile: any) => {
@@ -167,6 +189,8 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
         // onChange={onChangePage}
         page={page}
       />
+
+      <AddAccessForm open={open} onClose={() => setOpen(false)} />
     </Grid>
   )
 }
