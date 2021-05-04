@@ -50,10 +50,10 @@ export type CareSiteType =
 | "Hopital"
 | "Groupe Hospitalier"
 
-export type BackendCareSite = undefined | {
+export type BackendCareSite = {
   care_site_id: number
   care_site_name: string
   care_site_short_name: string
-  parent_id?: number
+  parents_ids: number[]
   care_site_type_source_value?: string
 }
