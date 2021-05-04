@@ -6,6 +6,7 @@ import Grid from "@material-ui/core/Grid"
 import * as _ from "lodash"
 
 import { submitGetCareSites } from "services/Console-Admin/careSiteService"
+import { BackendCareSite } from "types"
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -17,17 +18,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const careSiteToRow = (cs: any) => ({
-  id: cs.care_site_id.toString(),
-  careSiteId: cs.care_site_id,
-  name: cs.care_site_name,
-  shortName: cs.care_site_short_name,
-  parentId: cs.parent_ids,
+const careSiteToRow = (cs: BackendCareSite) => ({
+  id: cs?.care_site_id.toString(),
+  careSiteId: cs?.care_site_id,
+  name: cs?.care_site_name,
+  shortName: cs?.care_site_short_name,
+  parentId: cs?.parents_ids[0],
 })
 
 const CareSitesTree: React.FC = () => {
   const classes = useStyles()
-  const [careSites, setCareSites] = useState()
+  const [careSites, setCareSites] = useState<BackendCareSite[] | undefined>()
 
   const [loading, setLoading] = useState(true)
 
@@ -35,8 +36,6 @@ const CareSitesTree: React.FC = () => {
     const _init = async () => {
       setLoading(true)
       await submitGetCareSites().then((careSitesResp) => {
-        console.log(`careSitesResp`, careSitesResp)
-        // @ts-ignore
         setCareSites(careSitesResp ?? undefined)
       })
       setLoading(false)
@@ -44,6 +43,13 @@ const CareSitesTree: React.FC = () => {
 
     _init()
   }, []) // eslint-disable-line
+
+  console.log(
+    `_.values(careSites).map(careSiteToRow)`,
+    _.values(careSites).map(careSiteToRow)
+  )
+
+  console.log(`careSites`, careSites)
 
   const columns = [
     {
@@ -68,10 +74,10 @@ const CareSitesTree: React.FC = () => {
       ) : (
         <MaterialTable
           columns={columns}
-          data={_.values(careSites).map(careSiteToRow)}
-          parentChildData={({ parentId }, rows) =>
-            rows.find(({ careSiteId }) => careSiteId === parentId)
-          }
+          data={Object.values(careSites || []).map(careSiteToRow)}
+          // parentChildData={({ parentId }, rows) =>
+          //   rows.find(({ careSiteId }) => careSiteId === parentId)
+          // }
           options={{
             paging: false,
             filtering: false,
