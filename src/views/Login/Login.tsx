@@ -13,8 +13,8 @@ import {
   Typography,
 } from "@material-ui/core"
 
-import { authenticate, getCsrfToken } from "services/authentication"
 import { buildPartialUser } from "services/Console-Admin/userService"
+import { authenticate, getCsrfToken } from "services/authentication"
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants"
 import { login as loginAction } from "state/me"
 import logo from "assets/images/logo1.png"
@@ -56,17 +56,17 @@ const Login = () => {
     localStorage.removeItem('refresh')
   }, [])
 
-  const [hasCsrfCookie, setHasCsrfCookie] = useState(false)
-  if (!hasCsrfCookie) {
-    getCsrfToken()
-      .then((res: any) => {
-        console.log("Got csrf cookie", res)
-        setHasCsrfCookie(true)
-      })
-      .catch((err: AxiosError) => {
-        console.error("Error while getting csrf cookie", err)
-      })
-  }
+  // const [hasCsrfCookie, setHasCsrfCookie] = useState(false)
+  // if (!hasCsrfCookie) {
+  //   getCsrfToken()
+  //     .then((res: any) => {
+  //       console.log("Got csrf cookie", res)
+  //       setHasCsrfCookie(true)
+  //     })
+  //     .catch((err: AxiosError) => {
+  //       console.error("Error while getting csrf cookie", err)
+  //     })
+  // }
 
   const onLogin = async () => {
     try {
