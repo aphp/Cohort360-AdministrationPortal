@@ -16,10 +16,8 @@ import {
   TableSortLabel,
   Typography,
   Paper,
-  TextField,
 } from "@material-ui/core"
 import Pagination from "@material-ui/lab/Pagination"
-import Autocomplete from "@material-ui/lab/Autocomplete"
 
 import PersonAddIcon from "@material-ui/icons/PersonAdd"
 
@@ -61,7 +59,6 @@ const ProvidersTable = () => {
   const [orderBy, setOrderBy] = useState<string>("lastname")
   const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc")
   const [searchInput, setSearchInput] = useState("")
-  const [searchBy, setSearchBy] = useState(columns[1])
 
   const [open, setOpen] = useState(false)
 
@@ -72,7 +69,6 @@ const ProvidersTable = () => {
   )
   console.log(`page`, page)
   console.log(`total`, total)
-  console.log(`searchBy`, searchBy)
   console.log(`providers`, providers)
 
   useEffect(() => {
@@ -83,19 +79,13 @@ const ProvidersTable = () => {
     getData(orderBy, orderDirection, page)
   }, [orderBy, orderDirection, searchInput, page]) // eslint-disable-line
 
-  useEffect(() => {
-    if (searchInput) {
-      getData(orderBy, orderDirection, page)
-    }
-  }, [searchBy]) // eslint-disable-line
-
   const getData = async (
     orderBy: string,
     orderDirection: string,
     page?: number
   ) => {
     if (refreshed) {
-      const urlSearch = searchInput ? `&${searchBy.code}=${searchInput}` : ""
+      const urlSearch = searchInput ? `&search=${searchInput}` : ""
       const urlOrderingDirection = orderDirection === "desc" ? "-" : ""
 
       console.log(`urlSearch`, urlSearch)
@@ -110,7 +100,7 @@ const ProvidersTable = () => {
       })
     }
     setLoading(true)
-    submitGetProviders(orderBy, orderDirection, page, searchBy, searchInput)
+    submitGetProviders(orderBy, orderDirection, page, searchInput)
       .then((resp) => {
         console.log(`resp`, resp)
         if (resp) {
@@ -134,22 +124,9 @@ const ProvidersTable = () => {
     setOrderBy(property)
   }
 
-  const handleChangeAutocomplete = (
-    event: React.ChangeEvent<{}>,
-    value: { label: string; code: string } | null
-  ) => {
-    if (value) setSearchBy(value)
-  }
-
   return (
     <Grid container justify="flex-end">
-      <Grid
-        container
-        item
-        justify="space-between"
-        style={{ margin: "12px 0" }}
-        alignItems="center"
-      >
+      <Grid container item justify="space-between" style={{ margin: "12px 0" }}>
         <Button
           variant="contained"
           disableElevation
@@ -160,20 +137,6 @@ const ProvidersTable = () => {
           Nouvel utilisateur
         </Button>
         <Grid container item xs={6} justify="flex-end" alignItems="center">
-          <Autocomplete
-            options={columns}
-            getOptionLabel={(option) => option.label}
-            onChange={handleChangeAutocomplete}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Rechercher par..."
-                variant="outlined"
-              />
-            )}
-            value={searchBy}
-            style={{ width: "200px" }}
-          />
           <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
         </Grid>
       </Grid>

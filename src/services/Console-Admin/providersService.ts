@@ -5,11 +5,10 @@ export const submitGetProviders = async (
   orderBy: string,
   orderDirection: string,
   page?: number,
-  searchBy?: any,
   searchInput?: string
 ) => {
   const baseURL = BACK_API_URL;
-  const searchFilter = searchInput ? `&${searchBy.code}=${searchInput}` : ''
+  const searchFilter = searchInput ? `&search=${searchInput}` : ''
 
   let url = `${baseURL}/providers/?page=${page}&ordering=${orderDirection === 'desc' ? '-' : ''}${orderBy}${searchFilter}`;
 
