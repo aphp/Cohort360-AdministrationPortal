@@ -190,7 +190,11 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
         page={page}
       />
 
-      <AddAccessForm open={open} onClose={() => setOpen(false)} />
+      <AddAccessForm
+        open={open}
+        onClose={() => setOpen(false)}
+        entityId={right.provider_history_id}
+      />
     </Grid>
   )
 }

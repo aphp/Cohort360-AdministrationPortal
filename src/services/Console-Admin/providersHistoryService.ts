@@ -1,5 +1,5 @@
+import { AccessData } from 'types'
 import api from '../api'
-
 
 export const submitGetProfile = async (profileId: string) => {
     const profileResp = await api.get(`/profiles/?provider_id=${profileId}`)
@@ -32,6 +32,19 @@ export const submitCreateProfile = async (firstName: string, lastName: string,
                 } else success = false
             })
         }
+    })
+
+    return success
+}
+
+export const submitCreateAccess = async (accessData: AccessData) => {
+    let success
+
+    await api.post(`/accesses/`, accessData)
+    .then(res => {
+        if (res.status === 200) {
+            success= true       
+        } else success = false
     })
 
     return success

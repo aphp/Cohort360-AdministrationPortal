@@ -57,3 +57,13 @@ export type BackendCareSite = {
   parents_ids: number[]
   care_site_type_source_value?: string
 }
+
+// Access
+
+export type AccessData = {
+  entity_id: number
+  care_site_id: number
+  role_id: number
+  start_datetime?: string
+  end_datetime?: string
+}
