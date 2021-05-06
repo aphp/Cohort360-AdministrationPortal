@@ -73,6 +73,15 @@ const TopBar: React.FC = (props) => {
             >
               Utilisateurs
             </Button>
+            <Button
+              className={clsx(
+                classes.topBarButton,
+                pathname === "/roles" ? classes.activeButton : ""
+              )}
+              onClick={() => history.push("/roles")}
+            >
+              Rôles
+            </Button>
           </Grid>
 
           <Grid container item alignItems="center" justify="flex-end" xs={6}>

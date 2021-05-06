@@ -5,7 +5,7 @@ import CareSiteTree from "components/Console-Admin/CareSite/CareSiteTree"
 
 import useStyles from "./styles"
 
-const CareSite = () => {
+const CareSite: React.FC = () => {
   const classes = useStyles()
 
   return (
