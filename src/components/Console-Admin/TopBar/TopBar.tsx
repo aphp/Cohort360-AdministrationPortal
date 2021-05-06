@@ -43,7 +43,7 @@ const TopBar: React.FC = (props) => {
             container
             item
             alignItems="center"
-            xs={6}
+            xs={9}
             style={{ height: "100%" }}
           >
             <img
@@ -51,6 +51,15 @@ const TopBar: React.FC = (props) => {
               alt="Console logo"
               className={classes.logoIcon}
             />
+            <Button
+              className={clsx(
+                classes.topBarButton,
+                pathname === "/users" ? classes.activeButton : ""
+              )}
+              onClick={() => history.push("/users")}
+            >
+              Utilisateurs
+            </Button>
             <Button
               className={clsx(
                 classes.topBarButton,
@@ -67,15 +76,6 @@ const TopBar: React.FC = (props) => {
             <Button
               className={clsx(
                 classes.topBarButton,
-                pathname === "/users" ? classes.activeButton : ""
-              )}
-              onClick={() => history.push("/users")}
-            >
-              Utilisateurs
-            </Button>
-            <Button
-              className={clsx(
-                classes.topBarButton,
                 pathname === "/roles" ? classes.activeButton : ""
               )}
               onClick={() => history.push("/roles")}
@@ -84,7 +84,7 @@ const TopBar: React.FC = (props) => {
             </Button>
           </Grid>
 
-          <Grid container item alignItems="center" justify="flex-end" xs={6}>
+          <Grid container item alignItems="center" justify="flex-end" xs={3}>
             <ListItemIcon className={classes.listIcon}>
               <div className={classes.avatar}>
                 {me && `${(me.firstName || "?")[0]}${(me.lastName || "?")[0]}`}
