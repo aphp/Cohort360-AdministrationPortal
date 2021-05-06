@@ -4,7 +4,6 @@ import { makeStyles } from "@material-ui/core/styles"
 import MaterialTable from "material-table"
 import Grid from "@material-ui/core/Grid"
 import * as _ from "lodash"
-
 import { submitGetCareSites } from "services/Console-Admin/careSiteService"
 import { BackendCareSite } from "types"
 
@@ -23,7 +22,7 @@ const careSiteToRow = (cs: BackendCareSite) => ({
   careSiteId: cs?.care_site_id,
   name: cs?.care_site_name,
   shortName: cs?.care_site_short_name,
-  parentId: cs?.parents_ids[0],
+  parentId: cs?.parents_ids[0] === cs.care_site_id ? null : cs.parents_ids[0],
 })
 
 const CareSitesTree: React.FC = () => {
@@ -35,6 +34,7 @@ const CareSitesTree: React.FC = () => {
   useEffect(() => {
     const _init = async () => {
       setLoading(true)
+      // setCareSites(data)
       await submitGetCareSites().then((careSitesResp) => {
         setCareSites(careSitesResp ?? undefined)
       })
@@ -75,9 +75,9 @@ const CareSitesTree: React.FC = () => {
         <MaterialTable
           columns={columns}
           data={Object.values(careSites || []).map(careSiteToRow)}
-          // parentChildData={({ parentId }, rows) =>
-          //   rows.find(({ careSiteId }) => careSiteId === parentId)
-          // }
+          parentChildData={({ parentId }, rows) =>
+            rows.find(({ careSiteId }) => careSiteId === parentId)
+          }
           options={{
             paging: false,
             filtering: false,
