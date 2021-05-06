@@ -58,7 +58,65 @@ export type BackendCareSite = {
   care_site_type_source_value?: string
 }
 
+// Profile
+
+export type Profile = {
+  birth_date: string | null
+  care_site_id: number | null
+  cdm_source: string | null
+  creation_datetime: string
+  dea: string | null
+  delete_datetime: string
+  email: string | null
+  entry_created_by: number
+  entry_deleted_by: number
+  firstname: string | null
+  gender_concept_id: number | null
+  gender_source_concept_id: number | null
+  gender_source_value: number | null
+  insert_datetime: string
+  invalid_reason: string
+  is_active: boolean | null
+  key: string | null
+  lastname: string | null
+  manual_is_active: boolean | null
+  manual_valid_end_datetime: string | null
+  manual_valid_start_datetime: string | null
+  modified_datetime: string
+  npi: string | null
+  provider: any
+  provider_history_id: number
+  provider_id: number
+  provider_name: string | null
+  provider_source_value: string | null
+  specialty_concept_id: number | null
+  specialty_source_concept_id: number | null
+  specialty_source_value: string | null
+  update_datetime: string 
+  valid_end_datetime: string | null
+  valid_start_datetime: string | null
+  year_of_birth: number | null
+}
+
 // Access
+
+export type Access = {
+  id: string
+  care_site_history_id: number
+  is_valid: boolean
+  provider_history: any
+  care_site: any
+  role: any
+  entry_created_by: number
+  created_by: string
+  start_datetime: string
+  end_datetime: string
+  actual_start_datetime: string
+  actual_end_datetime: string
+  care_site_id: number
+  entity_id: number
+  role_id: number
+}
 
 export type AccessData = {
   entity_id: number

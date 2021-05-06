@@ -37,6 +37,19 @@ export const submitCreateProfile = async (firstName: string, lastName: string,
     return success
 }
 
+export const submitGetAccesses = async (providerHistoryId: number) => {
+    const accessesResp = await api.get(`/accesses/?provider_history_id=${providerHistoryId}&ordering=start_datetime`)
+
+    if (accessesResp.status !== 200){
+        return undefined
+    }
+
+    return {
+        accesses: accessesResp.data.results ?? undefined,
+        total: accessesResp.data.count ?? 0
+    }
+}
+
 export const submitCreateAccess = async (accessData: AccessData) => {
     let success
 

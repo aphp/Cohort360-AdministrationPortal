@@ -22,27 +22,38 @@ import CloseIcon from "@material-ui/icons/Close"
 
 import useStyles from "./styles"
 import AddAccessForm from "../providers/AddAccessForm/AddAccessForm"
+import { submitGetAccesses } from "services/Console-Admin/providersHistoryService"
+import { Access, Profile } from "types"
 
 type RightsTableProps = {
-  right: any
+  right: Profile
 }
 
 const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
   const classes = useStyles()
 
   const [open, setOpen] = useState(false)
-  const [profiles, setProfiles] = useState(undefined)
+  const [accesses, setAccesses] = useState<Access[] | undefined>()
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
-  const [orderBy, setOrderBy] = useState<string>("lastName")
+  const [orderBy, setOrderBy] = useState<string>("role")
   const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc")
 
-  const rowsPerPage = 50
+  const rowsPerPage = 5
 
   console.log(`right`, right)
+  console.log(`accesses`, accesses)
 
-  useEffect(() => {}, []) // eslint-disable-line
+  useEffect(() => {
+    setLoading(true)
+    submitGetAccesses(right.provider_history_id)
+      .then((res) => {
+        setAccesses(res?.accesses)
+        setTotal(res?.total)
+      })
+      .finally(() => setLoading(false))
+  }, []) // eslint-disable-line
 
   const createSortHandler = (property: any) => (
     event: React.MouseEvent<unknown>
@@ -61,15 +72,15 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
     },
     {
       label: "Droit",
-      code: "right",
+      code: "role",
     },
     {
-      label: "Accès",
-      code: "access",
+      label: "Date de début",
+      code: "startDate",
     },
     {
-      label: "Date",
-      code: "date",
+      label: "Date de fin",
+      code: "endDate",
     },
     {
       label: "Actif",
@@ -81,7 +92,6 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
     <Grid container justify="flex-end">
       <Grid container justify="space-between" alignItems="center">
         <Typography align="left" variant="h2" className={classes.title}>
-          {/* @ts-ignore */}
           Type de droit : {right.cdm_source}
         </Typography>
         {right.cdm_source === "MANUAL" && (
@@ -128,8 +138,31 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
                   </div>
                 </TableCell>
               </TableRow>
-            ) : // @ts-ignore
-            !right ? (
+            ) : accesses && accesses.length > 0 ? (
+              accesses.map((access: Access) => {
+                return (
+                  <TableRow key={access.id} className={classes.tableBodyRows}>
+                    <TableCell align="center">
+                      {access.care_site.care_site_name}
+                    </TableCell>
+                    <TableCell align="center">{access.role.name}</TableCell>
+                    <TableCell align="center">
+                      {new Date(access.start_datetime).toLocaleDateString(
+                        "fr-FR"
+                      )}
+                    </TableCell>
+                    <TableCell align="center">
+                      {new Date(access.end_datetime).toLocaleDateString(
+                        "fr-FR"
+                      )}
+                    </TableCell>
+                    <TableCell align="center">
+                      {access.is_valid ? <CheckIcon /> : <CloseIcon />}
+                    </TableCell>
+                  </TableRow>
+                )
+              })
+            ) : (
               <TableRow>
                 <TableCell colSpan={7}>
                   <Typography className={classes.loadingSpinnerContainer}>
@@ -137,47 +170,6 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
                   </Typography>
                 </TableCell>
               </TableRow>
-            ) : (
-              <TableRow>
-                <TableCell align="center">{right.perimeter}</TableCell>
-                <TableCell align="center">{right.right}</TableCell>
-                <TableCell align="center">{right.access}</TableCell>
-                <TableCell align="center">
-                  {new Date(right.creation_datetime).toLocaleDateString(
-                    "fr-FR"
-                  )}{" "}
-                  {new Date(right.creation_datetime).toLocaleTimeString(
-                    "fr-FR",
-                    {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    }
-                  )}
-                </TableCell>
-                <TableCell align="center">
-                  {right.is_active ? <CheckIcon /> : <CloseIcon />}
-                </TableCell>
-              </TableRow>
-              // @ts-ignore
-              // right.map((profile: any) => {
-              //   return (
-              //     profile && (
-              //       <TableRow
-              //         key={profile.id}
-              //         className={classes.tableBodyRows}
-              //         hover
-              //         onClick={() => window.open(`/profile/${profile.id}`)}
-              //       >
-              //         <TableCell align="center">
-              //           {profile.providerSourceValue}
-              //         </TableCell>
-              //         <TableCell align="center">{profile.lastName}</TableCell>
-              //         <TableCell align="center">{profile.firstName}</TableCell>
-              //         <TableCell align="center">{profile.email}</TableCell>
-              //       </TableRow>
-              //     )
-              //   )
-              // })
             )}
           </TableBody>
         </Table>
