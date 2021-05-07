@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
       height: "80%",
       width: "80%",
       margin: "auto",
-      boxShadow: "3px 3px 21px 0px rgba(0,0,0,0.75)",
+      boxShadow: theme.shadows[8],
       borderRadius: 6,
     },
     rightPanel: {
