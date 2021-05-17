@@ -145,7 +145,7 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
                     <TableCell align="center">
                       {access.care_site.care_site_name}
                     </TableCell>
-                    <TableCell align="center">{access.role.name}</TableCell>
+                    <TableCell align="center">{access?.role?.name}</TableCell>
                     <TableCell align="center">
                       {new Date(access.start_datetime).toLocaleDateString(
                         "fr-FR"

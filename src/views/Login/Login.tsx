@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useHistory } from "react-router-dom"
 import { useDispatch } from "react-redux"
-import { AxiosError } from "axios"
+// import { AxiosError } from "axios"
 import {
   Button,
   Dialog,
@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core"
 
 import { buildPartialUser } from "services/Console-Admin/userService"
-import { authenticate, getCsrfToken } from "services/authentication"
+import { authenticate, /**getCsrfToken**/ } from "services/authentication"
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants"
 import { login as loginAction } from "state/me"
 import logo from "assets/images/logo1.png"

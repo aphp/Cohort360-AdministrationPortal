@@ -27,3 +27,13 @@ export const authenticate = async (username: string, password: string): Promise<
         data: formData
     })
 }
+
+export const logout = () => {
+
+    const baseURL = BACK_API_URL
+
+    return axios({
+        method: 'GET',
+        url: `${baseURL}/accounts/logout/`
+    })
+}

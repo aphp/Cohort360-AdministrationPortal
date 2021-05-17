@@ -14,6 +14,7 @@ import {
 import { ReactComponent as LogoutIcon } from "assets/icones/power-off.svg"
 import consoleLogo from "assets/images/console-white.png"
 import { logout as logoutAction } from "state/me"
+import {logout as logoutRoute} from 'services/authentication'
 import { useAppSelector } from "state"
 import useStyles from "./styles"
 
@@ -94,6 +95,7 @@ const TopBar: React.FC = (props) => {
             <IconButton
               onClick={() => {
                 localStorage.clear()
+                logoutRoute()
                 dispatch<any>(logoutAction())
                 history.push("/")
               }}
