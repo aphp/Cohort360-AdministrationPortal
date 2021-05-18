@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "services/api";
 import { BACK_API_URL } from "../../constants";
 
 export const getProviders = async (
@@ -12,7 +12,7 @@ export const getProviders = async (
 
   let url = `${baseURL}/providers/?page=${page}&ordering=${orderDirection === 'desc' ? '-' : ''}${orderBy}${searchFilter}`;
 
-  const providersResp = await axios.get(url);
+  const providersResp = await api.get(url);
 
   if (providersResp.status !== 200){
     return {

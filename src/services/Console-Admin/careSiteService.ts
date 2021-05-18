@@ -1,8 +1,8 @@
-import axios from "../api"
+import api from "../api"
 import { BackendCareSite } from "types"
 
 export const getCareSites = async (): Promise<BackendCareSite[] | undefined> => {
-    const caresiteResp = await axios.get(`/care-sites/limited/`)
+    const caresiteResp = await api.get(`/care-sites/limited/`)
     
     if (caresiteResp.status !== 200) {
         return undefined
@@ -13,7 +13,7 @@ export const getCareSites = async (): Promise<BackendCareSite[] | undefined> => 
 }
 
 export const getManageableCareSites = async (): Promise<BackendCareSite[] | undefined> => {
-    const manageableCareSitesResp = await axios.get(`/care-sites/manageable/`)
+    const manageableCareSitesResp = await api.get(`/care-sites/manageable/`)
 
     if (manageableCareSitesResp.status !== 200){
         return undefined
