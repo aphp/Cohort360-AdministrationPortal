@@ -57,12 +57,6 @@ const CareSitesTree: React.FC = () => {
       field: "name",
       emptyValue: "-",
     },
-    {
-      title: "Sigle",
-      field: "shortName",
-      emptyValue: "-",
-      filtering: false,
-    },
   ]
 
   return (

@@ -147,9 +147,11 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
                     </TableCell>
                     <TableCell align="center">{access?.role?.name}</TableCell>
                     <TableCell align="center">
-                      {new Date(access.start_datetime).toLocaleDateString(
-                        "fr-FR"
-                      )}
+                      {access !== null
+                        ? new Date(access.start_datetime).toLocaleDateString(
+                            "fr-FR"
+                          )
+                        : "-"}
                     </TableCell>
                     <TableCell align="center">
                       {new Date(access.end_datetime).toLocaleDateString(
