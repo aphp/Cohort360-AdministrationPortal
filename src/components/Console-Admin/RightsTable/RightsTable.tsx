@@ -11,7 +11,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TableSortLabel,
   Typography,
 } from "@material-ui/core"
 import Pagination from "@material-ui/lab/Pagination"
@@ -37,8 +36,6 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
-  const [orderBy, setOrderBy] = useState<string>("role")
-  const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc")
 
   const rowsPerPage = 100
 
@@ -55,35 +52,21 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
       .finally(() => setLoading(false))
   }, []) // eslint-disable-line
 
-  const createSortHandler =
-    (property: any) => (event: React.MouseEvent<unknown>) => {
-      const isAsc: boolean = orderBy === property && orderDirection === "asc"
-      const _orderDirection = isAsc ? "desc" : "asc"
-
-      setOrderDirection(_orderDirection)
-      setOrderBy(property)
-    }
-
   const columns = [
     {
       label: "Périmètre",
-      code: "caresite",
     },
     {
       label: "Droit",
-      code: "role",
     },
     {
       label: "Date de début",
-      code: "startDate",
     },
     {
       label: "Date de fin",
-      code: "endDate",
     },
     {
       label: "Actif",
-      code: "isActive",
     },
   ]
 
@@ -110,20 +93,8 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
           <TableHead>
             <TableRow className={classes.tableHead}>
               {columns.map((column) => (
-                <TableCell
-                  sortDirection={
-                    orderBy === column.code ? orderDirection : false
-                  }
-                  align="center"
-                  className={classes.tableHeadCell}
-                >
-                  <TableSortLabel
-                    active={orderBy === column.code}
-                    direction={orderBy === column.code ? orderDirection : "asc"}
-                    onClick={createSortHandler(column.code)}
-                  >
-                    {column.label}
-                  </TableSortLabel>
+                <TableCell align="center" className={classes.tableHeadCell}>
+                  {column.label}
                 </TableCell>
               ))}
             </TableRow>
