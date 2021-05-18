@@ -1,5 +1,4 @@
 import api from "services/api";
-import { BACK_API_URL } from "../../constants";
 
 export const getProviders = async (
   orderBy: string,
@@ -7,12 +6,9 @@ export const getProviders = async (
   page?: number,
   searchInput?: string
 ) => {
-  const baseURL = BACK_API_URL;
   const searchFilter = searchInput ? `&search=${searchInput}` : ''
 
-  let url = `${baseURL}/providers/?page=${page}&ordering=${orderDirection === 'desc' ? '-' : ''}${orderBy}${searchFilter}`;
-
-  const providersResp = await api.get(url);
+  const providersResp = await api.get(`/providers/?page=${page}&ordering=${orderDirection === 'desc' ? '-' : ''}${orderBy}${searchFilter}`);
 
   if (providersResp.status !== 200){
     return {
