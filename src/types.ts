@@ -98,6 +98,33 @@ export type Profile = {
   year_of_birth: number | null
 }
 
+// Roles
+
+export type Roles = {
+  role_id: number
+  insert_datetime: string | null
+  update_datetime: string | null
+  delete_datetime: string | null
+  name: string
+  right_edit_roles: boolean | null
+  right_add_users: boolean | null
+  right_edit_users: boolean | null
+  right_read_users: boolean | null
+  right_manage_admin_accesses_same_level: boolean | null
+  right_read_admin_accesses_same_level: boolean | null
+  right_manage_admin_accesses_inferior_levels: boolean | null
+  right_read_admin_accesses_inferior_levels: boolean | null
+  right_manage_data_accesses_same_level: boolean | null
+  right_read_data_accesses_same_level: boolean | null
+  right_manage_data_accesses_inferior_levels: boolean | null
+  right_read_data_accesses_inferior_levels: boolean | null
+  right_read_patient_nominative: boolean | null
+  right_read_patient_pseudo_anonymised: boolean | null
+  right_export_jupyter_patient_nominative: boolean | null
+  right_export_jupyter_patient_pseudo_anonymised: boolean | null
+  invalid_reason: string | null
+}
+
 // Access
 
 export type Access = {
