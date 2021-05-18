@@ -25,7 +25,7 @@ import SearchBar from "../../../SearchBar/SearchBar"
 import AddUserDialog from "../AddProviderForm/AddProviderForm"
 
 import useStyles from "./styles"
-import { submitGetProviders } from "services/Console-Admin/providersService"
+import { getProviders } from "services/Console-Admin/providersService"
 
 const ProvidersTable = () => {
   const classes = useStyles()
@@ -100,7 +100,7 @@ const ProvidersTable = () => {
       })
     }
     setLoading(true)
-    submitGetProviders(orderBy, orderDirection, page, searchInput)
+    getProviders(orderBy, orderDirection, page, searchInput)
       .then((resp) => {
         console.log(`resp`, resp)
         if (resp) {
@@ -114,15 +114,14 @@ const ProvidersTable = () => {
       })
   }
 
-  const createSortHandler = (property: any) => (
-    event: React.MouseEvent<unknown>
-  ) => {
-    const isAsc: boolean = orderBy === property && orderDirection === "asc"
-    const _orderDirection = isAsc ? "desc" : "asc"
+  const createSortHandler =
+    (property: any) => (event: React.MouseEvent<unknown>) => {
+      const isAsc: boolean = orderBy === property && orderDirection === "asc"
+      const _orderDirection = isAsc ? "desc" : "asc"
 
-    setOrderDirection(_orderDirection)
-    setOrderBy(property)
-  }
+      setOrderDirection(_orderDirection)
+      setOrderBy(property)
+    }
 
   return (
     <Grid container justify="flex-end">

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import { CircularProgress, Grid, Typography } from "@material-ui/core"
 import { useParams } from "react-router"
 
-import { submitGetProfile } from "services/Console-Admin/providersHistoryService"
+import { getProfile } from "services/Console-Admin/providersHistoryService"
 import RightsTable from "components/Console-Admin/RightsTable/RightsTable"
 import useStyles from "./styles"
 
@@ -16,7 +16,7 @@ const ProviderHistory: React.FC = () => {
 
   useEffect(() => {
     setLoading(true)
-    submitGetProfile(providerId)
+    getProfile(providerId)
       .then((userResp) => {
         setUser(userResp)
         console.log(`userResp`, userResp)
@@ -41,9 +41,13 @@ const ProviderHistory: React.FC = () => {
                   {user[0].provider_name} - id APH :{" "}
                   {user[0].provider_source_value}
                 </Typography>
-                {user.map((userRight: any) => ( // revoir le type de userRight
-                  <RightsTable right={userRight} />
-                ))}
+                {user.map(
+                  (
+                    userRight: any // revoir le type de userRight
+                  ) => (
+                    <RightsTable right={userRight} />
+                  )
+                )}
               </>
             )}
           </Grid>

@@ -22,7 +22,7 @@ import CloseIcon from "@material-ui/icons/Close"
 
 import useStyles from "./styles"
 import AddAccessForm from "../providers/AddAccessForm/AddAccessForm"
-import { submitGetAccesses } from "services/Console-Admin/providersHistoryService"
+import { getAccesses } from "services/Console-Admin/providersHistoryService"
 import { Access, Profile } from "types"
 
 type RightsTableProps = {
@@ -40,14 +40,14 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
   const [orderBy, setOrderBy] = useState<string>("role")
   const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc")
 
-  const rowsPerPage = 5
+  const rowsPerPage = 100
 
   console.log(`right`, right)
   console.log(`accesses`, accesses)
 
   useEffect(() => {
     setLoading(true)
-    submitGetAccesses(right.provider_history_id)
+    getAccesses(right.provider_history_id)
       .then((res) => {
         setAccesses(res?.accesses)
         setTotal(res?.total)
@@ -55,15 +55,14 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
       .finally(() => setLoading(false))
   }, []) // eslint-disable-line
 
-  const createSortHandler = (property: any) => (
-    event: React.MouseEvent<unknown>
-  ) => {
-    const isAsc: boolean = orderBy === property && orderDirection === "asc"
-    const _orderDirection = isAsc ? "desc" : "asc"
+  const createSortHandler =
+    (property: any) => (event: React.MouseEvent<unknown>) => {
+      const isAsc: boolean = orderBy === property && orderDirection === "asc"
+      const _orderDirection = isAsc ? "desc" : "asc"
 
-    setOrderDirection(_orderDirection)
-    setOrderBy(property)
-  }
+      setOrderDirection(_orderDirection)
+      setOrderBy(property)
+    }
 
   const columns = [
     {

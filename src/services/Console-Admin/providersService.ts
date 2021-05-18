@@ -1,7 +1,7 @@
 import axios from "axios";
 import { BACK_API_URL } from "../../constants";
 
-export const submitGetProviders = async (
+export const getProviders = async (
   orderBy: string,
   orderDirection: string,
   page?: number,

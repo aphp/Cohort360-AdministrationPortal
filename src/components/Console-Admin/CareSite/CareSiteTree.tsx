@@ -4,7 +4,7 @@ import { makeStyles } from "@material-ui/core/styles"
 import MaterialTable from "material-table"
 import Grid from "@material-ui/core/Grid"
 import * as _ from "lodash"
-import { submitGetCareSites } from "services/Console-Admin/careSiteService"
+import { getCareSites } from "services/Console-Admin/careSiteService"
 import { BackendCareSite } from "types"
 
 const useStyles = makeStyles((theme) => ({
@@ -35,7 +35,7 @@ const CareSitesTree: React.FC = () => {
     const _init = async () => {
       setLoading(true)
       // setCareSites(data)
-      await submitGetCareSites().then((careSitesResp) => {
+      await getCareSites().then((careSitesResp) => {
         setCareSites(careSitesResp ?? undefined)
       })
       setLoading(false)
