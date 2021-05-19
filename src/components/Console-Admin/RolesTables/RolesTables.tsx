@@ -92,7 +92,7 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
     <Grid container justify="flex-end">
       <Grid container justify="space-between" alignItems="center">
         <Typography align="left" variant="h2" className={classes.title}>
-          Type de droit : {roles.name}
+          Type de Rôle : {roles.name}
         </Typography>
         {roles.name === "ADMIN" && (
           <Button
