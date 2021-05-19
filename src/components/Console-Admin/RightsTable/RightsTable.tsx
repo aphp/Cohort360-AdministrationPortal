@@ -16,8 +16,7 @@ import {
 import Pagination from "@material-ui/lab/Pagination"
 
 import AddIcon from "@material-ui/icons/Add"
-import CheckIcon from "@material-ui/icons/Check"
-import CloseIcon from "@material-ui/icons/Close"
+import FiberManualRecordRoundedIcon from "@material-ui/icons/FiberManualRecordRounded"
 
 import useStyles from "./styles"
 import AddAccessForm from "../providers/AddAccessForm/AddAccessForm"
@@ -93,7 +92,10 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
           <TableHead>
             <TableRow className={classes.tableHead}>
               {columns.map((column) => (
-                <TableCell align="center" className={classes.tableHeadCell}>
+                <TableCell
+                  align={column.label === "Périmètre" ? "left" : "center"}
+                  className={classes.tableHeadCell}
+                >
                   {column.label}
                 </TableCell>
               ))}
@@ -112,7 +114,7 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
               accesses.map((access: Access) => {
                 return (
                   <TableRow key={access.id} className={classes.tableBodyRows}>
-                    <TableCell align="center">
+                    <TableCell align="left">
                       {access.care_site.care_site_name}
                     </TableCell>
                     <TableCell align="center">{access?.role?.name}</TableCell>
@@ -131,7 +133,12 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
                         : "-"}
                     </TableCell>
                     <TableCell align="center">
-                      {access.is_valid ? <CheckIcon /> : <CloseIcon />}
+                      <FiberManualRecordRoundedIcon
+                        fontSize="small"
+                        style={{
+                          color: access.is_valid ? "#BDEA88" : "#ED6D91",
+                        }}
+                      />
                     </TableCell>
                   </TableRow>
                 )
