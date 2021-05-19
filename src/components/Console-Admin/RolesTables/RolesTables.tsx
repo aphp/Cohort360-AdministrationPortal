@@ -23,13 +23,13 @@ import CloseIcon from "@material-ui/icons/Close"
 import useStyles from "./styles"
 import AddAccessForm from "../providers/AddAccessForm/AddAccessForm"
 // import { submitGetAccesses } from "services/Console-Admin/providersHistoryService"
-import { Access, Profile } from "types"
+import { Access, Roles } from "types"
 
 type RolesTableProps = {
-  right: Profile
+  roles: Roles
 }
 
-const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
+const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
   const classes = useStyles()
 
   const [open, setOpen] = useState(false)
@@ -42,7 +42,7 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
 
   const rowsPerPage = 5
 
-  console.log(`right`, right)
+  console.log(`roles`, roles)
   console.log(`accesses`, accesses)
 
   // useEffect(() => {
@@ -92,9 +92,9 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
     <Grid container justify="flex-end">
       <Grid container justify="space-between" alignItems="center">
         <Typography align="left" variant="h2" className={classes.title}>
-          Type de droit : {right.cdm_source}
+          Type de droit : {roles.name}
         </Typography>
-        {right.cdm_source === "MANUAL" && (
+        {roles.name === "ADMIN" && (
           <Button
             variant="contained"
             disableElevation
@@ -182,11 +182,11 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
         page={page}
       />
 
-      <AddAccessForm
+      {/* <AddAccessForm
         open={open}
         onClose={() => setOpen(false)}
         entityId={right.provider_history_id}
-      />
+      /> */}
     </Grid>
   )
 }
