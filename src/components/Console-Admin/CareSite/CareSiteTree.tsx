@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react"
 import Grid from "@material-ui/core/Grid"
 import CircularProgress from "@material-ui/core/CircularProgress"
 import IconButton from "@material-ui/core/IconButton"
-import Checkbox from "@material-ui/core/Checkbox"
+import Radio from "@material-ui/core/Radio"
 import TableRow from "@material-ui/core/TableRow"
 import TableCell from "@material-ui/core/TableCell"
 import Typography from "@material-ui/core/Typography"
@@ -15,14 +15,11 @@ import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown"
 import EnhancedTable from "../EnhancedTable"
 
 import {
-  getScopePerimeters,
-  getScopeSubItems,
-} from "../../services/scopeService"
+  getScopeCareSites,
+  getCareSitesChildren,
+} from "services/Console-Admin/careSiteService"
 import { ScopeTreeRow } from "types"
 import { useAppSelector } from "state"
-
-import displayDigit from "utils/displayDigit"
-import { getSelectedScopes } from "utils/scopeTree"
 
 import useStyles from "./styles"
 
@@ -46,7 +43,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
 
   const fetchScopeTree = async () => {
     if (practitioner) {
-      const rootRows = await getScopePerimeters(practitioner.id)
+      const rootRows = await getScopeCareSites()
       setRootRows(rootRows)
     }
   }
@@ -74,7 +71,9 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
     const index = _openPopulation.indexOf(rowId)
 
     if (index !== -1) {
-      _openPopulation = _openPopulation.filter((id) => id !== rowId)
+      _openPopulation = _openPopulation.filter(
+        (care_site_id) => care_site_id !== rowId
+      )
       onChangeOpenPopulations(_openPopulation)
     } else {
       _openPopulation = [..._openPopulation, rowId]
@@ -82,12 +81,12 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
 
       const replaceSubItems = async (items: any) => {
         for (const item of items) {
-          if (item.id === rowId) {
+          if (item.care_site_id === rowId) {
             const foundItem = item.subItems
-              ? item.subItems.find((i: any) => i.id === "loading")
+              ? item.subItems.find((i: any) => i.care_site_id === "loading")
               : true
             if (foundItem) {
-              item.subItems = await getScopeSubItems(item)
+              item.subItems = await getCareSitesChildren(item)
               const isSelected = savedSelectedItems.indexOf(item)
               if (
                 isSelected !== -1 &&
@@ -95,7 +94,6 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                 item.subItems.length > 0
               ) {
                 savedSelectedItems = [...savedSelectedItems, ...item.subItems]
-                onChangeSelectedItem(savedSelectedItems)
               }
             }
           } else if (item.subItems && item.subItems.length !== 0) {
@@ -115,67 +113,10 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
    *
    */
   const _clickToSelect = (row: ScopeTreeRow) => {
-    const savedSelectedItems: ScopeTreeRow[] = getSelectedScopes(
-      row,
-      selectedItems,
-      rootRows
-    )
+    const savedSelectedItems: ScopeTreeRow[] = [row]
 
-    onChangeSelectedItem(savedSelectedItems)
+    onChangeSelectedItem([row])
     return savedSelectedItems
-  }
-
-  const _clickToSelectAll = () => {
-    let results: any[] = []
-    if (
-      rootRows.filter(
-        (row) => selectedItems.find(({ id }) => id === row.id) !== undefined
-      ).length === rootRows.length
-    ) {
-      results = []
-    } else {
-      for (const rootRow of rootRows) {
-        const rowsAndChildren = _clickToSelect(rootRow)
-        results = [...results, ...rowsAndChildren]
-      }
-    }
-    onChangeSelectedItem(results)
-  }
-
-  const _checkIfIndeterminated: (_row: any) => boolean | undefined = (_row) => {
-    // Si que un loading => false
-    if (
-      _row.subItems &&
-      _row.subItems.length > 0 &&
-      _row.subItems[0].id === "loading"
-    ) {
-      return false
-    }
-    const checkChild: (item: any) => boolean = (item) => {
-      const numberOfSubItemsSelected = item.subItems.filter((subItem: any) =>
-        selectedItems.find(({ id }) => id === subItem.id)
-      )?.length
-
-      if (
-        numberOfSubItemsSelected &&
-        numberOfSubItemsSelected !== item.subItems.length
-      ) {
-        // Si un des sub elem qui est check => true
-        return true
-      } else if (item.subItems.length >= numberOfSubItemsSelected) {
-        // Si un des sub-sub (ou sub-sub-sub ...) elem qui est check => true
-        let isCheck = false
-        for (const child of item.subItems) {
-          if (isCheck) continue
-          isCheck = !!checkChild(child)
-        }
-        return isCheck
-      } else {
-        // Sinon => false
-        return false
-      }
-    }
-    return checkChild(_row)
   }
 
   const headCells = [
@@ -191,20 +132,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
       align: "left",
       disablePadding: true,
       disableOrderBy: true,
-      label: (
-        <div style={{ padding: "0 0 0 4px" }}>
-          <Checkbox
-            color="secondary"
-            checked={
-              rootRows.filter(
-                (row) =>
-                  selectedItems.find(({ id }) => id === row.id) !== undefined
-              ).length === rootRows.length
-            }
-            onClick={_clickToSelectAll}
-          />
-        </div>
-      ),
+      label: "",
     },
     {
       id: "name",
@@ -232,13 +160,9 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
             if (!row) return <></>
             const labelId = `enhanced-table-checkbox-${index}`
 
-            const _displayLine = (
-              _row: any,
-              level: number,
-              parentAccess: string
-            ) => (
+            const _displayLine = (_row: any, level: number) => (
               <>
-                {_row.id === "loading" ? (
+                {_row.care_site_id === "loading" ? (
                   <TableRow hover key={Math.random()}>
                     <TableCell colSpan={5}>
                       <Skeleton animation="wave" />
@@ -247,7 +171,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                 ) : (
                   <TableRow
                     hover
-                    key={_row.id}
+                    key={_row.care_site_id}
                     classes={{
                       root:
                         level % 2 === 0 ? classes.mainRow : classes.secondRow,
@@ -256,14 +180,16 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                     <TableCell>
                       {_row.subItems && _row.subItems.length > 0 && (
                         <IconButton
-                          onClick={() => _clickToDeploy(_row.id)}
+                          onClick={() => _clickToDeploy(_row.care_site_id)}
                           style={{
                             marginLeft: level * 35,
                             padding: 0,
                             marginRight: -30,
                           }}
                         >
-                          {openPopulation.find((id) => _row.id === id) ? (
+                          {openPopulation.find(
+                            (care_site_id) => _row.care_site_id === care_site_id
+                          ) ? (
                             <KeyboardArrowDownIcon />
                           ) : (
                             <KeyboardArrowRightIcon />
@@ -273,7 +199,20 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                     </TableCell>
 
                     <TableCell align="center" padding="checkbox">
-                      <Checkbox
+                      <Radio
+                        color="secondary"
+                        checked={
+                          selectedItems.some(
+                            ({ care_site_id }) =>
+                              care_site_id === _row.care_site_id
+                          )
+                            ? true
+                            : false
+                        }
+                        onChange={() => _clickToSelect(_row)}
+                        inputProps={{ "aria-labelledby": labelId }}
+                      />
+                      {/* <Checkbox
                         color="secondary"
                         onClick={() => _clickToSelect(_row)}
                         indeterminate={_checkIfIndeterminated(_row)}
@@ -283,37 +222,27 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                             : false
                         }
                         inputProps={{ "aria-labelledby": labelId }}
-                      />
+                      /> */}
                     </TableCell>
 
                     <TableCell>
                       <Typography>{_row.name}</Typography>
-                    </TableCell>
-
-                    <TableCell align="center">
-                      <Typography>{displayDigit(_row.quantity)}</Typography>
-                    </TableCell>
-
-                    <TableCell align="center">
-                      <Typography>{_row.access ?? parentAccess}</Typography>
                     </TableCell>
                   </TableRow>
                 )}
               </>
             )
 
-            const _displayChildren = (
-              _row: any,
-              level: number,
-              parentAccess: string
-            ) => {
+            const _displayChildren = (_row: any, level: number) => {
               return (
                 <React.Fragment key={Math.random()}>
-                  {_displayLine(_row, level, parentAccess)}
-                  {openPopulation.find((id) => _row.id === id) &&
+                  {_displayLine(_row, level)}
+                  {openPopulation.find(
+                    (care_site_id) => _row.care_site_id === care_site_id
+                  ) &&
                     _row.subItems &&
                     _row.subItems.map((subItem: any) =>
-                      _displayChildren(subItem, level + 1, parentAccess)
+                      _displayChildren(subItem, level + 1)
                     )}
                 </React.Fragment>
               )
@@ -321,11 +250,13 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
 
             return (
               <React.Fragment key={Math.random()}>
-                {_displayLine(row, 0, row.access)}
-                {openPopulation.find((id) => row.id === id) &&
+                {_displayLine(row, 0)}
+                {openPopulation.find(
+                  (care_site_id) => row.care_site_id === care_site_id
+                ) &&
                   row.subItems &&
                   row.subItems.map((subItem: any) =>
-                    _displayChildren(subItem, 1, row.access)
+                    _displayChildren(subItem, 1)
                   )}
               </React.Fragment>
             )

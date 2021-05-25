@@ -1,15 +1,79 @@
 import api from "../api"
-import { BackendCareSite } from "types"
+import { BackendCareSite, ScopeTreeRow } from "types"
 
-export const getCareSites = async (): Promise<BackendCareSite[] | undefined> => {
-    const caresiteResp = await api.get(`/care-sites/limited/`)
-    
-    if (caresiteResp.status !== 200) {
-        return undefined
+const loadingItem: ScopeTreeRow = { care_site_id: 'loading', name: 'loading', subItems: [] }
+
+export const getCareSites = async () => {
+    const caresiteResp = await api.get(`/care-sites/?care_site_type_source_value=AP-HP`)
+
+    if (!caresiteResp) return undefined
+
+    const {data} = caresiteResp
+    if (!data) return [{ id: 'loading'}]
+
+    const careSitesData = data.results 
+    // a proteger
+
+    return careSitesData && careSitesData.length > 0 ? careSitesData : []
+}
+
+export const getScopeCareSites = async () => {
+    const careSitesResult = (await getCareSites()) ?? []
+
+    let scopeRows: ScopeTreeRow[] = []
+
+    for (const careSite of careSitesResult) {
+        const scopeRow: ScopeTreeRow = careSite as ScopeTreeRow
+        scopeRow.name = careSite.care_site_name
+        scopeRow.subItems = await getCareSitesChildren(careSite as ScopeTreeRow)
+        scopeRows = [...scopeRows, scopeRow]        
     }
 
-    return caresiteResp.data.results ?? undefined
+    // Sort by name
+    scopeRows = scopeRows.sort((a: ScopeTreeRow, b: ScopeTreeRow) => {
+        if (a.name > b.name) {
+        return 1
+        } else if (a.name < b.name) {
+        return -1
+        }
+        return 0
+    })
 
+    return scopeRows
+}
+
+export const getCareSitesChildren = async(careSite : ScopeTreeRow | null): Promise<ScopeTreeRow[]> => {
+    if (!careSite) return []
+    const children = await api.get(`/care-sites/${careSite.care_site_id}/children/`)
+    if (!children) return []
+
+
+    const childrenData:BackendCareSite[] = (children && children.data && children.status === 200) ? children.data.results : [] 
+
+    console.log(`childrenData`, childrenData)
+
+    let _childrenData = childrenData ? 
+    //@ts-ignore
+    childrenData?.map<ScopeTreeRow>((childrenData) => { 
+        return({
+        ...childrenData,
+        id: childrenData.care_site_id ?? 0,
+        name: childrenData.care_site_name ?? '',
+        subItems: [loadingItem]
+    })}) : []
+
+    _childrenData = _childrenData.filter(child => child.care_site_id !== careSite.care_site_id)
+
+    _childrenData = _childrenData.sort((a: ScopeTreeRow, b: ScopeTreeRow) => {
+        if (a.name > b.name) {
+          return 1
+        } else if (a.name < b.name) {
+          return -1
+        }
+        return 0
+      })
+
+    return _childrenData
 }
 
 export const getManageableCareSites = async (): Promise<BackendCareSite[] | undefined> => {
