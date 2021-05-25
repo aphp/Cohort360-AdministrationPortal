@@ -1,61 +1,145 @@
 import React, { useEffect, useState } from "react"
-import CircularProgress from "@material-ui/core/CircularProgress"
-import { makeStyles } from "@material-ui/core/styles"
-import MaterialTable from "material-table"
+
 import Grid from "@material-ui/core/Grid"
-import * as _ from "lodash"
-import { getCareSites } from "services/Console-Admin/careSiteService"
-import { BackendCareSite } from "types"
+import CircularProgress from "@material-ui/core/CircularProgress"
+import IconButton from "@material-ui/core/IconButton"
+import Radio from "@material-ui/core/Radio"
+import TableRow from "@material-ui/core/TableRow"
+import TableCell from "@material-ui/core/TableCell"
+import Typography from "@material-ui/core/Typography"
+import Skeleton from "@material-ui/lab/Skeleton"
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    height: "calc(100% - 84px)",
-    display: "flex",
-    justifyContent: "space-between",
-    flexDirection: "column",
-    overflow: "auto",
-  },
-}))
+import KeyboardArrowRightIcon from "@material-ui/icons/ChevronRight"
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown"
 
-const careSiteToRow = (cs: BackendCareSite) => ({
-  id: cs?.care_site_id.toString(),
-  careSiteId: cs?.care_site_id,
-  name: cs?.care_site_name,
-  shortName: cs?.care_site_short_name,
-  parentId: cs?.parents_ids[0] === cs.care_site_id ? null : cs.parents_ids[0],
-})
+import EnhancedTable from "../EnhancedTable"
 
-const CareSitesTree: React.FC = () => {
+import {
+  getScopeCareSites,
+  getCareSitesChildren,
+} from "services/Console-Admin/careSiteService"
+import { ScopeTreeRow } from "types"
+import { useAppSelector } from "state"
+
+import useStyles from "./styles"
+
+type ScopeTreeProps = {
+  defaultSelectedItems: ScopeTreeRow[]
+  onChangeSelectedItem: (selectedItems: ScopeTreeRow[]) => void
+}
+
+const ScopeTree: React.FC<ScopeTreeProps> = ({
+  defaultSelectedItems,
+  onChangeSelectedItem,
+}) => {
   const classes = useStyles()
-  const [careSites, setCareSites] = useState<BackendCareSite[] | undefined>()
 
+  const [openPopulation, onChangeOpenPopulations] = useState<number[]>([])
+  const [rootRows, setRootRows] = useState<ScopeTreeRow[]>([])
   const [loading, setLoading] = useState(true)
+  const [selectedItems, setSelectedItem] = useState(defaultSelectedItems)
+
+  const practitioner = useAppSelector((state) => state.me)
+
+  const fetchScopeTree = async () => {
+    if (practitioner) {
+      const rootRows = await getScopeCareSites()
+      setRootRows(rootRows)
+    }
+  }
 
   useEffect(() => {
     const _init = async () => {
       setLoading(true)
-      // setCareSites(data)
-      await getCareSites().then((careSitesResp) => {
-        setCareSites(careSitesResp ?? undefined)
-      })
+      await fetchScopeTree()
       setLoading(false)
     }
 
     _init()
   }, []) // eslint-disable-line
 
-  console.log(
-    `_.values(careSites).map(careSiteToRow)`,
-    _.values(careSites).map(careSiteToRow)
-  )
+  useEffect(() => setSelectedItem(defaultSelectedItems), [defaultSelectedItems])
 
-  console.log(`careSites`, careSites)
+  /**
+   * This function is called when a user click on chevron
+   *
+   */
+  const _clickToDeploy = async (rowId: number) => {
+    let savedSelectedItems = selectedItems ? [...selectedItems] : []
+    let _openPopulation = openPopulation ? openPopulation : []
+    let _rootRows = rootRows ? [...rootRows] : []
+    const index = _openPopulation.indexOf(rowId)
 
-  const columns = [
+    if (index !== -1) {
+      _openPopulation = _openPopulation.filter(
+        (care_site_id) => care_site_id !== rowId
+      )
+      onChangeOpenPopulations(_openPopulation)
+    } else {
+      _openPopulation = [..._openPopulation, rowId]
+      onChangeOpenPopulations(_openPopulation)
+
+      const replaceSubItems = async (items: any) => {
+        for (const item of items) {
+          if (item.care_site_id === rowId) {
+            const foundItem = item.subItems
+              ? item.subItems.find((i: any) => i.care_site_id === "loading")
+              : true
+            if (foundItem) {
+              item.subItems = await getCareSitesChildren(item)
+              const isSelected = savedSelectedItems.indexOf(item)
+              if (
+                isSelected !== -1 &&
+                item.subItems &&
+                item.subItems.length > 0
+              ) {
+                savedSelectedItems = [...savedSelectedItems, ...item.subItems]
+              }
+            }
+          } else if (item.subItems && item.subItems.length !== 0) {
+            item.subItems = [...(await replaceSubItems(item.subItems))]
+          }
+        }
+        return items
+      }
+
+      _rootRows = await replaceSubItems(_rootRows)
+      setRootRows(_rootRows)
+    }
+  }
+
+  /**
+   * This function is called when a user click on checkbox
+   *
+   */
+  const _clickToSelect = (row: ScopeTreeRow) => {
+    const savedSelectedItems: ScopeTreeRow[] = [row]
+
+    onChangeSelectedItem([row])
+    return savedSelectedItems
+  }
+
+  const headCells = [
     {
-      title: "Nom",
-      field: "name",
-      emptyValue: "-",
+      id: "",
+      align: "left",
+      disablePadding: true,
+      disableOrderBy: true,
+      label: "",
+    },
+    {
+      id: "",
+      align: "left",
+      disablePadding: true,
+      disableOrderBy: true,
+      label: "",
+    },
+    {
+      id: "name",
+      align: "left",
+      disablePadding: false,
+      disableOrderBy: true,
+      label: "Nom",
     },
   ]
 
@@ -66,33 +150,121 @@ const CareSitesTree: React.FC = () => {
           <CircularProgress size={50} />
         </Grid>
       ) : (
-        <MaterialTable
-          columns={columns}
-          data={Object.values(careSites || []).map(careSiteToRow)}
-          parentChildData={({ parentId }, rows) =>
-            rows.find(({ careSiteId }) => careSiteId === parentId)
-          }
-          options={{
-            paging: false,
-            filtering: false,
-            search: false,
-            showTitle: false,
-            toolbar: false,
-            headerStyle: {
-              fontSize: 11,
-              color: "#0063AF",
-              padding: "0 20px",
-              backgroundColor: "#D1E2F4",
-              height: 42,
-              fontWeight: "bold",
-              textTransform: "uppercase",
-            },
+        <EnhancedTable
+          noCheckbox
+          noPagination
+          rows={rootRows}
+          headCells={headCells}
+        >
+          {(row: any, index: number) => {
+            if (!row) return <></>
+            const labelId = `enhanced-table-checkbox-${index}`
+
+            const _displayLine = (_row: any, level: number) => (
+              <>
+                {_row.care_site_id === "loading" ? (
+                  <TableRow hover key={Math.random()}>
+                    <TableCell colSpan={5}>
+                      <Skeleton animation="wave" />
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  <TableRow
+                    hover
+                    key={_row.care_site_id}
+                    classes={{
+                      root:
+                        level % 2 === 0 ? classes.mainRow : classes.secondRow,
+                    }}
+                  >
+                    <TableCell>
+                      {_row.subItems && _row.subItems.length > 0 && (
+                        <IconButton
+                          onClick={() => _clickToDeploy(_row.care_site_id)}
+                          style={{
+                            marginLeft: level * 35,
+                            padding: 0,
+                            marginRight: -30,
+                          }}
+                        >
+                          {openPopulation.find(
+                            (care_site_id) => _row.care_site_id === care_site_id
+                          ) ? (
+                            <KeyboardArrowDownIcon />
+                          ) : (
+                            <KeyboardArrowRightIcon />
+                          )}
+                        </IconButton>
+                      )}
+                    </TableCell>
+
+                    <TableCell align="center" padding="checkbox">
+                      <Radio
+                        color="secondary"
+                        checked={
+                          selectedItems.some(
+                            ({ care_site_id }) =>
+                              care_site_id === _row.care_site_id
+                          )
+                            ? true
+                            : false
+                        }
+                        onChange={() => _clickToSelect(_row)}
+                        inputProps={{ "aria-labelledby": labelId }}
+                      />
+                      {/* <Checkbox
+                        color="secondary"
+                        onClick={() => _clickToSelect(_row)}
+                        indeterminate={_checkIfIndeterminated(_row)}
+                        checked={
+                          selectedItems.some(({ id }) => id === _row.id)
+                            ? true
+                            : false
+                        }
+                        inputProps={{ "aria-labelledby": labelId }}
+                      /> */}
+                    </TableCell>
+
+                    <TableCell>
+                      <Typography>{_row.name}</Typography>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </>
+            )
+
+            const _displayChildren = (_row: any, level: number) => {
+              return (
+                <React.Fragment key={Math.random()}>
+                  {_displayLine(_row, level)}
+                  {openPopulation.find(
+                    (care_site_id) => _row.care_site_id === care_site_id
+                  ) &&
+                    _row.subItems &&
+                    _row.subItems.map((subItem: any) =>
+                      _displayChildren(subItem, level + 1)
+                    )}
+                </React.Fragment>
+              )
+            }
+
+            return (
+              <React.Fragment key={Math.random()}>
+                {_displayLine(row, 0)}
+                {openPopulation.find(
+                  (care_site_id) => row.care_site_id === care_site_id
+                ) &&
+                  row.subItems &&
+                  row.subItems.map((subItem: any) =>
+                    _displayChildren(subItem, 1)
+                  )}
+              </React.Fragment>
+            )
           }}
-          onRowClick={(e, row) => window.open(`/care-sites/${row?.id}`)}
-        />
+        </EnhancedTable>
       )}
     </div>
   )
 }
 
-export default CareSitesTree
+export default ScopeTree

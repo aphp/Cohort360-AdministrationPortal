@@ -58,6 +58,14 @@ export type BackendCareSite = {
   care_site_type_source_value?: string
 }
 
+export type ScopeTreeRow = {
+  id?: number | string
+  care_site_id?: string | number
+  name: string
+  parentId?: string
+  subItems: ScopeTreeRow[]
+}
+
 // Profile
 
 export type Profile = {

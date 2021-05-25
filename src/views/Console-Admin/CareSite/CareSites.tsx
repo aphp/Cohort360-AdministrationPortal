@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { Grid, Paper, Typography } from "@material-ui/core"
 
 import CareSiteTree from "components/Console-Admin/CareSite/CareSiteTree"
@@ -7,6 +7,9 @@ import useStyles from "./styles"
 
 const CareSite: React.FC = () => {
   const classes = useStyles()
+  const [selectedItems, onChangeSelectedItems] = useState([])
+
+  console.log(`selectedItems`, selectedItems)
 
   return (
     <Grid container direction="column">
@@ -16,7 +19,11 @@ const CareSite: React.FC = () => {
             Liste des périmètres
           </Typography>
           <Paper>
-            <CareSiteTree />
+            <CareSiteTree
+              defaultSelectedItems={selectedItems}
+              //@ts-ignore
+              onChangeSelectedItem={onChangeSelectedItems}
+            />
           </Paper>
         </Grid>
       </Grid>
