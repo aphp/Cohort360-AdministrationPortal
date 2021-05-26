@@ -17,7 +17,7 @@ export const getCareSites = async () => {
     return careSitesData && careSitesData.length > 0 ? careSitesData : []
 }
 
-export const getScopeCareSites = async () => {
+export const getScopeCareSites = async (getCareSites: any) => {
     const careSitesResult = (await getCareSites()) ?? []
 
     let scopeRows: ScopeTreeRow[] = []
@@ -50,8 +50,6 @@ export const getCareSitesChildren = async(careSite : ScopeTreeRow | null): Promi
 
     const childrenData:BackendCareSite[] = (children && children.data && children.status === 200) ? children.data.results : [] 
 
-    console.log(`childrenData`, childrenData)
-
     let _childrenData = childrenData ? 
     //@ts-ignore
     childrenData?.map<ScopeTreeRow>((childrenData) => { 
@@ -76,12 +74,12 @@ export const getCareSitesChildren = async(careSite : ScopeTreeRow | null): Promi
     return _childrenData
 }
 
-export const getManageableCareSites = async (): Promise<BackendCareSite[] | undefined> => {
+export const getManageableCareSites = async (): Promise<ScopeTreeRow[]> => {
     const manageableCareSitesResp = await api.get(`/care-sites/manageable/`)
 
     if (manageableCareSitesResp.status !== 200){
-        return undefined
+        return []
     }
 
-    return manageableCareSitesResp.data.results ?? undefined
+    return manageableCareSitesResp.data.results ?? []
 }

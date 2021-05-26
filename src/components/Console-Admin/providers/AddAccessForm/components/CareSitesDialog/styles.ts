@@ -2,12 +2,8 @@ import { makeStyles, createStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles(() =>
   createStyles({
-    container: {
-      height: "calc(100% - 84px)",
-      display: "flex",
-      justifyContent: "space-between",
-      flexDirection: "column",
-      overflow: "auto",
+    content: {
+      minHeight: 75
     },
     dialog: {
       height: "calc(100% - 50px)"

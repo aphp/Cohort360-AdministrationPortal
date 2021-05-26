@@ -24,11 +24,13 @@ import { useAppSelector } from "state"
 import useStyles from "./styles"
 
 type ScopeTreeProps = {
-  defaultSelectedItems: ScopeTreeRow[]
-  onChangeSelectedItem: (selectedItems: ScopeTreeRow[]) => void
+  getCareSites: () => Promise<any>
+  defaultSelectedItems: ScopeTreeRow | null
+  onChangeSelectedItem: (selectedItems: ScopeTreeRow) => void
 }
 
 const ScopeTree: React.FC<ScopeTreeProps> = ({
+  getCareSites,
   defaultSelectedItems,
   onChangeSelectedItem,
 }) => {
@@ -43,7 +45,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
 
   const fetchScopeTree = async () => {
     if (practitioner) {
-      const rootRows = await getScopeCareSites()
+      const rootRows = await getScopeCareSites(getCareSites)
       setRootRows(rootRows)
     }
   }
@@ -65,7 +67,6 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
    *
    */
   const _clickToDeploy = async (rowId: number) => {
-    let savedSelectedItems = selectedItems ? [...selectedItems] : []
     let _openPopulation = openPopulation ? openPopulation : []
     let _rootRows = rootRows ? [...rootRows] : []
     const index = _openPopulation.indexOf(rowId)
@@ -87,14 +88,6 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
               : true
             if (foundItem) {
               item.subItems = await getCareSitesChildren(item)
-              const isSelected = savedSelectedItems.indexOf(item)
-              if (
-                isSelected !== -1 &&
-                item.subItems &&
-                item.subItems.length > 0
-              ) {
-                savedSelectedItems = [...savedSelectedItems, ...item.subItems]
-              }
             }
           } else if (item.subItems && item.subItems.length !== 0) {
             item.subItems = [...(await replaceSubItems(item.subItems))]
@@ -109,14 +102,11 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
   }
 
   /**
-   * This function is called when a user click on checkbox
+   * This function is called when a user click on a radio
    *
    */
   const _clickToSelect = (row: ScopeTreeRow) => {
-    const savedSelectedItems: ScopeTreeRow[] = [row]
-
-    onChangeSelectedItem([row])
-    return savedSelectedItems
+    onChangeSelectedItem(row)
   }
 
   const headCells = [
@@ -202,31 +192,15 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                       <Radio
                         color="secondary"
                         checked={
-                          selectedItems.some(
-                            ({ care_site_id }) =>
-                              care_site_id === _row.care_site_id
-                          )
-                            ? true
-                            : false
+                          selectedItems?.care_site_id === _row.care_site_id
                         }
                         onChange={() => _clickToSelect(_row)}
                         inputProps={{ "aria-labelledby": labelId }}
                       />
-                      {/* <Checkbox
-                        color="secondary"
-                        onClick={() => _clickToSelect(_row)}
-                        indeterminate={_checkIfIndeterminated(_row)}
-                        checked={
-                          selectedItems.some(({ id }) => id === _row.id)
-                            ? true
-                            : false
-                        }
-                        inputProps={{ "aria-labelledby": labelId }}
-                      /> */}
                     </TableCell>
 
                     <TableCell>
-                      <Typography>{_row.name}</Typography>
+                      <Typography>{_row.care_site_name}</Typography>
                     </TableCell>
                   </TableRow>
                 )}

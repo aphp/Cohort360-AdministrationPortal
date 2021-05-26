@@ -63,7 +63,7 @@ export const submitCreateAccess = async (accessData: AccessData) => {
     return success
 }
 
-export const getAssignableRoles = async (careSiteId: number | null) => {
+export const getAssignableRoles = async (careSiteId?: string | number | null) => {
     if (!careSiteId) return undefined
 
     const assignableRolesResp = await api.get(`/roles/assignable/?care_site_id=${careSiteId}`)

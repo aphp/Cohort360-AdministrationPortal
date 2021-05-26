@@ -8,6 +8,7 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
+  IconButton,
   TextField,
   Typography,
 } from "@material-ui/core"
@@ -16,9 +17,15 @@ import { KeyboardDatePicker } from "@material-ui/pickers"
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date"
 
 import InfoIcon from "@material-ui/icons/Info"
+import EditIcon from "@material-ui/icons/Edit"
 
 import useStyles from "./styles"
-import { submitCreateAccess } from "services/Console-Admin/providersHistoryService"
+import {
+  getAssignableRoles,
+  submitCreateAccess,
+} from "services/Console-Admin/providersHistoryService"
+import CareSitesDialog from "./components/CareSitesDialog/CareSitesDialog"
+import { ScopeTreeRow } from "types"
 
 type AddAccessFormProps = {
   open: boolean
@@ -33,34 +40,28 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
 }) => {
   const classes = useStyles()
 
-  const [careSite, setCareSite] = useState() // provider_history_id
-  const [role, setRole] = useState<{ name: string; role_id: number } | null>(
-    null
-  ) // role_id
+  const [careSite, setCareSite] = useState<ScopeTreeRow | null>(null)
+  const [role, setRole] =
+    useState<{ name: string; role_id: number } | null>(null)
   const [startDate, setStartDate] = useState<MaterialUiPickersDate | null>(
     moment()
-  ) // caresite_id
-  const [endDate, setEndDate] = useState<MaterialUiPickersDate | null>(null) // start_datetime -> pas obligatoire, le back met automatiquement a aujourd'hui si non rempli, pas de date antérieure autorisée
-  const [dateError, setDateError] = useState(false) // end_datetime -> peut être null
+  ) // pas de date antérieure à today autorisée
+  const [endDate, setEndDate] = useState<MaterialUiPickersDate | null>(null)
+  const [dateError, setDateError] = useState(false)
+  const [openPerimeters, setOpenPerimeters] = useState(false)
+  const [roles, setRoles] = useState()
+  const [loading, setLoading] = useState(false)
 
-  const fakeRoles = [
-    {
-      name: "ADMIN",
-      role_id: 0,
-    },
-    {
-      name: "ADMIN_USERS",
-      role_id: 1,
-    },
-    {
-      name: "READ_DATA_PSEUDOANONYMISED",
-      role_id: 2,
-    },
-    {
-      name: "READ_DATA_NOMINATIVE",
-      role_id: 3,
-    },
-  ]
+  useEffect(() => {
+    setLoading(true)
+    getAssignableRoles(careSite?.care_site_id)
+      .then((res) => {
+        setRoles(res)
+      })
+      .finally(() => setLoading(false))
+  }, [careSite])
+
+  console.log(`roles`, roles)
 
   const handleChangeAutocomplete = (
     event: React.ChangeEvent<{}>,
@@ -82,13 +83,13 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
 
     const accessData = {
       entity_id: entityId,
-      care_site_id: careSite,
+      care_site_id: careSite?.care_site_id,
       role_id: role?.role_id,
       start_datetime: stringStartDate,
       end_datetime: stringEndDate,
     }
 
-    // submitCreateAccess(accessData)
+    submitCreateAccess(accessData)
 
     onClose()
   }
@@ -99,9 +100,25 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
         Créer un nouvel accès :
       </DialogTitle>
       <DialogContent className={classes.dialog}>
-        <Grid container direction="column" className={classes.filter}>
+        <Grid
+          container
+          justify="space-between"
+          alignItems="center"
+          className={classes.filter}
+        >
           <Typography variant="h3">Périmètre :</Typography>
-          {/* A faire */}
+          {careSite ? (
+            <>
+              <Typography>{careSite.name}</Typography>
+              <IconButton onClick={() => setOpenPerimeters(true)}>
+                <EditIcon />
+              </IconButton>
+            </>
+          ) : (
+            <Button onClick={() => setOpenPerimeters(true)}>
+              Sélectionner un périmètre
+            </Button>
+          )}
         </Grid>
         <Grid
           container
@@ -111,7 +128,8 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
         >
           <Typography variant="h3">Role :</Typography>
           <Autocomplete
-            options={fakeRoles}
+            disabled={roles ? false : true}
+            options={roles}
             getOptionLabel={(option) => option.name}
             onChange={handleChangeAutocomplete}
             renderInput={(params) => (
@@ -134,6 +152,7 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
           <Typography variant="h3">Date de début :</Typography>
           <KeyboardDatePicker
             clearable
+            minDate={new Date()} // = today
             error={dateError}
             style={{ width: "250px" }}
             invalidDateMessage='La date doit être au format "JJ/MM/AAAA"'
@@ -153,6 +172,7 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
           <Typography variant="h3">Date de fin :</Typography>
           <KeyboardDatePicker
             clearable
+            minDate={new Date()} // = today
             error={dateError}
             style={{ width: "250px" }}
             invalidDateMessage='La date doit être au format "JJ/MM/AAAA"'
@@ -180,10 +200,21 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
         <Button onClick={onClose} color="primary">
           Annuler
         </Button>
-        <Button onClick={onSubmit} color="primary">
+        <Button
+          disabled={!careSite || !role}
+          onClick={onSubmit}
+          color="primary"
+        >
           Valider
         </Button>
       </DialogActions>
+
+      <CareSitesDialog
+        careSite={careSite}
+        onChangeCareSite={setCareSite}
+        open={openPerimeters}
+        onClose={() => setOpenPerimeters(false)}
+      />
     </Dialog>
   )
 }

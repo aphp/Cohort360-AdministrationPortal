@@ -6,6 +6,18 @@ export const getRoles = async () => {
     if (rolesResp.status !== 200) {
         return undefined
     }
+    
+    const roles = rolesResp.data.results ? 
+    rolesResp.data.results.sort((a: any, b: any) => {
+        if (a.name > b.name) {
+            return 1
+        } else if (a.name > b.name){
+            return -1
+        }
+        return 0
+    }) : undefined
 
-    return rolesResp.data.results ?? undefined
+    console.log(`roles`, roles)
+    return roles
+    // return rolesResp.data.results ?? undefined
 }
