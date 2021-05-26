@@ -19,176 +19,271 @@ import Pagination from "@material-ui/lab/Pagination"
 import AddIcon from "@material-ui/icons/Add"
 import CheckIcon from "@material-ui/icons/Check"
 import CloseIcon from "@material-ui/icons/Close"
+import FiberManualRecordRoundedIcon from "@material-ui/icons/FiberManualRecordRounded"
 
 import useStyles from "./styles"
-import AddAccessForm from "../providers/AddAccessForm/AddAccessForm"
+// import AddAccessForm from "../providers/AddAccessForm/AddAccessForm"
 // import { submitGetAccesses } from "services/Console-Admin/providersHistoryService"
-import { Access, Roles } from "types"
+import { Access ,Roles } from "types"
 
 type RolesTableProps = {
-  roles: Roles
+  roles: Roles[]
 }
 
 const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
   const classes = useStyles()
 
   const [open, setOpen] = useState(false)
-  const [accesses, setAccesses] = useState<Access[] | undefined>()
-  const [page, setPage] = useState(1)
-  const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
-  const [orderBy, setOrderBy] = useState<string>("role")
-  const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc")
-
-  const rowsPerPage = 5
 
   console.log(`roles`, roles)
-  console.log(`accesses`, accesses)
 
-  // useEffect(() => {
-  //   setLoading(true)
-  //   submitGetAccesses(right.provider_history_id)
-  //     .then((res) => {
-  //       setAccesses(res?.accesses)
-  //       setTotal(res?.total)
-  //     })
-  //     .finally(() => setLoading(false))
-  // }, []) // eslint-disable-line
-
-  const createSortHandler = (property: any) => (
-    event: React.MouseEvent<unknown>
-  ) => {
-    const isAsc: boolean = orderBy === property && orderDirection === "asc"
-    const _orderDirection = isAsc ? "desc" : "asc"
-
-    setOrderDirection(_orderDirection)
-    setOrderBy(property)
-  }
 
   const columns = [
     {
-      label: "Périmètre",
-      code: "caresite",
+      label : "right_edit_roles"
     },
     {
-      label: "Droit",
-      code: "role",
+      label : "right_add_users"
     },
     {
-      label: "Date de début",
-      code: "startDate",
+      label : "right_edit_users"
     },
     {
-      label: "Date de fin",
-      code: "endDate",
+      label : "right_read_users"
     },
     {
-      label: "Actif",
-      code: "isActive",
+      label : "right_manage_admin_accesses_same_level"
     },
+    {
+      label : "right_read_admin_accesses_same_level"
+    },
+    {
+      label : "right_manage_admin_accesses_inferior_levels"
+    },
+    {
+      label : "right_read_admin_accesses_inferior_levels"
+    },
+    {
+      label : "right_manage_data_accesses_same_level"
+    },
+    {
+      label : "right_read_data_accesses_same_level"
+    },
+    {
+      label : "right_manage_data_accesses_inferior_levels"
+    },
+    {
+      label : "right_read_data_accesses_inferior_levels"
+    },
+    {
+      label : "right_read_patient_nominative"
+    },
+    {
+      label : "right_read_patient_pseudo_anonymised"
+    },
+    {
+      label : "right_export_jupyter_patient_nominative"
+    },
+    {
+      label : "right_export_jupyter_patient_pseudo_anonymised"
+    },
+    {
+      label: "toto"
+    }
   ]
 
   return (
     <Grid container justify="flex-end">
-      <Grid container justify="space-between" alignItems="center">
-        <Typography align="left" variant="h2" className={classes.title}>
-          Type de Rôle : {roles.name}
-        </Typography>
-        {roles.name === "ADMIN" && (
-          <Button
-            variant="contained"
-            disableElevation
-            startIcon={<AddIcon height="15px" fill="#FFF" />}
-            className={classes.searchButton}
-            onClick={() => setOpen(true)}
-          >
-            Nouvel accès
-          </Button>
-        )}
-      </Grid>
-      <TableContainer component={Paper}>
+      {roles && roles.length > 0 ? (
+        roles.map((role: Roles) => {
+          return (
+            <>
+              <Grid container justify="space-between" alignItems="center">
+                <Typography align="left" variant="h2" className={classes.title}>
+                  Type de droit : {role.name}
+                </Typography>
+                {role.name && (
+                  <Button
+                  variant="contained"
+                  disableElevation
+                  startIcon={<AddIcon height="15px" fill="#FFF" />}
+                  className={classes.searchButton}
+                  onClick={() => setOpen(true)}
+                >
+                  Nouvel accès
+                </Button>
+                )}
+              </Grid>
+              <TableContainer component={Paper}>
         <Table className={classes.table}>
           <TableHead>
             <TableRow className={classes.tableHead}>
               {columns.map((column) => (
                 <TableCell
-                  sortDirection={
-                    orderBy === column.code ? orderDirection : false
-                  }
-                  align="center"
+                  align={column.label === "Droit" ? "left" : "center"}
                   className={classes.tableHeadCell}
                 >
-                  <TableSortLabel
-                    active={orderBy === column.code}
-                    direction={orderBy === column.code ? orderDirection : "asc"}
-                    onClick={createSortHandler(column.code)}
-                  >
-                    {column.label}
-                  </TableSortLabel>
+                  {column.label}
                 </TableCell>
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={7}>
-                  <div className={classes.loadingSpinnerContainer}>
-                    <CircularProgress size={50} />
-                  </div>
-                </TableCell>
-              </TableRow>
-            ) : accesses && accesses.length > 0 ? (
-              accesses.map((access: Access) => {
-                return (
-                  <TableRow key={access.id} className={classes.tableBodyRows}>
+                  <TableRow key={role.role_id} className={classes.tableBodyRows}>
                     <TableCell align="center">
-                      {access.care_site.care_site_name}
-                    </TableCell>
-                    <TableCell align="center">{access?.role?.name}</TableCell>
-                    <TableCell align="center">
-                      {new Date(access.start_datetime).toLocaleDateString(
-                        "fr-FR"
-                      )}
+                      <FiberManualRecordRoundedIcon
+                        fontSize="small"
+                        style={{
+                          color: role.right_edit_roles ? "#BDEA88" : "#ED6D91",
+                        }}
+                      />
                     </TableCell>
                     <TableCell align="center">
-                      {new Date(access.end_datetime).toLocaleDateString(
-                        "fr-FR"
-                      )}
+                      <FiberManualRecordRoundedIcon
+                        fontSize="small"
+                        style={{
+                          color: role.right_add_users ? "#BDEA88" : "#ED6D91",
+                        }}
+                      />
                     </TableCell>
                     <TableCell align="center">
-                      {access.is_valid ? <CheckIcon /> : <CloseIcon />}
+                      <FiberManualRecordRoundedIcon
+                        fontSize="small"
+                        style={{
+                          color: role.right_edit_users ? "#BDEA88" : "#ED6D91",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      <FiberManualRecordRoundedIcon
+                        fontSize="small"
+                        style={{
+                          color: role.right_read_users ? "#BDEA88" : "#ED6D91",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      <FiberManualRecordRoundedIcon
+                        fontSize="small"
+                        style={{
+                          color: role.right_manage_admin_accesses_same_level ? "#BDEA88" : "#ED6D91",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      <FiberManualRecordRoundedIcon
+                        fontSize="small"
+                        style={{
+                          color: role.right_read_admin_accesses_same_level ? "#BDEA88" : "#ED6D91",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      <FiberManualRecordRoundedIcon
+                        fontSize="small"
+                        style={{
+                          color: role.right_manage_admin_accesses_inferior_levels ? "#BDEA88" : "#ED6D91",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      <FiberManualRecordRoundedIcon
+                        fontSize="small"
+                        style={{
+                          color: role.right_read_admin_accesses_inferior_levels ? "#BDEA88" : "#ED6D91",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      <FiberManualRecordRoundedIcon
+                        fontSize="small"
+                        style={{
+                          color: role.right_manage_data_accesses_same_level ? "#BDEA88" : "#ED6D91",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      <FiberManualRecordRoundedIcon
+                        fontSize="small"
+                        style={{
+                          color: role.right_read_data_accesses_same_level ? "#BDEA88" : "#ED6D91",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      <FiberManualRecordRoundedIcon
+                        fontSize="small"
+                        style={{
+                          color: role.right_manage_data_accesses_inferior_levels ? "#BDEA88" : "#ED6D91",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      <FiberManualRecordRoundedIcon
+                        fontSize="small"
+                        style={{
+                          color: role.right_read_data_accesses_inferior_levels ? "#BDEA88" : "#ED6D91",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      <FiberManualRecordRoundedIcon
+                        fontSize="small"
+                        style={{
+                          color: role.right_read_patient_nominative ? "#BDEA88" : "#ED6D91",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      <FiberManualRecordRoundedIcon
+                        fontSize="small"
+                        style={{
+                          color: role.right_read_patient_pseudo_anonymised ? "#BDEA88" : "#ED6D91",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      <FiberManualRecordRoundedIcon
+                        fontSize="small"
+                        style={{
+                          color: role.right_export_jupyter_patient_nominative ? "#BDEA88" : "#ED6D91",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      <FiberManualRecordRoundedIcon
+                        fontSize="small"
+                        style={{
+                          color: role.right_export_jupyter_patient_pseudo_anonymised ? "#BDEA88" : "#ED6D91",
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell align="center">
+                      <FiberManualRecordRoundedIcon
+                        fontSize="small"
+                        style={{
+                          color: role.right_manage_data_accesses_inferior_levels ? "#BDEA88" : "#ED6D91",
+                        }}
+                      />
                     </TableCell>
                   </TableRow>
-                )
-              })
-            ) : (
-              <TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
+            </>
+          )
+        })
+      ) : (
+        <TableRow>
                 <TableCell colSpan={7}>
                   <Typography className={classes.loadingSpinnerContainer}>
                     Aucun résultat à afficher
                   </Typography>
                 </TableCell>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Pagination
-        className={classes.pagination}
-        count={Math.ceil(total / rowsPerPage)}
-        shape="rounded"
-        // onChange={onChangePage}
-        page={page}
-      />
-
-      {/* <AddAccessForm
-        open={open}
-        onClose={() => setOpen(false)}
-        entityId={right.provider_history_id}
-      /> */}
+      )}
     </Grid>
   )
 }
-
 export default RightsTable
