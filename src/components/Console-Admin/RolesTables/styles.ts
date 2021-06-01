@@ -6,7 +6,7 @@ const useStyles = makeStyles(() =>
       backgroundColor: '#5BC5F2',
       color: '#FFF',
       borderRadius: 25,
-      height: 20,
+      height: 50,
       margin: '4px 0'
     },
     title: {
