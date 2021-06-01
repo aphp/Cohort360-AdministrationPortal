@@ -155,8 +155,8 @@ export type Access = {
 
 export type AccessData = {
   entity_id: number
-  care_site_id: number
-  role_id: number
-  start_datetime?: string
-  end_datetime?: string
+  care_site_id: string | number | undefined
+  role_id: number | undefined
+  start_datetime?: string | null
+  end_datetime?: string | null
 }
