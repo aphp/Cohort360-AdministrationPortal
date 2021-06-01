@@ -59,10 +59,8 @@ export type BackendCareSite = {
 }
 
 export type ScopeTreeRow = {
-  id?: number | string
-  care_site_id?: string | number
+  care_site_id: string | number
   name: string
-  parentId?: string
   subItems: ScopeTreeRow[]
 }
 
@@ -154,9 +152,9 @@ export type Access = {
 }
 
 export type AccessData = {
-  entity_id: number
-  care_site_id: number
-  role_id: number
-  start_datetime?: string
-  end_datetime?: string
+  provider_history_id: number
+  care_site_id?: number | string
+  role_id?: number
+  start_datetime: string | null
+  end_datetime: string | null
 }

@@ -49,7 +49,7 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
   const [endDate, setEndDate] = useState<MaterialUiPickersDate | null>(null)
   const [dateError, setDateError] = useState(false)
   const [openPerimeters, setOpenPerimeters] = useState(false)
-  const [roles, setRoles] = useState()
+  const [roles, setRoles] = useState([])
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
@@ -61,7 +61,13 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
       .finally(() => setLoading(false))
   }, [careSite])
 
-  console.log(`roles`, roles)
+  useEffect(() => {
+    if (moment(startDate).isAfter(endDate)) {
+      setDateError(true)
+    } else {
+      setDateError(false)
+    }
+  }, [startDate, endDate])
 
   const handleChangeAutocomplete = (
     event: React.ChangeEvent<{}>,
@@ -79,10 +85,8 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
       ? moment(endDate).format()
       : null
 
-    console.log(`stringStartDate`, stringStartDate)
-
     const accessData = {
-      entity_id: entityId,
+      provider_history_id: entityId,
       care_site_id: careSite?.care_site_id,
       role_id: role?.role_id,
       start_datetime: stringStartDate,
@@ -91,6 +95,10 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
 
     submitCreateAccess(accessData)
 
+    setCareSite(null)
+    setRoles([])
+    setStartDate(null)
+    setEndDate(null)
     onClose()
   }
 
@@ -126,22 +134,28 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
           alignItems="center"
           className={classes.filter}
         >
-          <Typography variant="h3">Role :</Typography>
-          <Autocomplete
-            disabled={roles ? false : true}
-            options={roles}
-            getOptionLabel={(option) => option.name}
-            onChange={handleChangeAutocomplete}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Sélectionner un rôle..."
-                variant="outlined"
-              />
-            )}
-            value={role}
-            style={{ width: "250px" }}
-          />
+          <Typography variant="h3">Rôle :</Typography>
+          {roles ? (
+            <Autocomplete
+              disabled={!roles}
+              options={roles}
+              getOptionLabel={(option) => option.name}
+              onChange={handleChangeAutocomplete}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Sélectionner un rôle..."
+                  variant="outlined"
+                />
+              )}
+              value={role}
+              style={{ width: "250px" }}
+            />
+          ) : (
+            <Typography>
+              Choisir un périmètre pour obtenir les rôles disponibles.
+            </Typography>
+          )}
         </Grid>
         <Grid
           container
@@ -172,7 +186,7 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
           <Typography variant="h3">Date de fin :</Typography>
           <KeyboardDatePicker
             clearable
-            minDate={new Date()} // = today
+            minDate={moment().add(1, "days")} // = tomorrow
             error={dateError}
             style={{ width: "250px" }}
             invalidDateMessage='La date doit être au format "JJ/MM/AAAA"'
@@ -188,20 +202,20 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
             </Typography>
           )}
         </Grid>
-        <Grid container alignItems="center">
-          <InfoIcon color="action" style={{ height: "20px" }} />
+        <div>
+          <InfoIcon color="action" className={classes.infoIcon} />
           <Typography component="span">
-            Si aucune date n'est renseignée, la date de fin sera fixée à dans un
-            an.
+            Si aucune date de fin n'est renseignée, celle-ci sera fixée à dans
+            un an.
           </Typography>
-        </Grid>
+        </div>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary">
           Annuler
         </Button>
         <Button
-          disabled={!careSite || !role}
+          disabled={!careSite || !role || dateError}
           onClick={onSubmit}
           color="primary"
         >

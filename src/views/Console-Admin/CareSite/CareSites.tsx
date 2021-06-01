@@ -5,12 +5,12 @@ import CareSiteTree from "components/Console-Admin/CareSite/CareSiteTree"
 
 import useStyles from "./styles"
 import { getCareSites } from "services/Console-Admin/careSiteService"
+import { ScopeTreeRow } from "types"
 
 const CareSite: React.FC = () => {
   const classes = useStyles()
-  const [selectedItems, onChangeSelectedItems] = useState(null)
-
-  console.log(`selectedItems`, selectedItems)
+  const [selectedItem, onChangeSelectedItem] =
+    useState<ScopeTreeRow | null>(null)
 
   return (
     <Grid container direction="column">
@@ -22,9 +22,8 @@ const CareSite: React.FC = () => {
           <Paper>
             <CareSiteTree
               getCareSites={getCareSites}
-              defaultSelectedItems={selectedItems}
-              //@ts-ignore
-              onChangeSelectedItem={onChangeSelectedItems}
+              defaultSelectedItems={selectedItem}
+              onChangeSelectedItem={onChangeSelectedItem}
             />
           </Paper>
         </Grid>

@@ -9,7 +9,7 @@ export const getCareSites = async () => {
     if (!caresiteResp) return undefined
 
     const {data} = caresiteResp
-    if (!data) return [{ id: 'loading'}]
+    if (!data) return [{ care_site_id: 'loading'}]
 
     const careSitesData = data.results 
     // a proteger
@@ -50,12 +50,9 @@ export const getCareSitesChildren = async(careSite : ScopeTreeRow | null): Promi
 
     const childrenData:BackendCareSite[] = (children && children.data && children.status === 200) ? children.data.results : [] 
 
-    let _childrenData = childrenData ? 
-    //@ts-ignore
-    childrenData?.map<ScopeTreeRow>((childrenData) => { 
+    let _childrenData = childrenData ? childrenData?.map<ScopeTreeRow>((childrenData) => { 
         return({
         ...childrenData,
-        id: childrenData.care_site_id ?? 0,
         name: childrenData.care_site_name ?? '',
         subItems: [loadingItem]
     })}) : []

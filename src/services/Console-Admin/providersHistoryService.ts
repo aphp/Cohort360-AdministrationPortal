@@ -51,6 +51,7 @@ export const getAccesses = async (providerHistoryId: number) => {
 }
 
 export const submitCreateAccess = async (accessData: AccessData) => {
+    console.log(`accessData`, accessData)
     let success
 
     await api.post(`/accesses/`, accessData)

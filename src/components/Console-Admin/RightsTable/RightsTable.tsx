@@ -4,6 +4,7 @@ import {
   Button,
   CircularProgress,
   Grid,
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -16,10 +17,12 @@ import {
 import Pagination from "@material-ui/lab/Pagination"
 
 import AddIcon from "@material-ui/icons/Add"
+import EditIcon from "@material-ui/icons/Edit"
 import FiberManualRecordRoundedIcon from "@material-ui/icons/FiberManualRecordRounded"
 
 import useStyles from "./styles"
 import AddAccessForm from "../providers/AddAccessForm/AddAccessForm"
+import EditAccessForm from "../providers/EditAccessForm/EditAccessForm"
 import { getAccesses } from "services/Console-Admin/providersHistoryService"
 import { Access, Profile } from "types"
 
@@ -31,15 +34,13 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
   const classes = useStyles()
 
   const [open, setOpen] = useState(false)
+  const [openEdit, setOpenEdit] = useState(false)
   const [accesses, setAccesses] = useState<Access[] | undefined>()
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
 
   const rowsPerPage = 100
-
-  console.log(`right`, right)
-  console.log(`accesses`, accesses)
 
   useEffect(() => {
     setLoading(true)
@@ -49,7 +50,9 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
         setTotal(res?.total)
       })
       .finally(() => setLoading(false))
-  }, []) // eslint-disable-line
+  }, [accesses?.length]) // eslint-disable-line
+
+  const onClose = () => {}
 
   const columns = [
     {
@@ -66,6 +69,9 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
     },
     {
       label: "Actif",
+    },
+    {
+      label: "",
     },
   ]
 
@@ -119,17 +125,17 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
                     </TableCell>
                     <TableCell align="center">{access?.role?.name}</TableCell>
                     <TableCell align="center">
-                      {access.start_datetime
-                        ? new Date(access.start_datetime).toLocaleDateString(
-                            "fr-FR"
-                          )
+                      {access.actual_start_datetime
+                        ? new Date(
+                            access.actual_start_datetime
+                          ).toLocaleDateString("fr-FR")
                         : "-"}
                     </TableCell>
                     <TableCell align="center">
-                      {access.end_datetime
-                        ? new Date(access.end_datetime).toLocaleDateString(
-                            "fr-FR"
-                          )
+                      {access.actual_end_datetime
+                        ? new Date(
+                            access.actual_end_datetime
+                          ).toLocaleDateString("fr-FR")
                         : "-"}
                     </TableCell>
                     <TableCell align="center">
@@ -140,6 +146,22 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
                         }}
                       />
                     </TableCell>
+                    <TableCell align="center">
+                      <IconButton
+                        onClick={() => {
+                          setOpenEdit(true)
+                        }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </TableCell>
+
+                    <EditAccessForm
+                      open={openEdit}
+                      onClose={() => setOpenEdit(false)}
+                      entityId={right.provider_history_id}
+                      access={access}
+                    />
                   </TableRow>
                 )
               })

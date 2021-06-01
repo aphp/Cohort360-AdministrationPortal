@@ -1,12 +1,12 @@
-import React, { useState } from "react"
+import React from "react"
 import {
   Button,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
+  Grid,
 } from "@material-ui/core"
-import Grid from "@material-ui/core/Grid"
 
 import useStyles from "./styles"
 import CareSiteTree from "components/Console-Admin/CareSite/CareSiteTree"
@@ -27,11 +27,8 @@ const CareSitesDialog: React.FC<CareSitesDialogProps> = ({
   onClose,
 }) => {
   const classes = useStyles()
-  const [selectedItems, onChangeSelectedItems] =
-    useState<ScopeTreeRow | null>(null)
 
   const onCancel = () => {
-    onChangeSelectedItems(null)
     onChangeCareSite(null)
     onClose()
   }
@@ -39,7 +36,7 @@ const CareSitesDialog: React.FC<CareSitesDialogProps> = ({
   const onSubmit = () => {
     onClose()
   }
-  console.log(`selectedItems`, selectedItems)
+
   return (
     <Dialog
       open={open}
