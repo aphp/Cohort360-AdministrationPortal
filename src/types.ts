@@ -50,12 +50,12 @@ export type CareSiteType =
 | "Hopital"
 | "Groupe Hospitalier"
 
-export type BackendCareSite = {
+export type CareSite = {
   care_site_id: number
   care_site_name: string
   care_site_short_name: string
-  parents_ids: number[]
   care_site_type_source_value?: string
+  parents_ids?: number[]
 }
 
 export type ScopeTreeRow = {
@@ -90,7 +90,7 @@ export type Profile = {
   manual_valid_start_datetime: string | null
   modified_datetime: string
   npi: string | null
-  provider: any
+  provider: Provider
   provider_history_id: number
   provider_id: number
   provider_name: string | null
@@ -137,9 +137,9 @@ export type Access = {
   id: string
   care_site_history_id: number
   is_valid: boolean
-  provider_history: any
-  care_site: any
-  role: any
+  provider_history: number
+  care_site: CareSite
+  role: Roles
   entry_created_by: number
   created_by: string
   start_datetime: string
@@ -152,9 +152,33 @@ export type Access = {
 }
 
 export type AccessData = {
-  provider_history_id: number
+  provider_history_id?: number
   care_site_id?: number | string
   role_id?: number
   start_datetime: string | null
   end_datetime: string | null
+}
+
+// Provider
+
+export type Provider = {
+  birth_date?: string
+  cdm_source?: string
+  delete_datetime?: string
+  displayed_name?: string
+  email?: string
+  firstname?: string
+  gender_concept_id?: number
+  gender_source_concept_id?: number
+  gender_source_value?: string
+  insert_datetime?: string
+  lastname?: string
+  provider_id: number
+  provider_name?: string
+  provider_source_value?: string
+  specialty_concept_id?: number
+  specialty_source_concept_id?: number
+  specialty_source_value?: string
+  update_datetime?: string
+  year_of_birth?: number
 }
