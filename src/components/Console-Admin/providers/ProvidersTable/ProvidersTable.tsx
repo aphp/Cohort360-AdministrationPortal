@@ -63,15 +63,6 @@ const ProvidersTable = () => {
 
   const [open, setOpen] = useState(false)
 
-  console.log(`orderBy`, orderBy)
-  console.log(
-    `window.location.search`,
-    QueryString.parse(window.location.search)
-  )
-  console.log(`page`, page)
-  console.log(`total`, total)
-  console.log(`providers`, providers)
-
   useEffect(() => {
     setPage(1)
   }, [searchInput])
@@ -89,12 +80,6 @@ const ProvidersTable = () => {
       const urlSearch = searchInput ? `&search=${searchInput}` : ""
       const urlOrderingDirection = orderDirection === "desc" ? "-" : ""
 
-      console.log(`urlSearch`, urlSearch)
-
-      // history.push(
-      //   `/users/page=${page}&ordering=${orderDirection}${orderBy}${urlSearch}`
-      // )
-
       history.push({
         pathname: "/users",
         search: `?page=${page}&ordering=${urlOrderingDirection}${orderBy}${urlSearch}`,
@@ -103,7 +88,6 @@ const ProvidersTable = () => {
     setLoading(true)
     getProviders(orderBy, orderDirection, page, searchInput)
       .then((resp) => {
-        console.log(`resp`, resp)
         if (resp) {
           setProviders(resp.providers.length === 0 ? undefined : resp.providers)
           setTotal(resp.total)
