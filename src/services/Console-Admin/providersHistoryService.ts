@@ -64,6 +64,19 @@ export const submitCreateAccess = async (accessData: AccessData) => {
     return success
 }
 
+export const submitEditAccess = async (editData: AccessData, careSiteHistoryId?: number) => {
+    let success 
+
+    await api.patch(`/accesses/${careSiteHistoryId}/`, editData)
+    .then(res => {
+        if (res.status === 200){
+            success = true
+        } else success = false
+    })
+
+    return success
+}
+
 export const getAssignableRoles = async (careSiteId?: string | number | null) => {
     if (!careSiteId) return undefined
 

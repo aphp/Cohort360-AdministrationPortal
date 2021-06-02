@@ -34,15 +34,15 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
   const classes = useStyles()
 
   const [open, setOpen] = useState(false)
-  const [openEdit, setOpenEdit] = useState(false)
   const [accesses, setAccesses] = useState<Access[] | undefined>()
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
+  const [selectedAccess, setSelectedAccess] = useState<Access | null>(null)
 
   const rowsPerPage = 100
 
-  useEffect(() => {
+  const _getAccesses = () => {
     setLoading(true)
     getAccesses(right.provider_history_id)
       .then((res) => {
@@ -50,29 +50,24 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
         setTotal(res?.total)
       })
       .finally(() => setLoading(false))
+  }
+
+  useEffect(() => {
+    _getAccesses()
   }, [accesses?.length]) // eslint-disable-line
 
-  const onClose = () => {}
+  const onClose = () => {
+    setOpen(false)
+    _getAccesses()
+  }
 
   const columns = [
-    {
-      label: "Périmètre",
-    },
-    {
-      label: "Droit",
-    },
-    {
-      label: "Date de début",
-    },
-    {
-      label: "Date de fin",
-    },
-    {
-      label: "Actif",
-    },
-    {
-      label: "",
-    },
+    "Périmètre",
+    "Droit",
+    "Date de début",
+    "Date de fin",
+    "Actif",
+    "",
   ]
 
   return (
@@ -99,10 +94,10 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
             <TableRow className={classes.tableHead}>
               {columns.map((column) => (
                 <TableCell
-                  align={column.label === "Périmètre" ? "left" : "center"}
+                  align={column === "Périmètre" ? "left" : "center"}
                   className={classes.tableHeadCell}
                 >
-                  {column.label}
+                  {column}
                 </TableCell>
               ))}
             </TableRow>
@@ -149,19 +144,12 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
                     <TableCell align="center">
                       <IconButton
                         onClick={() => {
-                          setOpenEdit(true)
+                          setSelectedAccess(access)
                         }}
                       >
                         <EditIcon />
                       </IconButton>
                     </TableCell>
-
-                    <EditAccessForm
-                      open={openEdit}
-                      onClose={() => setOpenEdit(false)}
-                      entityId={right.provider_history_id}
-                      access={access}
-                    />
                   </TableRow>
                 )
               })
@@ -187,8 +175,13 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
 
       <AddAccessForm
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={onClose}
         entityId={right.provider_history_id}
+      />
+      <EditAccessForm
+        open={selectedAccess ? true : false}
+        onClose={() => setSelectedAccess(null)}
+        access={selectedAccess}
       />
     </Grid>
   )
