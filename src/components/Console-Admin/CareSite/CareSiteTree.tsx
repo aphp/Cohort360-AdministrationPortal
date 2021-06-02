@@ -24,7 +24,7 @@ import { useAppSelector } from "state"
 import useStyles from "./styles"
 
 type ScopeTreeProps = {
-  getCareSites: () => Promise<any>
+  getCareSites: () => Promise<ScopeTreeRow[]>
   defaultSelectedItems: ScopeTreeRow | null
   onChangeSelectedItem: (selectedItems: ScopeTreeRow) => void
 }
@@ -80,11 +80,13 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
       _openPopulation = [..._openPopulation, rowId]
       onChangeOpenPopulations(_openPopulation)
 
-      const replaceSubItems = async (items: any) => {
+      const replaceSubItems = async (items: ScopeTreeRow[]) => {
         for (const item of items) {
           if (item.care_site_id === rowId) {
             const foundItem = item.subItems
-              ? item.subItems.find((i: any) => i.care_site_id === "loading")
+              ? item.subItems.find(
+                  (i: ScopeTreeRow) => i.care_site_id === "loading"
+                )
               : true
             if (foundItem) {
               item.subItems = await getCareSitesChildren(item)
@@ -146,11 +148,11 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
           rows={rootRows}
           headCells={headCells}
         >
-          {(row: any, index: number) => {
+          {(row: ScopeTreeRow, index: number) => {
             if (!row) return <></>
             const labelId = `enhanced-table-checkbox-${index}`
 
-            const _displayLine = (_row: any, level: number) => (
+            const _displayLine = (_row: ScopeTreeRow, level: number) => (
               <>
                 {_row.care_site_id === "loading" ? (
                   <TableRow hover key={Math.random()}>
@@ -170,7 +172,9 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                     <TableCell>
                       {_row.subItems && _row.subItems.length > 0 && (
                         <IconButton
-                          onClick={() => _clickToDeploy(_row.care_site_id)}
+                          onClick={() =>
+                            _clickToDeploy(_row.care_site_id as number)
+                          }
                           style={{
                             marginLeft: level * 35,
                             padding: 0,
@@ -200,14 +204,14 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                     </TableCell>
 
                     <TableCell>
-                      <Typography>{_row.care_site_name}</Typography>
+                      <Typography>{_row.name}</Typography>
                     </TableCell>
                   </TableRow>
                 )}
               </>
             )
 
-            const _displayChildren = (_row: any, level: number) => {
+            const _displayChildren = (_row: ScopeTreeRow, level: number) => {
               return (
                 <React.Fragment key={Math.random()}>
                   {_displayLine(_row, level)}
@@ -215,7 +219,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                     (care_site_id) => _row.care_site_id === care_site_id
                   ) &&
                     _row.subItems &&
-                    _row.subItems.map((subItem: any) =>
+                    _row.subItems.map((subItem: ScopeTreeRow) =>
                       _displayChildren(subItem, level + 1)
                     )}
                 </React.Fragment>
@@ -229,7 +233,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                   (care_site_id) => row.care_site_id === care_site_id
                 ) &&
                   row.subItems &&
-                  row.subItems.map((subItem: any) =>
+                  row.subItems.map((subItem: ScopeTreeRow) =>
                     _displayChildren(subItem, 1)
                   )}
               </React.Fragment>
