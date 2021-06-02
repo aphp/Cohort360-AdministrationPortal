@@ -26,6 +26,7 @@ import AddUserDialog from "../AddProviderForm/AddProviderForm"
 
 import useStyles from "./styles"
 import { getProviders } from "services/Console-Admin/providersService"
+import { Provider } from "types"
 
 const ProvidersTable = () => {
   const classes = useStyles()
@@ -51,7 +52,7 @@ const ProvidersTable = () => {
     },
   ]
 
-  const [providers, setProviders] = useState(undefined)
+  const [providers, setProviders] = useState<Provider[] | null>(null)
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
@@ -171,8 +172,7 @@ const ProvidersTable = () => {
                   </div>
                 </TableCell>
               </TableRow>
-            ) : // @ts-ignore
-            !providers ? (
+            ) : !providers ? (
               <TableRow>
                 <TableCell colSpan={7}>
                   <Typography className={classes.loadingSpinnerContainer}>
@@ -181,8 +181,7 @@ const ProvidersTable = () => {
                 </TableCell>
               </TableRow>
             ) : (
-              // @ts-ignore
-              providers.map((provider: any) => {
+              providers.map((provider: Provider) => {
                 return (
                   provider && (
                     <TableRow

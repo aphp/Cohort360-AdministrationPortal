@@ -24,10 +24,10 @@ import FiberManualRecordRoundedIcon from "@material-ui/icons/FiberManualRecordRo
 import useStyles from "./styles"
 // import AddAccessForm from "../providers/AddAccessForm/AddAccessForm"
 // import { submitGetAccesses } from "services/Console-Admin/providersHistoryService"
-import { Access ,Roles } from "types"
+import { Access, Role } from "types"
 
 type RolesTableProps = {
-  roles: Roles[]
+  roles: Role[]
 }
 
 const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
@@ -38,65 +38,64 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
 
   console.log(`roles`, roles)
 
-
   const columns = [
     {
-      label : "right_edit_roles"
+      label: "right_edit_roles",
     },
     {
-      label : "right_add_users"
+      label: "right_add_users",
     },
     {
-      label : "right_edit_users"
+      label: "right_edit_users",
     },
     {
-      label : "right_read_users"
+      label: "right_read_users",
     },
     {
-      label : "right_manage_admin_accesses_same_level"
+      label: "right_manage_admin_accesses_same_level",
     },
     {
-      label : "right_read_admin_accesses_same_level"
+      label: "right_read_admin_accesses_same_level",
     },
     {
-      label : "right_manage_admin_accesses_inferior_levels"
+      label: "right_manage_admin_accesses_inferior_levels",
     },
     {
-      label : "right_read_admin_accesses_inferior_levels"
+      label: "right_read_admin_accesses_inferior_levels",
     },
     {
-      label : "right_manage_data_accesses_same_level"
+      label: "right_manage_data_accesses_same_level",
     },
     {
-      label : "right_read_data_accesses_same_level"
+      label: "right_read_data_accesses_same_level",
     },
     {
-      label : "right_manage_data_accesses_inferior_levels"
+      label: "right_manage_data_accesses_inferior_levels",
     },
     {
-      label : "right_read_data_accesses_inferior_levels"
+      label: "right_read_data_accesses_inferior_levels",
     },
     {
-      label : "right_read_patient_nominative"
+      label: "right_read_patient_nominative",
     },
     {
-      label : "right_read_patient_pseudo_anonymised"
+      label: "right_read_patient_pseudo_anonymised",
     },
     {
-      label : "right_export_jupyter_patient_nominative"
+      label: "right_export_jupyter_patient_nominative",
     },
     {
-      label : "right_export_jupyter_patient_pseudo_anonymised"
+      label: "right_export_jupyter_patient_pseudo_anonymised",
     },
     {
-      label: "toto"
-    }
+      label: "toto",
+    },
   ]
 
   return (
     <Grid container justify="flex-end">
       {roles && roles.length > 0 ? (
-        roles.map((role: Roles) => {
+        roles.map((role: Role) => {
           return (
             <>
               <Grid container justify="space-between" alignItems="center">
@@ -105,183 +104,223 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
                 </Typography>
                 {role.name && (
                   <Button
-                  variant="contained"
-                  disableElevation
-                  startIcon={<AddIcon height="15px" fill="#FFF" />}
-                  className={classes.searchButton}
-                  onClick={() => setOpen(true)}
-                >
-                  Nouvel accès
-                </Button>
+                    variant="contained"
+                    disableElevation
+                    startIcon={<AddIcon height="15px" fill="#FFF" />}
+                    className={classes.searchButton}
+                    onClick={() => setOpen(true)}
+                  >
+                    Nouvel accès
+                  </Button>
                 )}
               </Grid>
               <TableContainer component={Paper}>
-        <Table className={classes.table}>
-          <TableHead>
-            <TableRow className={classes.tableHead}>
-              {columns.map((column) => (
-                <TableCell
-                  align={column.label === "Droit" ? "left" : "center"}
-                  className={classes.tableHeadCell}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-                  <TableRow key={role.role_id} className={classes.tableBodyRows}>
-                    <TableCell align="center">
-                      <FiberManualRecordRoundedIcon
-                        fontSize="small"
-                        style={{
-                          color: role.right_edit_roles ? "#BDEA88" : "#ED6D91",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      <FiberManualRecordRoundedIcon
-                        fontSize="small"
-                        style={{
-                          color: role.right_add_users ? "#BDEA88" : "#ED6D91",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      <FiberManualRecordRoundedIcon
-                        fontSize="small"
-                        style={{
-                          color: role.right_edit_users ? "#BDEA88" : "#ED6D91",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      <FiberManualRecordRoundedIcon
-                        fontSize="small"
-                        style={{
-                          color: role.right_read_users ? "#BDEA88" : "#ED6D91",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      <FiberManualRecordRoundedIcon
-                        fontSize="small"
-                        style={{
-                          color: role.right_manage_admin_accesses_same_level ? "#BDEA88" : "#ED6D91",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      <FiberManualRecordRoundedIcon
-                        fontSize="small"
-                        style={{
-                          color: role.right_read_admin_accesses_same_level ? "#BDEA88" : "#ED6D91",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      <FiberManualRecordRoundedIcon
-                        fontSize="small"
-                        style={{
-                          color: role.right_manage_admin_accesses_inferior_levels ? "#BDEA88" : "#ED6D91",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      <FiberManualRecordRoundedIcon
-                        fontSize="small"
-                        style={{
-                          color: role.right_read_admin_accesses_inferior_levels ? "#BDEA88" : "#ED6D91",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      <FiberManualRecordRoundedIcon
-                        fontSize="small"
-                        style={{
-                          color: role.right_manage_data_accesses_same_level ? "#BDEA88" : "#ED6D91",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      <FiberManualRecordRoundedIcon
-                        fontSize="small"
-                        style={{
-                          color: role.right_read_data_accesses_same_level ? "#BDEA88" : "#ED6D91",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      <FiberManualRecordRoundedIcon
-                        fontSize="small"
-                        style={{
-                          color: role.right_manage_data_accesses_inferior_levels ? "#BDEA88" : "#ED6D91",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      <FiberManualRecordRoundedIcon
-                        fontSize="small"
-                        style={{
-                          color: role.right_read_data_accesses_inferior_levels ? "#BDEA88" : "#ED6D91",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      <FiberManualRecordRoundedIcon
-                        fontSize="small"
-                        style={{
-                          color: role.right_read_patient_nominative ? "#BDEA88" : "#ED6D91",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      <FiberManualRecordRoundedIcon
-                        fontSize="small"
-                        style={{
-                          color: role.right_read_patient_pseudo_anonymised ? "#BDEA88" : "#ED6D91",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      <FiberManualRecordRoundedIcon
-                        fontSize="small"
-                        style={{
-                          color: role.right_export_jupyter_patient_nominative ? "#BDEA88" : "#ED6D91",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      <FiberManualRecordRoundedIcon
-                        fontSize="small"
-                        style={{
-                          color: role.right_export_jupyter_patient_pseudo_anonymised ? "#BDEA88" : "#ED6D91",
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      <FiberManualRecordRoundedIcon
-                        fontSize="small"
-                        style={{
-                          color: role.right_manage_data_accesses_inferior_levels ? "#BDEA88" : "#ED6D91",
-                        }}
-                      />
-                    </TableCell>
-                  </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
+                <Table className={classes.table}>
+                  <TableHead>
+                    <TableRow className={classes.tableHead}>
+                      {columns.map((column) => (
+                        <TableCell
+                          align={column.label === "Droit" ? "left" : "center"}
+                          className={classes.tableHeadCell}
+                        >
+                          {column.label}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow
+                      key={role.role_id}
+                      className={classes.tableBodyRows}
+                    >
+                      <TableCell align="center">
+                        <FiberManualRecordRoundedIcon
+                          fontSize="small"
+                          style={{
+                            color: role.right_edit_roles
+                              ? "#BDEA88"
+                              : "#ED6D91",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <FiberManualRecordRoundedIcon
+                          fontSize="small"
+                          style={{
+                            color: role.right_add_users ? "#BDEA88" : "#ED6D91",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <FiberManualRecordRoundedIcon
+                          fontSize="small"
+                          style={{
+                            color: role.right_edit_users
+                              ? "#BDEA88"
+                              : "#ED6D91",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <FiberManualRecordRoundedIcon
+                          fontSize="small"
+                          style={{
+                            color: role.right_read_users
+                              ? "#BDEA88"
+                              : "#ED6D91",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <FiberManualRecordRoundedIcon
+                          fontSize="small"
+                          style={{
+                            color: role.right_manage_admin_accesses_same_level
+                              ? "#BDEA88"
+                              : "#ED6D91",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <FiberManualRecordRoundedIcon
+                          fontSize="small"
+                          style={{
+                            color: role.right_read_admin_accesses_same_level
+                              ? "#BDEA88"
+                              : "#ED6D91",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <FiberManualRecordRoundedIcon
+                          fontSize="small"
+                          style={{
+                            color:
+                              role.right_manage_admin_accesses_inferior_levels
+                                ? "#BDEA88"
+                                : "#ED6D91",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <FiberManualRecordRoundedIcon
+                          fontSize="small"
+                          style={{
+                            color:
+                              role.right_read_admin_accesses_inferior_levels
+                                ? "#BDEA88"
+                                : "#ED6D91",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <FiberManualRecordRoundedIcon
+                          fontSize="small"
+                          style={{
+                            color: role.right_manage_data_accesses_same_level
+                              ? "#BDEA88"
+                              : "#ED6D91",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <FiberManualRecordRoundedIcon
+                          fontSize="small"
+                          style={{
+                            color: role.right_read_data_accesses_same_level
+                              ? "#BDEA88"
+                              : "#ED6D91",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <FiberManualRecordRoundedIcon
+                          fontSize="small"
+                          style={{
+                            color:
+                              role.right_manage_data_accesses_inferior_levels
+                                ? "#BDEA88"
+                                : "#ED6D91",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <FiberManualRecordRoundedIcon
+                          fontSize="small"
+                          style={{
+                            color: role.right_read_data_accesses_inferior_levels
+                              ? "#BDEA88"
+                              : "#ED6D91",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <FiberManualRecordRoundedIcon
+                          fontSize="small"
+                          style={{
+                            color: role.right_read_patient_nominative
+                              ? "#BDEA88"
+                              : "#ED6D91",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <FiberManualRecordRoundedIcon
+                          fontSize="small"
+                          style={{
+                            color: role.right_read_patient_pseudo_anonymised
+                              ? "#BDEA88"
+                              : "#ED6D91",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <FiberManualRecordRoundedIcon
+                          fontSize="small"
+                          style={{
+                            color: role.right_export_jupyter_patient_nominative
+                              ? "#BDEA88"
+                              : "#ED6D91",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <FiberManualRecordRoundedIcon
+                          fontSize="small"
+                          style={{
+                            color:
+                              role.right_export_jupyter_patient_pseudo_anonymised
+                                ? "#BDEA88"
+                                : "#ED6D91",
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell align="center">
+                        <FiberManualRecordRoundedIcon
+                          fontSize="small"
+                          style={{
+                            color:
+                              role.right_manage_data_accesses_inferior_levels
+                                ? "#BDEA88"
+                                : "#ED6D91",
+                          }}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </>
           )
         })
       ) : (
         <TableRow>
-                <TableCell colSpan={7}>
-                  <Typography className={classes.loadingSpinnerContainer}>
-                    Aucun résultat à afficher
-                  </Typography>
-                </TableCell>
-              </TableRow>
+          <TableCell colSpan={7}>
+            <Typography className={classes.loadingSpinnerContainer}>
+              Aucun résultat à afficher
+            </Typography>
+          </TableCell>
+        </TableRow>
       )}
     </Grid>
   )

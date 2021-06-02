@@ -106,7 +106,7 @@ export type Profile = {
 
 // Roles
 
-export type Roles = {
+export type Role = {
   role_id: number
   insert_datetime: string | null
   update_datetime: string | null
@@ -139,7 +139,7 @@ export type Access = {
   is_valid: boolean
   provider_history: number
   care_site: CareSite
-  role: Roles
+  role: Role
   entry_created_by: number
   created_by: string
   start_datetime: string

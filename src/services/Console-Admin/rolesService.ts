@@ -1,3 +1,4 @@
+import { Role } from 'types'
 import api from '../api'
 
 export const getRoles = async () => {
@@ -8,7 +9,7 @@ export const getRoles = async () => {
     }
     
     const roles = rolesResp.data.results ? 
-    rolesResp.data.results.sort((a: any, b: any) => {
+    rolesResp.data.results.sort((a: Role, b: Role) => {
         if (a.name > b.name) {
             return 1
         } else if (a.name > b.name){
@@ -17,7 +18,6 @@ export const getRoles = async () => {
         return 0
     }) : undefined
 
-    console.log(`roles`, roles)
     return roles
     // return rolesResp.data.results ?? undefined
 }

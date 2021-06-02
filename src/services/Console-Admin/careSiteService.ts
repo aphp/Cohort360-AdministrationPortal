@@ -1,5 +1,5 @@
 import api from "../api"
-import { BackendCareSite, ScopeTreeRow } from "types"
+import { CareSite, ScopeTreeRow } from "types"
 
 const loadingItem: ScopeTreeRow = { care_site_id: 'loading', name: 'loading', subItems: [] }
 
@@ -48,7 +48,7 @@ export const getCareSitesChildren = async(careSite : ScopeTreeRow | null): Promi
     if (!children) return []
 
 
-    const childrenData:BackendCareSite[] = (children && children.data && children.status === 200) ? children.data.results : [] 
+    const childrenData:CareSite[] = (children && children.data && children.status === 200) ? children.data.results : [] 
 
     let _childrenData = childrenData ? childrenData?.map<ScopeTreeRow>((childrenData) => { 
         return({
