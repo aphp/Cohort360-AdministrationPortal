@@ -20,7 +20,6 @@ const ProviderHistory: React.FC = () => {
     getProfile(providerId)
       .then((userResp) => {
         setUser(userResp)
-        console.log(`userResp`, userResp)
       })
       .then(() => setLoading(false))
   }, [providerId])
