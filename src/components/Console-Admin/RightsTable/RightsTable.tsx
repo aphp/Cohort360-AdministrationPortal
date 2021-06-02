@@ -44,7 +44,7 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
 
   const _getAccesses = () => {
     setLoading(true)
-    getAccesses(right.provider_history_id)
+    getAccesses(right.provider_history_id, page)
       .then((res) => {
         setAccesses(res?.accesses)
         setTotal(res?.total)
@@ -54,7 +54,7 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
 
   useEffect(() => {
     _getAccesses()
-  }, [accesses?.length]) // eslint-disable-line
+  }, [accesses?.length, page]) // eslint-disable-line
 
   const onClose = () => {
     setOpen(false)
@@ -169,7 +169,7 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
         className={classes.pagination}
         count={Math.ceil(total / rowsPerPage)}
         shape="rounded"
-        // onChange={onChangePage}
+        onChange={(event, page: number) => setPage(page)}
         page={page}
       />
 

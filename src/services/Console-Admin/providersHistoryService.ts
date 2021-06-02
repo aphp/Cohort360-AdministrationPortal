@@ -37,8 +37,8 @@ export const submitCreateProfile = async (firstName: string, lastName: string,
     return success
 }
 
-export const getAccesses = async (providerHistoryId: number) => {
-    const accessesResp = await api.get(`/accesses/?provider_history_id=${providerHistoryId}&ordering=start_datetime`)
+export const getAccesses = async (providerHistoryId: number, page: number) => {
+    const accessesResp = await api.get(`/accesses/?page=${page}&provider_history_id=${providerHistoryId}&ordering=start_datetime`)
 
     if (accessesResp.status !== 200){
         return undefined
