@@ -58,7 +58,7 @@ const CareSitesDialog: React.FC<CareSitesDialogProps> = ({
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onCancel} color="primary">
+        <Button onClick={onCancel} color="secondary">
           Annuler
         </Button>
         <Button disabled={!careSite} onClick={onSubmit} color="primary">

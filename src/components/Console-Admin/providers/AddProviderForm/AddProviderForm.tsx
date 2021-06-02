@@ -23,9 +23,8 @@ const AddProviderDialog: React.FC<AddUserDialogProps> = ({ open, onClose }) => {
   const classes = useStyles()
 
   const [providerSourceValue, setProviderSourceValue] = useState("")
-  const [providerSourceValueError, setProviderSourceValueError] = useState(
-    false
-  )
+  const [providerSourceValueError, setProviderSourceValueError] =
+    useState(false)
   const [firstName, setFirstName] = useState("")
   const [firstNameError, setFirstNameError] = useState(false)
   const [lastName, setLastName] = useState("")
@@ -145,7 +144,7 @@ const AddProviderDialog: React.FC<AddUserDialogProps> = ({ open, onClose }) => {
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
+        <Button onClick={onClose} color="secondary">
           Annuler
         </Button>
         <Button onClick={onSubmit} color="primary">
