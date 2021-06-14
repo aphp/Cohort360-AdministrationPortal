@@ -2,7 +2,17 @@ import { makeStyles, createStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles(() =>
   createStyles({
-    searchButton: {
+    gridContainer: {
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginTop: 20,
+      marginBottom: 15
+    },
+    tableContainer:{
+      minWidth: 650,
+      backgroundColor: "white"
+    },
+    editButton: {
       backgroundColor: '#5BC5F2',
       color: '#FFF',
       borderRadius: 25,
