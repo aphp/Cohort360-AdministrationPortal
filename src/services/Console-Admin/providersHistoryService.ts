@@ -1,4 +1,4 @@
-import { AccessData } from 'types'
+import { AccessData, Role } from 'types'
 import api from '../api'
 
 export const getProfile = async (profileId: string) => {
@@ -55,7 +55,7 @@ export const submitCreateAccess = async (accessData: AccessData) => {
 
     await api.post(`/accesses/`, accessData)
     .then(res => {
-        if (res.status === 200) {
+        if (res.status === 201) {
             success= true       
         } else success = false
     })
@@ -85,5 +85,14 @@ export const getAssignableRoles = async (careSiteId?: string | number | null) =>
         return undefined
     }
 
-    return assignableRolesResp.data.results ?? undefined
+    const assignableRoles = assignableRolesResp.data.results.sort((a: Role, b: Role) => {
+        if (a.name > b.name) {
+            return 1
+        } else if (a.name > b.name){
+            return -1
+        }
+        return 0
+    }) ?? undefined
+
+    return assignableRoles
 }

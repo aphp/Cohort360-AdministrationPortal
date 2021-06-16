@@ -31,12 +31,14 @@ type AddAccessFormProps = {
   open: boolean
   onClose: () => void
   entityId: number
+  onSuccess: (success: boolean) => void
 }
 
 const AddAccessForm: React.FC<AddAccessFormProps> = ({
   open,
   onClose,
   entityId,
+  onSuccess,
 }) => {
   const classes = useStyles()
 
@@ -93,7 +95,9 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
       end_datetime: stringEndDate,
     }
 
-    submitCreateAccess(accessData)
+    submitCreateAccess(accessData).then((success) => {
+      if (success) onSuccess(true)
+    })
 
     setCareSite(null)
     setRoles([])
@@ -123,7 +127,12 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
               </IconButton>
             </>
           ) : (
-            <Button onClick={() => setOpenPerimeters(true)}>
+            <Button
+              variant="contained"
+              disableElevation
+              onClick={() => setOpenPerimeters(true)}
+              className={classes.button}
+            >
               Sélectionner un périmètre
             </Button>
           )}
@@ -166,7 +175,7 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
           <Typography variant="h3">Date de début :</Typography>
           <KeyboardDatePicker
             clearable
-            minDate={new Date()} // = today
+            minDate={moment()} // = today
             error={dateError}
             style={{ width: "250px" }}
             invalidDateMessage='La date doit être au format "JJ/MM/AAAA"'
@@ -211,7 +220,7 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
         </div>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
+        <Button onClick={onClose} color="secondary">
           Annuler
         </Button>
         <Button

@@ -25,6 +25,7 @@ import AddAccessForm from "../providers/AddAccessForm/AddAccessForm"
 import EditAccessForm from "../providers/EditAccessForm/EditAccessForm"
 import { getAccesses } from "services/Console-Admin/providersHistoryService"
 import { Access, Profile } from "types"
+import { Alert } from "@material-ui/lab"
 
 type RightsTableProps = {
   right: Profile
@@ -39,6 +40,7 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
   const [selectedAccess, setSelectedAccess] = useState<Access | null>(null)
+  const [success, setSuccess] = useState(false)
 
   const rowsPerPage = 100
 
@@ -55,6 +57,10 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
   useEffect(() => {
     _getAccesses()
   }, [accesses?.length, page]) // eslint-disable-line
+
+  useEffect(() => {
+    if (success) _getAccesses()
+  }, [success]) // eslint-disable-line
 
   const onClose = () => {
     setOpen(false)
@@ -177,12 +183,22 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
         open={open}
         onClose={onClose}
         entityId={right.provider_history_id}
+        onSuccess={setSuccess}
       />
       <EditAccessForm
         open={selectedAccess ? true : false}
         onClose={() => setSelectedAccess(null)}
         access={selectedAccess}
       />
+      {success && (
+        <Alert
+          severity="success"
+          onClose={() => setSuccess(false)}
+          className={classes.successAlert}
+        >
+          Le droit a bien été créé.
+        </Alert>
+      )}
     </Grid>
   )
 }

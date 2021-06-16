@@ -13,6 +13,12 @@ const useStyles = makeStyles(() => ({
       lineHeight: 2
     }
   },
+  button: {
+    backgroundColor: "#5BC5F2",
+    color: "#FFF",
+    borderRadius: 25,
+    height: 30,
+  },
   filter: {
     marginBottom: 24
   },
