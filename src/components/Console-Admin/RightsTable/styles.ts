@@ -52,6 +52,12 @@ const useStyles = makeStyles(() =>
         backgroundColor: "#FFF",
       },
     },
+    successAlert: {
+      position: "fixed",
+      bottom: 0,
+      right: 0,
+      zIndex: 100
+    }
   })
 );
 

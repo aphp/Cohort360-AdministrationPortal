@@ -55,7 +55,7 @@ export const submitCreateAccess = async (accessData: AccessData) => {
 
     await api.post(`/accesses/`, accessData)
     .then(res => {
-        if (res.status === 200) {
+        if (res.status === 201) {
             success= true       
         } else success = false
     })
