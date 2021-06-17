@@ -26,6 +26,7 @@ import EditAccessForm from "../providers/EditAccessForm/EditAccessForm"
 import { getAccesses } from "services/Console-Admin/providersHistoryService"
 import { Access, Profile } from "types"
 import { Alert } from "@material-ui/lab"
+import moment from "moment"
 
 type RightsTableProps = {
   right: Profile
@@ -40,8 +41,8 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
   const [selectedAccess, setSelectedAccess] = useState<Access | null>(null)
-  const [success, setSuccess] = useState(false)
-
+  const [addAccessSuccess, setAddAccessSuccess] = useState(false)
+  const [editAccessSuccess, setEditAccessSuccess] = useState(false)
   const rowsPerPage = 100
 
   const _getAccesses = () => {
@@ -59,8 +60,9 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
   }, [accesses?.length, page]) // eslint-disable-line
 
   useEffect(() => {
-    if (success) _getAccesses()
-  }, [success]) // eslint-disable-line
+    if (addAccessSuccess) _getAccesses()
+    if (editAccessSuccess) _getAccesses()
+  }, [addAccessSuccess, editAccessSuccess]) // eslint-disable-line
 
   const onClose = () => {
     setOpen(false)
@@ -127,16 +129,16 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
                     <TableCell align="center">{access?.role?.name}</TableCell>
                     <TableCell align="center">
                       {access.actual_start_datetime
-                        ? new Date(
-                            access.actual_start_datetime
-                          ).toLocaleDateString("fr-FR")
+                        ? moment(access.actual_start_datetime).format(
+                            "DD/MM/YYYY"
+                          )
                         : "-"}
                     </TableCell>
                     <TableCell align="center">
                       {access.actual_end_datetime
-                        ? new Date(
-                            access.actual_end_datetime
-                          ).toLocaleDateString("fr-FR")
+                        ? moment(access.actual_end_datetime).format(
+                            "DD/MM/YYYY"
+                          )
                         : "-"}
                     </TableCell>
                     <TableCell align="center">
@@ -183,20 +185,30 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
         open={open}
         onClose={onClose}
         entityId={right.provider_history_id}
-        onSuccess={setSuccess}
+        onSuccess={setAddAccessSuccess}
       />
       <EditAccessForm
         open={selectedAccess ? true : false}
         onClose={() => setSelectedAccess(null)}
         access={selectedAccess}
+        onSuccess={setEditAccessSuccess}
       />
-      {success && (
+      {addAccessSuccess && (
         <Alert
           severity="success"
-          onClose={() => setSuccess(false)}
+          onClose={() => setAddAccessSuccess(false)}
           className={classes.successAlert}
         >
           Le droit a bien été créé.
+        </Alert>
+      )}
+      {editAccessSuccess && (
+        <Alert
+          severity="success"
+          onClose={() => setEditAccessSuccess(false)}
+          className={classes.successAlert}
+        >
+          Les dates d'accès ont bien été éditées.
         </Alert>
       )}
     </Grid>

@@ -3,7 +3,6 @@ import moment from "moment"
 
 import {
   Button,
-  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -24,12 +23,14 @@ type EditAccessFormProps = {
   open: boolean
   onClose: () => void
   access?: Access | null
+  onSuccess: (success: boolean) => void
 }
 
 const EditAccessForm: React.FC<EditAccessFormProps> = ({
   open,
   onClose,
   access,
+  onSuccess,
 }) => {
   const classes = useStyles()
 
@@ -46,7 +47,9 @@ const EditAccessForm: React.FC<EditAccessFormProps> = ({
     )
   )
   const [dateError, setDateError] = useState(false)
-  const [loading, setLoading] = useState(false)
+
+  const isStartDatePast = startDate ? startDate.isBefore() : false
+  const isEndDatePast = endDate ? endDate.isBefore() : false
 
   useEffect(() => {
     setStartDate(
@@ -85,7 +88,9 @@ const EditAccessForm: React.FC<EditAccessFormProps> = ({
       end_datetime: stringEndDate,
     }
 
-    submitEditAccess(editData, access?.care_site_history_id)
+    submitEditAccess(editData, access?.care_site_history_id).then((success) => {
+      if (success) onSuccess(true)
+    })
 
     _onClose()
   }
@@ -103,10 +108,8 @@ const EditAccessForm: React.FC<EditAccessFormProps> = ({
         Éditer l'accès à {access?.care_site.care_site_name}:
       </DialogTitle>
       <DialogContent className={classes.dialog}>
-        {loading ? (
-          <CircularProgress />
-        ) : (
-          <>
+        <>
+          {!startDate?.isBefore() && (
             <Grid
               container
               justify="space-between"
@@ -134,6 +137,8 @@ const EditAccessForm: React.FC<EditAccessFormProps> = ({
                 </Typography>
               )}
             </Grid>
+          )}
+          {!endDate?.isBefore() && (
             <Grid
               container
               justify="space-between"
@@ -161,22 +166,26 @@ const EditAccessForm: React.FC<EditAccessFormProps> = ({
                 </Typography>
               )}
             </Grid>
-            <div>
-              <InfoIcon color="action" className={classes.infoIcon} />
-              <Typography component="span">
-                Si aucune date de fin n'est renseignée, celle-ci sera fixée à
-                dans un an.
-              </Typography>
-            </div>
-          </>
-        )}
+          )}
+          <div>
+            <InfoIcon color="action" className={classes.infoIcon} />
+            <Typography component="span">
+              Vous ne pouvez éditer que les dates qui ne sont pas encore
+              passées.
+            </Typography>
+          </div>
+        </>
       </DialogContent>
 
       <DialogActions>
         <Button onClick={_onClose} color="secondary">
           Annuler
         </Button>
-        <Button disabled={dateError} onClick={onSubmit} color="primary">
+        <Button
+          disabled={dateError || (isStartDatePast && isEndDatePast)}
+          onClick={onSubmit}
+          color="primary"
+        >
           Valider
         </Button>
       </DialogActions>
