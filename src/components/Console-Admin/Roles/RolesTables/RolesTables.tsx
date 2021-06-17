@@ -12,17 +12,12 @@ import {
   TableRow,
   Typography,
 } from "@material-ui/core"
-// import Pagination from "@material-ui/lab/Pagination"
-
-// import EditIcon from "@material-ui/icons/Add"
-// import CheckIcon from "@material-ui/icons/Check"
-// import CloseIcon from "@material-ui/icons/Close"
 import EditIcon from '@material-ui/icons/Edit'
 import FiberManualRecordRoundedIcon from "@material-ui/icons/FiberManualRecordRounded"
 
+import EditRolesModal from '../EditRolesModal/EditRolesModal'
 import useStyles from "./styles"
-// import AddAccessForm from "../providers/AddAccessForm/AddAccessForm"
-// import { submitGetAccesses } from "services/Console-Admin/providersHistoryService"
+
 import { Role } from "types"
 
 type RolesTableProps = {
@@ -275,6 +270,8 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
           </TableCell>
         </TableRow>
       )}
+
+      <EditRolesModal open={open} onClose={() => setOpen(false)} />
     </Grid>
   )
 
