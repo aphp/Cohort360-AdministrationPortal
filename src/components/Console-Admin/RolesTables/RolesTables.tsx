@@ -85,7 +85,7 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
                   </TableHead>
                   <TableBody>
                     <TableRow>
-                      <TableCell>Editer un rôle</TableCell>
+                      <TableCell>Gestion des rôles</TableCell>
                       <TableCell align="right">
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
@@ -96,7 +96,7 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Ajouter un utilisateur</TableCell>
+                      <TableCell>Ajouter un utilisateur / profil</TableCell>
                       <TableCell align="right">
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
@@ -107,7 +107,7 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Modifier un utilisateur</TableCell>
+                      <TableCell>Modifier un utilisateur / profil</TableCell>
                       <TableCell align="right">
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
@@ -118,7 +118,7 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>Lecture seul sur un utilisateur</TableCell>
+                      <TableCell>Consulter la liste des utilisateurs / profils</TableCell>
                       <TableCell align="right">
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
@@ -129,7 +129,7 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>droit 5</TableCell>
+                      <TableCell>Éditer les accès administrateurs d'un périmètre</TableCell>
                       <TableCell align="right">
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
@@ -140,7 +140,7 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>droit 6</TableCell>
+                      <TableCell>Consulter la liste des accès administrateur d'un périmètre</TableCell>
                       <TableCell align="right">
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
@@ -151,7 +151,7 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>droit 7</TableCell>
+                      <TableCell>Éditer les accès administrateurs des sous-périmètres</TableCell>
                       <TableCell align="right">
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
@@ -162,7 +162,7 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>droit 8</TableCell>
+                      <TableCell>Consulter la liste des accès administrateur des sous-périmètres</TableCell>
                       <TableCell align="right">
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
@@ -173,7 +173,7 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>droit 9</TableCell>
+                      <TableCell>Éditer les accès aux données patients d'un périmètre</TableCell>
                       <TableCell align="right">
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
@@ -184,7 +184,7 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>droit 10</TableCell>
+                      <TableCell>Consulter la liste des accès aux données patients d'un périmètre</TableCell>
                       <TableCell align="right">
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
@@ -195,7 +195,7 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>droit 11</TableCell>
+                      <TableCell>Éditer les accès aux données patients des sous-périmètres</TableCell>
                       <TableCell align="right">
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
@@ -206,7 +206,7 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>droit 12</TableCell>
+                      <TableCell>Consulter la liste des accès aux données patients des sous-périmètres</TableCell>
                       <TableCell align="right">
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
@@ -217,7 +217,7 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>droit 13</TableCell>
+                      <TableCell>Lecture des données patients nominatives</TableCell>
                       <TableCell align="right">
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
@@ -228,7 +228,7 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>droit 14</TableCell>
+                      <TableCell>Lecture des données patients pseudonymisées</TableCell>
                       <TableCell align="right">
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
@@ -239,7 +239,7 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>droit 15</TableCell>
+                      <TableCell>Export des données patients nominatives</TableCell>
                       <TableCell align="right">
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
@@ -250,7 +250,7 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
                       </TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>droit 16</TableCell>
+                      <TableCell>Export des données patients pseudonymisées</TableCell>
                       <TableCell align="right">
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
