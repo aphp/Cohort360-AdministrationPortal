@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import { CircularProgress, Grid } from "@material-ui/core"
 
 import { getRoles } from "services/Console-Admin/rolesService"
-import RolesTables from "components/Console-Admin/RolesTables/RolesTables"
+import RolesTables from "components/Console-Admin/Roles/RolesTables/RolesTables"
 import useStyles from "./styles"
 import { Role } from "types"
 

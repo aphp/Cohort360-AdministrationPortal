@@ -1,4 +1,3 @@
-import { Role } from 'types'
 import api from '../api'
 
 export const getRoles = async () => {
