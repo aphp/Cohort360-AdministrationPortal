@@ -31,8 +31,10 @@ export const submitCreateProfile = async (firstName: string, lastName: string,
                     success = true   
                 } else success = false
             })
+            .catch(error => success = false)
         }
     })
+    .catch(error => success = false)
 
     return success
 }
@@ -59,6 +61,9 @@ export const submitCreateAccess = async (accessData: AccessData) => {
             success= true       
         } else success = false
     })
+    .catch(error => {
+        success = false
+    })
 
     return success
 }
@@ -71,6 +76,9 @@ export const submitEditAccess = async (editData: AccessData, careSiteHistoryId?:
         if (res.status === 200){
             success = true
         } else success = false
+    })
+    .catch(error => {
+        success = false
     })
 
     return success

@@ -53,6 +53,12 @@ const useStyles = makeStyles(() =>
       '&:last-child': {
         marginRight: 0
       }
+    },
+    alert: {
+      position: "fixed",
+      bottom: 0,
+      right: 0,
+      zIndex: 100
     }
   })
 );

@@ -16,6 +16,7 @@ import {
   Typography,
   Paper,
 } from "@material-ui/core"
+import Alert from "@material-ui/lab/Alert"
 import Pagination from "@material-ui/lab/Pagination"
 
 import PersonAddIcon from "@material-ui/icons/PersonAdd"
@@ -59,6 +60,8 @@ const ProvidersTable = () => {
   const [orderBy, setOrderBy] = useState<string>("lastname")
   const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc")
   const [searchInput, setSearchInput] = useState("")
+  const [addProviderSuccess, setAddProviderSuccess] = useState(false)
+  const [addProviderFail, setAddProviderFail] = useState(false)
 
   const [open, setOpen] = useState(false)
 
@@ -199,7 +202,30 @@ const ProvidersTable = () => {
         page={page}
       />
 
-      <AddUserDialog open={open} onClose={() => setOpen(false)} />
+      <AddUserDialog
+        open={open}
+        onClose={() => setOpen(false)}
+        onSuccess={setAddProviderSuccess}
+        onFail={setAddProviderFail}
+      />
+      {addProviderSuccess && (
+        <Alert
+          severity="success"
+          onClose={() => setAddProviderSuccess(false)}
+          className={classes.alert}
+        >
+          L'utilisateur a bien été créé.
+        </Alert>
+      )}
+      {addProviderFail && (
+        <Alert
+          severity="success"
+          onClose={() => setAddProviderFail(false)}
+          className={classes.alert}
+        >
+          Erreur lors de la création de l'utilisateur.
+        </Alert>
+      )}
     </Grid>
   )
 }

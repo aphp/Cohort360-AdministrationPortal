@@ -16,6 +16,10 @@ const useStyles = makeStyles(() => ({
   filter: {
     marginBottom: 24
   },
+  infoIcon: {
+    height: 20,
+    margin: "0 5px -5px 0"
+  }
 }))
 
 export default useStyles
