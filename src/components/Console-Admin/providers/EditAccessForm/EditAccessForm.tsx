@@ -24,6 +24,7 @@ type EditAccessFormProps = {
   onClose: () => void
   access?: Access | null
   onSuccess: (success: boolean) => void
+  onFail: (fail: boolean) => void
 }
 
 const EditAccessForm: React.FC<EditAccessFormProps> = ({
@@ -31,6 +32,7 @@ const EditAccessForm: React.FC<EditAccessFormProps> = ({
   onClose,
   access,
   onSuccess,
+  onFail,
 }) => {
   const classes = useStyles()
 
@@ -89,7 +91,11 @@ const EditAccessForm: React.FC<EditAccessFormProps> = ({
     }
 
     submitEditAccess(editData, access?.care_site_history_id).then((success) => {
-      if (success) onSuccess(true)
+      if (success) {
+        onSuccess(true)
+      } else {
+        onFail(true)
+      }
     })
 
     _onClose()

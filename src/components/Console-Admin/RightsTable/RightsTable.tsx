@@ -42,7 +42,9 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
   const [loading, setLoading] = useState(false)
   const [selectedAccess, setSelectedAccess] = useState<Access | null>(null)
   const [addAccessSuccess, setAddAccessSuccess] = useState(false)
+  const [addAccessFail, setAddAccessFail] = useState(false)
   const [editAccessSuccess, setEditAccessSuccess] = useState(false)
+  const [editAccessFail, setEditAccessFail] = useState(false)
   const rowsPerPage = 100
 
   const _getAccesses = () => {
@@ -186,29 +188,49 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
         onClose={onClose}
         entityId={right.provider_history_id}
         onSuccess={setAddAccessSuccess}
+        onFail={setAddAccessFail}
       />
       <EditAccessForm
         open={selectedAccess ? true : false}
         onClose={() => setSelectedAccess(null)}
         access={selectedAccess}
         onSuccess={setEditAccessSuccess}
+        onFail={setEditAccessFail}
       />
       {addAccessSuccess && (
         <Alert
           severity="success"
           onClose={() => setAddAccessSuccess(false)}
-          className={classes.successAlert}
+          className={classes.alert}
         >
           Le droit a bien été créé.
+        </Alert>
+      )}
+      {addAccessFail && (
+        <Alert
+          severity="success"
+          onClose={() => setAddAccessFail(false)}
+          className={classes.alert}
+        >
+          Erreur lors de la création du droit.
         </Alert>
       )}
       {editAccessSuccess && (
         <Alert
           severity="success"
           onClose={() => setEditAccessSuccess(false)}
-          className={classes.successAlert}
+          className={classes.alert}
         >
           Les dates d'accès ont bien été éditées.
+        </Alert>
+      )}
+      {editAccessFail && (
+        <Alert
+          severity="error"
+          onClose={() => setEditAccessFail(false)}
+          className={classes.alert}
+        >
+          Erreur lors de l'édition de l'accès.
         </Alert>
       )}
     </Grid>

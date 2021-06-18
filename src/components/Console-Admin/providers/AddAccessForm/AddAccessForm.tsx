@@ -32,6 +32,7 @@ type AddAccessFormProps = {
   onClose: () => void
   entityId: number
   onSuccess: (success: boolean) => void
+  onFail: (fail: boolean) => void
 }
 
 const AddAccessForm: React.FC<AddAccessFormProps> = ({
@@ -39,6 +40,7 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
   onClose,
   entityId,
   onSuccess,
+  onFail,
 }) => {
   const classes = useStyles()
 
@@ -96,7 +98,11 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
     }
 
     submitCreateAccess(accessData).then((success) => {
-      if (success) onSuccess(true)
+      if (success) {
+        onSuccess(true)
+      } else {
+        onFail(true)
+      }
     })
 
     setCareSite(null)

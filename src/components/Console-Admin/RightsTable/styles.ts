@@ -52,7 +52,7 @@ const useStyles = makeStyles(() =>
         backgroundColor: "#FFF",
       },
     },
-    successAlert: {
+    alert: {
       position: "fixed",
       bottom: 0,
       right: 0,
