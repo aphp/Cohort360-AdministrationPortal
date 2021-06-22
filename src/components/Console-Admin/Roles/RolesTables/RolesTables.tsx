@@ -28,6 +28,7 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
   const classes = useStyles()
 
   const [open, setOpen] = useState(false)
+  const [selectedRole, setSelectedRole] = useState<Role | null>(null)
   // const [loading, setLoading] = useState(false)
 
   console.log(`roles`, roles)
@@ -38,7 +39,7 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
       key: 0
     },
     {
-      label: 'status actif/inactif',
+      label: 'statut actif/inactif',
       key: 1
     }
   ]
