@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import { useHistory } from "react-router-dom"
 
 import {
   CircularProgress,
@@ -15,6 +16,7 @@ import {
 } from "@material-ui/core"
 import Pagination from "@material-ui/lab/Pagination"
 
+import CallMadeIcon from "@material-ui/icons/CallMade"
 import EditIcon from "@material-ui/icons/Edit"
 import FiberManualRecordRoundedIcon from "@material-ui/icons/FiberManualRecordRounded"
 
@@ -44,6 +46,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
   getAccesses,
 }) => {
   const classes = useStyles()
+  const history = useHistory()
 
   const [selectedAccess, setSelectedAccess] = useState<Access | null>(null)
   const [editAccessSuccess, setEditAccessSuccess] = useState(false)
@@ -99,6 +102,15 @@ const RightsTable: React.FC<RightsTableProps> = ({
                       <TableCell align="left">
                         {access.provider_history.lastname}{" "}
                         {access.provider_history.firstname}
+                        <IconButton
+                          onClick={() =>
+                            history.push(
+                              `/user-profile/${access.provider_history_id}`
+                            )
+                          }
+                        >
+                          <CallMadeIcon />
+                        </IconButton>
                       </TableCell>
                     )}
                     <TableCell align={displayName ? "center" : "left"}>
