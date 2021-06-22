@@ -3,7 +3,7 @@ import { CircularProgress, Grid, Typography } from "@material-ui/core"
 import { useParams } from "react-router"
 
 import { getProfile } from "services/Console-Admin/providersHistoryService"
-import RightsTable from "components/Console-Admin/RightsTable/RightsTable"
+import Rights from "components/Console-Admin/Rights/Rights"
 import useStyles from "./styles"
 import { Profile } from "types"
 
@@ -42,7 +42,7 @@ const ProviderHistory: React.FC = () => {
                   {user[0].provider_source_value}
                 </Typography>
                 {user.map((userRight: Profile) => (
-                  <RightsTable right={userRight} />
+                  <Rights right={userRight} />
                 ))}
               </>
             )}

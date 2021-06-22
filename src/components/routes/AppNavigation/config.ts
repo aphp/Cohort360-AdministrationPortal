@@ -1,7 +1,8 @@
 import Login from 'views/Login/Login'
 import Providers from 'views/Console-Admin/Providers/Providers'
 import ProvidersHistory from 'views/Console-Admin/ProvidersHistory/ProvidersHistory'
-import CareSites from 'views/Console-Admin/CareSite/CareSites'
+import CareSites from 'views/Console-Admin/CareSites/CareSites'
+import CareSiteHistory from 'views/Console-Admin/CareSiteHistory/CareSiteHistory'
 import Roles from 'views/Console-Admin/Roles/Roles'
 
 const Config = [
@@ -46,6 +47,17 @@ const Config = [
     name: 'CareSites',
     isPrivate: true,
     component: CareSites
+  },
+  /** 
+   * Console-Admin CareSite View
+   */
+  {
+    exact: true,
+    displayTopBar: true,
+    path: '/caresite/:careSiteId',
+    name: 'CareSite',
+    isPrivate: true,
+    component: CareSiteHistory
   },
   /**
    * Console-Admin Roles View

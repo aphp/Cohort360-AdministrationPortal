@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 
 import {
-  Button,
   CircularProgress,
   Grid,
   IconButton,
@@ -16,95 +15,66 @@ import {
 } from "@material-ui/core"
 import Pagination from "@material-ui/lab/Pagination"
 
-import AddIcon from "@material-ui/icons/Add"
 import EditIcon from "@material-ui/icons/Edit"
 import FiberManualRecordRoundedIcon from "@material-ui/icons/FiberManualRecordRounded"
 
 import useStyles from "./styles"
-import AddAccessForm from "../providers/AddAccessForm/AddAccessForm"
-import EditAccessForm from "../providers/EditAccessForm/EditAccessForm"
-import { getAccesses } from "services/Console-Admin/providersHistoryService"
-import { Access, Profile } from "types"
+import EditAccessForm from "../../providers/EditAccessForm/EditAccessForm"
+import { Access } from "types"
 import { Alert } from "@material-ui/lab"
 import moment from "moment"
 
 type RightsTableProps = {
-  right: Profile
+  displayName: boolean
+  loading: boolean
+  page: number
+  setPage: (page: number) => void
+  total: number
+  accesses: Access[] | undefined
+  getAccesses: () => void
 }
 
-const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
+const RightsTable: React.FC<RightsTableProps> = ({
+  displayName,
+  loading,
+  page,
+  setPage,
+  total,
+  accesses,
+  getAccesses,
+}) => {
   const classes = useStyles()
 
-  const [open, setOpen] = useState(false)
-  const [accesses, setAccesses] = useState<Access[] | undefined>()
-  const [page, setPage] = useState(1)
-  const [total, setTotal] = useState(0)
-  const [loading, setLoading] = useState(false)
   const [selectedAccess, setSelectedAccess] = useState<Access | null>(null)
-  const [addAccessSuccess, setAddAccessSuccess] = useState(false)
-  const [addAccessFail, setAddAccessFail] = useState(false)
   const [editAccessSuccess, setEditAccessSuccess] = useState(false)
   const [editAccessFail, setEditAccessFail] = useState(false)
   const rowsPerPage = 100
 
-  const _getAccesses = () => {
-    setLoading(true)
-    getAccesses(right.provider_history_id, page)
-      .then((res) => {
-        setAccesses(res?.accesses)
-        setTotal(res?.total)
-      })
-      .finally(() => setLoading(false))
-  }
-
   useEffect(() => {
-    _getAccesses()
-  }, [accesses?.length, page]) // eslint-disable-line
+    if (editAccessSuccess) getAccesses()
+  }, [editAccessSuccess]) // eslint-disable-line
 
-  useEffect(() => {
-    if (addAccessSuccess) _getAccesses()
-    if (editAccessSuccess) _getAccesses()
-  }, [addAccessSuccess, editAccessSuccess]) // eslint-disable-line
-
-  const onClose = () => {
-    setOpen(false)
-    _getAccesses()
-  }
-
-  const columns = [
-    "Périmètre",
-    "Droit",
-    "Date de début",
-    "Date de fin",
-    "Actif",
-    "",
-  ]
+  const columns = displayName
+    ? ["Nom", "Périmètre", "Droit", "Date de début", "Date de fin", "Actif", ""]
+    : ["Périmètre", "Droit", "Date de début", "Date de fin", "Actif", ""]
 
   return (
     <Grid container justify="flex-end">
-      <Grid container justify="space-between" alignItems="center">
-        <Typography align="left" variant="h2" className={classes.title}>
-          Type de droit : {right.cdm_source}
-        </Typography>
-        {right.cdm_source === "MANUAL" && (
-          <Button
-            variant="contained"
-            disableElevation
-            startIcon={<AddIcon height="15px" fill="#FFF" />}
-            className={classes.searchButton}
-            onClick={() => setOpen(true)}
-          >
-            Nouvel accès
-          </Button>
-        )}
-      </Grid>
       <TableContainer component={Paper}>
         <Table className={classes.table}>
           <TableHead>
             <TableRow className={classes.tableHead}>
               {columns.map((column) => (
                 <TableCell
-                  align={column === "Périmètre" ? "left" : "center"}
+                  align={
+                    displayName
+                      ? column === "Nom"
+                        ? "left"
+                        : "center"
+                      : column === "Périmètre"
+                      ? "left"
+                      : "center"
+                  }
                   className={classes.tableHeadCell}
                 >
                   {column}
@@ -125,7 +95,13 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
               accesses.map((access: Access) => {
                 return (
                   <TableRow key={access.id} className={classes.tableBodyRows}>
-                    <TableCell align="left">
+                    {displayName && (
+                      <TableCell align="left">
+                        {access.provider_history.lastname}{" "}
+                        {access.provider_history.firstname}
+                      </TableCell>
+                    )}
+                    <TableCell align={displayName ? "center" : "left"}>
                       {access.care_site.care_site_name}
                     </TableCell>
                     <TableCell align="center">{access?.role?.name}</TableCell>
@@ -183,13 +159,6 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
         page={page}
       />
 
-      <AddAccessForm
-        open={open}
-        onClose={onClose}
-        entityId={right.provider_history_id}
-        onSuccess={setAddAccessSuccess}
-        onFail={setAddAccessFail}
-      />
       <EditAccessForm
         open={selectedAccess ? true : false}
         onClose={() => setSelectedAccess(null)}
@@ -197,24 +166,6 @@ const RightsTable: React.FC<RightsTableProps> = ({ right }) => {
         onSuccess={setEditAccessSuccess}
         onFail={setEditAccessFail}
       />
-      {addAccessSuccess && (
-        <Alert
-          severity="success"
-          onClose={() => setAddAccessSuccess(false)}
-          className={classes.alert}
-        >
-          Le droit a bien été créé.
-        </Alert>
-      )}
-      {addAccessFail && (
-        <Alert
-          severity="success"
-          onClose={() => setAddAccessFail(false)}
-          className={classes.alert}
-        >
-          Erreur lors de la création du droit.
-        </Alert>
-      )}
       {editAccessSuccess && (
         <Alert
           severity="success"

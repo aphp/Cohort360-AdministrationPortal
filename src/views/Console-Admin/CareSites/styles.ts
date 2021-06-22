@@ -8,6 +8,13 @@ const useStyles = makeStyles(() => ({
       paddingBottom: "20px",
       marginBottom: "40px",
     },
+    button : {
+      backgroundColor: '#5BC5F2',
+      color: "#FFF",
+      borderRadius: 25,
+      width: 125,
+      margin: "24px 8px 24px 0"
+    }
   }));
 
 export default useStyles

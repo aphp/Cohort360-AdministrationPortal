@@ -137,7 +137,8 @@ export type Access = {
   id: string
   care_site_history_id: number
   is_valid: boolean
-  provider_history: number
+  provider_history: Provider
+  provider_history_id: number
   care_site: CareSite
   role: Role
   entry_created_by: number

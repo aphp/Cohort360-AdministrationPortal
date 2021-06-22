@@ -80,3 +80,22 @@ export const getManageableCareSites = async (): Promise<ScopeTreeRow[]> => {
 
     return manageableCareSitesResp.data.results ?? []
 }
+
+export const getCareSiteAccesses = async (careSiteId: string) => {
+    const careSiteAccessesResp = await api.get(`/accesses/?care_site_id=${careSiteId}`)
+
+    if (careSiteAccessesResp.status !== 200) return undefined
+
+    return {
+        accesses: careSiteAccessesResp.data.results ?? undefined,
+        total: careSiteAccessesResp.data.count ?? 0
+    }
+} 
+
+export const getCareSite = async (careSiteId: string): Promise<string | undefined> => {
+    const careSiteResp = await api.get(`/care-sites/${careSiteId}/`)
+
+    if (careSiteResp.status !== 200) return undefined
+
+    return careSiteResp.data.care_site_name ?? undefined
+}
