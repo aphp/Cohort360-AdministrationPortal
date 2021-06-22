@@ -3,6 +3,7 @@ import moment from "moment"
 
 import {
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -150,7 +151,9 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
           className={classes.filter}
         >
           <Typography variant="h3">Rôle :</Typography>
-          {roles ? (
+          {loading ? (
+            <CircularProgress size={20} />
+          ) : roles ? (
             <Autocomplete
               disabled={!roles}
               options={roles}
