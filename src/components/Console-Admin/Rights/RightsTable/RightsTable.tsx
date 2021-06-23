@@ -105,7 +105,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
                         <IconButton
                           onClick={() =>
                             history.push(
-                              `/user-profile/${access.provider_history_id}`
+                              `/user-profile/${access.provider_history.provider_id}`
                             )
                           }
                         >
