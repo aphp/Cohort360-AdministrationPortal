@@ -11,11 +11,12 @@ import {
   TableHead,
   TableRow,
   Typography,
+  Switch
 } from "@material-ui/core"
 import EditIcon from '@material-ui/icons/Edit'
 import FiberManualRecordRoundedIcon from "@material-ui/icons/FiberManualRecordRounded"
 
-import EditRolesModal from '../EditRolesModal/EditRolesModal'
+import EditRoleSwitch from '../EditRolesModal/EditRolesModal'
 import useStyles from "./styles"
 
 import { Role } from "types"
@@ -44,6 +45,11 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
     }
   ]
 
+  // _handleEditRole(
+  //   setSelectedRole(role),
+  //   setOpen(true)
+  // )
+
   return (
     <Grid container justify="flex-end">
       {roles && roles.length > 0 ? (
@@ -60,7 +66,7 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
                     disableElevation
                     startIcon={<EditIcon />}
                     className={classes.editButton}
-                    onClick={() => setOpen(true)}
+                    onClick={() => setSelectedRole(role)}
                   />
                 )}
               </Grid>
@@ -70,7 +76,7 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
                     <TableRow className={classes.tableHead}>
                       {columns.map((column) => (
                         <TableCell
-                          // key={column.key}
+                          key={column.key}
                           align={column.label === "droit" ? "left" : "right"}
                           className={classes.tableHeadCell}
                         >
@@ -83,12 +89,22 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
                     <TableRow>
                       <TableCell>Gestion des rôles</TableCell>
                       <TableCell align="right">
-                        <FiberManualRecordRoundedIcon
-                          fontSize="small"
-                          style={{
-                            color: role.right_edit_roles ? "#BDEA88" : "#ED6D91",
-                           }}
-                        />
+                        {console.log(`selectedRole`, selectedRole)}
+                        {selectedRole ?
+                          <EditRoleSwitch
+                            open={selectedRole ? true : false}
+                            role={selectedRole}
+                            onClose={() => setSelectedRole(null)} 
+                          
+
+                          /> :
+                          <FiberManualRecordRoundedIcon
+                            fontSize="small"
+                            style={{
+                              color: role.right_edit_roles ? "#BDEA88" : "#ED6D91",
+                            }}
+                          />
+                        }
                       </TableCell>
                     </TableRow>
                     <TableRow>
@@ -272,7 +288,7 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
         </TableRow>
       )}
 
-      <EditRolesModal open={open} onClose={() => setOpen(false)} />
+      {/* <EditRolesModal open={open} onClose={() => setOpen(false)} /> */}
     </Grid>
   )
 
