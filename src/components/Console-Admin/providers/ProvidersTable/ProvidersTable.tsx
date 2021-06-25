@@ -73,29 +73,38 @@ const ProvidersTable = () => {
     getData(orderBy, orderDirection, page)
   }, [orderBy, orderDirection, searchInput, page]) // eslint-disable-line
 
+  useEffect(() => {
+    if (addProviderSuccess) getData(orderBy, orderDirection)
+  }, [addProviderSuccess]) // eslint-disable-line
+
   const getData = async (
     orderBy: string,
     orderDirection: string,
     page?: number
   ) => {
+    const _page = page ? page : 1
     if (refreshed) {
       const urlSearch = searchInput ? `&search=${searchInput}` : ""
       const urlOrderingDirection = orderDirection === "desc" ? "-" : ""
 
       history.push({
         pathname: "/users",
-        search: `?page=${page}&ordering=${urlOrderingDirection}${orderBy}${urlSearch}`,
+        search: `?page=${_page}&ordering=${urlOrderingDirection}${orderBy}${urlSearch}`,
       })
     }
     setLoading(true)
-    getProviders(orderBy, orderDirection, page, searchInput)
+    getProviders(orderBy, orderDirection, _page, searchInput)
       .then((resp) => {
         if (resp) {
           setProviders(resp.providers.length === 0 ? undefined : resp.providers)
           setTotal(resp.total)
         }
       })
-      .catch((error) => console.log(error))
+      .catch((error) => {
+        console.log(error)
+        setProviders(null)
+        setTotal(0)
+      })
       .finally(() => {
         setLoading(false)
       })
@@ -219,7 +228,7 @@ const ProvidersTable = () => {
       )}
       {addProviderFail && (
         <Alert
-          severity="success"
+          severity="error"
           onClose={() => setAddProviderFail(false)}
           className={classes.alert}
         >

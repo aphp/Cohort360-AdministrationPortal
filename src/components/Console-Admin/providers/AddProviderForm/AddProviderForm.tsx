@@ -85,6 +85,16 @@ const AddProviderDialog: React.FC<AddUserDialogProps> = ({
         }
       }
     )
+
+    setProviderSourceValue("")
+    setProviderSourceValueError(false)
+    setFirstName("")
+    setFirstNameError(false)
+    setLastName("")
+    setLastNameError(false)
+    setEmail("")
+    setEmailError(false)
+    onClose()
   }
 
   return (
