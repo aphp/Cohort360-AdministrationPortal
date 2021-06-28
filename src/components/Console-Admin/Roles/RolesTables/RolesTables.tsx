@@ -11,12 +11,12 @@ import {
   TableHead,
   TableRow,
   Typography,
-  Switch
+  // Switch
 } from "@material-ui/core"
 import EditIcon from '@material-ui/icons/Edit'
 import FiberManualRecordRoundedIcon from "@material-ui/icons/FiberManualRecordRounded"
 
-import EditRoleSwitch from '../EditRolesModal/EditRolesModal'
+import { EditRolesSwitch } from '../EditRolesModal/EditRolesModal'
 import useStyles from "./styles"
 
 import { Role } from "types"
@@ -28,7 +28,7 @@ type RolesTableProps = {
 const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
   const classes = useStyles()
 
-  const [open, setOpen] = useState(false)
+  // const [open, setOpen] = useState(false)
   const [selectedRole, setSelectedRole] = useState<Role | null>(null)
   // const [loading, setLoading] = useState(false)
 
@@ -60,7 +60,14 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
                 <Typography>
                   Rôle: {role.name}
                 </Typography>
-                {role.name && (
+                  {selectedRole && selectedRole?.role_id === role.role_id ?
+                  <Button
+                    className={classes.editButton}
+                    onClick={() => setSelectedRole(null)}
+                  >
+                    Valider
+                  </Button>
+                    :
                   <Button 
                     variant="contained"
                     disableElevation
@@ -68,7 +75,7 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
                     className={classes.editButton}
                     onClick={() => setSelectedRole(role)}
                   />
-                )}
+                  }
               </Grid>
               <TableContainer component={Paper}>
                 <Table className={classes.table}>
@@ -86,192 +93,297 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow>
+                    <TableRow className={classes.tableBodyRows}>
                       <TableCell>Gestion des rôles</TableCell>
                       <TableCell align="right">
-                        {console.log(`selectedRole`, selectedRole)}
-                        {selectedRole ?
-                          <EditRoleSwitch
-                            open={selectedRole ? true : false}
-                            role={selectedRole}
-                            onClose={() => setSelectedRole(null)} 
-                          
-
-                          /> :
-                          <FiberManualRecordRoundedIcon
-                            fontSize="small"
-                            style={{
-                              color: role.right_edit_roles ? "#BDEA88" : "#ED6D91",
-                            }}
-                          />
-                        }
+                      {selectedRole && selectedRole.role_id === role.role_id ?
+                        <EditRolesSwitch
+                          open={selectedRole ? true : false}
+                          role={selectedRole}
+                          onClose={() => setSelectedRole(null)} 
+                        /> :
+                        <FiberManualRecordRoundedIcon
+                          fontSize="small"
+                          style={{
+                            color: role.right_edit_roles ? "#BDEA88" : "#ED6D91",
+                          }}
+                        />
+                      }
                       </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Ajouter un utilisateur / profil</TableCell>
                       <TableCell align="right">
+                      {selectedRole && selectedRole.role_id === role.role_id ?
+                        <EditRolesSwitch
+                          open={selectedRole ? true : false}
+                          role={selectedRole}
+                          onClose={() => setSelectedRole(null)} 
+                        /> :
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
                           style={{
                             color: role.right_add_users ? "#BDEA88" : "#ED6D91",
                            }}
                         />
+                      }
                       </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Modifier un utilisateur / profil</TableCell>
                       <TableCell align="right">
+                      {selectedRole && selectedRole.role_id === role.role_id ?
+                        <EditRolesSwitch
+                          open={selectedRole ? true : false}
+                          role={selectedRole}
+                          onClose={() => setSelectedRole(null)} 
+                        /> :
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
                           style={{
                             color: role.right_edit_users ? "#BDEA88" : "#ED6D91",
                            }}
                         />
+                      }
                       </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Consulter la liste des utilisateurs / profils</TableCell>
                       <TableCell align="right">
+                      {selectedRole && selectedRole.role_id === role.role_id ?
+                        <EditRolesSwitch
+                          open={selectedRole ? true : false}
+                          role={selectedRole}
+                          onClose={() => setSelectedRole(null)} 
+                        /> :
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
                           style={{
                             color: role.right_read_users ? "#BDEA88" : "#ED6D91",
                            }}
                         />
+                      }
                       </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Éditer les accès administrateurs d'un périmètre</TableCell>
                       <TableCell align="right">
+                      {selectedRole && selectedRole.role_id === role.role_id ?
+                        <EditRolesSwitch
+                          open={selectedRole ? true : false}
+                          role={selectedRole}
+                          onClose={() => setSelectedRole(null)} 
+                        /> :
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
                           style={{
                             color: role.right_manage_admin_accesses_same_level ? "#BDEA88" : "#ED6D91",
                            }}
                         />
+                      }
                       </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Consulter la liste des accès administrateur d'un périmètre</TableCell>
                       <TableCell align="right">
+                      {selectedRole && selectedRole.role_id === role.role_id ?
+                        <EditRolesSwitch
+                          open={selectedRole ? true : false}
+                          role={selectedRole}
+                          onClose={() => setSelectedRole(null)} 
+                        /> :
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
                           style={{
                             color: role.right_read_admin_accesses_same_level ? "#BDEA88" : "#ED6D91",
                            }}
                         />
+                      }
                       </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Éditer les accès administrateurs des sous-périmètres</TableCell>
                       <TableCell align="right">
+                      {selectedRole && selectedRole.role_id === role.role_id ?
+                        <EditRolesSwitch
+                          open={selectedRole ? true : false}
+                          role={selectedRole}
+                          onClose={() => setSelectedRole(null)} 
+                        /> :
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
                           style={{
                             color: role.right_manage_admin_accesses_inferior_levels ? "#BDEA88" : "#ED6D91",
                            }}
                         />
+                      }
                       </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Consulter la liste des accès administrateur des sous-périmètres</TableCell>
                       <TableCell align="right">
+                      {selectedRole && selectedRole.role_id === role.role_id ?
+                        <EditRolesSwitch
+                          open={selectedRole ? true : false}
+                          role={selectedRole}
+                          onClose={() => setSelectedRole(null)} 
+                        /> :
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
                           style={{
                             color: role.right_read_admin_accesses_inferior_levels ? "#BDEA88" : "#ED6D91",
                            }}
                         />
+                      }
                       </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Éditer les accès aux données patients d'un périmètre</TableCell>
                       <TableCell align="right">
+                      {selectedRole && selectedRole.role_id === role.role_id ?
+                        <EditRolesSwitch
+                          open={selectedRole ? true : false}
+                          role={selectedRole}
+                          onClose={() => setSelectedRole(null)} 
+                        /> :
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
                           style={{
                             color: role.right_manage_data_accesses_same_level ? "#BDEA88" : "#ED6D91",
                            }}
                         />
+                      }
                       </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Consulter la liste des accès aux données patients d'un périmètre</TableCell>
                       <TableCell align="right">
+                      {selectedRole && selectedRole.role_id === role.role_id ?
+                        <EditRolesSwitch
+                          open={selectedRole ? true : false}
+                          role={selectedRole}
+                          onClose={() => setSelectedRole(null)} 
+                        /> :
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
                           style={{
                             color: role.right_read_data_accesses_same_level ? "#BDEA88" : "#ED6D91",
                            }}
                         />
+                      }
                       </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Éditer les accès aux données patients des sous-périmètres</TableCell>
                       <TableCell align="right">
+                      {selectedRole && selectedRole.role_id === role.role_id ?
+                        <EditRolesSwitch
+                          open={selectedRole ? true : false}
+                          role={selectedRole}
+                          onClose={() => setSelectedRole(null)} 
+                        /> :
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
                           style={{
                             color: role.right_manage_data_accesses_inferior_levels ? "#BDEA88" : "#ED6D91",
                            }}
                         />
+                      }
                       </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Consulter la liste des accès aux données patients des sous-périmètres</TableCell>
                       <TableCell align="right">
+                      {selectedRole && selectedRole.role_id === role.role_id ?
+                        <EditRolesSwitch
+                          open={selectedRole ? true : false}
+                          role={selectedRole}
+                          onClose={() => setSelectedRole(null)} 
+                        /> :
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
                           style={{
                             color: role.right_read_data_accesses_inferior_levels ? "#BDEA88" : "#ED6D91",
                            }}
                         />
+                      }
                       </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Lecture des données patients nominatives</TableCell>
                       <TableCell align="right">
+                      {selectedRole && selectedRole.role_id === role.role_id ?
+                        <EditRolesSwitch
+                          open={selectedRole ? true : false}
+                          role={selectedRole}
+                          onClose={() => setSelectedRole(null)} 
+                        /> :
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
                           style={{
                             color: role.right_read_patient_nominative ? "#BDEA88" : "#ED6D91",
                            }}
                         />
+                      }
                       </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Lecture des données patients pseudonymisées</TableCell>
                       <TableCell align="right">
+                      {selectedRole && selectedRole.role_id === role.role_id ?
+                        <EditRolesSwitch
+                          open={selectedRole ? true : false}
+                          role={selectedRole}
+                          onClose={() => setSelectedRole(null)} 
+                        /> :
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
                           style={{
                             color: role.right_read_patient_pseudo_anonymised ? "#BDEA88" : "#ED6D91",
                            }}
                         />
+                      }
                       </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Export des données patients nominatives</TableCell>
                       <TableCell align="right">
+                      {selectedRole && selectedRole.role_id === role.role_id ?
+                        <EditRolesSwitch
+                          open={selectedRole ? true : false}
+                          role={selectedRole}
+                          onClose={() => setSelectedRole(null)} 
+                        /> :
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
                           style={{
                             color: role.right_export_jupyter_patient_nominative ? "#BDEA88" : "#ED6D91",
                            }}
                         />
+                      }
                       </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell>Export des données patients pseudonymisées</TableCell>
                       <TableCell align="right">
+                      {selectedRole && selectedRole.role_id === role.role_id ?
+                        <EditRolesSwitch
+                          open={selectedRole ? true : false}
+                          role={selectedRole}
+                          onClose={() => setSelectedRole(null)} 
+                        /> :
                         <FiberManualRecordRoundedIcon
                           fontSize="small"
                           style={{
                             color: role.right_export_jupyter_patient_pseudo_anonymised ? "#BDEA88" : "#ED6D91",
                            }}
                         />
+                      }
                       </TableCell>
                     </TableRow>
+                    {/* {selectedRole ?
+                    
+                   } */}
                    </TableBody>
                  </Table>
                </TableContainer>
@@ -287,8 +399,6 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
           </TableCell>
         </TableRow>
       )}
-
-      {/* <EditRolesModal open={open} onClose={() => setOpen(false)} /> */}
     </Grid>
   )
 

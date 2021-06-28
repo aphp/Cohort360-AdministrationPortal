@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { Switch } from '@material-ui/core'
+import { Switch, Button } from '@material-ui/core'
 
-import useStyles from './styles'
+// import useStyles from './styles'
 import { Role } from 'types'
 
 type EditRolesModalProps = {
@@ -13,7 +13,13 @@ type EditRolesModalProps = {
     onFail?: () => void
 }
 
-const EditRolesModal: React.FC<EditRolesModalProps> = ({
+type EditValidationProps = {
+    onClose?: () => void
+    onSuccess?: () => void
+    onFail?: () => void
+}
+
+export const EditRolesSwitch: React.FC<EditRolesModalProps> = ({
     role,
     open, 
     onClose,
@@ -28,4 +34,11 @@ const EditRolesModal: React.FC<EditRolesModalProps> = ({
     )
 }
 
-export default EditRolesModal
+export const EditRolesValidation: React.FC<EditValidationProps> = ({ onClose, onSuccess, onFail }) => {
+    return (
+        <>
+            <Button>Annuler</Button>
+            <Button>Validation</Button>
+        </>
+    )
+}

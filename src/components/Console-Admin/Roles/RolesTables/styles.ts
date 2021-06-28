@@ -8,19 +8,12 @@ const useStyles = makeStyles(() =>
       marginTop: 20,
       marginBottom: 15
     },
-    tableContainer:{
-      minWidth: 650,
-      backgroundColor: "white"
-    },
     editButton: {
       backgroundColor: '#5BC5F2',
       color: '#FFF',
       borderRadius: 25,
       height: 20,
       margin: '4px 0'
-    },
-    title: {
-      margin: "12px 0"
     },
     table: {
       minWidth: 650,
@@ -37,7 +30,7 @@ const useStyles = makeStyles(() =>
       padding: "0 20px",
     },
     tableBodyRows: {
-      height: 80,
+      height: 50,
       "&:nth-of-type(even)": {
         backgroundColor: "#FAF9F9",
       },
@@ -49,18 +42,6 @@ const useStyles = makeStyles(() =>
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-    },
-    pagination: {
-      margin: "10px 0",
-      float: "right",
-      "& button": {
-        backgroundColor: "#fff",
-        color: "#5BC5F2",
-      },
-      "& .MuiPaginationItem-page.Mui-selected": {
-        color: "#0063AF",
-        backgroundColor: "#FFF",
-      },
     },
   })
 )
