@@ -16,7 +16,7 @@ import {
 } from "@material-ui/core"
 import Pagination from "@material-ui/lab/Pagination"
 
-import CallMadeIcon from "@material-ui/icons/CallMade"
+import LaunchIcon from "@material-ui/icons/Launch"
 import EditIcon from "@material-ui/icons/Edit"
 import FiberManualRecordRoundedIcon from "@material-ui/icons/FiberManualRecordRounded"
 
@@ -58,8 +58,8 @@ const RightsTable: React.FC<RightsTableProps> = ({
   }, [editAccessSuccess]) // eslint-disable-line
 
   const columns = displayName
-    ? ["Nom", "Périmètre", "Droit", "Date de début", "Date de fin", "Actif", ""]
-    : ["Périmètre", "Droit", "Date de début", "Date de fin", "Actif", ""]
+    ? ["Nom", "Périmètre", "Rôle", "Date de début", "Date de fin", "Actif", ""]
+    : ["Périmètre", "Rôle", "Date de début", "Date de fin", "Actif", ""]
 
   return (
     <Grid container justify="flex-end">
@@ -109,7 +109,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
                             )
                           }
                         >
-                          <CallMadeIcon />
+                          <LaunchIcon />
                         </IconButton>
                       </TableCell>
                     )}
