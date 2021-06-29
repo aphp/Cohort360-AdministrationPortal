@@ -111,6 +111,7 @@ export type Role = {
   insert_datetime: string | null
   update_datetime: string | null
   delete_datetime: string | null
+  help_text: string[]
   name: string
   right_edit_roles: boolean | null
   right_add_users: boolean | null

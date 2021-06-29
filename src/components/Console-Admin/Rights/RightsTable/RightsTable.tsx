@@ -12,19 +12,22 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
 } from "@material-ui/core"
 import Pagination from "@material-ui/lab/Pagination"
 
-import LaunchIcon from "@material-ui/icons/Launch"
 import EditIcon from "@material-ui/icons/Edit"
 import FiberManualRecordRoundedIcon from "@material-ui/icons/FiberManualRecordRounded"
+import InfoIcon from "@material-ui/icons/Info"
+import LaunchIcon from "@material-ui/icons/Launch"
 
 import useStyles from "./styles"
 import EditAccessForm from "../../providers/EditAccessForm/EditAccessForm"
-import { Access } from "types"
+import { Access, Role } from "types"
 import { Alert } from "@material-ui/lab"
 import moment from "moment"
+import { getRoles } from "services/Console-Admin/rolesService"
 
 type RightsTableProps = {
   displayName: boolean
@@ -49,9 +52,16 @@ const RightsTable: React.FC<RightsTableProps> = ({
   const history = useHistory()
 
   const [selectedAccess, setSelectedAccess] = useState<Access | null>(null)
+  const [roles, setRoles] = useState<Role[] | undefined>()
   const [editAccessSuccess, setEditAccessSuccess] = useState(false)
   const [editAccessFail, setEditAccessFail] = useState(false)
   const rowsPerPage = 100
+
+  useEffect(() => {
+    getRoles().then((res) => {
+      setRoles(res)
+    })
+  }, [])
 
   useEffect(() => {
     if (editAccessSuccess) getAccesses()
@@ -116,7 +126,29 @@ const RightsTable: React.FC<RightsTableProps> = ({
                     <TableCell align={displayName ? "center" : "left"}>
                       {access.care_site.care_site_name}
                     </TableCell>
-                    <TableCell align="center">{access?.role?.name}</TableCell>
+                    <TableCell align="center">
+                      <div className={classes.roleColumn}>
+                        {access?.role?.name}
+                        {roles && (
+                          <Tooltip
+                            classes={{ tooltip: classes.tooltip }}
+                            // @ts-ignore
+                            title={roles
+                              .find(
+                                (role: Role) => role.role_id === access.role_id
+                              )
+                              ?.help_text.map((text) => (
+                                <Typography>{text}</Typography>
+                              ))}
+                          >
+                            <InfoIcon
+                              color="action"
+                              className={classes.infoIcon}
+                            />
+                          </Tooltip>
+                        )}
+                      </div>
+                    </TableCell>
                     <TableCell align="center">
                       {access.actual_start_datetime
                         ? moment(access.actual_start_datetime).format(

@@ -47,6 +47,17 @@ const useStyles = makeStyles(() =>
       bottom: 0,
       right: 0,
       zIndex: 100
+    },
+    roleColumn: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center"
+    },
+    infoIcon: {
+      margin: "0 4px"
+    },
+    tooltip: {
+    maxWidth: 500
     }
   })
 );
