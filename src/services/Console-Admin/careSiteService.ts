@@ -122,3 +122,19 @@ export const getCareSite = async (careSiteId: string): Promise<string | undefine
 
     return careSiteResp.data.care_site_name ?? undefined
 }
+
+export const onDeleteAccess = async (careSiteHistoryId?: number) => {
+    let success
+
+    await api.delete(`/accesses/${careSiteHistoryId}/`)
+    .then(res => {
+        if (res.status === 204){
+            success = true
+        } else success = false
+    })
+    .catch(() => {
+        success = false
+    })
+
+    return success
+}
