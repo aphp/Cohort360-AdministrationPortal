@@ -46,8 +46,9 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
   const classes = useStyles()
 
   const [careSite, setCareSite] = useState<ScopeTreeRow | null>(null)
-  const [role, setRole] =
-    useState<{ name: string; role_id: number } | null>(null)
+  const [role, setRole] = useState<{ name: string; role_id: number } | null>(
+    null
+  )
   const [startDate, setStartDate] = useState<MaterialUiPickersDate | null>(
     moment()
   ) // pas de date antérieure à today autorisée
@@ -127,12 +128,15 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
         >
           <Typography variant="h3">Périmètre :</Typography>
           {careSite ? (
-            <>
+            <div style={{ display: "flex", alignItems: "center" }}>
               <Typography>{careSite.name}</Typography>
-              <IconButton onClick={() => setOpenPerimeters(true)}>
+              <IconButton
+                onClick={() => setOpenPerimeters(true)}
+                style={{ padding: "0 8px" }}
+              >
                 <EditIcon />
               </IconButton>
-            </>
+            </div>
           ) : (
             <Button
               variant="contained"
