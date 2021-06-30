@@ -56,12 +56,13 @@ export type CareSite = {
   care_site_short_name: string
   care_site_type_source_value?: string
   parents_ids?: number[]
+  children?: CareSite[]
 }
 
 export type ScopeTreeRow = {
   care_site_id: string | number
   name: string
-  subItems: ScopeTreeRow[]
+  children: ScopeTreeRow[]
 }
 
 // Profile

@@ -80,25 +80,25 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
       _openPopulation = [..._openPopulation, rowId]
       onChangeOpenPopulations(_openPopulation)
 
-      const replaceSubItems = async (items: ScopeTreeRow[]) => {
+      const replaceChildren = async (items: ScopeTreeRow[]) => {
         for (const item of items) {
           if (item.care_site_id === rowId) {
-            const foundItem = item.subItems
-              ? item.subItems.find(
+            const foundItem = item.children
+              ? item.children.find(
                   (i: ScopeTreeRow) => i.care_site_id === "loading"
                 )
               : true
             if (foundItem) {
-              item.subItems = await getCareSitesChildren(item)
+              item.children = await getCareSitesChildren(item)
             }
-          } else if (item.subItems && item.subItems.length !== 0) {
-            item.subItems = [...(await replaceSubItems(item.subItems))]
+          } else if (item.children && item.children.length !== 0) {
+            item.children = [...(await replaceChildren(item.children))]
           }
         }
         return items
       }
 
-      _rootRows = await replaceSubItems(_rootRows)
+      _rootRows = await replaceChildren(_rootRows)
       setRootRows(_rootRows)
     }
   }
@@ -170,7 +170,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                     }}
                   >
                     <TableCell>
-                      {_row.subItems && _row.subItems.length > 0 && (
+                      {_row.children && _row.children.length > 0 && (
                         <IconButton
                           onClick={() =>
                             _clickToDeploy(_row.care_site_id as number)
@@ -218,9 +218,9 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                   {openPopulation.find(
                     (care_site_id) => _row.care_site_id === care_site_id
                   ) &&
-                    _row.subItems &&
-                    _row.subItems.map((subItem: ScopeTreeRow) =>
-                      _displayChildren(subItem, level + 1)
+                    _row.children &&
+                    _row.children.map((child: ScopeTreeRow) =>
+                      _displayChildren(child, level + 1)
                     )}
                 </React.Fragment>
               )
@@ -232,9 +232,9 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                 {openPopulation.find(
                   (care_site_id) => row.care_site_id === care_site_id
                 ) &&
-                  row.subItems &&
-                  row.subItems.map((subItem: ScopeTreeRow) =>
-                    _displayChildren(subItem, 1)
+                  row.children &&
+                  row.children.map((child: ScopeTreeRow) =>
+                    _displayChildren(child, 1)
                   )}
               </React.Fragment>
             )
