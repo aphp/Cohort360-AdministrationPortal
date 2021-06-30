@@ -54,7 +54,7 @@ const useStyles = makeStyles(() =>
       alignItems: "center"
     },
     infoIcon: {
-      margin: "0 4px"
+      margin: "0 8px"
     },
     tooltip: {
     maxWidth: 500

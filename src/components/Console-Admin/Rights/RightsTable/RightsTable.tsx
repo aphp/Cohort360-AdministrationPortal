@@ -167,6 +167,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
                           >
                             <InfoIcon
                               color="action"
+                              fontSize="small"
                               className={classes.infoIcon}
                             />
                           </Tooltip>
