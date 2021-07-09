@@ -74,7 +74,7 @@ const TopBar: React.FC = (props) => {
             >
               Périmètres
             </Button>
-            {/* <Button
+            <Button
               className={clsx(
                 classes.topBarButton,
                 pathname === "/roles" ? classes.activeButton : ""
@@ -82,7 +82,7 @@ const TopBar: React.FC = (props) => {
               onClick={() => history.push("/roles")}
             >
               Rôles
-            </Button> */}
+            </Button>
           </Grid>
 
           <Grid container item alignItems="center" justify="flex-end" xs={3}>
