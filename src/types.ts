@@ -158,7 +158,7 @@ export type AccessData = {
   provider_history_id?: number
   care_site_id?: number | string
   role_id?: number
-  start_datetime: string | null
+  start_datetime?: string | null
   end_datetime: string | null
 }
 

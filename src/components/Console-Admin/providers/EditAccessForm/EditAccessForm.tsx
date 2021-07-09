@@ -17,7 +17,7 @@ import InfoIcon from "@material-ui/icons/Info"
 
 import useStyles from "./styles"
 import { submitEditAccess } from "services/Console-Admin/providersHistoryService"
-import { Access } from "types"
+import { Access, AccessData } from "types"
 
 type EditAccessFormProps = {
   open: boolean
@@ -77,6 +77,8 @@ const EditAccessForm: React.FC<EditAccessFormProps> = ({
   }, [startDate, endDate])
 
   const onSubmit = () => {
+    let editAccessData = {} as AccessData
+
     const stringStartDate = moment(startDate).isValid()
       ? moment(startDate).format()
       : access?.actual_start_datetime ?? null
@@ -85,18 +87,26 @@ const EditAccessForm: React.FC<EditAccessFormProps> = ({
       ? moment(endDate).format()
       : access?.actual_end_datetime ?? null
 
-    const editData = {
-      start_datetime: stringStartDate,
-      end_datetime: stringEndDate,
+    if (startDate?.isBefore()) {
+      editAccessData = {
+        end_datetime: stringEndDate,
+      }
+    } else {
+      editAccessData = {
+        start_datetime: stringStartDate,
+        end_datetime: stringEndDate,
+      }
     }
 
-    submitEditAccess(editData, access?.care_site_history_id).then((success) => {
-      if (success) {
-        onSuccess(true)
-      } else {
-        onFail(true)
+    submitEditAccess(editAccessData, access?.care_site_history_id).then(
+      (success) => {
+        if (success) {
+          onSuccess(true)
+        } else {
+          onFail(true)
+        }
       }
-    })
+    )
 
     _onClose()
   }
