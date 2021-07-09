@@ -96,7 +96,7 @@ const Rights: React.FC<RightsProps> = ({ right }) => {
       )}
       {addAccessFail && (
         <Alert
-          severity="success"
+          severity="error"
           onClose={() => setAddAccessFail(false)}
           className={classes.alert}
         >
