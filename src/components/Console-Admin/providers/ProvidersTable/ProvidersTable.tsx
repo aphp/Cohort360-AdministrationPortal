@@ -6,6 +6,7 @@ import {
   Button,
   CircularProgress,
   Grid,
+  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -19,6 +20,7 @@ import {
 import Alert from "@material-ui/lab/Alert"
 import Pagination from "@material-ui/lab/Pagination"
 
+import EditIcon from "@material-ui/icons/Edit"
 import PersonAddIcon from "@material-ui/icons/PersonAdd"
 
 import SearchBar from "../../../SearchBar/SearchBar"
@@ -27,6 +29,7 @@ import AddUserDialog from "../AddProviderForm/AddProviderForm"
 import useStyles from "./styles"
 import { getProviders } from "services/Console-Admin/providersService"
 import { Provider } from "types"
+import EditProviderDialog from "../EditProviderForm/EditProviderForm"
 
 const ProvidersTable = () => {
   const classes = useStyles()
@@ -50,6 +53,9 @@ const ProvidersTable = () => {
       label: "Email",
       code: "email",
     },
+    {
+      label: "",
+    },
   ]
 
   const [providers, setProviders] = useState<Provider[] | null>(null)
@@ -62,8 +68,13 @@ const ProvidersTable = () => {
   const [searchInput, setSearchInput] = useState("")
   const [addProviderSuccess, setAddProviderSuccess] = useState(false)
   const [addProviderFail, setAddProviderFail] = useState(false)
+  const [selectedProvider, setSelectedProvider] = useState<Provider | null>(
+    null
+  )
 
   const [open, setOpen] = useState(false)
+
+  console.log(`selectedProvider`, selectedProvider)
 
   useEffect(() => {
     setPage(1)
@@ -147,13 +158,17 @@ const ProvidersTable = () => {
                   align="center"
                   className={classes.tableHeadCell}
                 >
-                  <TableSortLabel
-                    active={orderBy === column.code}
-                    direction={orderBy === column.code ? orderDirection : "asc"}
-                    onClick={createSortHandler(column.code)}
-                  >
-                    {column.label}
-                  </TableSortLabel>
+                  {column.code && (
+                    <TableSortLabel
+                      active={orderBy === column.code}
+                      direction={
+                        orderBy === column.code ? orderDirection : "asc"
+                      }
+                      onClick={createSortHandler(column.code)}
+                    >
+                      {column.label}
+                    </TableSortLabel>
+                  )}
                 </TableCell>
               ))}
             </TableRow>
@@ -195,6 +210,16 @@ const ProvidersTable = () => {
                       <TableCell align="center">
                         {provider.email ?? "-"}
                       </TableCell>
+                      <TableCell>
+                        <IconButton
+                          onClick={(event) => {
+                            event.stopPropagation()
+                            setSelectedProvider(provider)
+                          }}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      </TableCell>
                     </TableRow>
                   )
                 )
@@ -216,6 +241,13 @@ const ProvidersTable = () => {
         onClose={() => setOpen(false)}
         onSuccess={setAddProviderSuccess}
         onFail={setAddProviderFail}
+      />
+      <EditProviderDialog
+        open={selectedProvider ? true : false}
+        onClose={() => setSelectedProvider(null)}
+        selectedProvider={selectedProvider}
+        onSuccess={() => console.log("youpi")}
+        onFail={() => console.log("faiiiiiiiiiil")}
       />
       {addProviderSuccess && (
         <Alert

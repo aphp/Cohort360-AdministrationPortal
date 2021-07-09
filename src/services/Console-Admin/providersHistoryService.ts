@@ -39,6 +39,26 @@ export const submitCreateProfile = async (firstName: string, lastName: string,
     return success
 }
 
+export const editProfile = async (providerHistoryId: string, firstName: string, lastName: string, email: string) => {
+    const profileData = {
+        firstname: firstName,
+        lastname: lastName,
+        email: email
+    }
+
+    let success
+
+    api.patch(`/profiles/${providerHistoryId}/`, profileData)
+    .then(res => {
+        if (res.status === 200) {
+            success = true   
+        } else success = false
+    })
+    .catch(error => success = false)
+
+    return success
+}
+
 export const getAccesses = async (providerHistoryId: number, page: number) => {
     const accessesResp = await api.get(`/accesses/?page=${page}&provider_history_id=${providerHistoryId}&ordering=start_datetime`)
 
