@@ -108,12 +108,12 @@ export type Profile = {
 // Roles
 
 export type Role = {
-  role_id: number
-  insert_datetime: string | null
-  update_datetime: string | null
-  delete_datetime: string | null
-  help_text: string[]
-  name: string
+  role_id?: number
+  insert_datetime?: string | null
+  update_datetime?: string | null
+  delete_datetime?: string | null
+  help_text?: string[]
+  name?: string
   right_edit_roles: boolean | null
   right_add_users: boolean | null
   right_edit_users: boolean | null
@@ -130,7 +130,7 @@ export type Role = {
   right_read_patient_pseudo_anonymised: boolean | null
   right_export_jupyter_patient_nominative: boolean | null
   right_export_jupyter_patient_pseudo_anonymised: boolean | null
-  invalid_reason: string | null
+  invalid_reason?: string | null
 }
 
 // Access

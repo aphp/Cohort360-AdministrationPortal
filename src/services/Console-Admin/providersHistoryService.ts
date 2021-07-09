@@ -114,12 +114,15 @@ export const getAssignableRoles = async (careSiteId?: string | number | null) =>
     }
 
     const assignableRoles = assignableRolesResp.data.results.sort((a: Role, b: Role) => {
-        if (a.name > b.name) {
-            return 1
-        } else if (a.name > b.name){
-            return -1
+        if (a.name && b.name){
+            if (a.name > b.name) {
+                return 1
+            } else if (a.name > b.name){
+                return -1
+            }
+            return 0
         }
-        return 0
+        else return 0
     }) ?? undefined
 
     return assignableRoles
