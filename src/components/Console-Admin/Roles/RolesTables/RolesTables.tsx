@@ -89,11 +89,20 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
     }
   }
 
+  const _onClose = () => {
+    setSelectedRole(null)
+  }
+
   const onSubmitEditRole = () => {
 
-    // const editData = rightState
-
-    // submitEditRoles(editData, selectedRole?.role_id)
+    // if (roles) {
+    //   const editData =
+    //     roles.map((role, index) => ({
+    //       editData: rightState[selectedRole.role_id]
+    //     }))
+    //   console.log(`editData`, editData)
+      // submitEditRoles(editData, selectedRole?.role_id)
+    // }
     _onClose()
   }
 
@@ -123,10 +132,6 @@ const RightsTable: React.FC<RolesTableProps> = ({ roles }) => {
   //     }))
   //   }
   // }
-
-  const _onClose = () => {
-    setSelectedRole(null)
-  }
 
   console.log(`rightState`, rightState)
 

@@ -62,14 +62,14 @@ const Config = [
   /**
    * Console-Admin Roles View
    */
-  {
-    exact: true,
-    displayTopBar: true,
-    path: '/roles',
-    name: 'Roles',
-    isPrivate: true,
-    component: Roles
-  }
+  // {
+  //   exact: true,
+  //   displayTopBar: true,
+  //   path: '/roles',
+  //   name: 'Roles',
+  //   isPrivate: true,
+  //   component: Roles
+  // }
 ]
 
 export default Config
