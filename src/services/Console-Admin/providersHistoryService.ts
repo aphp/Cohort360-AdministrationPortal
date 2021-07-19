@@ -1,8 +1,10 @@
 import { AccessData, Role } from 'types'
 import api from '../api'
 
-export const getProfile = async (profileId: string) => {
-    const profileResp = await api.get(`/profiles/?provider_id=${profileId}`)
+export const getProfile = async (providerId?: string) => {
+    if (!providerId) return undefined
+
+    const profileResp = await api.get(`/profiles/?provider_id=${providerId}`)
 
     if (profileResp.status !== 200){
         return undefined
@@ -31,30 +33,24 @@ export const submitCreateProfile = async (firstName: string, lastName: string,
                     success = true   
                 } else success = false
             })
-            .catch(error => success = false)
+            .catch(() => success = false)
         }
     })
-    .catch(error => success = false)
+    .catch(() => success = false)
 
     return success
 }
 
-export const editProfile = async (providerHistoryId: string, firstName: string, lastName: string, email: string) => {
-    const profileData = {
-        firstname: firstName,
-        lastname: lastName,
-        email: email
-    }
-
+export const editProfile = async (providerHistoryId: string, profileData: {}) => {
     let success
 
-    api.patch(`/profiles/${providerHistoryId}/`, profileData)
+    await api.patch(`/profiles/${providerHistoryId}/`, profileData)
     .then(res => {
         if (res.status === 200) {
             success = true   
         } else success = false
     })
-    .catch(error => success = false)
+    .catch(() => success = false)
 
     return success
 }
@@ -81,7 +77,7 @@ export const submitCreateAccess = async (accessData: AccessData) => {
             success= true       
         } else success = false
     })
-    .catch(error => {
+    .catch(() => {
         success = false
     })
 
@@ -97,7 +93,7 @@ export const submitEditAccess = async (editData: AccessData, careSiteHistoryId?:
             success = true
         } else success = false
     })
-    .catch(error => {
+    .catch(() => {
         success = false
     })
 

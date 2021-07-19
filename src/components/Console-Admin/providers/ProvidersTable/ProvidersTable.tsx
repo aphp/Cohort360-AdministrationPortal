@@ -71,6 +71,8 @@ const ProvidersTable = () => {
   const [selectedProvider, setSelectedProvider] = useState<Provider | null>(
     null
   )
+  const [editProviderSuccess, setEditProviderSuccess] = useState(false)
+  const [editProviderFail, setEditProviderFail] = useState(false)
 
   const [open, setOpen] = useState(false)
 
@@ -86,7 +88,8 @@ const ProvidersTable = () => {
 
   useEffect(() => {
     if (addProviderSuccess) getData(orderBy, orderDirection)
-  }, [addProviderSuccess]) // eslint-disable-line
+    if (editProviderSuccess) getData(orderBy, orderDirection)
+  }, [addProviderSuccess, editProviderSuccess]) // eslint-disable-line
 
   const getData = async (
     orderBy: string,
@@ -242,29 +245,40 @@ const ProvidersTable = () => {
         onSuccess={setAddProviderSuccess}
         onFail={setAddProviderFail}
       />
-      <EditProviderDialog
-        open={selectedProvider ? true : false}
-        onClose={() => setSelectedProvider(null)}
-        selectedProvider={selectedProvider}
-        onSuccess={() => console.log("youpi")}
-        onFail={() => console.log("faiiiiiiiiiil")}
-      />
-      {addProviderSuccess && (
+      {selectedProvider && (
+        <EditProviderDialog
+          open
+          onClose={() => setSelectedProvider(null)}
+          selectedProvider={selectedProvider}
+          onSuccess={setEditProviderSuccess}
+          onFail={setEditProviderFail}
+        />
+      )}
+
+      {(addProviderSuccess || editProviderSuccess) && (
         <Alert
           severity="success"
-          onClose={() => setAddProviderSuccess(false)}
+          onClose={() => {
+            if (addProviderSuccess) setAddProviderSuccess(false)
+            if (editProviderSuccess) setEditProviderSuccess(false)
+          }}
           className={classes.alert}
         >
-          L'utilisateur a bien été créé.
+          {addProviderSuccess && "L'utilisateur a bien été créé."}
+          {editProviderSuccess && "L'utilisateur a bien été créé."}
         </Alert>
       )}
-      {addProviderFail && (
+      {(addProviderFail || editProviderFail) && (
         <Alert
           severity="error"
-          onClose={() => setAddProviderFail(false)}
+          onClose={() => {
+            if (addProviderFail) setAddProviderFail(false)
+            if (editProviderFail) setEditProviderFail(false)
+          }}
           className={classes.alert}
         >
-          Erreur lors de la création de l'utilisateur.
+          {addProviderFail && "Erreur lors de la création de l'utilisateur."}
+          {editProviderFail && "Erreur lors de l'édition de l'utilisateur."}
         </Alert>
       )}
     </Grid>
