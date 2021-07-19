@@ -3,7 +3,7 @@ import Providers from 'views/Console-Admin/Providers/Providers'
 import ProvidersHistory from 'views/Console-Admin/ProvidersHistory/ProvidersHistory'
 import CareSites from 'views/Console-Admin/CareSites/CareSites'
 import CareSiteHistory from 'views/Console-Admin/CareSiteHistory/CareSiteHistory'
-// import Roles from 'views/Console-Admin/Roles/Roles'
+import Roles from 'views/Console-Admin/Roles/Roles'
 
 const Config = [
 	/**

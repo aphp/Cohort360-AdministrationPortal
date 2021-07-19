@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Switch, Button } from '@material-ui/core'
+import { Checkbox, Button } from '@material-ui/core'
 
 // import useStyles from './styles'
 import { Role } from 'types'
@@ -30,7 +30,7 @@ export const EditRolesSwitch: React.FC<EditRolesModalProps> = ({
     // const classes = useStyles()
 
     return (
-       <Switch></Switch>
+       <Checkbox size="small"></Checkbox>
     )
 }
 

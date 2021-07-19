@@ -8,6 +8,9 @@ const useStyles = makeStyles(() =>
     gridItem: {
       display: "flex",
       flexDirection: 'row'
+    },
+    editRoleSwitch: {
+      padding: 5
     }
   })
 )
