@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { CircularProgress, Grid, Typography } from "@material-ui/core"
+import Alert from "@material-ui/lab/Alert"
 import { useParams } from "react-router"
 
 import { getProfile } from "services/Console-Admin/providersHistoryService"
@@ -29,24 +30,20 @@ const ProviderHistory: React.FC = () => {
       <Grid container justify="center">
         {loading ? (
           <CircularProgress className={classes.loading} />
-        ) : (
+        ) : user && user.length > 0 ? (
           <Grid container item xs={12} sm={9}>
-            {user && (
-              <>
-                <Typography
-                  variant="h1"
-                  color="primary"
-                  className={classes.title}
-                >
-                  {user[0].provider_name} - id APH :{" "}
-                  {user[0].provider_source_value}
-                </Typography>
-                {user.map((userRight: Profile) => (
-                  <Rights right={userRight} />
-                ))}
-              </>
-            )}
+            <Typography variant="h1" color="primary" className={classes.title}>
+              {user[0].provider_name} - id APH : {user[0].provider_source_value}
+            </Typography>
+            {user.map((userRight: Profile) => (
+              <Rights right={userRight} />
+            ))}
           </Grid>
+        ) : (
+          <Alert severity="error" className={classes.alert}>
+            Erreur lors de la récupération des données de l'utilisateur,
+            veuillez réessayer ultérieurement.
+          </Alert>
         )}
       </Grid>
     </Grid>

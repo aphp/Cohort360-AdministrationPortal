@@ -13,6 +13,9 @@ const useStyles = makeStyles((theme) => ({
       paddingBottom: "20px",
       marginBottom: "20px",
     },
+    alert : {
+      width: "100%"
+    }
   }));
 
 export default useStyles
