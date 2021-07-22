@@ -11,6 +11,7 @@ import {
   Grid,
   IconButton,
   TextField,
+  Tooltip,
   Typography,
 } from "@material-ui/core"
 import Autocomplete from "@material-ui/lab/Autocomplete"
@@ -46,9 +47,11 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
   const classes = useStyles()
 
   const [careSite, setCareSite] = useState<ScopeTreeRow | null>(null)
-  const [role, setRole] = useState<{ name: string; role_id: number } | null>(
-    null
-  )
+  const [role, setRole] = useState<{
+    name: string
+    role_id: number
+    help_text: string[]
+  } | null>(null)
   const [startDate, setStartDate] = useState<MaterialUiPickersDate | null>(
     moment()
   ) // pas de date antérieure à today autorisée
@@ -77,7 +80,7 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
 
   const handleChangeAutocomplete = (
     event: React.ChangeEvent<{}>,
-    value: { name: string; role_id: number } | null
+    value: { name: string; role_id: number; help_text: string[] } | null
   ) => {
     if (value) setRole(value)
   }
@@ -163,6 +166,22 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
               options={roles}
               getOptionLabel={(option) => option.name}
               onChange={handleChangeAutocomplete}
+              renderOption={(option) => (
+                <Grid container justify="space-between" alignItems="center">
+                  <Typography>{option.name}</Typography>
+                  <Tooltip
+                    title={option.help_text.map((text) => (
+                      <Typography>{text}</Typography>
+                    ))}
+                  >
+                    <InfoIcon
+                      color="action"
+                      fontSize="small"
+                      className={classes.infoIcon}
+                    />
+                  </Tooltip>
+                </Grid>
+              )}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -171,7 +190,7 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
                 />
               )}
               value={role}
-              style={{ width: "250px" }}
+              style={{ width: "310px" }}
             />
           ) : (
             <Typography>
@@ -190,7 +209,7 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
             clearable
             minDate={moment()} // = today
             error={dateError}
-            style={{ width: "250px" }}
+            style={{ width: "310px" }}
             invalidDateMessage='La date doit être au format "JJ/MM/AAAA"'
             format="DD/MM/YYYY"
             onChange={(date: MaterialUiPickersDate) =>
@@ -210,7 +229,7 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
             clearable
             minDate={moment().add(1, "days")} // = tomorrow
             error={dateError}
-            style={{ width: "250px" }}
+            style={{ width: "310px" }}
             invalidDateMessage='La date doit être au format "JJ/MM/AAAA"'
             format="DD/MM/YYYY"
             onChange={(date: MaterialUiPickersDate) => setEndDate(date ?? null)}
