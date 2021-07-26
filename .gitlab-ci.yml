@@ -85,6 +85,7 @@ release:
     - echo $KUBE_CONFIG > /root/.kube/config
     - kubectl rollout restart deployment/$CI_COMMIT_BRANCH$SUFFIX
   rules:
-    - if: $CI_COMMIT_BRANCH == "fakedata" || $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "qualif" || $CI_COMMIT_BRANCH == "prod_a" || $CI_COMMIT_BRANCH == "prod_b"
+    - if: $CI_COMMIT_BRANCH == "fakedata" || $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "qualif"
+    - if: $CI_COMMIT_BRANCH == "prod_a" || $CI_COMMIT_BRANCH == "prod_b"
       when: manual
     - when: never
