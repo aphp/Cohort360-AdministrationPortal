@@ -1,4 +1,4 @@
-image: $HARBOR_REPOSITORY_URL/node:14.6.0
+image: node:14.6.0
 
 cache:
   paths:
@@ -8,9 +8,9 @@ variables:
   REACT_APP_PORTAIL_API_URL: /api/portail
   REACT_APP_CONTEXT: aphp
 
-default:
-  tags:
-    - k8s-small-generic
+  default:
+    tags:
+      - k8s-small-generic
 
 stages:
   - build
