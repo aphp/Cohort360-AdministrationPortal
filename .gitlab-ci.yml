@@ -83,6 +83,7 @@ release:
     SUFFIX: "-portail"
   script:
     - echo $KUBE_CONFIG > /root/.kube/config
+    - cat /root/.kube/config
     - kubectl rollout restart deployment/$CI_COMMIT_BRANCH$SUFFIX
   rules:
     - if: $CI_COMMIT_BRANCH == "fakedata" || $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "qualif"
