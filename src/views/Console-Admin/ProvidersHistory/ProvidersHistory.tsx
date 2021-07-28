@@ -6,23 +6,32 @@ import { useParams } from "react-router"
 import { getProfile } from "services/Console-Admin/providersHistoryService"
 import Rights from "components/Console-Admin/Rights/Rights"
 import useStyles from "./styles"
-import { Profile } from "types"
+import { Profile, Provider } from "types"
+import { getProvider } from "services/Console-Admin/providersService"
 
 const ProviderHistory: React.FC = () => {
   const classes = useStyles()
 
   const [loading, setLoading] = useState(false)
-  const [user, setUser] = useState<Profile[] | undefined>()
+  const [provider, setProvider] = useState<Provider | undefined>()
+  const [rights, setRights] = useState<Profile[] | undefined>()
 
   const { providerId } = useParams<{ providerId: string }>()
 
   useEffect(() => {
     setLoading(true)
-    getProfile(providerId)
-      .then((userResp) => {
-        setUser(userResp)
+    getProvider(providerId)
+      .then((providerResp) => {
+        setProvider(providerResp)
       })
-      .then(() => setLoading(false))
+      .then(() => {
+        getProfile(providerId)
+          .then((rightsResp) => {
+            setRights(rightsResp)
+          })
+          .catch(() => setRights(undefined))
+          .finally(() => setLoading(false))
+      })
   }, [providerId])
 
   return (
@@ -30,20 +39,33 @@ const ProviderHistory: React.FC = () => {
       <Grid container justify="center">
         {loading ? (
           <CircularProgress className={classes.loading} />
-        ) : user && user.length > 0 ? (
+        ) : (
           <Grid container item xs={12} sm={9}>
             <Typography variant="h1" color="primary" className={classes.title}>
-              {user[0].provider_name} - id APH : {user[0].provider_source_value}
+              {provider?.provider_name} - id APH :{" "}
+              {provider?.provider_source_value}
             </Typography>
-            {user.map((userRight: Profile) => (
-              <Rights right={userRight} />
-            ))}
+            <>
+              {rights ? (
+                rights.length > 0 ? (
+                  <>
+                    {rights.map((userRight: Profile) => (
+                      <Rights right={userRight} />
+                    ))}
+                  </>
+                ) : (
+                  <Alert severity="error" className={classes.alert}>
+                    Cet utilisateur ne possède pas de profil.
+                  </Alert>
+                )
+              ) : (
+                <Alert severity="error" className={classes.alert}>
+                  Erreur lors de la récupération des données de l'utilisateur,
+                  veuillez réessayer ultérieurement ou vérifier vos droits.
+                </Alert>
+              )}
+            </>
           </Grid>
-        ) : (
-          <Alert severity="error" className={classes.alert}>
-            Erreur lors de la récupération des données de l'utilisateur,
-            veuillez réessayer ultérieurement.
-          </Alert>
         )}
       </Grid>
     </Grid>

@@ -20,8 +20,8 @@ api.interceptors.response.use(
     return response
   },
   async function (error) {
-    if (error?.response?.status === 403) {
-      localStorage.clear()
+    if (error?.response?.status === 403 && !error.config.url.includes("/accesses/?care_site_id") && !error.config.url.includes("/profiles/")) {
+      localStorage.clear()                                          
       window.location.href = '/'
     }
     return Promise.reject(error)

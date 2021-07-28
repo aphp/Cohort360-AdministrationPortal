@@ -22,3 +22,17 @@ export const getProviders = async (
       total: providersResp.data.count ?? 0
   }
 };
+
+export const getProvider = async (providerId: string) => {
+ let provider 
+
+ await api.get(`/providers/${providerId}/`)
+  .then((providerResp) => {
+    provider = providerResp.data ?? undefined
+  })
+  .catch(() => {
+    provider = undefined
+  })
+
+ return provider
+}
