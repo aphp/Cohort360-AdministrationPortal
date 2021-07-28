@@ -126,7 +126,7 @@ const EditProviderDialog: React.FC<EditUserDialogProps> = ({
         ) : error ? (
           <Typography>
             Erreur lors de l'édition du profil. Veuillez réessayer
-            ultérieurement.
+            ultérieurement ou vérifier vos droits.
           </Typography>
         ) : (
           <>
