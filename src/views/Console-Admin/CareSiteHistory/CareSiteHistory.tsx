@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 
 import { CircularProgress, Grid, Typography } from "@material-ui/core"
+import Alert from "@material-ui/lab/Alert"
 
 import useStyles from "./styles"
 import {
@@ -16,8 +17,9 @@ const CareSiteHistory: React.FC = () => {
 
   const [loading, setLoading] = useState(false)
   const [careSiteName, setCareSiteName] = useState<string | undefined>()
-  const [careSiteAccesses, setCareSiteAccesses] =
-    useState<Access[] | undefined>()
+  const [careSiteAccesses, setCareSiteAccesses] = useState<
+    Access[] | undefined
+  >()
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
 
@@ -25,15 +27,20 @@ const CareSiteHistory: React.FC = () => {
 
   const _getCareSiteAccesses = () => {
     setLoading(true)
-    getCareSite(careSiteId).then((careSiteResp) =>
-      setCareSiteName(careSiteResp ?? "Inconnu")
-    )
-    getCareSiteAccesses(careSiteId)
-      .then((careSiteAccessesResp) => {
-        setCareSiteAccesses(careSiteAccessesResp?.accesses)
-        setTotal(careSiteAccessesResp?.total)
+    getCareSite(careSiteId)
+      .then((careSiteResp) => setCareSiteName(careSiteResp ?? "Inconnu"))
+      .then(() => {
+        getCareSiteAccesses(careSiteId)
+          .then((careSiteAccessesResp) => {
+            setCareSiteAccesses(careSiteAccessesResp?.accesses)
+            setTotal(careSiteAccessesResp?.total)
+          })
+          .catch(() => {
+            setCareSiteAccesses(undefined)
+            setTotal(0)
+          })
+          .finally(() => setLoading(false))
       })
-      .finally(() => setLoading(false))
   }
 
   useEffect(() => {
@@ -47,25 +54,24 @@ const CareSiteHistory: React.FC = () => {
           <CircularProgress className={classes.loading} />
         ) : (
           <Grid container item xs={12} sm={9}>
-            {careSiteAccesses && (
-              <>
-                <Typography
-                  variant="h1"
-                  color="primary"
-                  className={classes.title}
-                >
-                  Périmètre {careSiteName}
-                </Typography>
-                <RightsTable
-                  displayName={true}
-                  loading={loading}
-                  page={page}
-                  setPage={setPage}
-                  total={total}
-                  accesses={careSiteAccesses}
-                  getAccesses={_getCareSiteAccesses}
-                />
-              </>
+            <Typography variant="h1" color="primary" className={classes.title}>
+              Périmètre {careSiteName}
+            </Typography>
+            {careSiteAccesses ? (
+              <RightsTable
+                displayName={true}
+                loading={loading}
+                page={page}
+                setPage={setPage}
+                total={total}
+                accesses={careSiteAccesses}
+                getAccesses={_getCareSiteAccesses}
+              />
+            ) : (
+              <Alert severity="error" style={{ width: "100%" }}>
+                Erreur lors de la récupération des droits de ce périmètre,
+                veuillez réessayer ultérieurement ou vérifier vos droits.
+              </Alert>
             )}
           </Grid>
         )}
