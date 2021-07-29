@@ -10,27 +10,30 @@ import {
   getCareSiteAccesses,
 } from "services/Console-Admin/careSiteService"
 import RightsTable from "components/Console-Admin/Rights/RightsTable/RightsTable"
+import SearchBar from "components/SearchBar/SearchBar"
 import { Access } from "types"
 
 const CareSiteHistory: React.FC = () => {
   const classes = useStyles()
 
-  const [loading, setLoading] = useState(false)
+  const [loadingPage, setLoadingPage] = useState(false)
+  const [loadingData, setLoadingData] = useState(false)
   const [careSiteName, setCareSiteName] = useState<string | undefined>()
   const [careSiteAccesses, setCareSiteAccesses] = useState<
     Access[] | undefined
   >()
+  const [searchInput, setSearchInput] = useState("")
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
 
   const { careSiteId } = useParams<{ careSiteId: string }>()
 
   const _getCareSiteAccesses = () => {
-    setLoading(true)
+    setLoadingPage(true)
     getCareSite(careSiteId)
       .then((careSiteResp) => setCareSiteName(careSiteResp ?? "Inconnu"))
       .then(() => {
-        getCareSiteAccesses(careSiteId)
+        getCareSiteAccesses(careSiteId, page, searchInput)
           .then((careSiteAccessesResp) => {
             setCareSiteAccesses(careSiteAccessesResp?.accesses)
             setTotal(careSiteAccessesResp?.total)
@@ -39,18 +42,36 @@ const CareSiteHistory: React.FC = () => {
             setCareSiteAccesses(undefined)
             setTotal(0)
           })
-          .finally(() => setLoading(false))
+          .finally(() => setLoadingPage(false))
       })
   }
 
   useEffect(() => {
+    setPage(1)
+  }, [searchInput])
+
+  useEffect(() => {
     _getCareSiteAccesses()
-  }, [careSiteId, careSiteAccesses?.length, page]) // eslint-disable-line
+  }, [careSiteId]) // eslint-disable-line
+
+  useEffect(() => {
+    setLoadingData(true)
+    getCareSiteAccesses(careSiteId, page, searchInput)
+      .then((careSiteAccessesResp) => {
+        setCareSiteAccesses(careSiteAccessesResp?.accesses)
+        setTotal(careSiteAccessesResp?.total)
+      })
+      .catch(() => {
+        setCareSiteAccesses(undefined)
+        setTotal(0)
+      })
+      .finally(() => setLoadingData(false))
+  }, [careSiteAccesses?.length, searchInput, page]) // eslint-disable-line
 
   return (
     <Grid container direction="column">
       <Grid container justify="center">
-        {loading ? (
+        {loadingPage ? (
           <CircularProgress className={classes.loading} />
         ) : (
           <Grid container item xs={12} sm={9}>
@@ -58,15 +79,29 @@ const CareSiteHistory: React.FC = () => {
               Périmètre {careSiteName}
             </Typography>
             {careSiteAccesses ? (
-              <RightsTable
-                displayName={true}
-                loading={loading}
-                page={page}
-                setPage={setPage}
-                total={total}
-                accesses={careSiteAccesses}
-                getAccesses={_getCareSiteAccesses}
-              />
+              <>
+                <Grid
+                  container
+                  item
+                  justify="flex-end"
+                  alignItems="center"
+                  className={classes.searchBar}
+                >
+                  <SearchBar
+                    searchInput={searchInput}
+                    onChangeInput={setSearchInput}
+                  />
+                </Grid>
+                <RightsTable
+                  displayName={true}
+                  loading={loadingData}
+                  page={page}
+                  setPage={setPage}
+                  total={total}
+                  accesses={careSiteAccesses}
+                  getAccesses={_getCareSiteAccesses}
+                />
+              </>
             ) : (
               <Alert severity="error" style={{ width: "100%" }}>
                 Erreur lors de la récupération des droits de ce périmètre,

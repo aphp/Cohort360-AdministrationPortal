@@ -6,13 +6,16 @@ const useStyles = makeStyles(() => ({
       width: "100%",
       paddingTop: "80px",
       paddingBottom: "20px",
-      marginBottom: "40px",
+      marginBottom: "20px",
     },
     loading: {
       position: "absolute",
       top: "50%",
       left: "50%",
     },
+    searchBar : {
+      margin: "12px 0"
+    }
   }));
 
 export default useStyles

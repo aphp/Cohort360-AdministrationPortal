@@ -103,7 +103,7 @@ export const getManageableCareSites = async (): Promise<ScopeTreeRow[]> => {
     return manageableCareSitesResp.data ?? []
 }
 
-export const getCareSiteAccesses = async (careSiteId: string, searchInput?: string) => {
+export const getCareSiteAccesses = async (careSiteId: string, page?: number, searchInput?: string) => {
     const searchFilter = searchInput ? `&search=${searchInput}` : ''
     const careSiteAccessesResp = await api.get(`/accesses/?care_site_id=${careSiteId}${searchFilter}`)
 
