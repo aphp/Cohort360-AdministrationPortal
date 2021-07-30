@@ -86,20 +86,29 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
   }
 
   const onSubmit = () => {
-    const stringStartDate = moment(startDate).isValid()
-      ? moment(startDate).format()
-      : null
+    const stringStartDate =
+      moment(startDate).isValid() &&
+      !moment(startDate).isSame(new Date(), "day")
+        ? moment(startDate).format()
+        : null
 
     const stringEndDate = moment(endDate).isValid()
       ? moment(endDate).format()
       : null
 
-    const accessData = {
+    let accessData = {
       provider_history_id: entityId,
       care_site_id: careSite?.care_site_id,
       role_id: role?.role_id,
-      start_datetime: stringStartDate,
-      end_datetime: stringEndDate,
+    }
+
+    if (stringStartDate) {
+      // @ts-ignore
+      accessData = { ...accessData, start_datetime: stringStartDate }
+    }
+    if (stringEndDate) {
+      // @ts-ignore
+      accessData = { ...accessData, end_datetime: stringEndDate }
     }
 
     submitCreateAccess(accessData).then((success) => {
