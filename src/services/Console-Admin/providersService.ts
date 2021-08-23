@@ -8,7 +8,7 @@ export const getProviders = async (
 ) => {
   const searchFilter = searchInput ? `&search=${searchInput}` : ''
 
-  const providersResp = await api.get(`/providers/?page=${page}&ordering=${orderDirection === 'desc' ? '-' : ''}${orderBy}${searchFilter}`);
+  const providersResp = await api.get(`/providers/?manual_only=true&page=${page}&ordering=${orderDirection === 'desc' ? '-' : ''}${orderBy}${searchFilter}`);
 
   if (providersResp.status !== 200){
     return {
