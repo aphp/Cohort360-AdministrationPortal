@@ -15,33 +15,24 @@ export const getProfile = async (providerId?: string) => {
 
 export const submitCreateProfile = async (firstName: string, lastName: string,
     providerSourceValue: string, email: string) => {
-    const profileData = {
-        firstname: firstName,
-        lastname: lastName,
-        provider_source_value: providerSourceValue,
-        email: email
+    try {
+        const profileData = {
+            firstname: firstName,
+            lastname: lastName,
+            provider_source_value: providerSourceValue,
+            email: email
+        }
+        
+        const resCheckProfiles = await api.post(`/profiles/check/`, {provider_source_value: providerSourceValue} )
+        
+        if (resCheckProfiles.status === 200){
+            const createProfile = await api.post(`/profiles/`, profileData) 
+            return createProfile.status === 201
+        } else return false
+    } catch (error) {
+        console.error("Erreur lors de la création de profil", error)
+        return false
     }
-
-    let checkSuccess
-
-    await api.post(`/profiles/check/`, {provider_source_value: providerSourceValue} )
-    .then(res => { 
-        if (res.status === 200){
-            checkSuccess = true        
-        } else checkSuccess = false 
-    })
-    .catch(() => checkSuccess = false)
-
-    if (checkSuccess){
-        await api.post(`/profiles/`, profileData)
-        .then(res => {
-            debugger
-            return res.status === 201            
-        })
-        .catch(() => {
-            return false
-        })
-    } else return false
 }
 
 export const editProfile = async (providerHistoryId: string, profileData: {}) => {
