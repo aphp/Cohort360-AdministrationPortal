@@ -22,23 +22,26 @@ export const submitCreateProfile = async (firstName: string, lastName: string,
         email: email
     }
 
-    let success
+    let checkSuccess
 
-    api.post(`/profiles/check/`, {provider_source_value: providerSourceValue} )
+    await api.post(`/profiles/check/`, {provider_source_value: providerSourceValue} )
     .then(res => { 
-        if (res.status === 200) {
-            api.post(`/profiles/`, profileData)
-            .then(res => {
-                if (res.status === 201) {
-                    success = true   
-                } else success = false
-            })
-            .catch(() => success = false)
-        }
+        if (res.status === 200){
+            checkSuccess = true        
+        } else checkSuccess = false 
     })
-    .catch(() => success = false)
+    .catch(() => checkSuccess = false)
 
-    return success
+    if (checkSuccess){
+        await api.post(`/profiles/`, profileData)
+        .then(res => {
+            debugger
+            return res.status === 201            
+        })
+        .catch(() => {
+            return false
+        })
+    } else return false
 }
 
 export const editProfile = async (providerHistoryId: string, profileData: {}) => {
