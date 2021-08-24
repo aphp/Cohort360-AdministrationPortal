@@ -1,4 +1,4 @@
-FROM harbor.eds.aphp.fr/cohort360/node:14.6.0
+FROM harbor.eds.aphp.fr/cohort360/node-front:$CI_COMMIT_BRANCH
 WORKDIR /root
 COPY ./ ./
 ENV REACT_APP_PORTAIL_API_URL=/api/portail
