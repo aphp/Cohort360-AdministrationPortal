@@ -8,7 +8,7 @@ export const getProviders = async (
 ) => {
   const searchFilter = searchInput ? `&search=${searchInput}` : ''
 
-  const providersResp = await api.get(`/providers/?page=${page}&ordering=${orderDirection === 'desc' ? '-' : ''}${orderBy}${searchFilter}`);
+  const providersResp = await api.get(`/providers/?manual_only=true&page=${page}&ordering=${orderDirection === 'desc' ? '-' : ''}${orderBy}${searchFilter}`);
 
   if (providersResp.status !== 200){
     return {
@@ -22,3 +22,17 @@ export const getProviders = async (
       total: providersResp.data.count ?? 0
   }
 };
+
+export const getProvider = async (providerId: string) => {
+ let provider 
+
+ await api.get(`/providers/${providerId}/`)
+  .then((providerResp) => {
+    provider = providerResp.data ?? undefined
+  })
+  .catch(() => {
+    provider = undefined
+  })
+
+ return provider
+}

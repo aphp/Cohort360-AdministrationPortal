@@ -76,8 +76,6 @@ const ProvidersTable = () => {
 
   const [open, setOpen] = useState(false)
 
-  console.log(`selectedProvider`, selectedProvider)
-
   useEffect(() => {
     setPage(1)
   }, [searchInput])

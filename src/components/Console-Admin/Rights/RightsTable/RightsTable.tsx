@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
 
 import {
-  Button,
+  // Button,
   CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
+  // Dialog,
+  // DialogActions,
+  // DialogContent,
   Grid,
   IconButton,
   Paper,
@@ -21,7 +21,7 @@ import {
 } from "@material-ui/core"
 import Pagination from "@material-ui/lab/Pagination"
 
-import DeleteIcon from "@material-ui/icons/Delete"
+// import DeleteIcon from "@material-ui/icons/Delete"
 import EditIcon from "@material-ui/icons/Edit"
 import FiberManualRecordRoundedIcon from "@material-ui/icons/FiberManualRecordRounded"
 import InfoIcon from "@material-ui/icons/Info"
@@ -33,7 +33,7 @@ import { Access, Role } from "types"
 import { Alert } from "@material-ui/lab"
 import moment from "moment"
 import { getRoles } from "services/Console-Admin/rolesService"
-import { onDeleteAccess } from "services/Console-Admin/careSiteService"
+// import { onDeleteAccess } from "services/Console-Admin/careSiteService"
 
 type RightsTableProps = {
   displayName: boolean
@@ -59,7 +59,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
 
   const [selectedAccess, setSelectedAccess] = useState<Access | null>(null)
   const [roles, setRoles] = useState<Role[] | undefined>()
-  const [deleteAccess, setDeleteAccess] = useState<Access | null>(null)
+  // const [deleteAccess, setDeleteAccess] = useState<Access | null>(null)
   const [editAccessSuccess, setEditAccessSuccess] = useState(false)
   const [editAccessFail, setEditAccessFail] = useState(false)
   const [deleteAccessSuccess, setDeleteAccessSuccess] = useState(false)
@@ -79,19 +79,19 @@ const RightsTable: React.FC<RightsTableProps> = ({
   }, [editAccessSuccess, deleteAccessSuccess]) // eslint-disable-line
 
   const columns = displayName
-    ? ["Nom", "Rôle", "Date de début", "Date de fin", "Actif", "Actions"]
-    : ["Périmètre", "Rôle", "Date de début", "Date de fin", "Actif", "Actions"]
+    ? ["Nom", "Rôle", "Date de début", "Date de fin", "Actif", ""]
+    : ["Périmètre", "Rôle", "Date de début", "Date de fin", "Actif", ""]
 
-  const handleDeleteAction = () => {
-    onDeleteAccess(deleteAccess?.care_site_history_id).then((success) => {
-      setDeleteAccess(null)
-      if (success) {
-        setDeleteAccessSuccess(true)
-      } else {
-        setDeleteAccessFail(true)
-      }
-    })
-  }
+  // const handleDeleteAction = () => {
+  //   onDeleteAccess(deleteAccess?.care_site_history_id).then((success) => {
+  //     setDeleteAccess(null)
+  //     if (success) {
+  //       setDeleteAccessSuccess(true)
+  //     } else {
+  //       setDeleteAccessFail(true)
+  //     }
+  //   })
+  // }
 
   return (
     <Grid container justify="flex-end">
@@ -197,20 +197,23 @@ const RightsTable: React.FC<RightsTableProps> = ({
                       />
                     </TableCell>
                     <TableCell align="center">
-                      <IconButton
-                        onClick={() => {
-                          setSelectedAccess(access)
-                        }}
-                      >
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton
+                      {(access.actual_end_datetime ||
+                        access.actual_end_datetime) && (
+                        <IconButton
+                          onClick={() => {
+                            setSelectedAccess(access)
+                          }}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      )}
+                      {/* <IconButton
                         onClick={() => {
                           setDeleteAccess(access)
                         }}
                       >
                         <DeleteIcon />
-                      </IconButton>
+                      </IconButton> */}
                     </TableCell>
                   </TableRow>
                 )
@@ -243,7 +246,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
         onFail={setEditAccessFail}
       />
 
-      <Dialog
+      {/* <Dialog
         open={deleteAccess ? true : false}
         onClose={() => setDeleteAccess(null)}
       >
@@ -259,7 +262,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
           </Button>
           <Button onClick={handleDeleteAction}>Confirmer</Button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
 
       {(editAccessSuccess || deleteAccessSuccess) && (
         <Alert

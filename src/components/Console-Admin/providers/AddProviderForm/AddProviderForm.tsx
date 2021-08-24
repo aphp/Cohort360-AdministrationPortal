@@ -76,15 +76,9 @@ const AddProviderDialog: React.FC<AddUserDialogProps> = ({
   }, [email])
 
   const onSubmit = () => {
-    submitCreateProfile(firstName, lastName, providerSourceValue, email).then(
-      (res) => {
-        if (res) {
-          onSuccess(true)
-        } else {
-          onFail(true)
-        }
-      }
-    )
+    submitCreateProfile(firstName, lastName, providerSourceValue, email)
+      ? onSuccess(true)
+      : onFail(true)
 
     setProviderSourceValue("")
     setProviderSourceValueError(false)
