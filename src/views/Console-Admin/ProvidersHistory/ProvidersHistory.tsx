@@ -19,19 +19,27 @@ const ProviderHistory: React.FC = () => {
   const { providerId } = useParams<{ providerId: string }>()
 
   useEffect(() => {
-    setLoading(true)
-    getProvider(providerId)
-      .then((providerResp) => {
+    const getProviderHistory = async () => {
+      try {
+        setLoading(true)
+
+        const providerResp = await getProvider(providerId)
+
         setProvider(providerResp)
-      })
-      .then(() => {
-        getProfile(providerId)
-          .then((rightsResp) => {
-            setRights(rightsResp)
-          })
-          .catch(() => setRights(undefined))
-          .finally(() => setLoading(false))
-      })
+
+        const rightsResp = await getProfile(providerId)
+
+        setRights(rightsResp)
+
+        setLoading(false)
+      } catch (error) {
+        console.error(error)
+        setRights(undefined)
+        setLoading(false)
+      }
+    }
+
+    getProviderHistory()
   }, [providerId])
 
   return (
