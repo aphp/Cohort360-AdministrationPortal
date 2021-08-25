@@ -76,39 +76,45 @@ const EditAccessForm: React.FC<EditAccessFormProps> = ({
     }
   }, [startDate, endDate])
 
-  const onSubmit = () => {
-    let editAccessData = {} as AccessData
+  const onSubmit = async () => {
+    try {
+      let editAccessData = {} as AccessData
 
-    const stringStartDate = moment(startDate).isValid()
-      ? moment(startDate).format()
-      : access?.actual_start_datetime ?? null
+      const stringStartDate = moment(startDate).isValid()
+        ? moment(startDate).format()
+        : access?.actual_start_datetime ?? null
 
-    const stringEndDate = moment(endDate).isValid()
-      ? moment(endDate).format()
-      : access?.actual_end_datetime ?? null
+      const stringEndDate = moment(endDate).isValid()
+        ? moment(endDate).format()
+        : access?.actual_end_datetime ?? null
 
-    if (startDate?.isBefore()) {
-      editAccessData = {
-        end_datetime: stringEndDate,
-      }
-    } else {
-      editAccessData = {
-        start_datetime: stringStartDate,
-        end_datetime: stringEndDate,
-      }
-    }
-
-    submitEditAccess(editAccessData, access?.care_site_history_id).then(
-      (success) => {
-        if (success) {
-          onSuccess(true)
-        } else {
-          onFail(true)
+      if (startDate?.isBefore()) {
+        editAccessData = {
+          end_datetime: stringEndDate,
+        }
+      } else {
+        editAccessData = {
+          start_datetime: stringStartDate,
+          end_datetime: stringEndDate,
         }
       }
-    )
 
-    _onClose()
+      const submitEditAccessResp = await submitEditAccess(
+        editAccessData,
+        access?.care_site_history_id
+      )
+
+      if (submitEditAccessResp) {
+        onSuccess(true)
+      } else {
+        onFail(true)
+      }
+
+      _onClose()
+    } catch (error) {
+      console.error("Erreur lors de l'édition d'un accès", error)
+      _onClose()
+    }
   }
 
   const _onClose = () => {
