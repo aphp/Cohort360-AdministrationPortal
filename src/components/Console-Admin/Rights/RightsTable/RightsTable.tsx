@@ -68,9 +68,16 @@ const RightsTable: React.FC<RightsTableProps> = ({
   const rowsPerPage = 100
 
   useEffect(() => {
-    getRoles().then((res) => {
-      setRoles(res)
-    })
+    const _getRoles = async () => {
+      try {
+        const rolesResp = await getRoles()
+        setRoles(rolesResp)
+      } catch (error) {
+        console.error("Erreur lors de la récupération des rôles", error)
+      }
+    }
+
+    _getRoles()
   }, [])
 
   useEffect(() => {
