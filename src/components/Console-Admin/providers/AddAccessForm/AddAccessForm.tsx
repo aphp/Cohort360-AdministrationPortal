@@ -62,12 +62,24 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    setLoading(true)
-    getAssignableRoles(careSite?.care_site_id)
-      .then((res) => {
-        setRoles(res)
-      })
-      .finally(() => setLoading(false))
+    const fetchAssignableRoles = async () => {
+      try {
+        setLoading(true)
+
+        const assignableRolesResp = await getAssignableRoles(
+          careSite?.care_site_id
+        )
+
+        setRoles(assignableRolesResp)
+
+        setLoading(false)
+      } catch (error) {
+        console.error(error)
+        setLoading(false)
+      }
+    }
+
+    fetchAssignableRoles()
   }, [careSite])
 
   useEffect(() => {
@@ -85,7 +97,7 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
     if (value) setRole(value)
   }
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const stringStartDate =
       moment(startDate).isValid() &&
       !moment(startDate).isSame(new Date(), "day")
@@ -111,13 +123,13 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
       accessData = { ...accessData, end_datetime: stringEndDate }
     }
 
-    submitCreateAccess(accessData).then((success) => {
-      if (success) {
-        onSuccess(true)
-      } else {
-        onFail(true)
-      }
-    })
+    const submitCreateAccessResp = await submitCreateAccess(accessData)
+
+    if (submitCreateAccessResp) {
+      onSuccess(true)
+    } else {
+      onFail(true)
+    }
 
     setCareSite(null)
     setRoles([])
