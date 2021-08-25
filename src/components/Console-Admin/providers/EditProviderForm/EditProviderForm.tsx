@@ -49,20 +49,30 @@ const EditProviderDialog: React.FC<EditUserDialogProps> = ({
   const [emailError, setEmailError] = useState(false)
 
   useEffect(() => {
-    const providerId = selectedProvider?.provider_id.toString()
-    setLoading(true)
-    getProfile(providerId)
-      .then((profiles) => {
-        if (profiles) {
-          const manualProfile = profiles.find(
+    const _getProfile = async () => {
+      try {
+        const providerId = selectedProvider?.provider_id.toString()
+        setLoading(true)
+
+        const profilesResp = await getProfile(providerId)
+
+        if (profilesResp) {
+          const manualProfile = profilesResp.find(
             (profile: Profile) => profile.cdm_source === "MANUAL"
           )
 
           setProviderHistoryId(manualProfile.provider_history_id)
         }
-      })
-      .catch(() => setError(true))
-      .finally(() => setLoading(false))
+
+        setLoading(false)
+      } catch (error) {
+        console.error("Erreur lors de la récupération du profil", error)
+        setError(true)
+        setLoading(false)
+      }
+    }
+
+    _getProfile()
   }, []) // eslint-disable-line
 
   useEffect(() => {
@@ -91,21 +101,7 @@ const EditProviderDialog: React.FC<EditUserDialogProps> = ({
     } else setEmailError(false)
   }, [email])
 
-  const onSubmit = () => {
-    const data = {
-      firstname: firstName,
-      lastname: lastName,
-      email: email,
-    }
-
-    editProfile(providerHistoryId, data).then((res) => {
-      if (res) {
-        onSuccess(true)
-      } else {
-        onFail(true)
-      }
-    })
-
+  const resetDialogAndClose = () => {
     setFirstName("")
     setFirstNameError(false)
     setLastName("")
@@ -113,6 +109,30 @@ const EditProviderDialog: React.FC<EditUserDialogProps> = ({
     setEmail("")
     setEmailError(false)
     onClose()
+  }
+
+  const onSubmit = async () => {
+    try {
+      const data = {
+        firstname: firstName,
+        lastname: lastName,
+        email: email,
+      }
+
+      const editProfileResp = await editProfile(providerHistoryId, data)
+
+      if (editProfileResp) {
+        onSuccess(true)
+      } else {
+        onFail(true)
+      }
+
+      resetDialogAndClose()
+    } catch (error) {
+      console.error("Erreur lors de l'édition d'un utilisateur", error)
+      onFail(true)
+      resetDialogAndClose()
+    }
   }
 
   return (
