@@ -114,6 +114,7 @@ const EditAccessForm: React.FC<EditAccessFormProps> = ({
     } catch (error) {
       console.error("Erreur lors de l'édition d'un accès", error)
       _onClose()
+      onFail(true)
     }
   }
 

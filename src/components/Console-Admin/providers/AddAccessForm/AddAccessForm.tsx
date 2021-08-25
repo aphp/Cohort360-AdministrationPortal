@@ -100,45 +100,55 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
     if (value) setRole(value)
   }
 
-  const onSubmit = async () => {
-    const stringStartDate =
-      moment(startDate).isValid() &&
-      !moment(startDate).isSame(new Date(), "day")
-        ? moment(startDate).format()
-        : null
-
-    const stringEndDate = moment(endDate).isValid()
-      ? moment(endDate).format()
-      : null
-
-    let accessData = {
-      provider_history_id: entityId,
-      care_site_id: careSite?.care_site_id,
-      role_id: role?.role_id,
-    }
-
-    if (stringStartDate) {
-      // @ts-ignore
-      accessData = { ...accessData, start_datetime: stringStartDate }
-    }
-    if (stringEndDate) {
-      // @ts-ignore
-      accessData = { ...accessData, end_datetime: stringEndDate }
-    }
-
-    const submitCreateAccessResp = await submitCreateAccess(accessData)
-
-    if (submitCreateAccessResp) {
-      onSuccess(true)
-    } else {
-      onFail(true)
-    }
-
+  const resetDialogAndClose = () => {
     setCareSite(null)
     setRoles([])
     setStartDate(null)
     setEndDate(null)
     onClose()
+  }
+
+  const onSubmit = async () => {
+    try {
+      const stringStartDate =
+        moment(startDate).isValid() &&
+        !moment(startDate).isSame(new Date(), "day")
+          ? moment(startDate).format()
+          : null
+
+      const stringEndDate = moment(endDate).isValid()
+        ? moment(endDate).format()
+        : null
+
+      let accessData = {
+        provider_history_id: entityId,
+        care_site_id: careSite?.care_site_id,
+        role_id: role?.role_id,
+      }
+
+      if (stringStartDate) {
+        // @ts-ignore
+        accessData = { ...accessData, start_datetime: stringStartDate }
+      }
+      if (stringEndDate) {
+        // @ts-ignore
+        accessData = { ...accessData, end_datetime: stringEndDate }
+      }
+
+      const submitCreateAccessResp = await submitCreateAccess(accessData)
+
+      if (submitCreateAccessResp) {
+        onSuccess(true)
+      } else {
+        onFail(true)
+      }
+
+      resetDialogAndClose()
+    } catch (error) {
+      console.error("Erreur lors de la création d'un accès")
+      resetDialogAndClose()
+      onFail(true)
+    }
   }
 
   return (
