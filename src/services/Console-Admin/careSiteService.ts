@@ -124,17 +124,12 @@ export const getCareSite = async (careSiteId: string): Promise<string | undefine
 }
 
 export const onDeleteAccess = async (careSiteHistoryId?: number) => {
-    let success
+    try {
+        const deleteAccessResp = await api.delete(`/accesses/${careSiteHistoryId}/`)
 
-    await api.delete(`/accesses/${careSiteHistoryId}/`)
-    .then(res => {
-        if (res.status === 204){
-            success = true
-        } else success = false
-    })
-    .catch(() => {
-        success = false
-    })
-
-    return success
+        return deleteAccessResp.status === 204
+    } catch(error){
+        console.error("Erreur lors de la suppression d'un accès", error)
+        return false
+    }
 }
