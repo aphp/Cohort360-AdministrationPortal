@@ -74,7 +74,10 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
 
         setLoading(false)
       } catch (error) {
-        console.error(error)
+        console.error(
+          "Erreur lors de la récupération des rôles assignables",
+          error
+        )
         setLoading(false)
       }
     }

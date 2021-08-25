@@ -33,7 +33,10 @@ const ProviderHistory: React.FC = () => {
 
         setLoading(false)
       } catch (error) {
-        console.error(error)
+        console.error(
+          "Erreur lors de la récupération du provider ou du profile",
+          error
+        )
         setRights(undefined)
         setLoading(false)
       }

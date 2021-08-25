@@ -29,6 +29,6 @@ export const getProvider = async (providerId: string) => {
 
     return providerResp.data ?? undefined
   } catch (error){
-    console.error(error)
+    console.error("Erreur lors de la récupération de l'utilisateur", error)
   }
 }
