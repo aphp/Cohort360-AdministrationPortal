@@ -13,50 +13,34 @@ export const getRoles = async () => {
 
 //have to finish the function of editing Role
 export const submitEditRoles = async (editData: Role, role_id?: number) => {
-    let success
+    try {
+        const editRoleResp = await api.patch(`/roles/${role_id}/`, editData)
 
-    await api.patch(`/roles/${role_id}/`, editData)
-    .then (res => {
-        if (res.status === 200) {
-            success = true
-        } else {
-            success = false
-        }
-    }).catch(error => {
-        success = false
-    })
-
-    return success
+        return editRoleResp.status === 200
+    } catch(error) {
+        console.error("Erreur lors l'édition d'un rôle", error)
+        return false
+    }
 }
 
 export const createRoles = async (createData: Role) => {
-    let success
+    try {
+        const createRoleResp = await api.post(`/roles/`, createData)
 
-    await api.post(`/roles/`, createData)
-    .then(res => {
-        if (res.status === 200) {
-            success = true
-        } else success = false
-    }).catch(error => {
-        success = false
-    })
-
-    return success
+        return createRoleResp.status === 200
+    } catch(error) {
+        console.error("Erreur lors de la création de rôle", error)
+        return false
+    }
 }
 
 export const deleteRoles = async (role_id?: number) => {
-    let success
+    try {
+        const deleteRoleResp = await api.delete(`/roles/${role_id}/`)
 
-    await api.delete(`/roles/${role_id}/`)
-    .then(res => {
-        if (res.status === 200) {
-            success = true
-        } else {
-            success = false
-        }
-    }).catch(error => {
-        success = false
-    })
-
-    return success
+        return deleteRoleResp.status === 200
+    } catch(error) {
+        console.error("Erreur lors de la suppression d'un rôle", error)
+        return false
+    }
 }
