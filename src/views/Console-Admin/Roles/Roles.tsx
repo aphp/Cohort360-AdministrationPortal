@@ -4,7 +4,6 @@ import { CircularProgress, Grid } from "@material-ui/core"
 import { getRoles } from "services/Console-Admin/rolesService"
 import RolesTables from "components/Console-Admin/Roles/RolesTables/RolesTables"
 import useStyles from "./styles"
-import { Role } from "types"
 
 const Roles: React.FC = () => {
   const classes = useStyles()
@@ -12,12 +11,19 @@ const Roles: React.FC = () => {
   const [retrieveRoles, setRetrieveRoles] = useState<any>()
 
   useEffect(() => {
-    setLoading(true)
-    getRoles()
-      .then((rolesResp: Role[]) => {
+    const _getRoles = async () => {
+      try {
+        const rolesResp = await getRoles()
+
         setRetrieveRoles(rolesResp)
-      })
-      .then(() => setLoading(false))
+        setLoading(false)
+      } catch (error) {
+        console.error("Erreur lors de la récupération des rôles", error)
+        setLoading(false)
+      }
+    }
+
+    _getRoles()
   }, []) // eslint-disable-line
 
   return (
