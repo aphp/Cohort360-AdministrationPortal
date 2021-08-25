@@ -263,7 +263,7 @@ const ProvidersTable = () => {
           className={classes.alert}
         >
           {addProviderSuccess && "L'utilisateur a bien été créé."}
-          {editProviderSuccess && "L'utilisateur a bien été créé."}
+          {editProviderSuccess && "L'utilisateur a bien été édité."}
         </Alert>
       )}
       {(addProviderFail || editProviderFail) && (
