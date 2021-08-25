@@ -36,17 +36,14 @@ export const submitCreateProfile = async (firstName: string, lastName: string,
 }
 
 export const editProfile = async (providerHistoryId: string, profileData: {}) => {
-    let success
+    try {
+        const editProfileResp = await api.patch(`/profiles/${providerHistoryId}/`, profileData)
 
-    await api.patch(`/profiles/${providerHistoryId}/`, profileData)
-    .then(res => {
-        if (res.status === 200) {
-            success = true   
-        } else success = false
-    })
-    .catch(() => success = false)
-
-    return success
+        return editProfileResp.status === 200
+    } catch (error){
+        console.error("Erreur lors de l'édition d'un profil", error)
+        return false
+    }
 }
 
 export const getAccesses = async (providerHistoryId: number, page: number) => {
@@ -63,35 +60,25 @@ export const getAccesses = async (providerHistoryId: number, page: number) => {
 }
 
 export const submitCreateAccess = async (accessData: AccessData) => {
-    let success
+    try {
+        const createAccessResp = await api.post(`/accesses/`, accessData)
 
-    await api.post(`/accesses/`, accessData)
-    .then(res => {
-        if (res.status === 201) {
-            success= true       
-        } else success = false
-    })
-    .catch(() => {
-        success = false
-    })
-
-    return success
+        return createAccessResp.status === 201
+    } catch(error){
+        console.error("Erreur lors de la création d'un accès", error)
+        return false
+    }
 }
 
 export const submitEditAccess = async (editData: AccessData, careSiteHistoryId?: number) => {
-    let success 
+    try {
+        const editAccessResp = await api.patch(`/accesses/${careSiteHistoryId}/`, editData)
 
-    await api.patch(`/accesses/${careSiteHistoryId}/`, editData)
-    .then(res => {
-        if (res.status === 200){
-            success = true
-        } else success = false
-    })
-    .catch(() => {
-        success = false
-    })
-
-    return success
+        return editAccessResp.status === 200
+    } catch (error){
+        console.error("Erreur lors de l'édition d'un accès", error)
+        return false
+    }
 }
 
 export const getAssignableRoles = async (careSiteId?: string | number | null) => {
