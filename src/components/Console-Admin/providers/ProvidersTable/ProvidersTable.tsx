@@ -94,32 +94,43 @@ const ProvidersTable = () => {
     orderDirection: string,
     page?: number
   ) => {
-    const _page = page ? page : 1
-    if (refreshed) {
-      const urlSearch = searchInput ? `&search=${searchInput}` : ""
-      const urlOrderingDirection = orderDirection === "desc" ? "-" : ""
+    try {
+      const _page = page ? page : 1
+      if (refreshed) {
+        const urlSearch = searchInput ? `&search=${searchInput}` : ""
+        const urlOrderingDirection = orderDirection === "desc" ? "-" : ""
 
-      history.push({
-        pathname: "/users",
-        search: `?page=${_page}&ordering=${urlOrderingDirection}${orderBy}${urlSearch}`,
-      })
+        history.push({
+          pathname: "/users",
+          search: `?page=${_page}&ordering=${urlOrderingDirection}${orderBy}${urlSearch}`,
+        })
+      }
+
+      setLoading(true)
+
+      const providersResp = await getProviders(
+        orderBy,
+        orderDirection,
+        _page,
+        searchInput
+      )
+
+      if (providersResp) {
+        setProviders(
+          providersResp.providers.length === 0
+            ? undefined
+            : providersResp.providers
+        )
+        setTotal(providersResp.total)
+      }
+
+      setLoading(false)
+    } catch (error) {
+      console.error("Erreur lors de la récupération des providers", error)
+      setProviders(null)
+      setTotal(0)
+      setLoading(false)
     }
-    setLoading(true)
-    getProviders(orderBy, orderDirection, _page, searchInput)
-      .then((resp) => {
-        if (resp) {
-          setProviders(resp.providers.length === 0 ? undefined : resp.providers)
-          setTotal(resp.total)
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-        setProviders(null)
-        setTotal(0)
-      })
-      .finally(() => {
-        setLoading(false)
-      })
   }
 
   const createSortHandler =
