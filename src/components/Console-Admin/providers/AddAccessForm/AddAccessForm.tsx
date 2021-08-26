@@ -22,10 +22,8 @@ import InfoIcon from "@material-ui/icons/Info"
 import EditIcon from "@material-ui/icons/Edit"
 
 import useStyles from "./styles"
-import {
-  getAssignableRoles,
-  submitCreateAccess,
-} from "services/Console-Admin/providersHistoryService"
+import { getAssignableRoles } from "services/Console-Admin/rolesService"
+import { submitCreateAccess } from "services/Console-Admin/providersHistoryService"
 import CareSitesDialog from "./components/CareSitesDialog/CareSitesDialog"
 import { ScopeTreeRow } from "types"
 
