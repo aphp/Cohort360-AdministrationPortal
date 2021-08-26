@@ -62,7 +62,7 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    const fetchAssignableRoles = async () => {
+    const _getAssignableRoles = async () => {
       try {
         setLoading(true)
 
@@ -82,7 +82,7 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
       }
     }
 
-    fetchAssignableRoles()
+    _getAssignableRoles()
   }, [careSite])
 
   useEffect(() => {
