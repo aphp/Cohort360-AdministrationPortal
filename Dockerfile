@@ -1,7 +1,11 @@
-FROM harbor.eds.aphp.fr/cohort360/node-front:$CI_COMMIT_BRANCH
-WORKDIR /root
-COPY ./ ./
-ENV REACT_APP_PORTAIL_API_URL=/api/portail
-ENV REACT_APP_CONTEXT=aphp
-RUN mkdir -p static
-CMD ["sleep", "infinity"]
+FROM harbor.eds.aphp.fr/cohort360/nginx:{{ENVIR}}
+
+WORKDIR /app
+COPY package.json tsconfig.json entry-point.sh ./
+COPY src src
+COPY public public
+COPY build build
+
+COPY nginx.conf /etc/nginx/conf.d/
+CMD ["bash", "entry-point.sh"]
+
