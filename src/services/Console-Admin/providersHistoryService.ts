@@ -34,7 +34,9 @@ export const submitCreateProfile = async (
     if (resCheckProfiles.status === 200) {
       const createProfile = await api.post(`/profiles/`, profileData)
       return createProfile.status === 201
-    } else return false
+    } else {
+      return false
+    }
   } catch (error) {
     console.error("Erreur lors de la création de profil", error)
     return false
