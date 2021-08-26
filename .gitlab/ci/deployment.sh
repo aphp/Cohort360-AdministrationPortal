@@ -1,8 +1,5 @@
 #!/usr/bin/bash
 
-# source env var
-export $(cat .gitlab/ci/env/${CI_COMMIT_BRANCH}.env | xargs)
-
 # replace placeholders by env var
 
 sed -i "s/{{ENVIR}}/$ENVIR/g" nginx.conf

@@ -32,15 +32,74 @@ test:
     - echo "Testing the code"
 #    -
 
-deploy-image:
+deploy-to-fakedata:
   image :
     name : $HARBOR_REPOSITORY_URL/kaniko-executor:$CI_COMMIT_BRANCH
     entrypoint : [ "" ]
   stage: deploy
+  variables:
+    ENVIR: "fakedata"
+    ENVIRONMENT: "fakedata"
   script:
     - sh .gitlab/ci/deployment.sh
   rules:
-    - if: $CI_COMMIT_BRANCH == "fakedata" || $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "qualif" || $CI_COMMIT_BRANCH == "prod_a" || $CI_COMMIT_BRANCH == "prod_b"
+    - if: $CI_COMMIT_BRANCH == "fakedata"
+    - when: never
+
+deploy-to-dev:
+  image :
+    name : $HARBOR_REPOSITORY_URL/kaniko-executor:$CI_COMMIT_BRANCH
+    entrypoint : [ "" ]
+  stage: deploy
+  variables:
+    ENVIR: "dev"
+    ENVIRONMENT: "dev"
+  script:
+    - sh .gitlab/ci/deployment.sh
+  rules:
+    - if: $CI_COMMIT_BRANCH == "dev"
+    - when: never
+
+deploy-to-staging:
+  image :
+    name : $HARBOR_REPOSITORY_URL/kaniko-executor:$CI_COMMIT_BRANCH
+    entrypoint : [ "" ]
+  stage: deploy
+  variables:
+    ENVIR: "qualif"
+    ENVIRONMENT: "qualif"
+  script:
+    - sh .gitlab/ci/deployment.sh
+  rules:
+    - if: $CI_COMMIT_BRANCH == "qualif"
+    - when: never
+
+deploy-to-prod-a:
+  image :
+    name : $HARBOR_REPOSITORY_URL/kaniko-executor:$CI_COMMIT_BRANCH
+    entrypoint : [ "" ]
+  stage: deploy
+  variables:
+    ENVIR: "prod_a"
+    ENVIRONMENT: "prod-a"
+  script:
+    - sh .gitlab/ci/deployment.sh
+  rules:
+    - if: $CI_COMMIT_BRANCH == "prod_a"
+    - when: never
+
+deploy-to-prod-b:
+  image :
+    name : $HARBOR_REPOSITORY_URL/kaniko-executor:$CI_COMMIT_BRANCH
+    entrypoint : [ "" ]
+  stage: deploy
+  variables:
+    ENVIR: "prod_b"
+    ENVIRONMENT: "prod-b"
+  script:
+    - sh .gitlab/ci/deployment.sh
+  rules:
+    - if: $CI_COMMIT_BRANCH == "prod_b"
     - when: never
 
 release:
