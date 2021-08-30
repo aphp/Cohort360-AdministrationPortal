@@ -103,13 +103,29 @@ export const submitEditAccess = async (
   }
 }
 
-export const onDeleteAccess = async (careSiteHistoryId?: number) => {
+export const onDeleteOrTerminateAccess = async (
+  terminateAccess: boolean,
+  careSiteHistoryId?: number
+) => {
   try {
-    const deleteAccessResp = await api.delete(`/accesses/${careSiteHistoryId}/`)
+    if (terminateAccess) {
+      const terminateAccessResp = await api.patch(
+        `/accesses/${careSiteHistoryId}/close/`
+      )
 
-    return deleteAccessResp.status === 204
+      return terminateAccessResp.status === 200
+    } else {
+      const deleteAccessResp = await api.delete(
+        `/accesses/${careSiteHistoryId}/`
+      )
+
+      return deleteAccessResp.status === 204
+    }
   } catch (error) {
-    console.error("Erreur lors de la suppression d'un accès", error)
+    console.error(
+      "Erreur lors de la suppression ou l'interruption d'un accès",
+      error
+    )
     return false
   }
 }
