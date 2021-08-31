@@ -75,11 +75,7 @@ const AddProviderDialog: React.FC<AddUserDialogProps> = ({
     } else setEmailError(false)
   }, [email])
 
-  const onSubmit = () => {
-    submitCreateProfile(firstName, lastName, providerSourceValue, email)
-      ? onSuccess(true)
-      : onFail(true)
-
+  const resetAndCloseDialog = () => {
     setProviderSourceValue("")
     setProviderSourceValueError(false)
     setFirstName("")
@@ -89,6 +85,25 @@ const AddProviderDialog: React.FC<AddUserDialogProps> = ({
     setEmail("")
     setEmailError(false)
     onClose()
+  }
+
+  const onSubmit = async () => {
+    try {
+      const createProfileResp = await submitCreateProfile(
+        firstName,
+        lastName,
+        providerSourceValue,
+        email
+      )
+
+      createProfileResp ? onSuccess(true) : onFail(true)
+
+      resetAndCloseDialog()
+    } catch (error) {
+      console.error("Erreur lors de la création de l'utilisateur", error)
+      onFail(true)
+      resetAndCloseDialog()
+    }
   }
 
   return (

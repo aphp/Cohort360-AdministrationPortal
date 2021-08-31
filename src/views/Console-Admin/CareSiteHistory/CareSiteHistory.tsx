@@ -28,22 +28,28 @@ const CareSiteHistory: React.FC = () => {
 
   const { careSiteId } = useParams<{ careSiteId: string }>()
 
-  const _getCareSiteAccesses = () => {
-    setLoadingPage(true)
-    getCareSite(careSiteId)
-      .then((careSiteResp) => setCareSiteName(careSiteResp ?? "Inconnu"))
-      .then(() => {
-        getCareSiteAccesses(careSiteId, page, searchInput)
-          .then((careSiteAccessesResp) => {
-            setCareSiteAccesses(careSiteAccessesResp?.accesses)
-            setTotal(careSiteAccessesResp?.total)
-          })
-          .catch(() => {
-            setCareSiteAccesses(undefined)
-            setTotal(0)
-          })
-          .finally(() => setLoadingPage(false))
-      })
+  const _getCareSiteAccesses = async () => {
+    try {
+      setLoadingPage(true)
+
+      const careSiteResp = await getCareSite(careSiteId)
+      setCareSiteName(careSiteResp ?? "Inconnu")
+
+      const careSiteAccessesResp = await getCareSiteAccesses(
+        careSiteId,
+        page,
+        searchInput
+      )
+      setCareSiteAccesses(careSiteAccessesResp?.accesses)
+      setTotal(careSiteAccessesResp?.total)
+
+      setLoadingPage(false)
+    } catch (error) {
+      console.error("Erreur lors de la récupération des accès", error)
+      setCareSiteAccesses(undefined)
+      setTotal(0)
+      setLoadingPage(false)
+    }
   }
 
   useEffect(() => {
@@ -55,17 +61,33 @@ const CareSiteHistory: React.FC = () => {
   }, [careSiteId]) // eslint-disable-line
 
   useEffect(() => {
-    setLoadingData(true)
-    getCareSiteAccesses(careSiteId, page, searchInput)
-      .then((careSiteAccessesResp) => {
+    const fetchCareSiteAccesses = async () => {
+      try {
+        setLoadingData(true)
+
+        const careSiteAccessesResp = await getCareSiteAccesses(
+          careSiteId,
+          page,
+          searchInput
+        )
+
         setCareSiteAccesses(careSiteAccessesResp?.accesses)
         setTotal(careSiteAccessesResp?.total)
-      })
-      .catch(() => {
+
+        setLoadingData(false)
+      } catch (error) {
+        console.error(
+          "Erreur lors de la récupération des accès liés à un périmètre.",
+          error
+        )
         setCareSiteAccesses(undefined)
         setTotal(0)
-      })
-      .finally(() => setLoadingData(false))
+
+        setLoadingData(false)
+      }
+    }
+
+    fetchCareSiteAccesses()
   }, [careSiteAccesses?.length, searchInput, page]) // eslint-disable-line
 
   return (

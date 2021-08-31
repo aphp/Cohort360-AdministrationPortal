@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
 
 import {
-  // Button,
+  Button,
   CircularProgress,
-  // Dialog,
-  // DialogActions,
-  // DialogContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
   Grid,
   IconButton,
   Paper,
@@ -21,11 +21,12 @@ import {
 } from "@material-ui/core"
 import Pagination from "@material-ui/lab/Pagination"
 
-// import DeleteIcon from "@material-ui/icons/Delete"
+import DeleteIcon from "@material-ui/icons/Delete"
 import EditIcon from "@material-ui/icons/Edit"
 import FiberManualRecordRoundedIcon from "@material-ui/icons/FiberManualRecordRounded"
 import InfoIcon from "@material-ui/icons/Info"
 import LaunchIcon from "@material-ui/icons/Launch"
+import TimerOffIcon from "@material-ui/icons/TimerOff"
 
 import useStyles from "./styles"
 import EditAccessForm from "../../providers/EditAccessForm/EditAccessForm"
@@ -33,7 +34,7 @@ import { Access, Role } from "types"
 import { Alert } from "@material-ui/lab"
 import moment from "moment"
 import { getRoles } from "services/Console-Admin/rolesService"
-// import { onDeleteAccess } from "services/Console-Admin/careSiteService"
+import { onDeleteOrTerminateAccess } from "services/Console-Admin/providersHistoryService"
 
 type RightsTableProps = {
   displayName: boolean
@@ -59,18 +60,26 @@ const RightsTable: React.FC<RightsTableProps> = ({
 
   const [selectedAccess, setSelectedAccess] = useState<Access | null>(null)
   const [roles, setRoles] = useState<Role[] | undefined>()
-  // const [deleteAccess, setDeleteAccess] = useState<Access | null>(null)
+  const [deleteAccess, setDeleteAccess] = useState<Access | null>(null)
   const [editAccessSuccess, setEditAccessSuccess] = useState(false)
   const [editAccessFail, setEditAccessFail] = useState(false)
   const [deleteAccessSuccess, setDeleteAccessSuccess] = useState(false)
   const [deleteAccessFail, setDeleteAccessFail] = useState(false)
+  const [terminateAccess, setTerminateAccess] = useState(false)
 
   const rowsPerPage = 100
 
   useEffect(() => {
-    getRoles().then((res) => {
-      setRoles(res)
-    })
+    const _getRoles = async () => {
+      try {
+        const rolesResp = await getRoles()
+        setRoles(rolesResp)
+      } catch (error) {
+        console.error("Erreur lors de la récupération des rôles", error)
+      }
+    }
+
+    _getRoles()
   }, [])
 
   useEffect(() => {
@@ -79,19 +88,31 @@ const RightsTable: React.FC<RightsTableProps> = ({
   }, [editAccessSuccess, deleteAccessSuccess]) // eslint-disable-line
 
   const columns = displayName
-    ? ["Nom", "Rôle", "Date de début", "Date de fin", "Actif", ""]
-    : ["Périmètre", "Rôle", "Date de début", "Date de fin", "Actif", ""]
+    ? ["Nom", "Rôle", "Date de début", "Date de fin", "Actif", "Actions"]
+    : ["Périmètre", "Rôle", "Date de début", "Date de fin", "Actif", "Actions"]
 
-  // const handleDeleteAction = () => {
-  //   onDeleteAccess(deleteAccess?.care_site_history_id).then((success) => {
-  //     setDeleteAccess(null)
-  //     if (success) {
-  //       setDeleteAccessSuccess(true)
-  //     } else {
-  //       setDeleteAccessFail(true)
-  //     }
-  //   })
-  // }
+  const handleDeleteAction = async () => {
+    try {
+      const terminateAccessResp = await onDeleteOrTerminateAccess(
+        terminateAccess,
+        deleteAccess?.care_site_history_id
+      )
+
+      if (terminateAccessResp) {
+        setDeleteAccessSuccess(true)
+      } else {
+        setDeleteAccessFail(true)
+      }
+      setDeleteAccess(null)
+    } catch (error) {
+      console.error(
+        "Erreur lors de la suppression ou l'interruption de l'accès",
+        error
+      )
+      setDeleteAccessFail(true)
+      setDeleteAccess(null)
+    }
+  }
 
   return (
     <Grid container justify="flex-end">
@@ -197,23 +218,44 @@ const RightsTable: React.FC<RightsTableProps> = ({
                       />
                     </TableCell>
                     <TableCell align="center">
-                      {(access.actual_end_datetime ||
+                      {(access.actual_start_datetime ||
                         access.actual_end_datetime) && (
-                        <IconButton
-                          onClick={() => {
-                            setSelectedAccess(access)
-                          }}
-                        >
-                          <EditIcon />
-                        </IconButton>
+                        <Tooltip title="Éditer l'accès">
+                          <IconButton
+                            onClick={() => {
+                              setSelectedAccess(access)
+                            }}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        </Tooltip>
                       )}
-                      {/* <IconButton
-                        onClick={() => {
-                          setDeleteAccess(access)
-                        }}
-                      >
-                        <DeleteIcon />
-                      </IconButton> */}
+                      {access.actual_start_datetime &&
+                        moment(access.actual_start_datetime).isBefore() && (
+                          <Tooltip title="Interrompre l'accès.">
+                            <IconButton
+                              onClick={() => {
+                                setDeleteAccess(access)
+                                setTerminateAccess(true)
+                              }}
+                            >
+                              <TimerOffIcon />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                      {access.actual_start_datetime &&
+                        moment(access.actual_start_datetime).isAfter() && (
+                          <Tooltip title="Supprimer l'accès.">
+                            <IconButton
+                              onClick={() => {
+                                setDeleteAccess(access)
+                                setTerminateAccess(false)
+                              }}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </Tooltip>
+                        )}
                     </TableCell>
                   </TableRow>
                 )
@@ -246,14 +288,15 @@ const RightsTable: React.FC<RightsTableProps> = ({
         onFail={setEditAccessFail}
       />
 
-      {/* <Dialog
+      <Dialog
         open={deleteAccess ? true : false}
         onClose={() => setDeleteAccess(null)}
       >
         <DialogContent>
           <Typography>
-            Êtes-vous sûr(e) de vouloir supprimer cet accès sur le périmètre{" "}
-            {deleteAccess?.care_site.care_site_name} ?
+            Êtes-vous sûr(e) de vouloir{" "}
+            {terminateAccess ? "interrompre" : "supprimer"} cet accès sur le
+            périmètre {deleteAccess?.care_site.care_site_name} ?
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -262,7 +305,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
           </Button>
           <Button onClick={handleDeleteAction}>Confirmer</Button>
         </DialogActions>
-      </Dialog> */}
+      </Dialog>
 
       {(editAccessSuccess || deleteAccessSuccess) && (
         <Alert
@@ -274,7 +317,10 @@ const RightsTable: React.FC<RightsTableProps> = ({
           className={classes.alert}
         >
           {editAccessSuccess && "Les dates d'accès ont bien été éditées."}
-          {deleteAccessSuccess && "L'accès a bien été supprimé."}
+          {deleteAccessSuccess &&
+            `L'accès a bien été ${
+              terminateAccess ? "interrompu" : "supprimé"
+            }.`}
         </Alert>
       )}
       {(editAccessFail || deleteAccessFail) && (
@@ -287,7 +333,10 @@ const RightsTable: React.FC<RightsTableProps> = ({
           className={classes.alert}
         >
           {editAccessFail && "Erreur lors de l'édition de l'accès."}
-          {deleteAccessFail && "Erreur lors de la suppression de l'accès."}
+          {deleteAccessFail &&
+            `Erreur lors de ${
+              terminateAccess ? "l'interruption" : "la suppression"
+            } de l'accès.`}
         </Alert>
       )}
     </Grid>

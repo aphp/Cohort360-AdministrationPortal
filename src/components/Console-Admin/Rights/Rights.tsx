@@ -26,14 +26,19 @@ const Rights: React.FC<RightsProps> = ({ right }) => {
   const [addAccessSuccess, setAddAccessSuccess] = useState(false)
   const [addAccessFail, setAddAccessFail] = useState(false)
 
-  const _getAccesses = () => {
-    setLoading(true)
-    getAccesses(right.provider_history_id, page)
-      .then((res) => {
-        setAccesses(res?.accesses)
-        setTotal(res?.total)
-      })
-      .finally(() => setLoading(false))
+  const _getAccesses = async () => {
+    try {
+      setLoading(true)
+
+      const rightsResp = await getAccesses(right.provider_history_id, page)
+
+      setAccesses(rightsResp?.accesses)
+      setTotal(rightsResp?.total)
+      setLoading(false)
+    } catch (error) {
+      console.error("Erreur lors de la récupération des accès", error)
+      setLoading(false)
+    }
   }
 
   useEffect(() => {

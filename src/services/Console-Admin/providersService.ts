@@ -24,15 +24,11 @@ export const getProviders = async (
 };
 
 export const getProvider = async (providerId: string) => {
- let provider 
+  try {
+    const providerResp = await api.get(`/providers/${providerId}/`)
 
- await api.get(`/providers/${providerId}/`)
-  .then((providerResp) => {
-    provider = providerResp.data ?? undefined
-  })
-  .catch(() => {
-    provider = undefined
-  })
-
- return provider
+    return providerResp.data ?? undefined
+  } catch (error){
+    console.error("Erreur lors de la récupération de l'utilisateur", error)
+  }
 }

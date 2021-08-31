@@ -22,10 +22,8 @@ import InfoIcon from "@material-ui/icons/Info"
 import EditIcon from "@material-ui/icons/Edit"
 
 import useStyles from "./styles"
-import {
-  getAssignableRoles,
-  submitCreateAccess,
-} from "services/Console-Admin/providersHistoryService"
+import { getAssignableRoles } from "services/Console-Admin/rolesService"
+import { submitCreateAccess } from "services/Console-Admin/providersHistoryService"
 import CareSitesDialog from "./components/CareSitesDialog/CareSitesDialog"
 import { ScopeTreeRow } from "types"
 
@@ -62,12 +60,27 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    setLoading(true)
-    getAssignableRoles(careSite?.care_site_id)
-      .then((res) => {
-        setRoles(res)
-      })
-      .finally(() => setLoading(false))
+    const _getAssignableRoles = async () => {
+      try {
+        setLoading(true)
+
+        const assignableRolesResp = await getAssignableRoles(
+          careSite?.care_site_id
+        )
+
+        setRoles(assignableRolesResp)
+
+        setLoading(false)
+      } catch (error) {
+        console.error(
+          "Erreur lors de la récupération des rôles assignables",
+          error
+        )
+        setLoading(false)
+      }
+    }
+
+    _getAssignableRoles()
   }, [careSite])
 
   useEffect(() => {
@@ -85,45 +98,55 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
     if (value) setRole(value)
   }
 
-  const onSubmit = () => {
-    const stringStartDate =
-      moment(startDate).isValid() &&
-      !moment(startDate).isSame(new Date(), "day")
-        ? moment(startDate).format()
-        : null
-
-    const stringEndDate = moment(endDate).isValid()
-      ? moment(endDate).format()
-      : null
-
-    let accessData = {
-      provider_history_id: entityId,
-      care_site_id: careSite?.care_site_id,
-      role_id: role?.role_id,
-    }
-
-    if (stringStartDate) {
-      // @ts-ignore
-      accessData = { ...accessData, start_datetime: stringStartDate }
-    }
-    if (stringEndDate) {
-      // @ts-ignore
-      accessData = { ...accessData, end_datetime: stringEndDate }
-    }
-
-    submitCreateAccess(accessData).then((success) => {
-      if (success) {
-        onSuccess(true)
-      } else {
-        onFail(true)
-      }
-    })
-
+  const resetDialogAndClose = () => {
     setCareSite(null)
     setRoles([])
     setStartDate(null)
     setEndDate(null)
     onClose()
+  }
+
+  const onSubmit = async () => {
+    try {
+      const stringStartDate =
+        moment(startDate).isValid() &&
+        !moment(startDate).isSame(new Date(), "day")
+          ? moment(startDate).format()
+          : null
+
+      const stringEndDate = moment(endDate).isValid()
+        ? moment(endDate).format()
+        : null
+
+      let accessData = {
+        provider_history_id: entityId,
+        care_site_id: careSite?.care_site_id,
+        role_id: role?.role_id,
+      }
+
+      if (stringStartDate) {
+        // @ts-ignore
+        accessData = { ...accessData, start_datetime: stringStartDate }
+      }
+      if (stringEndDate) {
+        // @ts-ignore
+        accessData = { ...accessData, end_datetime: stringEndDate }
+      }
+
+      const submitCreateAccessResp = await submitCreateAccess(accessData)
+
+      if (submitCreateAccessResp) {
+        onSuccess(true)
+      } else {
+        onFail(true)
+      }
+
+      resetDialogAndClose()
+    } catch (error) {
+      console.error("Erreur lors de la création d'un accès")
+      resetDialogAndClose()
+      onFail(true)
+    }
   }
 
   return (

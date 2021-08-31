@@ -1,62 +1,73 @@
-import api from '../api'
-import { Role } from '../../types'
+import api from "../api"
+import { Role } from "../../types"
 
 export const getRoles = async () => {
-    const rolesResp = await api.get(`/roles/`)
+  const rolesResp = await api.get(`/roles/`)
 
-    if (rolesResp.status !== 200) {
-        return undefined
-    }
-    return rolesResp.data.results ?? undefined
+  if (rolesResp.status !== 200) {
+    return undefined
+  }
+  return rolesResp.data.results ?? undefined
 }
 
+export const getAssignableRoles = async (
+  careSiteId?: string | number | null
+) => {
+  if (!careSiteId) return undefined
+
+  const assignableRolesResp = await api.get(
+    `/roles/assignable/?care_site_id=${careSiteId}`
+  )
+
+  if (assignableRolesResp.status !== 200) {
+    return undefined
+  }
+
+  const assignableRoles =
+    assignableRolesResp.data.results.sort((a: Role, b: Role) => {
+      if (a.name && b.name) {
+        if (a.name > b.name) {
+          return 1
+        } else if (a.name > b.name) {
+          return -1
+        }
+        return 0
+      } else return 0
+    }) ?? undefined
+
+  return assignableRoles
+}
 
 //have to finish the function of editing Role
 export const submitEditRoles = async (editData: Role, role_id?: number) => {
-    let success
+  try {
+    const editRoleResp = await api.patch(`/roles/${role_id}/`, editData)
 
-    await api.patch(`/roles/${role_id}/`, editData)
-    .then (res => {
-        if (res.status === 200) {
-            success = true
-        } else {
-            success = false
-        }
-    }).catch(error => {
-        success = false
-    })
-
-    return success
+    return editRoleResp.status === 200
+  } catch (error) {
+    console.error("Erreur lors l'édition d'un rôle", error)
+    return false
+  }
 }
 
 export const createRoles = async (createData: Role) => {
-    let success
+  try {
+    const createRoleResp = await api.post(`/roles/`, createData)
 
-    await api.post(`/roles/`, createData)
-    .then(res => {
-        if (res.status === 200) {
-            success = true
-        } else success = false
-    }).catch(error => {
-        success = false
-    })
-
-    return success
+    return createRoleResp.status === 200
+  } catch (error) {
+    console.error("Erreur lors de la création de rôle", error)
+    return false
+  }
 }
 
 export const deleteRoles = async (role_id?: number) => {
-    let success
+  try {
+    const deleteRoleResp = await api.delete(`/roles/${role_id}/`)
 
-    await api.delete(`/roles/${role_id}/`)
-    .then(res => {
-        if (res.status === 200) {
-            success = true
-        } else {
-            success = false
-        }
-    }).catch(error => {
-        success = false
-    })
-
-    return success
+    return deleteRoleResp.status === 200
+  } catch (error) {
+    console.error("Erreur lors de la suppression d'un rôle", error)
+    return false
+  }
 }

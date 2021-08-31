@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core"
 
 import { buildPartialUser } from "services/Console-Admin/userService"
-import { authenticate, /**getCsrfToken**/ } from "services/authentication"
+import { authenticate /**getCsrfToken**/ } from "services/authentication"
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants"
 import { login as loginAction } from "state/me"
 import logo from "assets/images/logo1.png"
@@ -51,9 +51,9 @@ const Login = () => {
   const [errorLogin, setErrorLogin] = useState<boolean>(false)
 
   useEffect(() => {
-    localStorage.removeItem('user')
-    localStorage.removeItem('access')
-    localStorage.removeItem('refresh')
+    localStorage.removeItem("user")
+    localStorage.removeItem("access")
+    localStorage.removeItem("refresh")
   }, [])
 
   // const [hasCsrfCookie, setHasCsrfCookie] = useState(false)
@@ -87,6 +87,7 @@ const Login = () => {
         setErrorLogin(true)
       }
     } catch (err) {
+      console.error("Erreur lors de l'authentification", err)
       setErrorLogin(true)
     }
   }
