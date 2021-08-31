@@ -5,9 +5,9 @@ image: $HARBOR_REPOSITORY_URL/node:$CI_COMMIT_BRANCH
 #  tags:
 #    - k8s-small-generic
 
-cache:
-  paths:
-    - build/*
+#cache:
+#  paths:
+#    - build/*
 
 variables:
   REACT_APP_BACK_API_URL: /api/back
