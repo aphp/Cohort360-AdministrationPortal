@@ -16,5 +16,8 @@ else
     echo "All variables have been well replaced"
 fi
 
+# @todo: rm after cache is enabled
+sed -i "s/{{ENVIR}}/$CI_COMMIT_BRANCH/g" Dockerfile_tmp
+
 echo "{\"auths\":{\"$HARBOR_REGISTRY\":{\"username\":\"$BOT_NAME\",\"password\":\"$BOT_TOKEN\"}}}" > /kaniko/.docker/config.json
 /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile_tmp --destination $HARBOR_REPOSITORY_URL/portail:$CI_COMMIT_BRANCH
