@@ -55,11 +55,7 @@ release:
     entrypoint: [ "" ]
   stage: release
   script:
-    - SUFFIX="-portail"
-    - mkdir /root/.kube
-    - cat $KUBE_CONFIG > /root/.kube/config
-    - ENVIRONMENT=${CI_COMMIT_BRANCH/_/-}
-    - kubectl rollout restart deployment/$ENVIRONMENT$SUFFIX
+    - bash .gitlab/release.sh
   rules:
     - if: $CI_COMMIT_BRANCH == "fakedata" || $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "qualif"
     - if: $CI_COMMIT_BRANCH == "prod_a" || $CI_COMMIT_BRANCH == "prod_b"
