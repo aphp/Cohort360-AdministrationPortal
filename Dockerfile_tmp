@@ -1,5 +1,5 @@
 FROM harbor.eds.aphp.fr/cohort360/node:{{ENVIR}}
-WORKDIR /root
+WORKDIR /app
 COPY ./ ./
 RUN mkdir -p /etc/nginx && mkdir -p /etc/nginx/sites-enabled/
 COPY nginx.conf /etc/nginx/sites-enabled/
