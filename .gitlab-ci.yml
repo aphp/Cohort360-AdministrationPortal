@@ -24,7 +24,7 @@ build:
     - echo "Build"
     - npm install
     - npm audit fix
-    - npm run build
+    - CI=false npm run build
   rules:
     - if: ($CI_COMMIT_BRANCH == "fakedata" || $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "qualif" || $CI_COMMIT_BRANCH == "prod_a" || $CI_COMMIT_BRANCH == "prod_b") && $ONLY_RELEASE == null
     - when: never
