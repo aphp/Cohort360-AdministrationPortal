@@ -19,5 +19,5 @@ cat $KUBE_CONFIG > /root/.kube/config
 # rollout k8s deploy
 SUFFIX="-portail"
 ENVIRONMENT=${CI_COMMIT_BRANCH/_/-}
-kubectl create configmap $ENVIRONMENT$SUFFIX-env --from-env-file=$ENV_FILE -o yaml --dry-run=client | kubectl apply -f -
+kubectl create secret generic $ENVIRONMENT$SUFFIX-env --from-env-file=$ENV_FILE -o yaml --dry-run=client | kubectl apply -f -
 kubectl rollout restart deployment/$ENVIRONMENT$SUFFIX
