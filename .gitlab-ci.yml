@@ -1,16 +1,16 @@
-image: $HARBOR_REPOSITORY_URL/node:14.6.0
+image: $HARBOR_REPOSITORY_URL/node:$CI_COMMIT_BRANCH
+
+# uncomment when cache will be made available for kube shared runner
+#default:
+#  tags:
+#    - k8s-small-generic
 
 cache:
   paths:
     - build/*
 
 variables:
-  REACT_APP_PORTAIL_API_URL: /api/portail
-  REACT_APP_CONTEXT: aphp
-
-default:
-  tags:
-    - k8s-small-generic
+  REACT_APP_BACK_API_URL: /api/back
 
 stages:
   - build
@@ -24,67 +24,38 @@ build:
     - echo "Build"
     - npm install
     - npm audit fix
-    - npm run build
+    - CI=false npm run build
+  rules:
+    - if: ($CI_COMMIT_BRANCH == "fakedata" || $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "qualif" || $CI_COMMIT_BRANCH == "prod_a" || $CI_COMMIT_BRANCH == "prod_b") && $ONLY_RELEASE == null
+    - when: never
 
 test:
   stage: test
   script:
     - echo "Testing the code"
 #    -
-
-deploy-to-fakedata:
-  image :
-    name : $HARBOR_REPOSITORY_URL/kaniko-executor:debug
-    entrypoint : [ "" ]
-  stage: deploy
-  variables:
-    ENVIR: "fakedata"
-  script:
-    - echo "{\"auths\":{\"$HARBOR_REGISTRY\":{\"username\":\"$BOT_NAME\",\"password\":\"$BOT_TOKEN\"}}}" > /kaniko/.docker/config.json
-    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --destination $HARBOR_REPOSITORY_URL/cohort-portail:$ENVIR
   rules:
-    - if: $CI_COMMIT_BRANCH == "fakedata"
+    - if: ($CI_COMMIT_BRANCH == "fakedata" || $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "qualif" || $CI_COMMIT_BRANCH == "prod_a" || $CI_COMMIT_BRANCH == "prod_b") && $ONLY_RELEASE == null
     - when: never
 
-deploy-to-dev:
+deploy:
   image :
-    name : $HARBOR_REPOSITORY_URL/kaniko-executor:debug
+    name : $HARBOR_REPOSITORY_URL/kaniko-executor:$CI_COMMIT_BRANCH
     entrypoint : [ "" ]
   stage: deploy
-  variables:
-    ENVIR: "dev"
   script:
-    - echo "{\"auths\":{\"$HARBOR_REGISTRY\":{\"username\":\"$BOT_NAME\",\"password\":\"$BOT_TOKEN\"}}}" > /kaniko/.docker/config.json
-    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --destination $HARBOR_REPOSITORY_URL/cohort-portail:$ENVIR
+    - sh .gitlab/deployment.sh
   rules:
-    - if: $CI_COMMIT_BRANCH == "dev"
-    - when: never
-
-deploy-to-staging:
-  image :
-    name : $HARBOR_REPOSITORY_URL/kaniko-executor:debug
-    entrypoint : [ "" ]
-  stage: deploy
-  variables:
-    ENVIR: "qualif"
-  script:
-    - echo "{\"auths\":{\"$HARBOR_REGISTRY\":{\"username\":\"$BOT_NAME\",\"password\":\"$BOT_TOKEN\"}}}" > /kaniko/.docker/config.json
-    - /kaniko/executor --context $CI_PROJECT_DIR --dockerfile $CI_PROJECT_DIR/Dockerfile --destination $HARBOR_REPOSITORY_URL/cohort-portail:$ENVIR
-  rules:
-    - if: $CI_COMMIT_BRANCH == "qualif"
+    - if: ($CI_COMMIT_BRANCH == "fakedata" || $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "qualif" || $CI_COMMIT_BRANCH == "prod_a" || $CI_COMMIT_BRANCH == "prod_b") && $ONLY_RELEASE == null
     - when: never
 
 release:
   image:
-    name: harbor.eds.aphp.fr/cohort360/kubectl:latest
+    name: harbor.eds.aphp.fr/cohort360/kubectl:$CI_COMMIT_BRANCH
     entrypoint: [ "" ]
   stage: release
-  variables:
-    SUFFIX: "-portail"
   script:
-    - echo $KUBE_CONFIG > /root/.kube/config
-    - cat /root/.kube/config
-    - kubectl rollout restart deployment/$CI_COMMIT_BRANCH$SUFFIX
+    - bash .gitlab/release.sh
   rules:
     - if: $CI_COMMIT_BRANCH == "fakedata" || $CI_COMMIT_BRANCH == "dev" || $CI_COMMIT_BRANCH == "qualif"
     - if: $CI_COMMIT_BRANCH == "prod_a" || $CI_COMMIT_BRANCH == "prod_b"
