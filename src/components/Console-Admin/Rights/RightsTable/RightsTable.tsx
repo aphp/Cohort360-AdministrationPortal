@@ -218,44 +218,56 @@ const RightsTable: React.FC<RightsTableProps> = ({
                       />
                     </TableCell>
                     <TableCell align="center">
-                      {(access.actual_start_datetime ||
-                        access.actual_end_datetime) && (
-                        <Tooltip title="Éditer l'accès">
-                          <IconButton
-                            onClick={() => {
-                              setSelectedAccess(access)
-                            }}
-                          >
-                            <EditIcon />
-                          </IconButton>
-                        </Tooltip>
-                      )}
-                      {access.actual_start_datetime &&
-                        moment(access.actual_start_datetime).isBefore() && (
-                          <Tooltip title="Interrompre l'accès.">
-                            <IconButton
-                              onClick={() => {
-                                setDeleteAccess(access)
-                                setTerminateAccess(true)
-                              }}
-                            >
-                              <TimerOffIcon />
-                            </IconButton>
-                          </Tooltip>
-                        )}
-                      {access.actual_start_datetime &&
-                        moment(access.actual_start_datetime).isAfter() && (
-                          <Tooltip title="Supprimer l'accès.">
-                            <IconButton
-                              onClick={() => {
-                                setDeleteAccess(access)
-                                setTerminateAccess(false)
-                              }}
-                            >
-                              <DeleteIcon />
-                            </IconButton>
-                          </Tooltip>
-                        )}
+                      <Grid
+                        container
+                        item
+                        alignContent="center"
+                        justify="space-between"
+                      >
+                        <Grid item xs={6}>
+                          {(access.actual_start_datetime ||
+                            access.actual_end_datetime) && (
+                            <Tooltip title="Éditer l'accès">
+                              <IconButton
+                                onClick={() => {
+                                  setSelectedAccess(access)
+                                }}
+                              >
+                                <EditIcon />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+                        </Grid>
+                        <Grid item xs={6}>
+                          {access.actual_start_datetime &&
+                            moment(access.actual_start_datetime).isBefore() &&
+                            access.is_valid && (
+                              <Tooltip title="Interrompre l'accès">
+                                <IconButton
+                                  onClick={() => {
+                                    setDeleteAccess(access)
+                                    setTerminateAccess(true)
+                                  }}
+                                >
+                                  <TimerOffIcon />
+                                </IconButton>
+                              </Tooltip>
+                            )}
+                          {access.actual_start_datetime &&
+                            moment(access.actual_start_datetime).isAfter() && (
+                              <Tooltip title="Supprimer l'accès">
+                                <IconButton
+                                  onClick={() => {
+                                    setDeleteAccess(access)
+                                    setTerminateAccess(false)
+                                  }}
+                                >
+                                  <DeleteIcon />
+                                </IconButton>
+                              </Tooltip>
+                            )}
+                        </Grid>
+                      </Grid>
                     </TableCell>
                   </TableRow>
                 )
