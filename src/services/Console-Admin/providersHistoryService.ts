@@ -123,7 +123,7 @@ export const onDeleteOrTerminateAccess = async (
     }
   } catch (error) {
     console.error(
-      "Erreur lors de la suppression ou l'interruption d'un accès",
+      "Erreur lors de la suppression ou la clôture d'un accès",
       error
     )
     return false

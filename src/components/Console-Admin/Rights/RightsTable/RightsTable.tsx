@@ -106,7 +106,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
       setDeleteAccess(null)
     } catch (error) {
       console.error(
-        "Erreur lors de la suppression ou l'interruption de l'accès",
+        "Erreur lors de la suppression ou la clôture de l'accès",
         error
       )
       setDeleteAccessFail(true)
@@ -210,12 +210,18 @@ const RightsTable: React.FC<RightsTableProps> = ({
                         : "-"}
                     </TableCell>
                     <TableCell align="center">
-                      <FiberManualRecordRoundedIcon
-                        fontSize="small"
-                        style={{
-                          color: access.is_valid ? "#BDEA88" : "#ED6D91",
-                        }}
-                      />
+                      <Tooltip
+                        title={
+                          access.is_valid ? "Accès actif" : "Accès inactif"
+                        }
+                      >
+                        <FiberManualRecordRoundedIcon
+                          fontSize="small"
+                          style={{
+                            color: access.is_valid ? "#BDEA88" : "#ED6D91",
+                          }}
+                        />
+                      </Tooltip>
                     </TableCell>
                     <TableCell align="center">
                       <Grid
@@ -242,7 +248,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
                           {access.actual_start_datetime &&
                             moment(access.actual_start_datetime).isBefore() &&
                             access.is_valid && (
-                              <Tooltip title="Interrompre l'accès">
+                              <Tooltip title="Clôturer l'accès">
                                 <IconButton
                                   onClick={() => {
                                     setDeleteAccess(access)
@@ -307,7 +313,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
         <DialogContent>
           <Typography>
             Êtes-vous sûr(e) de vouloir{" "}
-            {terminateAccess ? "interrompre" : "supprimer"} cet accès sur le
+            {terminateAccess ? "clôturer" : "supprimer"} cet accès sur le
             périmètre {deleteAccess?.care_site.care_site_name} ?
           </Typography>
         </DialogContent>
@@ -330,9 +336,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
         >
           {editAccessSuccess && "Les dates d'accès ont bien été éditées."}
           {deleteAccessSuccess &&
-            `L'accès a bien été ${
-              terminateAccess ? "interrompu" : "supprimé"
-            }.`}
+            `L'accès a bien été ${terminateAccess ? "clôturé" : "supprimé"}.`}
         </Alert>
       )}
       {(editAccessFail || deleteAccessFail) && (
@@ -346,8 +350,8 @@ const RightsTable: React.FC<RightsTableProps> = ({
         >
           {editAccessFail && "Erreur lors de l'édition de l'accès."}
           {deleteAccessFail &&
-            `Erreur lors de ${
-              terminateAccess ? "l'interruption" : "la suppression"
+            `Erreur lors de la ${
+              terminateAccess ? "clôture" : "suppression"
             } de l'accès.`}
         </Alert>
       )}
