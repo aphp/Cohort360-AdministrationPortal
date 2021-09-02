@@ -210,12 +210,18 @@ const RightsTable: React.FC<RightsTableProps> = ({
                         : "-"}
                     </TableCell>
                     <TableCell align="center">
-                      <FiberManualRecordRoundedIcon
-                        fontSize="small"
-                        style={{
-                          color: access.is_valid ? "#BDEA88" : "#ED6D91",
-                        }}
-                      />
+                      <Tooltip
+                        title={
+                          access.is_valid ? "Accès actif" : "Accès inactif"
+                        }
+                      >
+                        <FiberManualRecordRoundedIcon
+                          fontSize="small"
+                          style={{
+                            color: access.is_valid ? "#BDEA88" : "#ED6D91",
+                          }}
+                        />
+                      </Tooltip>
                     </TableCell>
                     <TableCell align="center">
                       <Grid
