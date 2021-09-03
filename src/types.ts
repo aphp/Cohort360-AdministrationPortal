@@ -2,7 +2,7 @@
 
 // State
 
-export type MeState = null |  {
+export type MeState = null | {
   providerId: number
   firstName: string | null
   lastName: string | null
@@ -45,10 +45,7 @@ export type BackendUserReceived = {
 
 // Service
 
-export type CareSiteType = 
-| "AP-HP"
-| "Hopital"
-| "Groupe Hospitalier"
+export type CareSiteType = "AP-HP" | "Hopital" | "Groupe Hospitalier"
 
 export type CareSite = {
   care_site_id: number
@@ -99,7 +96,7 @@ export type Profile = {
   specialty_concept_id: number | null
   specialty_source_concept_id: number | null
   specialty_source_value: string | null
-  update_datetime: string 
+  update_datetime: string
   valid_end_datetime: string | null
   valid_start_datetime: string | null
   year_of_birth: number | null
@@ -176,7 +173,7 @@ export type Provider = {
   gender_source_value?: string
   insert_datetime?: string
   lastname?: string
-  provider_id: number
+  provider_id?: number
   provider_name?: string
   provider_source_value?: string
   specialty_concept_id?: number

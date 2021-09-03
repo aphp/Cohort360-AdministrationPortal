@@ -1,4 +1,4 @@
-import { AccessData } from "types"
+import { AccessData, Provider } from "types"
 import api from "../api"
 
 export const getProfile = async (providerId?: string) => {
@@ -13,26 +13,14 @@ export const getProfile = async (providerId?: string) => {
   return profileResp.data.results ?? undefined
 }
 
-export const submitCreateProfile = async (
-  firstName: string,
-  lastName: string,
-  providerSourceValue: string,
-  email: string
-) => {
+export const submitCreateProfile = async (providerData: Provider) => {
   try {
-    const profileData = {
-      firstname: firstName,
-      lastname: lastName,
-      provider_source_value: providerSourceValue,
-      email: email,
-    }
-
     const resCheckProfiles = await api.post(`/profiles/check/`, {
-      provider_source_value: providerSourceValue,
+      provider_source_value: providerData.provider_source_value,
     })
 
     if (resCheckProfiles.status === 200) {
-      const createProfile = await api.post(`/profiles/`, profileData)
+      const createProfile = await api.post(`/profiles/`, providerData)
       return createProfile.status === 201
     } else {
       return false
