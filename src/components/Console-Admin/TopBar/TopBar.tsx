@@ -14,7 +14,7 @@ import {
 import { ReactComponent as LogoutIcon } from "assets/icones/power-off.svg"
 import consoleLogo from "assets/images/console-white.png"
 import { logout as logoutAction } from "state/me"
-import {logout as logoutRoute} from 'services/authentication'
+import { logout as logoutRoute } from "services/authentication"
 import { useAppSelector } from "state"
 import useStyles from "./styles"
 
@@ -74,15 +74,15 @@ const TopBar: React.FC = (props) => {
             >
               Périmètres
             </Button>
-            {/* <Button
+            <Button
               className={clsx(
                 classes.topBarButton,
                 pathname === "/roles" ? classes.activeButton : ""
               )}
               onClick={() => history.push("/roles")}
             >
-              Rôles
-            </Button> */}
+              Habilitation
+            </Button>
           </Grid>
 
           <Grid container item alignItems="center" justify="flex-end" xs={3}>
