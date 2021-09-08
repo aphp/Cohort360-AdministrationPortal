@@ -1,4 +1,4 @@
-FROM harbor.eds.aphp.fr/cohort360/nginx:{{ENVIR}}
+FROM {{IMAGE_REPOSITORY_URL}}/nginx:{{ENVIR}}
 
 WORKDIR /app
 COPY package.json tsconfig.json entry-point.sh ./

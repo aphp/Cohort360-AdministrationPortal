@@ -1,4 +1,4 @@
-FROM harbor.eds.aphp.fr/cohort360/node:{{ENVIR}}
+FROM {{IMAGE_REPOSITORY_URL}}/node:{{ENVIR}}
 WORKDIR /app
 COPY ./ ./
 RUN mkdir -p /etc/nginx && mkdir -p /etc/nginx/sites-enabled/
