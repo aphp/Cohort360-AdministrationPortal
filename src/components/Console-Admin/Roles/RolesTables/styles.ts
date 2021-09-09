@@ -2,18 +2,12 @@ import { makeStyles, createStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles(() =>
   createStyles({
-    gridContainer: {
-      justifyContent: "space-between",
-      alignItems: "center",
-      marginTop: 20,
-      marginBottom: 15
-    },
-    editButton: {
-      backgroundColor: '#5BC5F2',
-      color: '#FFF',
+    buttons: {
+      backgroundColor: "#5BC5F2",
+      color: "#FFF",
       borderRadius: 25,
-      height: 20,
-      margin: '4px 0'
+      height: 50,
+      margin: "4px 0",
     },
     table: {
       minWidth: 650,
@@ -37,11 +31,6 @@ const useStyles = makeStyles(() =>
       "&:hover": {
         cursor: "pointer",
       },
-    },
-    loadingSpinnerContainer: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
     },
   })
 )

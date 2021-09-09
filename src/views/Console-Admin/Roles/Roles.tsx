@@ -3,7 +3,9 @@ import { CircularProgress, Grid } from "@material-ui/core"
 
 import { getRoles } from "services/Console-Admin/rolesService"
 import RolesTables from "components/Console-Admin/Roles/RolesTables/RolesTables"
+import RolesTable from "components/Console-Admin/Roles/RolesTables/RolesTable"
 import useStyles from "./styles"
+import { Role } from "types"
 
 const Roles: React.FC = () => {
   const classes = useStyles()
@@ -26,6 +28,8 @@ const Roles: React.FC = () => {
     _getRoles()
   }, []) // eslint-disable-line
 
+  console.log(`retrieveRoles`, retrieveRoles)
+
   return (
     <Grid container direction="column">
       <Grid container justify="center">
@@ -33,11 +37,13 @@ const Roles: React.FC = () => {
           <CircularProgress className={classes.loading} />
         ) : (
           <Grid container item xs={12} sm={9}>
-            {retrieveRoles && (
+            {/* {retrieveRoles && (
               <>
                 <RolesTables roles={retrieveRoles} />
               </>
-            )}
+            )} */}
+            {retrieveRoles &&
+              retrieveRoles.map((role: Role) => <RolesTable role={role} />)}
           </Grid>
         )}
       </Grid>
