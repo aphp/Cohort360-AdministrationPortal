@@ -16,6 +16,7 @@ import {
   TableSortLabel,
   Typography,
   Paper,
+  Tooltip,
 } from "@material-ui/core"
 import Alert from "@material-ui/lab/Alert"
 import Pagination from "@material-ui/lab/Pagination"
@@ -23,13 +24,12 @@ import Pagination from "@material-ui/lab/Pagination"
 import EditIcon from "@material-ui/icons/Edit"
 import PersonAddIcon from "@material-ui/icons/PersonAdd"
 
+import ProviderDialog from "../ProviderForm/ProviderForm"
 import SearchBar from "../../../SearchBar/SearchBar"
-import AddUserDialog from "../AddProviderForm/AddProviderForm"
 
-import useStyles from "./styles"
 import { getProviders } from "services/Console-Admin/providersService"
+import useStyles from "./styles"
 import { Provider } from "types"
-import EditProviderDialog from "../EditProviderForm/EditProviderForm"
 
 const ProvidersTable = () => {
   const classes = useStyles()
@@ -73,8 +73,6 @@ const ProvidersTable = () => {
   )
   const [editProviderSuccess, setEditProviderSuccess] = useState(false)
   const [editProviderFail, setEditProviderFail] = useState(false)
-
-  const [open, setOpen] = useState(false)
 
   useEffect(() => {
     setPage(1)
@@ -150,7 +148,7 @@ const ProvidersTable = () => {
           disableElevation
           startIcon={<PersonAddIcon height="15px" fill="#FFF" />}
           className={classes.searchButton}
-          onClick={() => setOpen(true)}
+          onClick={() => setSelectedProvider({})}
         >
           Nouvel utilisateur
         </Button>
@@ -223,14 +221,16 @@ const ProvidersTable = () => {
                         {provider.email ?? "-"}
                       </TableCell>
                       <TableCell>
-                        <IconButton
-                          onClick={(event) => {
-                            event.stopPropagation()
-                            setSelectedProvider(provider)
-                          }}
-                        >
-                          <EditIcon />
-                        </IconButton>
+                        <Tooltip title="Éditer l'utilisateur">
+                          <IconButton
+                            onClick={(event) => {
+                              event.stopPropagation()
+                              setSelectedProvider(provider)
+                            }}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        </Tooltip>
                       </TableCell>
                     </TableRow>
                   )
@@ -248,19 +248,15 @@ const ProvidersTable = () => {
         page={page}
       />
 
-      <AddUserDialog
-        open={open}
-        onClose={() => setOpen(false)}
-        onSuccess={setAddProviderSuccess}
-        onFail={setAddProviderFail}
-      />
       {selectedProvider && (
-        <EditProviderDialog
+        <ProviderDialog
           open
           onClose={() => setSelectedProvider(null)}
           selectedProvider={selectedProvider}
-          onSuccess={setEditProviderSuccess}
-          onFail={setEditProviderFail}
+          onAddProviderSuccess={setAddProviderSuccess}
+          onEditProviderSuccess={setEditProviderSuccess}
+          onAddProviderFail={setAddProviderFail}
+          onEditProviderFail={setEditProviderSuccess}
         />
       )}
 
