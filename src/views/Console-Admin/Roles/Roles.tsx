@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react"
-import { CircularProgress, Grid } from "@material-ui/core"
+import { CircularProgress, Grid, Typography } from "@material-ui/core"
 import Alert from "@material-ui/lab/Alert"
 
 import { getRoles } from "services/Console-Admin/rolesService"
-import RolesTable from "components/Console-Admin/Roles/RolesTables/RolesTable"
+import RolesTable from "components/Console-Admin/Roles/RolesTablesOld/RolesTableOld"
 import useStyles from "./styles"
 import { Role } from "types"
 
@@ -39,6 +39,13 @@ const Roles: React.FC = () => {
             <CircularProgress className={classes.loading} />
           ) : (
             <Grid container item xs={12} sm={9}>
+              <Typography
+                variant="h1"
+                color="primary"
+                className={classes.title}
+              >
+                Habilitation
+              </Typography>
               {roles ? (
                 roles.map((role: Role) => (
                   <RolesTable

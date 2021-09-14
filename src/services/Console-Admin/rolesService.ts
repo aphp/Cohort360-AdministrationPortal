@@ -54,7 +54,7 @@ export const createRoles = async (createData: Role) => {
   try {
     const createRoleResp = await api.post(`/roles/`, createData)
 
-    return createRoleResp.status === 200
+    return createRoleResp.status === 201
   } catch (error) {
     console.error("Erreur lors de la création de rôle", error)
     return false

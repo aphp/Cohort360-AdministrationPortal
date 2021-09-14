@@ -28,7 +28,7 @@ type RolesTableProps = {
   onEditRoleFail: (success: boolean) => void
 }
 
-const RolesTable: React.FC<RolesTableProps> = ({
+const RolesTableOld: React.FC<RolesTableProps> = ({
   role,
   onEditRoleSuccess,
   onEditRoleFail,
@@ -265,4 +265,4 @@ const RolesTable: React.FC<RolesTableProps> = ({
   )
 }
 
-export default RolesTable
+export default RolesTableOld

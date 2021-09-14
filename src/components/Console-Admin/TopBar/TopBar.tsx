@@ -81,6 +81,15 @@ const TopBar: React.FC = (props) => {
               )}
               onClick={() => history.push("/roles")}
             >
+              Rôles
+            </Button>
+            <Button
+              className={clsx(
+                classes.topBarButton,
+                pathname === "/habilitation" ? classes.activeButton : ""
+              )}
+              onClick={() => history.push("/habilitation")}
+            >
               Habilitation
             </Button>
           </Grid>

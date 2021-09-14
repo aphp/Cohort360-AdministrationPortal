@@ -131,6 +131,7 @@ export type Role = {
 }
 
 export type RoleKeys =
+  | "name"
   | "right_edit_roles"
   | "right_add_users"
   | "right_edit_users"
