@@ -143,9 +143,9 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
 
   const _onChangeValue = (key: RoleKeys, value: any) => {
     const _role = { ...role }
+    // @ts-ignore
     _role[key] = value
 
-    // @ts-ignore
     setRole(_role)
   }
 
