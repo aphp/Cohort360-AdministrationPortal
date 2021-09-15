@@ -30,7 +30,7 @@ import {
   getRoles,
   //  deleteRole
 } from "services/Console-Admin/rolesService"
-import RoleDialog from "../RoleDialog.tsx/RoleDialog"
+import RoleDialog from "../RoleDialog/RoleDialog"
 
 const defaultRole: Role = {
   name: "",
