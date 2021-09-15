@@ -1,12 +1,12 @@
-import axios from 'axios'
-import { ACCESS_TOKEN, BACK_API_URL } from '../constants'
+import axios from "axios"
+import { ACCESS_TOKEN, BACK_API_URL } from "../constants"
 
 const api = axios.create({
   baseURL: BACK_API_URL,
   headers: {
-    Accept: 'application/json',
-    'Access-Control-Allow-Origin': '*'
-  }
+    Accept: "application/json",
+    "Access-Control-Allow-Origin": "*",
+  },
 })
 
 api.interceptors.request.use((config) => {
@@ -20,9 +20,14 @@ api.interceptors.response.use(
     return response
   },
   async function (error) {
-    if (error?.response?.status === 403 && !error.config.url.includes("/accesses/?care_site_id") && !error.config.url.includes("/profiles/")) {
-      localStorage.clear()                                          
-      window.location.href = '/'
+    if (
+      error?.response?.status === 403 &&
+      !error.config.url.includes("/accesses/?care_site_id") &&
+      !error.config.url.includes("/profiles/") &&
+      !error.config.url.includes("/roles/")
+    ) {
+      localStorage.clear()
+      window.location.href = "/"
     }
     return Promise.reject(error)
   }

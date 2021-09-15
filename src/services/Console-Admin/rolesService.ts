@@ -61,11 +61,11 @@ export const createRoles = async (createData: Role) => {
   }
 }
 
-export const deleteRoles = async (role_id?: number) => {
+export const deleteRole = async (role_id?: number) => {
   try {
     const deleteRoleResp = await api.delete(`/roles/${role_id}/`)
 
-    return deleteRoleResp.status === 200
+    return deleteRoleResp.status === 204
   } catch (error) {
     console.error("Erreur lors de la suppression d'un rôle", error)
     return false

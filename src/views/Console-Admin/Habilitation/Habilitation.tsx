@@ -14,7 +14,7 @@ const Habilitation: React.FC = () => {
       <Grid container justify="center">
         <Grid container item xs={12} sm={9}>
           <Typography variant="h1" color="primary" className={classes.title}>
-            Liste des utilisateurs
+            Liste des rôles
           </Typography>
           <RolesTable />
         </Grid>
