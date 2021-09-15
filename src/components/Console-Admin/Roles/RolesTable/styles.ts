@@ -32,6 +32,17 @@ const useStyles = makeStyles(() =>
         cursor: "pointer",
       },
     },
+    loadingSpinnerContainer: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    alert: {
+      position: "fixed",
+      bottom: 0,
+      right: 0,
+      zIndex: 100,
+    },
   })
 )
 
