@@ -209,7 +209,24 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
         {isEditable ? role?.name : "Créer un nouveau rôle :"}
       </DialogTitle>
       <DialogContent className={classes.dialog}>
-        {!isEditable && (
+        {isEditable ? (
+          editMode ? (
+            <Grid container direction="column" className={classes.filter}>
+              <Typography variant="h3">Nom du rôle :</Typography>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                autoFocus
+                placeholder="Nom du rôle"
+                value={role?.name}
+                onChange={(event) => _onChangeValue("name", event.target.value)}
+              />
+            </Grid>
+          ) : (
+            ""
+          )
+        ) : (
           <Grid container direction="column" className={classes.filter}>
             <Typography variant="h3">Nom du rôle :</Typography>
             <TextField
