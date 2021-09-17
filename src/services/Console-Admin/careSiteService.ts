@@ -30,7 +30,7 @@ export const getScopeCareSites = async (getCareSites: any) => {
 
   for (const careSite of careSitesResult) {
     const scopeRow: ScopeTreeRow = careSite as ScopeTreeRow
-    scopeRow.name = careSite.care_site_name
+    scopeRow.name = `${careSite.care_site_source_value} - ${careSite.care_site_name}`
     scopeRow.children =
       careSite.children?.length > 0
         ? parseChildren(careSite.children)
@@ -92,7 +92,9 @@ export const getCareSitesChildren = async (
     ? childrenData?.map<ScopeTreeRow>((childrenData) => {
         return {
           ...childrenData,
-          name: childrenData.care_site_name ?? "",
+          name:
+            `${childrenData.care_site_source_value} - ${childrenData.care_site_name}` ??
+            "",
           children: [loadingItem],
         }
       })
@@ -149,5 +151,8 @@ export const getCareSite = async (
 
   if (careSiteResp.status !== 200) return undefined
 
-  return careSiteResp.data.care_site_name ?? undefined
+  return (
+    `${careSiteResp.data.care_site_source_value} - ${careSiteResp.data.care_site_name}` ??
+    undefined
+  )
 }
