@@ -131,6 +131,25 @@ export type Role = {
   invalid_reason?: string | null
 }
 
+export type RoleKeys =
+  | "name"
+  | "right_edit_roles"
+  | "right_add_users"
+  | "right_edit_users"
+  | "right_read_users"
+  | "right_manage_admin_accesses_same_level"
+  | "right_read_admin_accesses_same_level"
+  | "right_manage_admin_accesses_inferior_levels"
+  | "right_read_admin_accesses_inferior_levels"
+  | "right_manage_data_accesses_same_level"
+  | "right_read_data_accesses_same_level"
+  | "right_manage_data_accesses_inferior_levels"
+  | "right_read_data_accesses_inferior_levels"
+  | "right_read_patient_nominative"
+  | "right_read_patient_pseudo_anonymised"
+  | "right_export_jupyter_patient_nominative"
+  | "right_export_jupyter_patient_pseudo_anonymised"
+
 // Access
 
 export type Access = {

@@ -2,7 +2,7 @@ import api from "../api"
 import { Role } from "../../types"
 
 export const getRoles = async () => {
-  const rolesResp = await api.get(`/roles/`)
+  const rolesResp = await api.get(`/roles/?ordering=name`)
 
   if (rolesResp.status !== 200) {
     return undefined
@@ -54,18 +54,18 @@ export const createRoles = async (createData: Role) => {
   try {
     const createRoleResp = await api.post(`/roles/`, createData)
 
-    return createRoleResp.status === 200
+    return createRoleResp.status === 201
   } catch (error) {
     console.error("Erreur lors de la création de rôle", error)
     return false
   }
 }
 
-export const deleteRoles = async (role_id?: number) => {
+export const deleteRole = async (role_id?: number) => {
   try {
     const deleteRoleResp = await api.delete(`/roles/${role_id}/`)
 
-    return deleteRoleResp.status === 200
+    return deleteRoleResp.status === 204
   } catch (error) {
     console.error("Erreur lors de la suppression d'un rôle", error)
     return false
