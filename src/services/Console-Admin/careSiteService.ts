@@ -57,7 +57,7 @@ const parseChildren = (children?: CareSite[]) => {
   let _childrenData = children.map<ScopeTreeRow>((child) => {
     return {
       ...child,
-      name: child.care_site_name ?? "",
+      name: `${child.care_site_source_value} - ${child.care_site_name}` ?? "",
       children: [loadingItem],
     }
   })
