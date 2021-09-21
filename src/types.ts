@@ -51,6 +51,7 @@ export type CareSite = {
   care_site_id: number
   care_site_name: string
   care_site_short_name: string
+  care_site_source_value: string
   care_site_type_source_value?: string
   parents_ids?: number[]
   children?: CareSite[]
