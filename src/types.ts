@@ -2,7 +2,7 @@
 
 // State
 
-export type MeState = null |  {
+export type MeState = null | {
   providerId: number
   firstName: string | null
   lastName: string | null
@@ -45,15 +45,13 @@ export type BackendUserReceived = {
 
 // Service
 
-export type CareSiteType = 
-| "AP-HP"
-| "Hopital"
-| "Groupe Hospitalier"
+export type CareSiteType = "AP-HP" | "Hopital" | "Groupe Hospitalier"
 
 export type CareSite = {
   care_site_id: number
   care_site_name: string
   care_site_short_name: string
+  care_site_source_value: string
   care_site_type_source_value?: string
   parents_ids?: number[]
   children?: CareSite[]
@@ -99,7 +97,7 @@ export type Profile = {
   specialty_concept_id: number | null
   specialty_source_concept_id: number | null
   specialty_source_value: string | null
-  update_datetime: string 
+  update_datetime: string
   valid_end_datetime: string | null
   valid_start_datetime: string | null
   year_of_birth: number | null
@@ -132,6 +130,25 @@ export type Role = {
   right_export_jupyter_patient_pseudo_anonymised: boolean | null
   invalid_reason?: string | null
 }
+
+export type RoleKeys =
+  | "name"
+  | "right_edit_roles"
+  | "right_add_users"
+  | "right_edit_users"
+  | "right_read_users"
+  | "right_manage_admin_accesses_same_level"
+  | "right_read_admin_accesses_same_level"
+  | "right_manage_admin_accesses_inferior_levels"
+  | "right_read_admin_accesses_inferior_levels"
+  | "right_manage_data_accesses_same_level"
+  | "right_read_data_accesses_same_level"
+  | "right_manage_data_accesses_inferior_levels"
+  | "right_read_data_accesses_inferior_levels"
+  | "right_read_patient_nominative"
+  | "right_read_patient_pseudo_anonymised"
+  | "right_export_jupyter_patient_nominative"
+  | "right_export_jupyter_patient_pseudo_anonymised"
 
 // Access
 
@@ -176,7 +193,7 @@ export type Provider = {
   gender_source_value?: string
   insert_datetime?: string
   lastname?: string
-  provider_id: number
+  provider_id?: number
   provider_name?: string
   provider_source_value?: string
   specialty_concept_id?: number

@@ -168,6 +168,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
                     )}
                     {!displayName && (
                       <TableCell align={"left"}>
+                        {access.care_site.care_site_source_value} -{" "}
                         {access.care_site.care_site_name}
                       </TableCell>
                     )}

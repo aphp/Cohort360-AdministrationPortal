@@ -3,7 +3,7 @@ import Providers from "views/Console-Admin/Providers/Providers"
 import ProvidersHistory from "views/Console-Admin/ProvidersHistory/ProvidersHistory"
 import CareSites from "views/Console-Admin/CareSites/CareSites"
 import CareSiteHistory from "views/Console-Admin/CareSiteHistory/CareSiteHistory"
-import Roles from "views/Console-Admin/Roles/Roles"
+import Habilitation from "views/Console-Admin/Habilitation/Habilitation"
 
 const Config = [
   /**
@@ -59,15 +59,15 @@ const Config = [
     component: CareSiteHistory,
   },
   /**
-   * Console-Admin Roles View
+   * Console-Admin Habilitation View
    */
   {
     exact: true,
     displayTopBar: true,
-    path: "/roles",
-    name: "Roles",
+    path: "/habilitation",
+    name: "Habilitation",
     isPrivate: true,
-    component: Roles,
+    component: Habilitation,
   },
 ]
 
