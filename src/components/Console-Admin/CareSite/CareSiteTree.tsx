@@ -17,22 +17,26 @@ import EnhancedTable from "../EnhancedTable"
 import {
   getScopeCareSites,
   getCareSitesChildren,
+  searchInCareSites,
 } from "services/Console-Admin/careSiteService"
 import { ScopeTreeRow } from "types"
 import { useAppSelector } from "state"
 
 import useStyles from "./styles"
+import { Breadcrumbs } from "@material-ui/core"
 
 type ScopeTreeProps = {
   getCareSites: () => Promise<ScopeTreeRow[]>
   defaultSelectedItems: ScopeTreeRow | null
   onChangeSelectedItem: (selectedItems: ScopeTreeRow) => void
+  searchInput?: string
 }
 
 const ScopeTree: React.FC<ScopeTreeProps> = ({
   getCareSites,
   defaultSelectedItems,
   onChangeSelectedItem,
+  searchInput,
 }) => {
   const classes = useStyles()
 
@@ -50,15 +54,30 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
     }
   }
 
+  const _init = async () => {
+    setLoading(true)
+    await fetchScopeTree()
+    setLoading(false)
+  }
+
   useEffect(() => {
-    const _init = async () => {
+    _init()
+  }, []) // eslint-disable-line
+
+  useEffect(() => {
+    const _searchInCareSites = async () => {
       setLoading(true)
-      await fetchScopeTree()
+      const careSiteSearchResp = await searchInCareSites(searchInput)
+      setRootRows(careSiteSearchResp)
       setLoading(false)
     }
 
-    _init()
-  }, []) // eslint-disable-line
+    if (searchInput && searchInput?.length > 2) {
+      _searchInCareSites()
+    } else if (!searchInput) {
+      _init()
+    }
+  }, [searchInput]) // eslint-disable-line
 
   useEffect(() => setSelectedItem(defaultSelectedItems), [defaultSelectedItems])
 
@@ -111,14 +130,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
     onChangeSelectedItem(row)
   }
 
-  const headCells = [
-    {
-      id: "",
-      align: "left",
-      disablePadding: true,
-      disableOrderBy: true,
-      label: "",
-    },
+  const searchModeHeadCells = [
     {
       id: "",
       align: "left",
@@ -135,6 +147,17 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
     },
   ]
 
+  const headCells = [
+    {
+      id: "",
+      align: "left",
+      disablePadding: true,
+      disableOrderBy: true,
+      label: "",
+    },
+    ...searchModeHeadCells,
+  ]
+
   return (
     <div className={classes.container}>
       {loading ? (
@@ -146,7 +169,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
           noCheckbox
           noPagination
           rows={rootRows}
-          headCells={headCells}
+          headCells={searchInput ? searchModeHeadCells : headCells}
         >
           {(row: ScopeTreeRow, index: number) => {
             if (!row) return <></>
@@ -169,28 +192,31 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                         level % 2 === 0 ? classes.mainRow : classes.secondRow,
                     }}
                   >
-                    <TableCell>
-                      {_row.children && _row.children.length > 0 && (
-                        <IconButton
-                          onClick={() =>
-                            _clickToDeploy(_row.care_site_id as number)
-                          }
-                          style={{
-                            marginLeft: level * 35,
-                            padding: 0,
-                            marginRight: -30,
-                          }}
-                        >
-                          {openPopulation.find(
-                            (care_site_id) => _row.care_site_id === care_site_id
-                          ) ? (
-                            <KeyboardArrowDownIcon />
-                          ) : (
-                            <KeyboardArrowRightIcon />
-                          )}
-                        </IconButton>
-                      )}
-                    </TableCell>
+                    {!searchInput && (
+                      <TableCell>
+                        {_row.children && _row.children.length > 0 && (
+                          <IconButton
+                            onClick={() =>
+                              _clickToDeploy(_row.care_site_id as number)
+                            }
+                            style={{
+                              marginLeft: level * 35,
+                              padding: 0,
+                              marginRight: -30,
+                            }}
+                          >
+                            {openPopulation.find(
+                              (care_site_id) =>
+                                _row.care_site_id === care_site_id
+                            ) ? (
+                              <KeyboardArrowDownIcon />
+                            ) : (
+                              <KeyboardArrowRightIcon />
+                            )}
+                          </IconButton>
+                        )}
+                      </TableCell>
+                    )}
 
                     <TableCell align="center" padding="checkbox">
                       <Radio
@@ -204,7 +230,17 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                     </TableCell>
 
                     <TableCell>
-                      <Typography>{_row.name}</Typography>
+                      {searchInput ? (
+                        <Breadcrumbs maxItems={2}>
+                          {_row.name.split(">").map((name: any) => (
+                            <Typography style={{ color: "#153D8A" }}>
+                              {name}
+                            </Typography>
+                          ))}
+                        </Breadcrumbs>
+                      ) : (
+                        <Typography>{_row.name}</Typography>
+                      )}
                     </TableCell>
                   </TableRow>
                 )}
