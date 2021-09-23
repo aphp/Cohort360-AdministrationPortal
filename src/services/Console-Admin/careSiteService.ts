@@ -156,3 +156,60 @@ export const getCareSite = async (
     undefined
   )
 }
+
+export const searchInCareSites = async (searchInput?: string) => {
+  try {
+    if (!searchInput) {
+      return []
+    }
+    const careSiteSearchResp = await api.get(
+      `/care-sites/?treefy=true&search=${searchInput}`
+    )
+
+    if (careSiteSearchResp.data) {
+      return parseCareSiteSearchResults(
+        careSiteSearchResp.data[0].children,
+        searchInput
+      )
+    } else {
+      return []
+    }
+  } catch (error) {
+    console.error(error)
+    return []
+  }
+}
+
+const parseCareSiteSearchResults = (response: any[], searchInput: string) => {
+  let scope: any[] = []
+
+  const recursive = (table: CareSite[], existingTitle: string) => {
+    for (const item of table) {
+      const name = existingTitle
+        ? `${existingTitle} > ${item.care_site_source_value} - ${item.care_site_name}`
+        : `${item.care_site_source_value} - ${item.care_site_name}`
+
+      const regexp = new RegExp(searchInput.toLowerCase())
+
+      if (
+        item.care_site_name.toLowerCase().search(regexp) !== -1 ||
+        item.care_site_source_value.toLowerCase().search(regexp) !== -1
+      ) {
+        scope = [
+          ...scope,
+          {
+            ...item,
+            name,
+          },
+        ]
+      }
+
+      if (item.children && item.children.length > 0) {
+        recursive(item.children, name)
+      }
+    }
+  }
+
+  recursive(response, response[0].name)
+  return scope
+}
