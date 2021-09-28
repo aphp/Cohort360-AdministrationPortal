@@ -188,7 +188,7 @@ export const searchInCareSites = async (
 const parseCareSiteSearchResults = (response: any[], searchInput: string) => {
   let scope: any[] = []
 
-  const recursive = (table: CareSite[], existingTitle: string) => {
+  const recursive = (table: CareSite[], existingTitle?: string) => {
     for (const item of table) {
       const name = existingTitle
         ? `${existingTitle} > ${item.care_site_source_value} - ${item.care_site_name}`
@@ -210,7 +210,11 @@ const parseCareSiteSearchResults = (response: any[], searchInput: string) => {
       }
 
       if (item.children && item.children.length > 0) {
-        recursive(item.children, name)
+        if (item.care_site_type_source_value === "Groupe hospitalier (GH)") {
+          recursive(item.children)
+        } else {
+          recursive(item.children, name)
+        }
       }
     }
   }
