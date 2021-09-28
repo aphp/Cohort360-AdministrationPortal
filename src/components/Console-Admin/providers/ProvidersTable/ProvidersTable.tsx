@@ -23,6 +23,7 @@ import Pagination from "@material-ui/lab/Pagination"
 
 import EditIcon from "@material-ui/icons/Edit"
 import PersonAddIcon from "@material-ui/icons/PersonAdd"
+import VisibilityIcon from "@material-ui/icons/Visibility"
 
 import ProviderDialog from "../ProviderForm/ProviderForm"
 import SearchBar from "../../../SearchBar/SearchBar"
@@ -54,7 +55,7 @@ const ProvidersTable = () => {
       code: "email",
     },
     {
-      label: "",
+      label: "Actions",
     },
   ]
 
@@ -168,17 +169,13 @@ const ProvidersTable = () => {
                   align="center"
                   className={classes.tableHeadCell}
                 >
-                  {column.code && (
-                    <TableSortLabel
-                      active={orderBy === column.code}
-                      direction={
-                        orderBy === column.code ? orderDirection : "asc"
-                      }
-                      onClick={createSortHandler(column.code)}
-                    >
-                      {column.label}
-                    </TableSortLabel>
-                  )}
+                  <TableSortLabel
+                    active={orderBy === column.code}
+                    direction={orderBy === column.code ? orderDirection : "asc"}
+                    onClick={createSortHandler(column.code)}
+                  >
+                    {column.label}
+                  </TableSortLabel>
                 </TableCell>
               ))}
             </TableRow>
@@ -221,6 +218,18 @@ const ProvidersTable = () => {
                         {provider.email ?? "-"}
                       </TableCell>
                       <TableCell>
+                        <Tooltip title="Visualiser les accès de l'utilisateur">
+                          <IconButton
+                            onClick={(event) => {
+                              event.stopPropagation()
+                              history.push(
+                                `/user-profile/${provider.provider_id}`
+                              )
+                            }}
+                          >
+                            <VisibilityIcon />
+                          </IconButton>
+                        </Tooltip>
                         <Tooltip title="Éditer l'utilisateur">
                           <IconButton
                             onClick={(event) => {
