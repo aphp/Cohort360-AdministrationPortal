@@ -157,13 +157,18 @@ export const getCareSite = async (
   )
 }
 
-export const searchInCareSites = async (searchInput?: string) => {
+export const searchInCareSites = async (
+  isManageable?: boolean,
+  searchInput?: string
+) => {
   try {
     if (!searchInput) {
       return []
     }
     const careSiteSearchResp = await api.get(
-      `/care-sites/?treefy=true&search=${searchInput}`
+      isManageable
+        ? `/care-sites/manageable/?search=${searchInput}`
+        : `/care-sites/?treefy=true&search=${searchInput}`
     )
 
     if (careSiteSearchResp.data) {

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import {
   Button,
   Dialog,
@@ -6,11 +6,12 @@ import {
   DialogContent,
   DialogActions,
   Grid,
+  Paper,
 } from "@material-ui/core"
 
 import useStyles from "./styles"
 import CareSiteTree from "components/Console-Admin/CareSite/CareSiteTree"
-import { getManageableCareSites } from "services/Console-Admin/careSiteService"
+import SearchBar from "components/SearchBar/SearchBar"
 import { ScopeTreeRow } from "types"
 
 type CareSitesDialogProps = {
@@ -27,6 +28,7 @@ const CareSitesDialog: React.FC<CareSitesDialogProps> = ({
   onClose,
 }) => {
   const classes = useStyles()
+  const [searchInput, setSearchInput] = useState("")
 
   const onCancel = () => {
     onChangeCareSite(null)
@@ -49,12 +51,17 @@ const CareSitesDialog: React.FC<CareSitesDialogProps> = ({
         Sélectionner un périmètre :
       </DialogTitle>
       <DialogContent className={classes.content}>
-        <Grid container item xs={12} direction="column">
-          <CareSiteTree
-            getCareSites={getManageableCareSites}
-            defaultSelectedItems={careSite}
-            onChangeSelectedItem={onChangeCareSite}
-          />
+        <Grid container item xs={12} direction="column" alignItems="flex-end">
+          <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
+
+          <Paper style={{ width: "100%", marginTop: 12 }}>
+            <CareSiteTree
+              isManageable={true}
+              defaultSelectedItems={careSite}
+              onChangeSelectedItem={onChangeCareSite}
+              searchInput={searchInput}
+            />
+          </Paper>
         </Grid>
       </DialogContent>
       <DialogActions>

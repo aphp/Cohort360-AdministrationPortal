@@ -169,13 +169,19 @@ const ProvidersTable = () => {
                   align="center"
                   className={classes.tableHeadCell}
                 >
-                  <TableSortLabel
-                    active={orderBy === column.code}
-                    direction={orderBy === column.code ? orderDirection : "asc"}
-                    onClick={createSortHandler(column.code)}
-                  >
-                    {column.label}
-                  </TableSortLabel>
+                  {column.label !== "Actions" ? (
+                    <TableSortLabel
+                      active={orderBy === column.code}
+                      direction={
+                        orderBy === column.code ? orderDirection : "asc"
+                      }
+                      onClick={createSortHandler(column.code)}
+                    >
+                      {column.label}
+                    </TableSortLabel>
+                  ) : (
+                    column.label
+                  )}
                 </TableCell>
               ))}
             </TableRow>
@@ -217,7 +223,7 @@ const ProvidersTable = () => {
                       <TableCell align="center">
                         {provider.email ?? "-"}
                       </TableCell>
-                      <TableCell>
+                      <TableCell align="center">
                         <Tooltip title="Visualiser les accès de l'utilisateur">
                           <IconButton
                             onClick={(event) => {

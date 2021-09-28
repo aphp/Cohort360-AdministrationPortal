@@ -18,6 +18,8 @@ import {
   getScopeCareSites,
   getCareSitesChildren,
   searchInCareSites,
+  getManageableCareSites,
+  getCareSites,
 } from "services/Console-Admin/careSiteService"
 import { ScopeTreeRow } from "types"
 import { useAppSelector } from "state"
@@ -26,14 +28,14 @@ import useStyles from "./styles"
 import { Breadcrumbs } from "@material-ui/core"
 
 type ScopeTreeProps = {
-  getCareSites: () => Promise<ScopeTreeRow[]>
+  isManageable?: boolean
   defaultSelectedItems: ScopeTreeRow | null
   onChangeSelectedItem: (selectedItems: ScopeTreeRow) => void
   searchInput?: string
 }
 
 const ScopeTree: React.FC<ScopeTreeProps> = ({
-  getCareSites,
+  isManageable,
   defaultSelectedItems,
   onChangeSelectedItem,
   searchInput,
@@ -49,7 +51,9 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
 
   const fetchScopeTree = async () => {
     if (practitioner) {
-      const rootRows = await getScopeCareSites(getCareSites)
+      const rootRows = await getScopeCareSites(
+        isManageable ? getManageableCareSites : getCareSites
+      )
       setRootRows(rootRows)
     }
   }
@@ -67,7 +71,10 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
   useEffect(() => {
     const _searchInCareSites = async () => {
       setLoading(true)
-      const careSiteSearchResp = await searchInCareSites(searchInput)
+      const careSiteSearchResp = await searchInCareSites(
+        isManageable,
+        searchInput
+      )
       setRootRows(careSiteSearchResp)
       setLoading(false)
     }
@@ -162,7 +169,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
     <div className={classes.container}>
       {loading ? (
         <Grid container justify="center">
-          <CircularProgress size={50} />
+          <CircularProgress size={40} />
         </Grid>
       ) : (
         <EnhancedTable
