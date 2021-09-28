@@ -310,7 +310,7 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
             <Button
               variant="contained"
               disableElevation
-              startIcon={<EditIcon height="15px" fill="#FFF" />}
+              endIcon={<EditIcon height="15px" fill="#FFF" />}
               onClick={() => setEditMode(true)}
               className={classes.buttons}
             >

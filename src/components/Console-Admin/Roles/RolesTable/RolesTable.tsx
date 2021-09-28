@@ -22,7 +22,7 @@ import Alert from "@material-ui/lab/Alert"
 
 import AddIcon from "@material-ui/icons/Add"
 // import DeleteIcon from "@material-ui/icons/Delete"
-import EditIcon from "@material-ui/icons/Edit"
+import VisibilityIcon from "@material-ui/icons/Visibility"
 
 import useStyles from "./styles"
 import { Role } from "types"
@@ -168,7 +168,7 @@ const RolesTable: React.FC = () => {
                               setSelectedRole(role)
                             }}
                           >
-                            <EditIcon />
+                            <VisibilityIcon />
                           </IconButton>
                         </Tooltip>
                         {/* <Tooltip title="Supprimer le rôle">
