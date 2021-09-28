@@ -25,13 +25,19 @@ build:
     - npm install
     - npm audit fix
     - CI=false npm run build
+  rules:
+    - if: ('$CI_COMMIT_BRANCH =~ /^($STANDARD_CD_BRANCHES)$/' || '$CI_COMMIT_BRANCH =~ /^($PROTECTED_CD_BRANCHES)$/') && $ONLY_RELEASE == null
+    - when: never
 
 test:
   stage: test
   script:
     - echo "Testing the code"
 #    -
-
+  rules:
+    - if: ('$CI_COMMIT_BRANCH =~ /^($STANDARD_CD_BRANCHES)$/' || '$CI_COMMIT_BRANCH =~ /^($PROTECTED_CD_BRANCHES)$/') && $ONLY_RELEASE == null
+    - when: never
+      
 deploy:
   image :
     name : $IMAGE_REPOSITORY_URL/kaniko-executor:$CI_COMMIT_BRANCH
