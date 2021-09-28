@@ -6,8 +6,6 @@ import { Button, Grid, Paper, Typography } from "@material-ui/core"
 import CareSiteTree from "components/Console-Admin/CareSite/CareSiteTree"
 import SearchBar from "components/SearchBar/SearchBar"
 
-import { getCareSites } from "services/Console-Admin/careSiteService"
-
 import useStyles from "./styles"
 import { ScopeTreeRow } from "types"
 
@@ -39,7 +37,6 @@ const CareSites: React.FC = () => {
 
           <Paper style={{ width: "100%", marginTop: 12 }}>
             <CareSiteTree
-              getCareSites={getCareSites}
               defaultSelectedItems={selectedItem}
               onChangeSelectedItem={onChangeSelectedItem}
               searchInput={searchInput}
