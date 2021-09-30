@@ -21,9 +21,10 @@ import {
 } from "@material-ui/core"
 import Pagination from "@material-ui/lab/Pagination"
 
+import CancelIcon from "@material-ui/icons/Cancel"
+import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 import DeleteIcon from "@material-ui/icons/Delete"
 import EditIcon from "@material-ui/icons/Edit"
-import FiberManualRecordRoundedIcon from "@material-ui/icons/FiberManualRecordRounded"
 import InfoIcon from "@material-ui/icons/Info"
 import LaunchIcon from "@material-ui/icons/Launch"
 import TimerOffIcon from "@material-ui/icons/TimerOff"
@@ -75,7 +76,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
         const rolesResp = await getRoles()
         setRoles(rolesResp)
       } catch (error) {
-        console.error("Erreur lors de la récupération des rôles", error)
+        console.error("Erreur lors de la récupération des habilitations", error)
       }
     }
 
@@ -88,8 +89,22 @@ const RightsTable: React.FC<RightsTableProps> = ({
   }, [editAccessSuccess, deleteAccessSuccess]) // eslint-disable-line
 
   const columns = displayName
-    ? ["Nom", "Rôle", "Date de début", "Date de fin", "Actif", "Actions"]
-    : ["Périmètre", "Rôle", "Date de début", "Date de fin", "Actif", "Actions"]
+    ? [
+        "Nom",
+        "Habilitation",
+        "Date de début",
+        "Date de fin",
+        "Actif",
+        "Actions",
+      ]
+    : [
+        "Périmètre",
+        "Habilitation",
+        "Date de début",
+        "Date de fin",
+        "Actif",
+        "Actions",
+      ]
 
   const handleDeleteAction = async () => {
     try {
@@ -216,12 +231,11 @@ const RightsTable: React.FC<RightsTableProps> = ({
                           access.is_valid ? "Accès actif" : "Accès inactif"
                         }
                       >
-                        <FiberManualRecordRoundedIcon
-                          fontSize="small"
-                          style={{
-                            color: access.is_valid ? "#BDEA88" : "#ED6D91",
-                          }}
-                        />
+                        {access.is_valid ? (
+                          <CheckCircleIcon style={{ color: "#BDEA88" }} />
+                        ) : (
+                          <CancelIcon style={{ color: "#ED6D91" }} />
+                        )}
                       </Tooltip>
                     </TableCell>
                     <TableCell align="center">
