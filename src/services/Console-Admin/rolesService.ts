@@ -45,7 +45,7 @@ export const submitEditRoles = async (editData: Role, role_id?: number) => {
 
     return editRoleResp.status === 200
   } catch (error) {
-    console.error("Erreur lors l'édition d'un rôle", error)
+    console.error("Erreur lors l'édition d'une habilitation", error)
     return false
   }
 }
@@ -56,7 +56,7 @@ export const createRoles = async (createData: Role) => {
 
     return createRoleResp.status === 201
   } catch (error) {
-    console.error("Erreur lors de la création de rôle", error)
+    console.error("Erreur lors de la création de l'habilitation", error)
     return false
   }
 }
@@ -67,7 +67,7 @@ export const deleteRole = async (role_id?: number) => {
 
     return deleteRoleResp.status === 204
   } catch (error) {
-    console.error("Erreur lors de la suppression d'un rôle", error)
+    console.error("Erreur lors de la suppression d'une habilitation", error)
     return false
   }
 }

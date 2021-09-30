@@ -73,7 +73,7 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
         setLoading(false)
       } catch (error) {
         console.error(
-          "Erreur lors de la récupération des rôles assignables",
+          "Erreur lors de la récupération des habilitations assignables",
           error
         )
         setLoading(false)
@@ -189,7 +189,7 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
           alignItems="center"
           className={classes.filter}
         >
-          <Typography variant="h3">Rôle :</Typography>
+          <Typography variant="h3">Habilitation :</Typography>
           {loading ? (
             <CircularProgress size={20} />
           ) : roles ? (
@@ -217,7 +217,7 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="Sélectionner un rôle..."
+                  label="Sélectionner une habilitation..."
                   variant="outlined"
                 />
               )}
@@ -226,7 +226,7 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
             />
           ) : (
             <Typography>
-              Choisir un périmètre pour obtenir les rôles disponibles.
+              Choisir un périmètre pour obtenir les habilitations disponibles.
             </Typography>
           )}
         </Grid>
