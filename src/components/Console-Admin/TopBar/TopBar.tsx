@@ -77,11 +77,11 @@ const TopBar: React.FC = (props) => {
             <Button
               className={clsx(
                 classes.topBarButton,
-                pathname === "/habilitation" ? classes.activeButton : ""
+                pathname === "/habilitations" ? classes.activeButton : ""
               )}
-              onClick={() => history.push("/habilitation")}
+              onClick={() => history.push("/habilitations")}
             >
-              Habilitation
+              Habilitations
             </Button>
           </Grid>
 

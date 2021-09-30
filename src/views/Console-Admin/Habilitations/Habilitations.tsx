@@ -6,7 +6,7 @@ import RolesTable from "components/Console-Admin/Roles/RolesTable/RolesTable"
 
 import useStyles from "./styles"
 
-const Habilitation: React.FC = () => {
+const Habilitations: React.FC = () => {
   const classes = useStyles()
 
   return (
@@ -14,7 +14,7 @@ const Habilitation: React.FC = () => {
       <Grid container justify="center">
         <Grid container item xs={12} sm={9}>
           <Typography variant="h1" color="primary" className={classes.title}>
-            Liste des rôles
+            Liste des habilitations
           </Typography>
           <RolesTable />
         </Grid>
@@ -23,4 +23,4 @@ const Habilitation: React.FC = () => {
   )
 }
 
-export default Habilitation
+export default Habilitations

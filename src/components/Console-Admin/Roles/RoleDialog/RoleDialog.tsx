@@ -19,8 +19,9 @@ import {
   Typography,
 } from "@material-ui/core"
 
+import CancelIcon from "@material-ui/icons/Cancel"
+import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 import EditIcon from "@material-ui/icons/Edit"
-import FiberManualRecordRoundedIcon from "@material-ui/icons/FiberManualRecordRounded"
 
 import useStyles from "./styles"
 import {
@@ -59,7 +60,7 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
 
   const rows = [
     {
-      label: "Gestion des rôles",
+      label: "Gestion des habilitations",
       status: role?.right_edit_roles,
       keyName: "right_edit_roles",
     },
@@ -195,7 +196,9 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
       onClose()
     } catch (error) {
       console.error(
-        `Erreur lors de ${isEditable ? "l'édition" : "la création"} du rôle`,
+        `Erreur lors de ${
+          isEditable ? "l'édition" : "la création"
+        } de l'habilitation`,
         error
       )
       isEditable ? onEditRoleFail(true) : onAddRoleFail(true)
@@ -206,19 +209,19 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md">
       <DialogTitle className={classes.title}>
-        {isEditable ? role?.name : "Créer un nouveau rôle :"}
+        {isEditable ? role?.name : "Créer une nouvelle habilitation :"}
       </DialogTitle>
       <DialogContent className={classes.dialog}>
         {isEditable ? (
           editMode ? (
             <Grid container direction="column" className={classes.filter}>
-              <Typography variant="h3">Nom du rôle :</Typography>
+              <Typography variant="h3">Nom de l'habilitation :</Typography>
               <TextField
                 variant="outlined"
                 margin="normal"
                 fullWidth
                 autoFocus
-                placeholder="Nom du rôle"
+                placeholder="Nom de l'habilitation"
                 value={role?.name}
                 onChange={(event) => _onChangeValue("name", event.target.value)}
               />
@@ -228,13 +231,13 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
           )
         ) : (
           <Grid container direction="column" className={classes.filter}>
-            <Typography variant="h3">Nom du rôle :</Typography>
+            <Typography variant="h3">Nom de l'abilitation :</Typography>
             <TextField
               variant="outlined"
               margin="normal"
               fullWidth
               autoFocus
-              placeholder="Nom du rôle"
+              placeholder="Nom de l'habilitation"
               value={role?.name}
               onChange={(event) => _onChangeValue("name", event.target.value)}
             />
@@ -264,17 +267,17 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
                     {isEditable ? (
                       editMode ? (
                         <Switch
+                          color="primary"
                           checked={row.status ? true : false}
                           onChange={(event) =>
                             // @ts-ignore
                             _onChangeValue(row.keyName, event.target.checked)
                           }
                         />
+                      ) : row.status ? (
+                        <CheckCircleIcon style={{ color: "#BDEA88" }} />
                       ) : (
-                        <FiberManualRecordRoundedIcon
-                          fontSize="small"
-                          style={{ color: row.status ? "#BDEA88" : "#ED6D91" }}
-                        />
+                        <CancelIcon style={{ color: "#ED6D91" }} />
                       )
                     ) : (
                       <Switch
