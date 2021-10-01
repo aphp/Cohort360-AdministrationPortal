@@ -231,7 +231,7 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
           )
         ) : (
           <Grid container direction="column" className={classes.filter}>
-            <Typography variant="h3">Nom de l'abilitation :</Typography>
+            <Typography variant="h3">Nom de l'habilitation :</Typography>
             <TextField
               variant="outlined"
               margin="normal"
@@ -281,6 +281,7 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
                       )
                     ) : (
                       <Switch
+                        color="primary"
                         checked={row.status ? true : false}
                         onChange={(event) =>
                           // @ts-ignore
