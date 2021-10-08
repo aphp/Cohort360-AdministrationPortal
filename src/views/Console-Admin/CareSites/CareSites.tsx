@@ -4,17 +4,19 @@ import { useHistory } from "react-router-dom"
 import { Button, Grid, Paper, Typography } from "@material-ui/core"
 
 import CareSiteTree from "components/Console-Admin/CareSite/CareSiteTree"
+import SearchBar from "components/SearchBar/SearchBar"
 
 import useStyles from "./styles"
-import { getCareSites } from "services/Console-Admin/careSiteService"
 import { ScopeTreeRow } from "types"
 
 const CareSites: React.FC = () => {
   const classes = useStyles()
   const history = useHistory()
 
-  const [selectedItem, onChangeSelectedItem] =
-    useState<ScopeTreeRow | null>(null)
+  const [selectedItem, onChangeSelectedItem] = useState<ScopeTreeRow | null>(
+    null
+  )
+  const [searchInput, setSearchInput] = useState("")
 
   return (
     <Grid container direction="column">
@@ -30,13 +32,17 @@ const CareSites: React.FC = () => {
           <Typography variant="h1" color="primary" className={classes.title}>
             Liste des périmètres
           </Typography>
-          <Paper style={{ width: "100%" }}>
+
+          <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
+
+          <Paper style={{ width: "100%", marginTop: 12 }}>
             <CareSiteTree
-              getCareSites={getCareSites}
               defaultSelectedItems={selectedItem}
               onChangeSelectedItem={onChangeSelectedItem}
+              searchInput={searchInput}
             />
           </Paper>
+
           <Button
             variant="contained"
             disableElevation

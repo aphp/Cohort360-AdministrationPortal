@@ -22,7 +22,7 @@ import Alert from "@material-ui/lab/Alert"
 
 import AddIcon from "@material-ui/icons/Add"
 // import DeleteIcon from "@material-ui/icons/Delete"
-import EditIcon from "@material-ui/icons/Edit"
+import VisibilityIcon from "@material-ui/icons/Visibility"
 
 import useStyles from "./styles"
 import { Role } from "types"
@@ -55,7 +55,7 @@ const defaultRole: Role = {
 const RolesTable: React.FC = () => {
   const classes = useStyles()
 
-  const columns = ["Rôle", "Actions"]
+  const columns = ["Habilitation", "Actions"]
 
   const [_roles, setRoles] = useState<Role[] | null>(null)
   const [loading, setLoading] = useState(false)
@@ -91,7 +91,7 @@ const RolesTable: React.FC = () => {
       setRoles(rolesResp)
       setLoading(false)
     } catch (error) {
-      console.error("Erreur lors de la récupération des rôles", error)
+      console.error("Erreur lors de la récupération des habilitations", error)
       setLoading(false)
     }
   }
@@ -107,7 +107,7 @@ const RolesTable: React.FC = () => {
   //     }
   //     setDeleteRole(null)
   //   } catch (error) {
-  //     console.error("Erreur lors de la suppression du rôle", error)
+  //     console.error("Erreur lors de la suppression de l'habilitation", error)
   //     setDeleteRoleFail(true)
   //     setDeleteRole(null)
   //   }
@@ -123,7 +123,7 @@ const RolesTable: React.FC = () => {
           className={classes.buttons}
           onClick={() => setSelectedRole(defaultRole)}
         >
-          Nouveau rôle
+          Nouvelle habilitation
         </Button>
       </Grid>
       <TableContainer component={Paper}>
@@ -132,7 +132,7 @@ const RolesTable: React.FC = () => {
             <TableRow className={classes.tableHead}>
               {columns.map((column) => (
                 <TableCell
-                  align={column === "Rôle" ? "left" : "right"}
+                  align={column === "Habilitation" ? "left" : "right"}
                   className={classes.tableHeadCell}
                 >
                   {column}
@@ -161,17 +161,17 @@ const RolesTable: React.FC = () => {
                     >
                       <TableCell align="left">{role.name}</TableCell>
                       <TableCell align="right">
-                        <Tooltip title="Visualiser le rôle">
+                        <Tooltip title="Visualiser l'habilitation">
                           <IconButton
                             onClick={(event) => {
                               event.stopPropagation()
                               setSelectedRole(role)
                             }}
                           >
-                            <EditIcon />
+                            <VisibilityIcon />
                           </IconButton>
                         </Tooltip>
-                        {/* <Tooltip title="Supprimer le rôle">
+                        {/* <Tooltip title="Supprimer l'habilitation">
                           <IconButton
                             onClick={() => {
                               setDeleteRole(role)
@@ -208,7 +208,7 @@ const RolesTable: React.FC = () => {
       >
         <DialogContent>
           <Typography>
-            Êtes-vous sûr(e) de vouloir supprimer le rôle {_deleteRole?.name} ?
+            Êtes-vous sûr(e) de vouloir supprimer l'habilitation {_deleteRole?.name} ?
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -229,9 +229,9 @@ const RolesTable: React.FC = () => {
           }}
           className={classes.alert}
         >
-          {addRoleSuccess && "Le rôle a bien été créé."}
-          {editRoleSuccess && "Le rôle a bien été édité."}
-          {/* {deleteRoleSuccess && "Le rôle a bien été supprimé."} */}
+          {addRoleSuccess && "L'habilitation a bien été créée."}
+          {editRoleSuccess && "L'habilitation a bien été éditée."}
+          {/* {deleteRoleSuccess && "L'habilitation a bien été supprimé."} */}
         </Alert>
       )}
       {(addRoleFail || editRoleFail) && (
@@ -244,9 +244,9 @@ const RolesTable: React.FC = () => {
           }}
           className={classes.alert}
         >
-          {addRoleFail && "Erreur lors de la création du rôle."}
-          {editRoleFail && "Erreur lors de l'édition du rôle."}
-          {/* {deleteRoleFail && "Erreur lors de la suppression du rôle."} */}
+          {addRoleFail && "Erreur lors de la création de l'habilitation."}
+          {editRoleFail && "Erreur lors de l'édition de l'habilitation."}
+          {/* {deleteRoleFail && "Erreur lors de la suppression de l'habilitation."} */}
         </Alert>
       )}
     </Grid>
