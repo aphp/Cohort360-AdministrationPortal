@@ -17,6 +17,7 @@ import {
   Typography,
   Paper,
   Tooltip,
+  Snackbar,
 } from "@material-ui/core"
 import Alert from "@material-ui/lab/Alert"
 import Pagination from "@material-ui/lab/Pagination"
@@ -276,30 +277,48 @@ const ProvidersTable = () => {
       )}
 
       {(addProviderSuccess || editProviderSuccess) && (
-        <Alert
-          severity="success"
+        <Snackbar
+          open
           onClose={() => {
             if (addProviderSuccess) setAddProviderSuccess(false)
             if (editProviderSuccess) setEditProviderSuccess(false)
           }}
-          className={classes.alert}
+          autoHideDuration={3000}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         >
-          {addProviderSuccess && "L'utilisateur a bien été créé."}
-          {editProviderSuccess && "L'utilisateur a bien été édité."}
-        </Alert>
+          <Alert
+            severity="success"
+            onClose={() => {
+              if (addProviderSuccess) setAddProviderSuccess(false)
+              if (editProviderSuccess) setEditProviderSuccess(false)
+            }}
+          >
+            {addProviderSuccess && "L'utilisateur a bien été créé."}
+            {editProviderSuccess && "L'utilisateur a bien été édité."}
+          </Alert>
+        </Snackbar>
       )}
       {(addProviderFail || editProviderFail) && (
-        <Alert
-          severity="error"
+        <Snackbar
+          open
           onClose={() => {
             if (addProviderFail) setAddProviderFail(false)
             if (editProviderFail) setEditProviderFail(false)
           }}
-          className={classes.alert}
+          autoHideDuration={3000}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         >
-          {addProviderFail && "Erreur lors de la création de l'utilisateur."}
-          {editProviderFail && "Erreur lors de l'édition de l'utilisateur."}
-        </Alert>
+          <Alert
+            severity="error"
+            onClose={() => {
+              if (addProviderFail) setAddProviderFail(false)
+              if (editProviderFail) setEditProviderFail(false)
+            }}
+          >
+            {addProviderFail && "Erreur lors de la création de l'utilisateur."}
+            {editProviderFail && "Erreur lors de l'édition de l'utilisateur."}
+          </Alert>
+        </Snackbar>
       )}
     </Grid>
   )

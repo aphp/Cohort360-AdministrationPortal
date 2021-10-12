@@ -37,12 +37,6 @@ const useStyles = makeStyles(() =>
       alignItems: "center",
       justifyContent: "center",
     },
-    alert: {
-      position: "fixed",
-      bottom: 0,
-      right: 0,
-      zIndex: 100,
-    },
   })
 )
 

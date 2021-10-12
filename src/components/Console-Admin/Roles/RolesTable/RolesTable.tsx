@@ -8,6 +8,7 @@ import {
   // DialogContent,
   Grid,
   IconButton,
+  Snackbar,
   Table,
   TableBody,
   TableCell,
@@ -220,34 +221,54 @@ const RolesTable: React.FC = () => {
       </Dialog> */}
 
       {(addRoleSuccess || editRoleSuccess) && (
-        <Alert
-          severity="success"
+        <Snackbar
+          open
           onClose={() => {
             if (addRoleSuccess) setAddRoleSuccess(false)
             if (editRoleSuccess) setEditRoleSuccess(false)
             // if (deleteRoleSuccess) setDeleteRoleSuccess(false)
           }}
-          className={classes.alert}
+          autoHideDuration={3000}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         >
-          {addRoleSuccess && "L'habilitation a bien été créée."}
-          {editRoleSuccess && "L'habilitation a bien été éditée."}
-          {/* {deleteRoleSuccess && "L'habilitation a bien été supprimé."} */}
-        </Alert>
+          <Alert
+            severity="success"
+            onClose={() => {
+              if (addRoleSuccess) setAddRoleSuccess(false)
+              if (editRoleSuccess) setEditRoleSuccess(false)
+              // if (deleteRoleSuccess) setDeleteRoleSuccess(false)
+            }}
+          >
+            {addRoleSuccess && "L'habilitation a bien été créée."}
+            {editRoleSuccess && "L'habilitation a bien été éditée."}
+            {/* {deleteRoleSuccess && "L'habilitation a bien été supprimé."} */}
+          </Alert>
+        </Snackbar>
       )}
       {(addRoleFail || editRoleFail) && (
-        <Alert
-          severity="error"
+        <Snackbar
+          open
           onClose={() => {
             if (addRoleFail) setAddRoleFail(false)
             if (editRoleFail) setEditRoleFail(false)
             // if (deleteRoleFail) setDeleteRoleFail(false)
           }}
-          className={classes.alert}
+          autoHideDuration={3000}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         >
-          {addRoleFail && "Erreur lors de la création de l'habilitation."}
-          {editRoleFail && "Erreur lors de l'édition de l'habilitation."}
-          {/* {deleteRoleFail && "Erreur lors de la suppression de l'habilitation."} */}
-        </Alert>
+          <Alert
+            severity="error"
+            onClose={() => {
+              if (addRoleFail) setAddRoleFail(false)
+              if (editRoleFail) setEditRoleFail(false)
+              // if (deleteRoleFail) setDeleteRoleFail(false)
+            }}
+          >
+            {addRoleFail && "Erreur lors de la création de l'habilitation."}
+            {editRoleFail && "Erreur lors de l'édition de l'habilitation."}
+            {/* {deleteRoleFail && "Erreur lors de la suppression de l'habilitation."} */}
+          </Alert>
+        </Snackbar>
       )}
     </Grid>
   )
