@@ -168,6 +168,7 @@ const RolesTable: React.FC = () => {
                               event.stopPropagation()
                               setSelectedRole(role)
                             }}
+                            style={{ padding: "0 12px" }}
                           >
                             <VisibilityIcon />
                           </IconButton>

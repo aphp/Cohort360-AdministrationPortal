@@ -256,6 +256,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
                                 onClick={() => {
                                   setSelectedAccess(access)
                                 }}
+                                style={{ padding: "4px 12px" }}
                               >
                                 <EditIcon />
                               </IconButton>
@@ -272,6 +273,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
                                     setDeleteAccess(access)
                                     setTerminateAccess(true)
                                   }}
+                                  style={{ padding: "4px 12px" }}
                                 >
                                   <TimerOffIcon />
                                 </IconButton>
@@ -285,6 +287,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
                                     setDeleteAccess(access)
                                     setTerminateAccess(false)
                                   }}
+                                  style={{ padding: "4px 12px" }}
                                 >
                                   <DeleteIcon />
                                 </IconButton>
