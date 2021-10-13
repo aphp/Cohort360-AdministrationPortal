@@ -225,7 +225,10 @@ const ProvidersTable = () => {
                         {provider.email ?? "-"}
                       </TableCell>
                       <TableCell align="center">
-                        <Tooltip title="Visualiser les accès de l'utilisateur">
+                        <Tooltip
+                          title="Visualiser les accès de l'utilisateur"
+                          style={{ padding: "0 12px" }}
+                        >
                           <IconButton
                             onClick={(event) => {
                               event.stopPropagation()
@@ -237,7 +240,10 @@ const ProvidersTable = () => {
                             <VisibilityIcon />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip title="Éditer l'utilisateur">
+                        <Tooltip
+                          title="Éditer l'utilisateur"
+                          style={{ padding: "0 12px" }}
+                        >
                           <IconButton
                             onClick={(event) => {
                               event.stopPropagation()
