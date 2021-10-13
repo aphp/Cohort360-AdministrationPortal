@@ -10,6 +10,7 @@ import {
   Grid,
   IconButton,
   Paper,
+  Snackbar,
   Table,
   TableBody,
   TableCell,
@@ -118,6 +119,8 @@ const RightsTable: React.FC<RightsTableProps> = ({
       } else {
         setDeleteAccessFail(true)
       }
+
+      getAccesses()
       setDeleteAccess(null)
     } catch (error) {
       console.error(
@@ -341,34 +344,52 @@ const RightsTable: React.FC<RightsTableProps> = ({
       </Dialog>
 
       {(editAccessSuccess || deleteAccessSuccess) && (
-        <Alert
-          severity="success"
+        <Snackbar
+          open
           onClose={() => {
             if (editAccessSuccess) setEditAccessSuccess(false)
             if (deleteAccessSuccess) setDeleteAccessSuccess(false)
           }}
-          className={classes.alert}
+          autoHideDuration={3000}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         >
-          {editAccessSuccess && "Les dates d'accès ont bien été éditées."}
-          {deleteAccessSuccess &&
-            `L'accès a bien été ${terminateAccess ? "clôturé" : "supprimé"}.`}
-        </Alert>
+          <Alert
+            severity="success"
+            onClose={() => {
+              if (editAccessSuccess) setEditAccessSuccess(false)
+              if (deleteAccessSuccess) setDeleteAccessSuccess(false)
+            }}
+          >
+            {editAccessSuccess && "Les dates d'accès ont bien été éditées."}
+            {deleteAccessSuccess &&
+              `L'accès a bien été ${terminateAccess ? "clôturé" : "supprimé"}.`}
+          </Alert>
+        </Snackbar>
       )}
       {(editAccessFail || deleteAccessFail) && (
-        <Alert
-          severity="error"
+        <Snackbar
+          open
           onClose={() => {
             if (editAccessFail) setEditAccessFail(false)
             if (deleteAccessFail) setDeleteAccessFail(false)
           }}
-          className={classes.alert}
+          autoHideDuration={3000}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         >
-          {editAccessFail && "Erreur lors de l'édition de l'accès."}
-          {deleteAccessFail &&
-            `Erreur lors de la ${
-              terminateAccess ? "clôture" : "suppression"
-            } de l'accès.`}
-        </Alert>
+          <Alert
+            severity="error"
+            onClose={() => {
+              if (editAccessFail) setEditAccessFail(false)
+              if (deleteAccessFail) setDeleteAccessFail(false)
+            }}
+          >
+            {editAccessFail && "Erreur lors de l'édition de l'accès."}
+            {deleteAccessFail &&
+              `Erreur lors de la ${
+                terminateAccess ? "clôture" : "suppression"
+              } de l'accès.`}
+          </Alert>
+        </Snackbar>
       )}
     </Grid>
   )

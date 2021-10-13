@@ -1,4 +1,4 @@
-import { makeStyles, createStyles } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -42,24 +42,18 @@ const useStyles = makeStyles(() =>
         backgroundColor: "#FFF",
       },
     },
-    alert: {
-      position: "fixed",
-      bottom: 0,
-      right: 0,
-      zIndex: 100
-    },
     roleColumn: {
       display: "flex",
       justifyContent: "center",
-      alignItems: "center"
+      alignItems: "center",
     },
     infoIcon: {
-      margin: "0 8px"
+      margin: "0 8px",
     },
     tooltip: {
-    maxWidth: 500
-    }
+      maxWidth: 500,
+    },
   })
-);
+)
 
-export default useStyles;
+export default useStyles

@@ -1,9 +1,8 @@
 image: $IMAGE_REPOSITORY_URL/node:$CI_COMMIT_BRANCH
 
-# uncomment when cache will be made available for kube shared runner
-#default:
-#  tags:
-#    - k8s-small-generic
+default:
+  tags:
+    - k8s-small-generic
 
 cache:
   paths:
@@ -37,7 +36,7 @@ test:
   rules:
     - if: ('$CI_COMMIT_BRANCH =~ /^($STANDARD_CD_BRANCHES)$/' || '$CI_COMMIT_BRANCH =~ /^($PROTECTED_CD_BRANCHES)$/') && $ONLY_RELEASE == null
     - when: never
-      
+
 deploy:
   image :
     name : $IMAGE_REPOSITORY_URL/kaniko-executor:$CI_COMMIT_BRANCH

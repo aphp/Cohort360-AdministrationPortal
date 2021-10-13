@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 
-import { Button, Grid, Typography } from "@material-ui/core"
+import { Button, Grid, Snackbar, Typography } from "@material-ui/core"
 
 import AddIcon from "@material-ui/icons/Add"
 
@@ -91,22 +91,28 @@ const Rights: React.FC<RightsProps> = ({ right }) => {
         onFail={setAddAccessFail}
       />
       {addAccessSuccess && (
-        <Alert
-          severity="success"
+        <Snackbar
+          open
           onClose={() => setAddAccessSuccess(false)}
-          className={classes.alert}
+          autoHideDuration={3000}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         >
-          Le droit a bien été créé.
-        </Alert>
+          <Alert severity="success" onClose={() => setAddAccessSuccess(false)}>
+            Le droit a bien été créé.
+          </Alert>
+        </Snackbar>
       )}
       {addAccessFail && (
-        <Alert
-          severity="error"
+        <Snackbar
+          open
           onClose={() => setAddAccessFail(false)}
-          className={classes.alert}
+          autoHideDuration={3000}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         >
-          Erreur lors de la création du droit.
-        </Alert>
+          <Alert severity="error" onClose={() => setAddAccessFail(false)}>
+            Erreur lors de la création du droit.
+          </Alert>
+        </Snackbar>
       )}
     </Grid>
   )

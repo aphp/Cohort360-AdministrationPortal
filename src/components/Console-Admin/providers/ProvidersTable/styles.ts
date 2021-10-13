@@ -1,4 +1,4 @@
-import { makeStyles, createStyles } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from "@material-ui/core/styles"
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -43,24 +43,18 @@ const useStyles = makeStyles(() =>
       },
     },
     searchButton: {
-      backgroundColor: '#5BC5F2',
-      color: '#FFF',
+      backgroundColor: "#5BC5F2",
+      color: "#FFF",
       borderRadius: 25,
-      height: 50
+      height: 50,
     },
     chips: {
-      margin: '0 6px 12px 6px',
-      '&:last-child': {
-        marginRight: 0
-      }
+      margin: "0 6px 12px 6px",
+      "&:last-child": {
+        marginRight: 0,
+      },
     },
-    alert: {
-      position: "fixed",
-      bottom: 0,
-      right: 0,
-      zIndex: 100
-    }
   })
-);
+)
 
-export default useStyles;
+export default useStyles
