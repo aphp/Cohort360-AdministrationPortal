@@ -119,6 +119,8 @@ const RightsTable: React.FC<RightsTableProps> = ({
       } else {
         setDeleteAccessFail(true)
       }
+
+      getAccesses()
       setDeleteAccess(null)
     } catch (error) {
       console.error(
