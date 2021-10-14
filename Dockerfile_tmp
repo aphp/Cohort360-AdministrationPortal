@@ -1,6 +1,0 @@
-FROM {{IMAGE_REPOSITORY_URL}}/node:{{ENVIR}}
-WORKDIR /app
-COPY ./ ./
-RUN mkdir -p /etc/nginx && mkdir -p /etc/nginx/sites-enabled/
-COPY nginx.conf /etc/nginx/sites-enabled/
-CMD ["bash", "entry-point.sh"]
