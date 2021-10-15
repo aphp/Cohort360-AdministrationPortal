@@ -4,6 +4,7 @@ import ProvidersHistory from "views/Console-Admin/ProvidersHistory/ProvidersHist
 import CareSites from "views/Console-Admin/CareSites/CareSites"
 import CareSiteHistory from "views/Console-Admin/CareSiteHistory/CareSiteHistory"
 import Habilitations from "views/Console-Admin/Habilitations/Habilitations"
+import Logs from "views/Console-Admin/Logs/Logs"
 
 const Config = [
   /**
@@ -68,6 +69,17 @@ const Config = [
     name: "Habilitations",
     isPrivate: true,
     component: Habilitations,
+  },
+  /**
+   * Console-Admin Logs View
+   */
+  {
+    exact: true,
+    displayTopBar: true,
+    path: "/logs",
+    name: "Logs",
+    isPrivate: false,
+    component: Logs,
   },
 ]
 
