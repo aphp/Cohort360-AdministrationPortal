@@ -202,3 +202,23 @@ export type Provider = {
   update_datetime?: string
   year_of_birth?: number
 }
+
+export type Log = {
+  data?: string
+  errors?: string | null
+  id?: number
+  host?: string
+  method?: string
+  path?: string
+  query_params?: string
+  remote_addr?: string
+  requested_at?: string
+  response?: string
+  response_ms?: number
+  status_code?: number
+  user?: number
+  user_details: Provider
+  username_persistent?: string
+  view?: string
+  view_method?: string
+}

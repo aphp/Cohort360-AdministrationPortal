@@ -17,12 +17,8 @@ const useStyles = makeStyles(() =>
       padding: "0 20px",
     },
     tableBodyRows: {
-      height: 80,
       "&:nth-of-type(even)": {
         backgroundColor: "#FAF9F9",
-      },
-      "&:hover": {
-        cursor: "pointer",
       },
     },
     loadingSpinnerContainer: {

@@ -262,8 +262,10 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
             <TableBody>
               {rows.map((row, index) => (
                 <TableRow key={index} className={classes.tableBodyRows}>
-                  <TableCell>{row.label}</TableCell>
-                  <TableCell align="right">
+                  <TableCell className={classes.tableBodyCell}>
+                    {row.label}
+                  </TableCell>
+                  <TableCell align="right" className={classes.tableBodyCell}>
                     {isEditable ? (
                       editMode ? (
                         <Switch

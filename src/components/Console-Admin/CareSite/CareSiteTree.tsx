@@ -168,7 +168,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
   return (
     <div className={classes.container}>
       {loading ? (
-        <Grid container justify="center">
+        <Grid container justify="center" style={{ padding: 16 }}>
           <CircularProgress size={40} />
         </Grid>
       ) : (
