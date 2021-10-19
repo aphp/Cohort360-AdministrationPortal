@@ -1,26 +1,29 @@
 import React, { useEffect, useState } from "react"
+import moment from "moment"
 
-import { Grid, Paper, Typography } from "@material-ui/core"
+import { CircularProgress, Grid, Paper, Typography } from "@material-ui/core"
+
+import { getLogs } from "services/Console-Admin/logsService"
+import { Log } from "types"
 
 import useStyles from "./styles"
-import { Log } from "types"
-import { getLogs } from "services/Console-Admin/logsService"
-import moment from "moment"
-import { _logs } from "./test"
 
 const LogsTable: React.FC = () => {
   const classes = useStyles()
+  const [loading, setLoading] = useState(false)
   const [logs, setLogs] = useState<Log[] | null>(null)
 
   useEffect(() => {
     const _getLogs = async () => {
       try {
-        // const logsResp = await getLogs()
+        setLoading(true)
+        const logsResp = await getLogs()
 
-        // setLogs(logsResp)
-        setLogs(_logs)
+        setLogs(logsResp)
+        setLoading(false)
       } catch (error) {
         console.error("Erreur lors de la récupération des logs", error)
+        setLoading(false)
       }
     }
 
@@ -43,9 +46,10 @@ const LogsTable: React.FC = () => {
   }
 
   return (
-    <Grid container justify="flex-end">
-      {logs &&
-        logs.length > 0 &&
+    <Grid container justify="center">
+      {loading ? (
+        <CircularProgress size={30} />
+      ) : logs && logs.length > 0 ? (
         logs.map((log: Log) => {
           return (
             <Grid
@@ -53,29 +57,21 @@ const LogsTable: React.FC = () => {
               component={Paper}
               style={{ padding: 12, marginBottom: 8 }}
             >
-              {/* <Grid
+              <Grid
                 container
                 item
                 justify="flex-start"
                 xs={6}
                 direction="column"
               >
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <Typography
-                    align="left"
-                    variant="h3"
-                    style={{ lineHeight: 2 }}
-                  >
+                <div className={classes.divCentered}>
+                  <Typography variant="h3" style={{ lineHeight: 2 }}>
                     {log.user_details?.provider_name}
                   </Typography>
                   <Typography>&nbsp;- {log.user}</Typography>
                 </div>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <Typography
-                    align="left"
-                    variant="h3"
-                    style={{ lineHeight: 2 }}
-                  >
+                <div className={classes.divCentered}>
+                  <Typography variant="h3" style={{ lineHeight: 2 }}>
                     Date :
                   </Typography>
                   <Typography>
@@ -85,73 +81,46 @@ const LogsTable: React.FC = () => {
                       : "-"}
                   </Typography>
                 </div>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <Typography
-                    align="left"
-                    variant="h3"
-                    style={{ lineHeight: 2 }}
-                  >
+                <div className={classes.divCentered}>
+                  <Typography variant="h3" style={{ lineHeight: 2 }}>
                     URL :
                   </Typography>
                   <Typography>&nbsp;{log.path}</Typography>
                 </div>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <Typography
-                    align="left"
-                    variant="h3"
-                    style={{ lineHeight: 2 }}
-                  >
+                <div className={classes.divCentered}>
+                  <Typography variant="h3" style={{ lineHeight: 2 }}>
                     Vue :
                   </Typography>
                   <Typography>&nbsp;{log.view}</Typography>
                 </div>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <Typography
-                    align="left"
-                    variant="h3"
-                    style={{ lineHeight: 2 }}
-                  >
-                    Adresse IP :
+                <div className={classes.divCentered}>
+                  <Typography variant="h3" style={{ lineHeight: 2 }}>
+                    Adresse IP:
                   </Typography>
                   <Typography>&nbsp;{log.remote_addr}</Typography>
                 </div>
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <Typography
-                    align="left"
-                    variant="h3"
-                    style={{ lineHeight: 2 }}
-                  >
+                <div className={classes.divCentered}>
+                  <Typography variant="h3" style={{ lineHeight: 2 }}>
                     Hôte :
                   </Typography>
                   <Typography>&nbsp;{log.host}</Typography>
                 </div>
-              </Grid> */}
-              {/* <Grid container item xs={6} direction="column">
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                  }}
-                >
-                  <Typography
-                    align="right"
-                    variant="h3"
-                    style={{ lineHeight: 2 }}
-                  >
+              </Grid>
+              <Grid
+                container
+                item
+                xs={6}
+                direction="column"
+                alignItems="flex-end"
+              >
+                <div className={classes.divCentered}>
+                  <Typography variant="h3" style={{ lineHeight: 2 }}>
                     ID :
                   </Typography>
                   <Typography>&nbsp;{log.id}</Typography>
                 </div>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                  }}
-                >
+                <div className={classes.divCentered}>
                   <Typography
-                    align="right"
                     variant="h3"
                     style={{
                       lineHeight: 2,
@@ -165,15 +134,8 @@ const LogsTable: React.FC = () => {
                     &nbsp;- {log.view_method?.toLocaleUpperCase()}
                   </Typography>
                 </div>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                  }}
-                >
+                <div className={classes.divCentered}>
                   <Typography
-                    align="right"
                     variant="h3"
                     style={{
                       lineHeight: 2,
@@ -186,31 +148,21 @@ const LogsTable: React.FC = () => {
                     {log.status_code}
                   </Typography>
                 </div>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                  }}
-                >
-                  <Typography
-                    align="right"
-                    variant="h3"
-                    style={{ lineHeight: 2 }}
-                  >
+                <div className={classes.divCentered}>
+                  <Typography variant="h3" style={{ lineHeight: 2 }}>
                     Temps de réponse :
                   </Typography>
                   <Typography>&nbsp;{log.response_ms}ms</Typography>
                 </div>
-              </Grid> */}
+              </Grid>
               <Grid
                 container
                 item
                 direction="column"
                 alignItems="flex-start"
-                style={{ marginTop: 16 }}
+                className={classes.separator}
               >
-                <Typography align="left" variant="h3" style={{ lineHeight: 2 }}>
+                <Typography variant="h3" style={{ lineHeight: 2 }}>
                   Data :
                 </Typography>
                 <Typography align="left" className={classes.jsonDisplay}>
@@ -218,7 +170,7 @@ const LogsTable: React.FC = () => {
                 </Typography>
               </Grid>
               <Grid container item direction="column" alignItems="flex-start">
-                <Typography align="left" variant="h3" style={{ lineHeight: 2 }}>
+                <Typography variant="h3" style={{ lineHeight: 2 }}>
                   Réponse :
                 </Typography>
                 <Typography align="left" className={classes.jsonDisplay}>
@@ -227,12 +179,8 @@ const LogsTable: React.FC = () => {
               </Grid>
               {log.errors && (
                 <Grid container item>
-                  <Typography
-                    align="left"
-                    variant="h3"
-                    style={{ lineHeight: 2 }}
-                  >
-                    Erreurs:
+                  <Typography variant="h3" style={{ lineHeight: 2 }}>
+                    Erreurs :
                   </Typography>
                   <Typography align="left" className={classes.jsonDisplay}>
                     {log.errors}
@@ -241,7 +189,17 @@ const LogsTable: React.FC = () => {
               )}
             </Grid>
           )
-        })}
+        })
+      ) : (
+        <Grid
+          container
+          component={Paper}
+          style={{ padding: 12, marginBottom: 8 }}
+          justify="center"
+        >
+          <Typography align="center">Aucun résultat à afficher.</Typography>
+        </Grid>
+      )}
     </Grid>
   )
 }

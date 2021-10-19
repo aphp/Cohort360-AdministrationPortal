@@ -205,7 +205,7 @@ export type Provider = {
 
 export type Log = {
   data?: string
-  errors?: string
+  errors?: string | null
   id?: number
   host?: string
   method?: string
