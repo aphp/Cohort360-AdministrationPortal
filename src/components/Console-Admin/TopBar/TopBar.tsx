@@ -83,6 +83,15 @@ const TopBar: React.FC = (props) => {
             >
               Habilitations
             </Button>
+            <Button
+              className={clsx(
+                classes.topBarButton,
+                pathname === "/logs" ? classes.activeButton : ""
+              )}
+              onClick={() => history.push("/logs")}
+            >
+              Logs
+            </Button>
           </Grid>
 
           <Grid container item alignItems="center" justify="flex-end" xs={3}>
