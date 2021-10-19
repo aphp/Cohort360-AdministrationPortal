@@ -15,6 +15,15 @@ const useStyles = makeStyles(() => ({
     fontWeight: 700,
     borderRadius: 3,
   },
+  separator: {
+    marginTop: 8,
+    paddingTop: 8,
+    borderTop: "#D0D7D8 solid 1px",
+  },
+  divCentered: {
+    display: "flex",
+    alignItems: "center",
+  },
 }))
 
 export default useStyles
