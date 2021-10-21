@@ -20,6 +20,10 @@ stages:
 
 build:
   stage: build
+  artifacts:
+    paths:
+      - build/
+    expire_in: 1 week
   script:
     - echo "Build"
     - npm install
@@ -43,6 +47,10 @@ deploy:
     name : $IMAGE_REPOSITORY_URL/kaniko-executor:$CI_COMMIT_BRANCH
     entrypoint : [ "" ]
   stage: deploy
+  needs:
+    - job: test
+    - job: build
+      artifacts: true
   script:
     - sh .gitlab/deployment.sh
   rules:
