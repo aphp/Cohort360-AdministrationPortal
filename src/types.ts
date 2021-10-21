@@ -222,3 +222,11 @@ export type Log = {
   view?: string
   view_method?: string
 }
+
+export type LogsFiltersObject = {
+  user: null | string
+  afterDate: null | string
+  beforeDate: null | string
+  statusCode: string[]
+  httpMethod: string[]
+}

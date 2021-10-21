@@ -78,7 +78,7 @@ const Config = [
     displayTopBar: true,
     path: "/logs",
     name: "Logs",
-    isPrivate: false,
+    isPrivate: true,
     component: Logs,
   },
 ]
