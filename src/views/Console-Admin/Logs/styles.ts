@@ -22,6 +22,18 @@ const useStyles = makeStyles(() => ({
       marginRight: 0,
     },
   },
+  pagination: {
+    margin: "10px 0",
+    float: "right",
+    "& button": {
+      backgroundColor: "#fff",
+      color: "#5BC5F2",
+    },
+    "& .MuiPaginationItem-page.Mui-selected": {
+      color: "#0063AF",
+      backgroundColor: "#FFF",
+    },
+  },
 }))
 
 export default useStyles

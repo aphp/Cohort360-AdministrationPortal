@@ -2,7 +2,7 @@ import api from "../api"
 import { LogsFiltersObject } from "types"
 import moment from "moment"
 
-export const getLogs = async (filters: LogsFiltersObject) => {
+export const getLogs = async (filters: LogsFiltersObject, page: number) => {
   try {
     const userFilter = filters.user ? `&user=${filters.user}` : ""
     const statusCodeFilter =
@@ -23,10 +23,13 @@ export const getLogs = async (filters: LogsFiltersObject) => {
       : ""
 
     const getLogsResp = await api.get(
-      `/logs/?${userFilter}${statusCodeFilter}${httpMethodFilter}${afterDateFilter}${beforeDateFilter}`
+      `/logs/?page=${page}${userFilter}${statusCodeFilter}${httpMethodFilter}${afterDateFilter}${beforeDateFilter}`
     )
 
-    return getLogsResp?.data.results ?? []
+    return {
+      logs: getLogsResp?.data.results ?? [],
+      total: getLogsResp?.data.count ?? 0,
+    }
   } catch (error) {
     console.error("Erreur lors de la récupération des logs", error)
   }

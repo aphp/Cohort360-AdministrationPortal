@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 
 import { Button, Chip, Grid, Typography } from "@material-ui/core"
+import Pagination from "@material-ui/lab/Pagination"
 
 import LogsFilters from "components/Console-Admin/Logs/LogsFilters/LogsFilters"
 import LogsTable from "components/Console-Admin/Logs/LogsTable/LogsTable"
@@ -29,13 +30,16 @@ const Logs: React.FC = () => {
   const [openFilters, setOpenFilters] = useState(false)
   const [filters, setFilters] = useState<LogsFiltersObject>(filtersDefault)
   const [logs, setLogs] = useState<Log[] | undefined>(undefined)
+  const [page, setPage] = useState(1)
+  const [total, setTotal] = useState(0)
 
   const _getLogs = async () => {
     try {
       setLoading(true)
-      const logsResp = await getLogs(filters)
+      const logsResp = await getLogs(filters, page)
 
-      setLogs(logsResp)
+      setLogs(logsResp?.logs)
+      setTotal(logsResp?.total)
       setLoading(false)
     } catch (error) {
       console.error("Erreur lors de la récupération des logs", error)
@@ -45,7 +49,7 @@ const Logs: React.FC = () => {
 
   useEffect(() => {
     _getLogs()
-  }, [filters]) // eslint-disable-line
+  }, [filters, page]) // eslint-disable-line
 
   const handleDeleteChip = (filterName: string, value?: any) => {
     const _filters = { ...filters }
@@ -141,6 +145,13 @@ const Logs: React.FC = () => {
             </Grid>
 
             <LogsTable loading={loading} logs={logs} />
+            <Pagination
+              className={classes.pagination}
+              count={Math.ceil(total / 100)}
+              shape="rounded"
+              onChange={(event, page: number) => setPage(page)}
+              page={page}
+            />
           </Grid>
         </Grid>
       </Grid>
