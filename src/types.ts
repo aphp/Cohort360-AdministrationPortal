@@ -113,6 +113,7 @@ export type Role = {
   help_text?: string[]
   name?: string
   right_edit_roles: boolean | null
+  right_read_logs: boolean | null
   right_add_users: boolean | null
   right_edit_users: boolean | null
   right_read_users: boolean | null
