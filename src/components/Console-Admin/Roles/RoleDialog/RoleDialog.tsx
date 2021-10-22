@@ -65,6 +65,11 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
       keyName: "right_edit_roles",
     },
     {
+      label: "Consulter la liste des logs",
+      status: role?.right_read_logs,
+      keyName: "right_read_logs",
+    },
+    {
       label: "Ajouter un utilisateur / profil",
       status: role?.right_add_users,
       keyName: "right_add_users",
@@ -155,6 +160,7 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
       const roleData = {
         name: role?.name,
         right_edit_roles: role?.right_edit_roles,
+        right_read_logs: role?.right_read_logs,
         right_add_users: role?.right_add_users,
         right_edit_users: role?.right_edit_users,
         right_read_users: role?.right_read_users,

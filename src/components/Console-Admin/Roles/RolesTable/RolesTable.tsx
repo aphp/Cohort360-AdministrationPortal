@@ -36,6 +36,7 @@ import RoleDialog from "../RoleDialog/RoleDialog"
 const defaultRole: Role = {
   name: "",
   right_edit_roles: false,
+  right_read_logs: false,
   right_add_users: false,
   right_edit_users: false,
   right_read_users: false,

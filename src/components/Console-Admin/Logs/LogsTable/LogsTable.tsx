@@ -1,34 +1,19 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 import moment from "moment"
 
 import { CircularProgress, Grid, Paper, Typography } from "@material-ui/core"
 
-import { getLogs } from "services/Console-Admin/logsService"
 import { Log } from "types"
 
 import useStyles from "./styles"
 
-const LogsTable: React.FC = () => {
+type LogsTableProps = {
+  loading: boolean
+  logs?: Log[]
+}
+
+const LogsTable: React.FC<LogsTableProps> = ({ loading, logs }) => {
   const classes = useStyles()
-  const [loading, setLoading] = useState(false)
-  const [logs, setLogs] = useState<Log[] | null>(null)
-
-  useEffect(() => {
-    const _getLogs = async () => {
-      try {
-        setLoading(true)
-        const logsResp = await getLogs()
-
-        setLogs(logsResp)
-        setLoading(false)
-      } catch (error) {
-        console.error("Erreur lors de la récupération des logs", error)
-        setLoading(false)
-      }
-    }
-
-    _getLogs()
-  }, []) // eslint-disable-line
 
   const setSwaggerMethodColor = (method?: string) => {
     switch (method) {
