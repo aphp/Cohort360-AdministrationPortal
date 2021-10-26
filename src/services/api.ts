@@ -24,7 +24,8 @@ api.interceptors.response.use(
       error?.response?.status === 403 &&
       !error.config.url.includes("/accesses/?care_site_id") &&
       !error.config.url.includes("/profiles/") &&
-      !error.config.url.includes("/roles/")
+      !error.config.url.includes("/roles/") &&
+      !error.config.url.includes("/logs/")
     ) {
       localStorage.clear()
       window.location.href = "/"

@@ -10,6 +10,7 @@ export type MeState = null | {
   providerSourceValue: string
   yearOfBirth: number | null
   displayName: string | null
+  accesses: Access[]
   // [key: string]: number | string | boolean | Date | null
 }
 
@@ -39,6 +40,7 @@ export type BackendUserReceived = {
   is_main_admin: boolean
   dea: string | null
   npi: string | null
+  accesses: Access[]
 }
 
 // --CONSOLE-ADMIN--

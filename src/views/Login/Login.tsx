@@ -77,7 +77,7 @@ const Login = () => {
 
       const { status, data = {} } = response
       if (status === 200) {
-        dispatch(loginAction(buildPartialUser(data.provider)))
+        dispatch(loginAction(buildPartialUser(data.provider, data.accesses)))
 
         localStorage.setItem(ACCESS_TOKEN, data.jwt.access)
         localStorage.setItem(REFRESH_TOKEN, data.jwt.refresh)
