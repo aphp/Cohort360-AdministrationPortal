@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import clsx from "clsx"
@@ -26,10 +26,22 @@ const TopBar: React.FC = (props) => {
   const classes = useStyles()
   const history = useHistory()
   const { me } = useAppSelector((state) => ({ me: state.me }))
+  const [seeLogs, setSeeLogs] = useState(false)
 
   const dispatch = useDispatch()
 
   const pathname = window.location.pathname
+
+  useEffect(() => {
+    if (me?.accesses) {
+      for (const access of me?.accesses) {
+        console.log(`access`, access)
+        if (access.role.right_read_logs) {
+          setSeeLogs(true)
+        }
+      }
+    }
+  }, []) // eslint-disable-line
 
   return (
     <AppBar position="static" className={classes.appbar}>
@@ -83,15 +95,17 @@ const TopBar: React.FC = (props) => {
             >
               Habilitations
             </Button>
-            <Button
-              className={clsx(
-                classes.topBarButton,
-                pathname === "/logs" ? classes.activeButton : ""
-              )}
-              onClick={() => history.push("/logs")}
-            >
-              Logs
-            </Button>
+            {seeLogs && (
+              <Button
+                className={clsx(
+                  classes.topBarButton,
+                  pathname === "/logs" ? classes.activeButton : ""
+                )}
+                onClick={() => history.push("/logs")}
+              >
+                Logs
+              </Button>
+            )}
           </Grid>
 
           <Grid container item alignItems="center" justify="flex-end" xs={3}>
