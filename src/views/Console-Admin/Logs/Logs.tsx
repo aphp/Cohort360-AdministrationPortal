@@ -32,10 +32,14 @@ const Logs: React.FC = () => {
   const [logs, setLogs] = useState<Log[] | undefined>(undefined)
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
+  const search = window.location.search
+
+  console.log(`search`, search)
 
   const _getLogs = async () => {
     try {
       setLoading(true)
+
       const logsResp = await getLogs(filters, page)
 
       setLogs(logsResp?.logs)
@@ -46,6 +50,15 @@ const Logs: React.FC = () => {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    const user = new URLSearchParams(search).get("user")
+    const _filters = { ...filters }
+
+    _filters["user"] = user
+
+    setFilters(_filters)
+  }, []) // eslint-disable-line
 
   useEffect(() => {
     _getLogs()

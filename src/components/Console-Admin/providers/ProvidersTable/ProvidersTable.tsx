@@ -22,6 +22,7 @@ import {
 import Alert from "@material-ui/lab/Alert"
 import Pagination from "@material-ui/lab/Pagination"
 
+import AssignmentIcon from "@material-ui/icons/Assignment"
 import EditIcon from "@material-ui/icons/Edit"
 import PersonAddIcon from "@material-ui/icons/PersonAdd"
 import VisibilityIcon from "@material-ui/icons/Visibility"
@@ -251,6 +252,22 @@ const ProvidersTable = () => {
                             }}
                           >
                             <EditIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip
+                          title="Voir les logs de l'utilisateur"
+                          style={{ padding: "0 12px" }}
+                        >
+                          <IconButton
+                            onClick={(event) => {
+                              event.stopPropagation()
+                              history.push({
+                                pathname: "/logs",
+                                search: `?user=${provider.provider_source_value}`,
+                              })
+                            }}
+                          >
+                            <AssignmentIcon />
                           </IconButton>
                         </Tooltip>
                       </TableCell>

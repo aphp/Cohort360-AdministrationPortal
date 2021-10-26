@@ -35,7 +35,6 @@ const TopBar: React.FC = (props) => {
   useEffect(() => {
     if (me?.accesses) {
       for (const access of me?.accesses) {
-        console.log(`access`, access)
         if (access.role.right_read_logs) {
           setSeeLogs(true)
         }
