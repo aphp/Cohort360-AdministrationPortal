@@ -19,6 +19,7 @@ type CareSitesDialogProps = {
   onChangeCareSite: (careSite: ScopeTreeRow | null) => void
   open: boolean
   onClose: () => void
+  isManageable: boolean
 }
 
 const CareSitesDialog: React.FC<CareSitesDialogProps> = ({
@@ -26,6 +27,7 @@ const CareSitesDialog: React.FC<CareSitesDialogProps> = ({
   onChangeCareSite,
   open,
   onClose,
+  isManageable,
 }) => {
   const classes = useStyles()
   const [searchInput, setSearchInput] = useState("")
@@ -56,7 +58,7 @@ const CareSitesDialog: React.FC<CareSitesDialogProps> = ({
 
           <Paper style={{ width: "100%", marginTop: 12 }}>
             <CareSiteTree
-              isManageable={true}
+              isManageable={isManageable}
               defaultSelectedItems={careSite}
               onChangeSelectedItem={onChangeCareSite}
               searchInput={searchInput}

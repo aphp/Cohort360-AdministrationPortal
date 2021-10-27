@@ -32,6 +32,12 @@ const useStyles = makeStyles(() => ({
     width: 34,
     maxWidth: 34,
   },
+  button: {
+    backgroundColor: "#5BC5F2",
+    color: "#FFF",
+    borderRadius: 25,
+    height: 30,
+  },
 }))
 
 export default useStyles
