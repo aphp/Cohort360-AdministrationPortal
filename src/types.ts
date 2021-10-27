@@ -233,4 +233,5 @@ export type LogsFiltersObject = {
   statusCode: string[]
   httpMethod: string[]
   access: null | string
+  careSite: null | string
 }

@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react"
+import { useHistory } from "react-router-dom"
 
-import Grid from "@material-ui/core/Grid"
 import CircularProgress from "@material-ui/core/CircularProgress"
+import Grid from "@material-ui/core/Grid"
 import IconButton from "@material-ui/core/IconButton"
 import Radio from "@material-ui/core/Radio"
 import TableRow from "@material-ui/core/TableRow"
 import TableCell from "@material-ui/core/TableCell"
+import Tooltip from "@material-ui/core/Tooltip"
 import Typography from "@material-ui/core/Typography"
 import Skeleton from "@material-ui/lab/Skeleton"
 
+import AssignmentIcon from "@material-ui/icons/Assignment"
 import KeyboardArrowRightIcon from "@material-ui/icons/ChevronRight"
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown"
 
@@ -41,6 +44,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
   searchInput,
 }) => {
   const classes = useStyles()
+  const history = useHistory()
 
   const [openPopulation, onChangeOpenPopulations] = useState<number[]>([])
   const [rootRows, setRootRows] = useState<ScopeTreeRow[]>([])
@@ -152,6 +156,13 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
       disableOrderBy: true,
       label: "Nom",
     },
+    {
+      id: "",
+      align: "center",
+      disablePadding: true,
+      disableOrderBy: true,
+      label: "",
+    },
   ]
 
   const headCells = [
@@ -248,6 +259,22 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                       ) : (
                         <Typography>{_row.name}</Typography>
                       )}
+                    </TableCell>
+
+                    <TableCell align="right">
+                      <Tooltip title="Voir les logs du périmètre">
+                        <IconButton
+                          onClick={() => {
+                            history.push({
+                              pathname: "/logs",
+                              search: `?careSite=${_row.care_site_id}`,
+                            })
+                          }}
+                          style={{ padding: "4px 12px" }}
+                        >
+                          <AssignmentIcon />
+                        </IconButton>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 )}

@@ -24,9 +24,12 @@ export const getLogs = async (filters: LogsFiltersObject, page: number) => {
     const accessFilters = filters.access
       ? `&path=/accesses/${filters.access}/`
       : ""
+    const careSiteFilters = filters.careSite
+      ? `&response="care_site_id":${filters.careSite}`
+      : ""
 
     const getLogsResp = await api.get(
-      `/logs/?page=${page}${userFilter}${statusCodeFilter}${httpMethodFilter}${afterDateFilter}${beforeDateFilter}${accessFilters}`
+      `/logs/?page=${page}${userFilter}${statusCodeFilter}${httpMethodFilter}${afterDateFilter}${beforeDateFilter}${accessFilters}${careSiteFilters}`
     )
 
     return {

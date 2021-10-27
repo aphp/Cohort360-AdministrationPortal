@@ -21,20 +21,28 @@ const filtersDefault = {
   afterDate: null,
   beforeDate: null,
   access: null,
-  // careSite: null,
+  careSite: null,
 }
 
 const Logs: React.FC = () => {
   const classes = useStyles()
+
+  const search = window.location.search
+  const user = new URLSearchParams(search).get("user")
+  const access = new URLSearchParams(search).get("access")
+  const careSite = new URLSearchParams(search).get("careSite")
+
   const [loading, setLoading] = useState(false)
   const [openFilters, setOpenFilters] = useState(false)
-  const [filters, setFilters] = useState<LogsFiltersObject>(filtersDefault)
+  const [filters, setFilters] = useState<LogsFiltersObject>({
+    ...filtersDefault,
+    user: user,
+    access: access,
+    careSite: careSite,
+  })
   const [logs, setLogs] = useState<Log[] | undefined>(undefined)
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
-  const search = window.location.search
-
-  console.log(`search`, search)
 
   const _getLogs = async () => {
     try {
@@ -52,17 +60,6 @@ const Logs: React.FC = () => {
   }
 
   useEffect(() => {
-    const user = new URLSearchParams(search).get("user")
-    const access = new URLSearchParams(search).get("access")
-    const _filters = { ...filters }
-
-    _filters["user"] = user
-    _filters["access"] = access
-
-    setFilters(_filters)
-  }, []) // eslint-disable-line
-
-  useEffect(() => {
     _getLogs()
   }, [filters, page]) // eslint-disable-line
 
@@ -74,6 +71,7 @@ const Logs: React.FC = () => {
       case "afterDate":
       case "beforeDate":
       case "access":
+      case "careSite":
         _filters[filterName] = null
         break
       case "httpMethod":
@@ -163,6 +161,15 @@ const Logs: React.FC = () => {
                   className={classes.filterChip}
                   label={`Accès : ${filters.access}`}
                   onDelete={() => handleDeleteChip("access")}
+                  color="primary"
+                  variant="outlined"
+                />
+              )}
+              {filters.careSite && (
+                <Chip
+                  className={classes.filterChip}
+                  label={`Périmètre : ${filters.careSite}`}
+                  onDelete={() => handleDeleteChip("careSite")}
                   color="primary"
                   variant="outlined"
                 />
