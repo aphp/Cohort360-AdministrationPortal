@@ -21,7 +21,7 @@ const filtersDefault = {
   afterDate: null,
   beforeDate: null,
   access: null,
-  careSite: null,
+  careSite: { careSiteId: null, careSiteName: null },
 }
 
 const Logs: React.FC = () => {
@@ -30,7 +30,8 @@ const Logs: React.FC = () => {
   const search = window.location.search
   const user = new URLSearchParams(search).get("user")
   const access = new URLSearchParams(search).get("access")
-  const careSite = new URLSearchParams(search).get("careSite")
+  const careSiteId = new URLSearchParams(search).get("careSiteId")
+  const careSiteName = new URLSearchParams(search).get("careSiteName")
 
   const [loading, setLoading] = useState(false)
   const [openFilters, setOpenFilters] = useState(false)
@@ -38,7 +39,7 @@ const Logs: React.FC = () => {
     ...filtersDefault,
     user: user,
     access: access,
-    careSite: careSite,
+    careSite: { careSiteId: careSiteId, careSiteName: careSiteName },
   })
   const [logs, setLogs] = useState<Log[] | undefined>(undefined)
   const [page, setPage] = useState(1)
@@ -71,8 +72,10 @@ const Logs: React.FC = () => {
       case "afterDate":
       case "beforeDate":
       case "access":
-      case "careSite":
         _filters[filterName] = null
+        break
+      case "careSite":
+        _filters["careSite"] = { careSiteId: null, careSiteName: null }
         break
       case "httpMethod":
       case "statusCode":
@@ -165,10 +168,12 @@ const Logs: React.FC = () => {
                   variant="outlined"
                 />
               )}
-              {filters.careSite && (
+              {filters.careSite.careSiteId && (
                 <Chip
                   className={classes.filterChip}
-                  label={`Périmètre : ${filters.careSite}`}
+                  label={`Périmètre : ${filters.careSite.careSiteName
+                    ?.split(".")
+                    .join(" ")}`}
                   onDelete={() => handleDeleteChip("careSite")}
                   color="primary"
                   variant="outlined"

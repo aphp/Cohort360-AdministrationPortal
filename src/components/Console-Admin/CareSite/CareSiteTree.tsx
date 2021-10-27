@@ -269,7 +269,11 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                             onClick={() => {
                               history.push({
                                 pathname: "/logs",
-                                search: `?careSite=${_row.care_site_id}`,
+                                search: `?careSiteId=${
+                                  _row.care_site_id
+                                }&careSiteName=${_row.name
+                                  .split(" ")
+                                  .join(".")}`,
                               })
                             }}
                             style={{ padding: "4px 12px" }}
