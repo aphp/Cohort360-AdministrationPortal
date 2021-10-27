@@ -22,6 +22,7 @@ import {
 } from "@material-ui/core"
 import Pagination from "@material-ui/lab/Pagination"
 
+import AssignmentIcon from "@material-ui/icons/Assignment"
 import CancelIcon from "@material-ui/icons/Cancel"
 import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 import DeleteIcon from "@material-ui/icons/Delete"
@@ -248,7 +249,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
                         alignContent="center"
                         justify="space-between"
                       >
-                        <Grid item xs={6}>
+                        <Grid item xs={4}>
                           {(access.actual_start_datetime ||
                             access.actual_end_datetime) && (
                             <Tooltip title="Éditer l'accès">
@@ -263,7 +264,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
                             </Tooltip>
                           )}
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={4}>
                           {access.actual_start_datetime &&
                             moment(access.actual_start_datetime).isBefore() &&
                             access.is_valid && (
@@ -293,6 +294,21 @@ const RightsTable: React.FC<RightsTableProps> = ({
                                 </IconButton>
                               </Tooltip>
                             )}
+                        </Grid>
+                        <Grid item xs={4}>
+                          <Tooltip title="Voir les logs de l'accès">
+                            <IconButton
+                              onClick={() => {
+                                history.push({
+                                  pathname: "/logs",
+                                  search: `?access=${access.care_site_history_id}`,
+                                })
+                              }}
+                              style={{ padding: "4px 12px" }}
+                            >
+                              <AssignmentIcon />
+                            </IconButton>
+                          </Tooltip>
                         </Grid>
                       </Grid>
                     </TableCell>

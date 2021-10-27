@@ -20,8 +20,8 @@ const filtersDefault = {
   statusCode: [],
   afterDate: null,
   beforeDate: null,
+  access: null,
   // careSite: null,
-  // access: à faire peut-être directement avec un lien en cliquant sur l'accès concerné
 }
 
 const Logs: React.FC = () => {
@@ -53,9 +53,11 @@ const Logs: React.FC = () => {
 
   useEffect(() => {
     const user = new URLSearchParams(search).get("user")
+    const access = new URLSearchParams(search).get("access")
     const _filters = { ...filters }
 
     _filters["user"] = user
+    _filters["access"] = access
 
     setFilters(_filters)
   }, []) // eslint-disable-line
@@ -71,6 +73,7 @@ const Logs: React.FC = () => {
       case "user":
       case "afterDate":
       case "beforeDate":
+      case "access":
         _filters[filterName] = null
         break
       case "httpMethod":
@@ -151,6 +154,15 @@ const Logs: React.FC = () => {
                     "DD/MM/YYYY"
                   )}`}
                   onDelete={() => handleDeleteChip("beforeDate")}
+                  color="primary"
+                  variant="outlined"
+                />
+              )}
+              {filters.access && (
+                <Chip
+                  className={classes.filterChip}
+                  label={`Accès : ${filters.access}`}
+                  onDelete={() => handleDeleteChip("access")}
                   color="primary"
                   variant="outlined"
                 />

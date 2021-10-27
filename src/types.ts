@@ -232,4 +232,5 @@ export type LogsFiltersObject = {
   beforeDate: null | string
   statusCode: string[]
   httpMethod: string[]
+  access: null | string
 }
