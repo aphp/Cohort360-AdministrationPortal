@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { useHistory } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import clsx from "clsx"
@@ -26,22 +26,12 @@ const TopBar: React.FC = (props) => {
   const classes = useStyles()
   const history = useHistory()
   const { me } = useAppSelector((state) => ({ me: state.me }))
-  const [seeLogs, setSeeLogs] = useState(false)
+
+  const seeLogs = me?.seeLogs ?? false
 
   const dispatch = useDispatch()
 
   const pathname = window.location.pathname
-
-  useEffect(() => {
-    if (me?.accesses) {
-      for (const access of me?.accesses) {
-        console.log(`access`, access)
-        if (access.role.right_read_logs) {
-          setSeeLogs(true)
-        }
-      }
-    }
-  }, []) // eslint-disable-line
 
   return (
     <AppBar position="static" className={classes.appbar}>

@@ -77,7 +77,16 @@ const Login = () => {
 
       const { status, data = {} } = response
       if (status === 200) {
-        dispatch(loginAction(buildPartialUser(data.provider, data.accesses)))
+        let seeLogs = false
+
+        if (data.accesses) {
+          for (const access of data.accesses) {
+            if (access.role.right_read_logs) {
+              seeLogs = true
+            }
+          }
+        }
+        dispatch(loginAction(buildPartialUser(data.provider, seeLogs)))
 
         localStorage.setItem(ACCESS_TOKEN, data.jwt.access)
         localStorage.setItem(REFRESH_TOKEN, data.jwt.refresh)
