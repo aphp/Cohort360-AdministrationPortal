@@ -22,6 +22,7 @@ import {
 } from "@material-ui/core"
 import Pagination from "@material-ui/lab/Pagination"
 
+import AssignmentIcon from "@material-ui/icons/Assignment"
 import CancelIcon from "@material-ui/icons/Cancel"
 import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 import DeleteIcon from "@material-ui/icons/Delete"
@@ -37,6 +38,7 @@ import { Alert } from "@material-ui/lab"
 import moment from "moment"
 import { getRoles } from "services/Console-Admin/rolesService"
 import { onDeleteOrTerminateAccess } from "services/Console-Admin/providersHistoryService"
+import { useAppSelector } from "state"
 
 type RightsTableProps = {
   displayName: boolean
@@ -68,6 +70,9 @@ const RightsTable: React.FC<RightsTableProps> = ({
   const [deleteAccessSuccess, setDeleteAccessSuccess] = useState(false)
   const [deleteAccessFail, setDeleteAccessFail] = useState(false)
   const [terminateAccess, setTerminateAccess] = useState(false)
+
+  const { me } = useAppSelector((state) => ({ me: state.me }))
+  const seeLogs = me?.seeLogs ?? false
 
   const rowsPerPage = 100
 
@@ -248,7 +253,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
                         alignContent="center"
                         justify="space-between"
                       >
-                        <Grid item xs={6}>
+                        <Grid item xs={seeLogs ? 4 : 6}>
                           {(access.actual_start_datetime ||
                             access.actual_end_datetime) && (
                             <Tooltip title="Éditer l'accès">
@@ -263,7 +268,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
                             </Tooltip>
                           )}
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={seeLogs ? 4 : 6}>
                           {access.actual_start_datetime &&
                             moment(access.actual_start_datetime).isBefore() &&
                             access.is_valid && (
@@ -294,6 +299,23 @@ const RightsTable: React.FC<RightsTableProps> = ({
                               </Tooltip>
                             )}
                         </Grid>
+                        {seeLogs && (
+                          <Grid item xs={4}>
+                            <Tooltip title="Voir les logs de l'accès">
+                              <IconButton
+                                onClick={() => {
+                                  history.push({
+                                    pathname: "/logs",
+                                    search: `?access=${access.care_site_history_id}`,
+                                  })
+                                }}
+                                style={{ padding: "4px 12px" }}
+                              >
+                                <AssignmentIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </Grid>
+                        )}
                       </Grid>
                     </TableCell>
                   </TableRow>
