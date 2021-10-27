@@ -52,6 +52,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
   const [selectedItems, setSelectedItem] = useState(defaultSelectedItems)
 
   const practitioner = useAppSelector((state) => state.me)
+  const seeLogs = practitioner?.seeLogs ?? false
 
   const fetchScopeTree = async () => {
     if (practitioner) {
@@ -262,19 +263,21 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                     </TableCell>
 
                     <TableCell align="right">
-                      <Tooltip title="Voir les logs du périmètre">
-                        <IconButton
-                          onClick={() => {
-                            history.push({
-                              pathname: "/logs",
-                              search: `?careSite=${_row.care_site_id}`,
-                            })
-                          }}
-                          style={{ padding: "4px 12px" }}
-                        >
-                          <AssignmentIcon />
-                        </IconButton>
-                      </Tooltip>
+                      {seeLogs && (
+                        <Tooltip title="Voir les logs du périmètre">
+                          <IconButton
+                            onClick={() => {
+                              history.push({
+                                pathname: "/logs",
+                                search: `?careSite=${_row.care_site_id}`,
+                              })
+                            }}
+                            style={{ padding: "4px 12px" }}
+                          >
+                            <AssignmentIcon />
+                          </IconButton>
+                        </Tooltip>
+                      )}
                     </TableCell>
                   </TableRow>
                 )}

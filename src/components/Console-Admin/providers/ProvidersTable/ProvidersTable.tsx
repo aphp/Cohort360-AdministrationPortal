@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
-// import { useDispatch } from "react-redux"
 
 import {
   Button,
@@ -33,11 +32,15 @@ import SearchBar from "../../../SearchBar/SearchBar"
 import { getProviders } from "services/Console-Admin/providersService"
 import useStyles from "./styles"
 import { Provider } from "types"
+import { useAppSelector } from "state"
 
 const ProvidersTable = () => {
   const classes = useStyles()
-  // const dispatch = useDispatch()
   const history = useHistory()
+
+  const { me } = useAppSelector((state) => ({ me: state.me }))
+
+  const seeLogs = me?.seeLogs ?? false
 
   const columns = [
     {
@@ -254,22 +257,24 @@ const ProvidersTable = () => {
                             <EditIcon />
                           </IconButton>
                         </Tooltip>
-                        <Tooltip
-                          title="Voir les logs de l'utilisateur"
-                          style={{ padding: "0 12px" }}
-                        >
-                          <IconButton
-                            onClick={(event) => {
-                              event.stopPropagation()
-                              history.push({
-                                pathname: "/logs",
-                                search: `?user=${provider.provider_source_value}`,
-                              })
-                            }}
+                        {seeLogs && (
+                          <Tooltip
+                            title="Voir les logs de l'utilisateur"
+                            style={{ padding: "0 12px" }}
                           >
-                            <AssignmentIcon />
-                          </IconButton>
-                        </Tooltip>
+                            <IconButton
+                              onClick={(event) => {
+                                event.stopPropagation()
+                                history.push({
+                                  pathname: "/logs",
+                                  search: `?user=${provider.provider_source_value}`,
+                                })
+                              }}
+                            >
+                              <AssignmentIcon />
+                            </IconButton>
+                          </Tooltip>
+                        )}
                       </TableCell>
                     </TableRow>
                   )
