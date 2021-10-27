@@ -234,7 +234,7 @@ export type LogsFiltersObject = {
   httpMethod: string[]
   access: null | string
   careSite: {
-    careSiteId: null | string
+    careSiteId: null | string | number
     careSiteName: null | string
   }
 }

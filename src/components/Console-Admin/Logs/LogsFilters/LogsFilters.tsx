@@ -9,6 +9,7 @@ import {
   DialogTitle,
   FormLabel,
   Grid,
+  IconButton,
   TextField,
   Typography,
 } from "@material-ui/core"
@@ -16,8 +17,12 @@ import Autocomplete from "@material-ui/lab/Autocomplete"
 import { KeyboardDatePicker } from "@material-ui/pickers"
 import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date"
 
+import EditIcon from "@material-ui/icons/Edit"
+
+import CareSitesDialog from "../../providers/AddAccessForm/components/CareSitesDialog/CareSitesDialog"
+
 import useStyles from "./styles"
-import { LogsFiltersObject } from "types"
+import { LogsFiltersObject, ScopeTreeRow } from "types"
 
 type LogsFiltersProps = {
   filters: LogsFiltersObject
@@ -34,9 +39,24 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
   onClose,
 }) => {
   const classes = useStyles()
+
+  const formattedCareSite = filters.careSite.careSiteId
+    ? {
+        care_site_id: filters.careSite.careSiteId ?? "",
+        name: filters.careSite.careSiteName ?? "",
+        children: [],
+      }
+    : null
+
   const [_filters, setFilters] = useState(filters)
   const [dateError, setDateError] = useState(false)
   const [userError, setUserError] = useState(false)
+  const [openPerimeters, setOpenPerimeters] = useState(false)
+  const [selectedCareSite, setSelectedCareSite] = useState<ScopeTreeRow | null>(
+    formattedCareSite
+  )
+
+  console.log(`selectedCareSite`, selectedCareSite)
 
   useEffect(() => {
     if (moment(_filters.afterDate).isAfter(_filters.beforeDate)) {
@@ -67,7 +87,14 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
   }
 
   const onSubmit = () => {
-    onChangeFilters(_filters)
+    const _filtersCopy = {
+      ..._filters,
+      careSite: {
+        careSiteId: selectedCareSite?.care_site_id.toString() ?? null,
+        careSiteName: selectedCareSite?.name ?? null,
+      },
+    }
+    onChangeFilters(_filtersCopy)
     onClose()
   }
 
@@ -171,6 +198,36 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
             </Typography>
           )}
         </Grid>
+        <Grid
+          container
+          justify="space-between"
+          alignItems="center"
+          className={classes.filter}
+        >
+          <Typography variant="h3">Périmètre :</Typography>
+          {selectedCareSite ? (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <Typography>
+                {selectedCareSite.name.split(".").join(" ")}
+              </Typography>
+              <IconButton
+                onClick={() => setOpenPerimeters(true)}
+                style={{ padding: "0 8px" }}
+              >
+                <EditIcon />
+              </IconButton>
+            </div>
+          ) : (
+            <Button
+              variant="contained"
+              disableElevation
+              onClick={() => setOpenPerimeters(true)}
+              className={classes.button}
+            >
+              Sélectionner un périmètre
+            </Button>
+          )}
+        </Grid>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary">
@@ -184,6 +241,14 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
           Valider
         </Button>
       </DialogActions>
+
+      <CareSitesDialog
+        careSite={selectedCareSite}
+        onChangeCareSite={setSelectedCareSite}
+        open={openPerimeters}
+        onClose={() => setOpenPerimeters(false)}
+        isManageable={false}
+      />
     </Dialog>
   )
 }

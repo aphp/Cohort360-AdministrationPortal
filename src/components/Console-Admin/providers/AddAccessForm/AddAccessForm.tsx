@@ -301,6 +301,7 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
         onChangeCareSite={setCareSite}
         open={openPerimeters}
         onClose={() => setOpenPerimeters(false)}
+        isManageable={true}
       />
     </Dialog>
   )

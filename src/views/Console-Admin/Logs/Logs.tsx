@@ -9,7 +9,7 @@ import LogsTable from "components/Console-Admin/Logs/LogsTable/LogsTable"
 import { getLogs } from "services/Console-Admin/logsService"
 import { Log, LogsFiltersObject } from "types"
 
-import FilterListIcon from "@material-ui/icons/FilterList"
+import { ReactComponent as FilterIcon } from "assets/icones/filter.svg"
 
 import useStyles from "./styles"
 import moment from "moment"
@@ -100,7 +100,7 @@ const Logs: React.FC = () => {
             <Button
               variant="contained"
               disableElevation
-              startIcon={<FilterListIcon height="15px" fill="#FFF" />}
+              startIcon={<FilterIcon height="15px" fill="#FFF" />}
               className={classes.filterButton}
               onClick={() => setOpenFilters(true)}
             >
