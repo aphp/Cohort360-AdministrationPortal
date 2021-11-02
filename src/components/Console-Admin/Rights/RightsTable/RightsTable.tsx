@@ -207,7 +207,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
                                 (role: Role) => role.role_id === access.role_id
                               )
                               ?.help_text.map((text) => (
-                                <Typography>{text}</Typography>
+                                <Typography>- {text}</Typography>
                               ))}
                           >
                             <InfoIcon
