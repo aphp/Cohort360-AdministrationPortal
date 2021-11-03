@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 
 import {
   Button,
@@ -52,6 +52,7 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
   const classes = useStyles()
 
   const [role, setRole] = useState<Role>(selectedRole)
+  const [errorName, setErrorName] = useState(false)
   const [editMode, setEditMode] = useState(false)
 
   const isEditable = selectedRole?.role_id ? true : false
@@ -147,6 +148,14 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
     },
   ]
 
+  useEffect(() => {
+    if ((role.name && role.name.length < 4) || !role.name) {
+      setErrorName(true)
+    } else {
+      setErrorName(false)
+    }
+  }, [role])
+
   const _onChangeValue = (key: RoleKeys, value: any) => {
     const _role = { ...role }
     // @ts-ignore
@@ -218,24 +227,7 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
         {isEditable ? role?.name : "Créer une nouvelle habilitation :"}
       </DialogTitle>
       <DialogContent className={classes.dialog}>
-        {isEditable ? (
-          editMode ? (
-            <Grid container direction="column" className={classes.filter}>
-              <Typography variant="h3">Nom de l'habilitation :</Typography>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                autoFocus
-                placeholder="Nom de l'habilitation"
-                value={role?.name}
-                onChange={(event) => _onChangeValue("name", event.target.value)}
-              />
-            </Grid>
-          ) : (
-            ""
-          )
-        ) : (
+        {(isEditable && editMode) || !isEditable ? (
           <Grid container direction="column" className={classes.filter}>
             <Typography variant="h3">Nom de l'habilitation :</Typography>
             <TextField
@@ -246,8 +238,15 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
               placeholder="Nom de l'habilitation"
               value={role?.name}
               onChange={(event) => _onChangeValue("name", event.target.value)}
+              error={errorName}
+              helperText={
+                errorName &&
+                "Le nom de l'habilitation doit contenir au moins 4 caractères."
+              }
             />
           </Grid>
+        ) : (
+          ""
         )}
         <TableContainer component={Paper}>
           <Table className={classes.table}>
@@ -272,22 +271,7 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
                     {row.label}
                   </TableCell>
                   <TableCell align="right" className={classes.tableBodyCell}>
-                    {isEditable ? (
-                      editMode ? (
-                        <Switch
-                          color="primary"
-                          checked={row.status ? true : false}
-                          onChange={(event) =>
-                            // @ts-ignore
-                            _onChangeValue(row.keyName, event.target.checked)
-                          }
-                        />
-                      ) : row.status ? (
-                        <CheckCircleIcon style={{ color: "#BDEA88" }} />
-                      ) : (
-                        <CancelIcon style={{ color: "#ED6D91" }} />
-                      )
-                    ) : (
+                    {(isEditable && editMode) || !isEditable ? (
                       <Switch
                         color="primary"
                         checked={row.status ? true : false}
@@ -296,6 +280,10 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
                           _onChangeValue(row.keyName, event.target.checked)
                         }
                       />
+                    ) : row.status ? (
+                      <CheckCircleIcon style={{ color: "#BDEA88" }} />
+                    ) : (
+                      <CancelIcon style={{ color: "#ED6D91" }} />
                     )}
                   </TableCell>
                 </TableRow>
@@ -308,35 +296,25 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
         <Button onClick={onClose} color="secondary">
           {isEditable ? "Fermer" : "Annuler"}
         </Button>
-        {isEditable ? (
-          editMode ? (
-            <Button
-              variant="contained"
-              disableElevation
-              onClick={() => onSubmit()}
-              className={classes.buttons}
-            >
-              Valider
-            </Button>
-          ) : (
-            <Button
-              variant="contained"
-              disableElevation
-              endIcon={<EditIcon height="15px" fill="#FFF" />}
-              onClick={() => setEditMode(true)}
-              className={classes.buttons}
-            >
-              Éditer
-            </Button>
-          )
-        ) : (
+        {(isEditable && editMode) || !isEditable ? (
           <Button
             variant="contained"
             disableElevation
+            disabled={errorName || !role.name}
             onClick={() => onSubmit()}
             className={classes.buttons}
           >
             Valider
+          </Button>
+        ) : (
+          <Button
+            variant="contained"
+            disableElevation
+            endIcon={<EditIcon height="15px" fill="#FFF" />}
+            onClick={() => setEditMode(true)}
+            className={classes.buttons}
+          >
+            Éditer
           </Button>
         )}
       </DialogActions>

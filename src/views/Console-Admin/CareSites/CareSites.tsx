@@ -35,25 +35,29 @@ const CareSites: React.FC = () => {
 
           <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
 
-          <Paper style={{ width: "100%", marginTop: 12 }}>
+          <Paper style={{ width: "100%", marginTop: 12, marginBottom: 100 }}>
             <CareSiteTree
               defaultSelectedItems={selectedItem}
               onChangeSelectedItem={onChangeSelectedItem}
               searchInput={searchInput}
             />
           </Paper>
+        </Grid>
 
-          <Button
-            variant="contained"
-            disableElevation
-            disabled={!selectedItem}
-            className={classes.button}
-            onClick={() =>
-              history.push(`/caresite/${selectedItem?.care_site_id}`)
-            }
-          >
-            Valider
-          </Button>
+        <Grid container item className={classes.bottomBar} justify="center">
+          <Grid container item justify="flex-end" xs={9}>
+            <Button
+              variant="contained"
+              disableElevation
+              disabled={!selectedItem}
+              className={classes.button}
+              onClick={() =>
+                history.push(`/caresite/${selectedItem?.care_site_id}`)
+              }
+            >
+              Valider
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
     </Grid>

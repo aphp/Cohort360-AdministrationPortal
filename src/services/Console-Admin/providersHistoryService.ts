@@ -1,4 +1,4 @@
-import { AccessData, Provider } from "types"
+import { AccessData, Profile, Provider } from "types"
 import api from "../api"
 
 export const getProfile = async (providerId?: string) => {
@@ -10,7 +10,7 @@ export const getProfile = async (providerId?: string) => {
     return undefined
   }
 
-  return profileResp.data.results ?? undefined
+  return profileResp.data.results.sort((a : Profile, b: any) => a.cdm_source?.localeCompare(b.cdm_source)) ?? undefined
 }
 
 export const submitCreateProfile = async (providerData: Provider) => {
