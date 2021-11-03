@@ -44,18 +44,20 @@ const CareSites: React.FC = () => {
           </Paper>
         </Grid>
 
-        <Grid container item className={classes.bottomBar} xs={9}>
-          <Button
-            variant="contained"
-            disableElevation
-            disabled={!selectedItem}
-            className={classes.button}
-            onClick={() =>
-              history.push(`/caresite/${selectedItem?.care_site_id}`)
-            }
-          >
-            Valider
-          </Button>
+        <Grid container item className={classes.bottomBar} justify="center">
+          <Grid container item justify="flex-end" xs={9}>
+            <Button
+              variant="contained"
+              disableElevation
+              disabled={!selectedItem}
+              className={classes.button}
+              onClick={() =>
+                history.push(`/caresite/${selectedItem?.care_site_id}`)
+              }
+            >
+              Valider
+            </Button>
+          </Grid>
         </Grid>
       </Grid>
     </Grid>
