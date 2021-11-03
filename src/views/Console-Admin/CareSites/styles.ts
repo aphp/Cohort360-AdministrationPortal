@@ -14,6 +14,12 @@ const useStyles = makeStyles(() => ({
       borderRadius: 25,
       width: 125,
       margin: "24px 8px 24px 0"
+    },
+    bottomBar: {
+      justifyContent: "flex-end",
+      position: "fixed", 
+      bottom: 0,
+      backgroundColor: "#E6F1FD"
     }
   }));
 

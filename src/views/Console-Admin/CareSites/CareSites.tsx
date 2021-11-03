@@ -35,14 +35,16 @@ const CareSites: React.FC = () => {
 
           <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
 
-          <Paper style={{ width: "100%", marginTop: 12 }}>
+          <Paper style={{ width: "100%", marginTop: 12, marginBottom: 100 }}>
             <CareSiteTree
               defaultSelectedItems={selectedItem}
               onChangeSelectedItem={onChangeSelectedItem}
               searchInput={searchInput}
             />
           </Paper>
+        </Grid>
 
+        <Grid container item className={classes.bottomBar} xs={9}>
           <Button
             variant="contained"
             disableElevation
