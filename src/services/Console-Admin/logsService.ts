@@ -22,7 +22,7 @@ export const getLogs = async (filters: LogsFiltersObject, page: number) => {
         )}`
       : ""
     const accessFilters = filters.access
-      ? `&path=/accesses/${filters.access}/`
+      ? `&path_contains=/accesses/${filters.access}/`
       : ""
     const careSiteFilters = filters.careSite.careSiteId
       ? `&response="care_site_id":${filters.careSite.careSiteId}`
