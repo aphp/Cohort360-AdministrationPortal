@@ -347,13 +347,15 @@ const RightsTable: React.FC<RightsTableProps> = ({
         page={page}
       />
 
-      <EditAccessForm
-        open={selectedAccess ? true : false}
-        onClose={() => setSelectedAccess(null)}
-        access={selectedAccess}
-        onSuccess={setEditAccessSuccess}
-        onFail={setEditAccessFail}
-      />
+      {selectedAccess && (
+        <EditAccessForm
+          open
+          onClose={() => setSelectedAccess(null)}
+          access={selectedAccess}
+          onSuccess={setEditAccessSuccess}
+          onFail={setEditAccessFail}
+        />
+      )}
 
       <Dialog
         open={deleteAccess ? true : false}
