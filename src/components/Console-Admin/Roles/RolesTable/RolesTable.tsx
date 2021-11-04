@@ -128,7 +128,7 @@ const RolesTable: React.FC = () => {
           Nouvelle habilitation
         </Button>
       </Grid>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} style={{ marginBottom: 50 }}>
         <Table className={classes.table}>
           <TableHead>
             <TableRow className={classes.tableHead}>
