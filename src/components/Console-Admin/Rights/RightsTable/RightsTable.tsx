@@ -270,7 +270,10 @@ const RightsTable: React.FC<RightsTableProps> = ({
                         </Grid>
                         <Grid item xs={seeLogs ? 4 : 6}>
                           {access.actual_start_datetime &&
-                            moment(access.actual_start_datetime).isBefore() &&
+                            moment(access.actual_start_datetime).isSameOrBefore(
+                              moment(),
+                              "day"
+                            ) &&
                             access.is_valid && (
                               <Tooltip title="Clôturer l'accès">
                                 <IconButton
@@ -285,7 +288,10 @@ const RightsTable: React.FC<RightsTableProps> = ({
                               </Tooltip>
                             )}
                           {access.actual_start_datetime &&
-                            moment(access.actual_start_datetime).isAfter() && (
+                            moment(access.actual_start_datetime).isAfter(
+                              moment(),
+                              "day"
+                            ) && (
                               <Tooltip title="Supprimer l'accès">
                                 <IconButton
                                   onClick={() => {
