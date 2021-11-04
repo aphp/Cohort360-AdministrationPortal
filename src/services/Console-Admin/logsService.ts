@@ -1,5 +1,5 @@
 import api from "../api"
-import { LogsFiltersObject } from "types"
+import { Log, LogsFiltersObject } from "types"
 import moment from "moment"
 
 export const getLogs = async (filters: LogsFiltersObject, page: number) => {
@@ -32,8 +32,34 @@ export const getLogs = async (filters: LogsFiltersObject, page: number) => {
       `/logs/?page=${page}${userFilter}${statusCodeFilter}${httpMethodFilter}${afterDateFilter}${beforeDateFilter}${accessFilters}${careSiteFilters}`
     )
 
+    const logsResp = getLogsResp?.data.results ?? []
+
+    if (filters.access && page === 1) {
+      const getCreateAccessLogsResp = await api.get(
+        `/logs/?page=${page}&path=/accesses/&response="care_site_history_id":${filters.access}${userFilter}${statusCodeFilter}${httpMethodFilter}${afterDateFilter}${beforeDateFilter}${careSiteFilters}`
+      )
+
+      const createAccessLogs: Log[] =
+        getCreateAccessLogsResp?.data?.results ?? []
+
+      let createAccessLog = createAccessLogs[0]
+      if (createAccessLogs && createAccessLogs.length > 1) {
+        for (const log of createAccessLogs) {
+          if (
+            log.requested_at &&
+            moment(log.requested_at).isAfter(createAccessLog.requested_at)
+          ) {
+            createAccessLog = log
+          }
+        }
+      }
+      if (createAccessLog) {
+        logsResp.push(createAccessLog)
+      }
+    }
+
     return {
-      logs: getLogsResp?.data.results ?? [],
+      logs: logsResp,
       total: getLogsResp?.data.count ?? 0,
     }
   } catch (error) {

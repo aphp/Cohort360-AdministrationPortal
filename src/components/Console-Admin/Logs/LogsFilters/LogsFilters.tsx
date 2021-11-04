@@ -56,8 +56,6 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
     formattedCareSite
   )
 
-  console.log(`selectedCareSite`, selectedCareSite)
-
   useEffect(() => {
     if (moment(_filters.afterDate).isAfter(_filters.beforeDate)) {
       setDateError(true)
