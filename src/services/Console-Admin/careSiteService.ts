@@ -75,7 +75,8 @@ const parseChildren = (children?: CareSite[]) => {
 }
 
 export const getCareSitesChildren = async (
-  careSite: ScopeTreeRow | null
+  careSite: ScopeTreeRow | null,
+  getSubItem?: boolean
 ): Promise<ScopeTreeRow[]> => {
   if (!careSite) return []
   const children = await api.get(
@@ -83,22 +84,24 @@ export const getCareSitesChildren = async (
   )
   if (!children) return []
 
-  const childrenData: CareSite[] =
+  const childrenData: any[] =
     children && children.data && children.status === 200
       ? children.data.results
       : []
 
-  let _childrenData = childrenData
-    ? childrenData?.map<ScopeTreeRow>((childrenData) => {
-        return {
-          ...childrenData,
-          name:
-            `${childrenData.care_site_source_value} - ${childrenData.care_site_name}` ??
-            "",
-          children: [loadingItem],
-        }
-      })
-    : []
+  let _childrenData: ScopeTreeRow[] = []
+
+  for (const child of childrenData) {
+    const scopeRow: ScopeTreeRow = child as ScopeTreeRow
+
+    scopeRow.name =
+      `${child.care_site_source_value} - ${child.care_site_name}` ?? ""
+    scopeRow.children =
+      getSubItem === true
+        ? await getCareSitesChildren(child as ScopeTreeRow)
+        : [loadingItem]
+    _childrenData = [..._childrenData, scopeRow]
+  }
 
   _childrenData = _childrenData.filter(
     (child) => child.care_site_id !== careSite.care_site_id
