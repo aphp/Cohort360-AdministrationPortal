@@ -120,7 +120,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                 )
               : true
             if (foundItem) {
-              item.children = await getCareSitesChildren(item)
+              item.children = await getCareSitesChildren(item, true)
             }
           } else if (item.children && item.children.length !== 0) {
             item.children = [...(await replaceChildren(item.children))]
