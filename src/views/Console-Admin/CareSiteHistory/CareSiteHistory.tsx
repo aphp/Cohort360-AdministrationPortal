@@ -11,7 +11,9 @@ import {
 } from "services/Console-Admin/careSiteService"
 import RightsTable from "components/Console-Admin/Rights/RightsTable/RightsTable"
 import SearchBar from "components/SearchBar/SearchBar"
-import { Access } from "types"
+import { Access, Order } from "types"
+
+const orderDefault = { orderBy: "is_valid", orderDirection: "asc" } as Order
 
 const CareSiteHistory: React.FC = () => {
   const classes = useStyles()
@@ -26,6 +28,8 @@ const CareSiteHistory: React.FC = () => {
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
 
+  const [order, setOrder] = useState(orderDefault)
+
   const { careSiteId } = useParams<{ careSiteId: string }>()
 
   const _getCareSiteAccesses = async () => {
@@ -37,6 +41,7 @@ const CareSiteHistory: React.FC = () => {
 
       const careSiteAccessesResp = await getCareSiteAccesses(
         careSiteId,
+        order,
         page,
         searchInput
       )
@@ -58,7 +63,7 @@ const CareSiteHistory: React.FC = () => {
 
   useEffect(() => {
     _getCareSiteAccesses()
-  }, [careSiteId]) // eslint-disable-line
+  }, [careSiteId, order]) // eslint-disable-line
 
   useEffect(() => {
     const fetchCareSiteAccesses = async () => {
@@ -67,6 +72,7 @@ const CareSiteHistory: React.FC = () => {
 
         const careSiteAccessesResp = await getCareSiteAccesses(
           careSiteId,
+          order,
           page,
           searchInput
         )
@@ -122,6 +128,8 @@ const CareSiteHistory: React.FC = () => {
                   total={total}
                   accesses={careSiteAccesses}
                   getAccesses={_getCareSiteAccesses}
+                  order={order}
+                  setOrder={setOrder}
                 />
               </>
             ) : (

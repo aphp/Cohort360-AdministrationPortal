@@ -238,3 +238,8 @@ export type LogsFiltersObject = {
     careSiteName: null | string
   }
 }
+
+export type Order = {
+  orderBy: string
+  orderDirection: "asc" | "desc"
+}

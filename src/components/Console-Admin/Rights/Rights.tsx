@@ -8,12 +8,14 @@ import useStyles from "./styles"
 import AddAccessForm from "../providers/AddAccessForm/AddAccessForm"
 import RightsTable from "./RightsTable/RightsTable"
 import { getAccesses } from "services/Console-Admin/providersHistoryService"
-import { Access, Profile } from "types"
+import { Access, Order, Profile } from "types"
 import { Alert } from "@material-ui/lab"
 
 type RightsProps = {
   right: Profile
 }
+
+const orderDefault = { orderBy: "is_valid", orderDirection: "asc" } as Order
 
 const Rights: React.FC<RightsProps> = ({ right }) => {
   const classes = useStyles()
@@ -25,12 +27,17 @@ const Rights: React.FC<RightsProps> = ({ right }) => {
   const [loading, setLoading] = useState(false)
   const [addAccessSuccess, setAddAccessSuccess] = useState(false)
   const [addAccessFail, setAddAccessFail] = useState(false)
+  const [order, setOrder] = useState(orderDefault)
 
   const _getAccesses = async () => {
     try {
       setLoading(true)
 
-      const rightsResp = await getAccesses(right.provider_history_id, page)
+      const rightsResp = await getAccesses(
+        right.provider_history_id,
+        page,
+        order
+      )
 
       setAccesses(rightsResp?.accesses)
       setTotal(rightsResp?.total)
@@ -43,7 +50,7 @@ const Rights: React.FC<RightsProps> = ({ right }) => {
 
   useEffect(() => {
     _getAccesses()
-  }, [accesses?.length, page]) // eslint-disable-line
+  }, [accesses?.length, order, page]) // eslint-disable-line
 
   useEffect(() => {
     if (addAccessSuccess) _getAccesses()
@@ -81,6 +88,8 @@ const Rights: React.FC<RightsProps> = ({ right }) => {
         total={total}
         accesses={accesses}
         getAccesses={_getAccesses}
+        order={order}
+        setOrder={setOrder}
       />
 
       <AddAccessForm

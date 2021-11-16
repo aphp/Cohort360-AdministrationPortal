@@ -1,5 +1,5 @@
 import api from "../api"
-import { CareSite, ScopeTreeRow } from "types"
+import { CareSite, Order, ScopeTreeRow } from "types"
 
 const loadingItem: ScopeTreeRow = {
   care_site_id: "loading",
@@ -131,12 +131,22 @@ export const getManageableCareSites = async (): Promise<ScopeTreeRow[]> => {
 
 export const getCareSiteAccesses = async (
   careSiteId: string,
+  order: Order,
   page?: number,
   searchInput?: string
 ) => {
+  const _orderDirection =
+    order.orderBy === "is_valid"
+      ? order.orderDirection === "asc"
+        ? "desc"
+        : "asc"
+      : order.orderDirection
+
   const searchFilter = searchInput ? `&search=${searchInput}` : ""
   const careSiteAccessesResp = await api.get(
-    `/accesses/?care_site_id=${careSiteId}&page=${page}${searchFilter}`
+    `/accesses/?care_site_id=${careSiteId}&page=${page}&ordering=${
+      _orderDirection === "desc" ? "-" : ""
+    }${order.orderBy}${searchFilter}`
   )
 
   if (careSiteAccessesResp.status !== 200) return undefined

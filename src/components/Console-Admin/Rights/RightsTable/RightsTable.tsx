@@ -17,6 +17,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TableSortLabel,
   Tooltip,
   Typography,
 } from "@material-ui/core"
@@ -33,7 +34,7 @@ import TimerOffIcon from "@material-ui/icons/TimerOff"
 
 import useStyles from "./styles"
 import EditAccessForm from "../../providers/EditAccessForm/EditAccessForm"
-import { Access, Role } from "types"
+import { Access, Order, Role } from "types"
 import { Alert } from "@material-ui/lab"
 import moment from "moment"
 import { getRoles } from "services/Console-Admin/rolesService"
@@ -48,6 +49,8 @@ type RightsTableProps = {
   total: number
   accesses: Access[] | undefined
   getAccesses: () => void
+  order: Order
+  setOrder: (order: Order) => void
 }
 
 const RightsTable: React.FC<RightsTableProps> = ({
@@ -58,6 +61,8 @@ const RightsTable: React.FC<RightsTableProps> = ({
   total,
   accesses,
   getAccesses,
+  order,
+  setOrder,
 }) => {
   const classes = useStyles()
   const history = useHistory()
@@ -96,20 +101,53 @@ const RightsTable: React.FC<RightsTableProps> = ({
 
   const columns = displayName
     ? [
-        "Nom",
-        "Habilitation",
-        "Date de début",
-        "Date de fin",
-        "Actif",
-        "Actions",
+        {
+          label: "Nom",
+        },
+        {
+          label: "Habilitation",
+          code: "role_name",
+        },
+        {
+          label: "Date de début",
+          code: "start_datetime",
+        },
+        {
+          label: "Date de fin",
+          code: "end_datetime",
+        },
+        {
+          label: "Actif",
+          code: "is_valid",
+        },
+        {
+          label: "Actions",
+        },
       ]
     : [
-        "Périmètre",
-        "Habilitation",
-        "Date de début",
-        "Date de fin",
-        "Actif",
-        "Actions",
+        {
+          label: "Périmètre",
+          code: "care_site_name",
+        },
+        {
+          label: "Habilitation",
+          code: "role_name",
+        },
+        {
+          label: "Date de début",
+          code: "start_datetime",
+        },
+        {
+          label: "Date de fin",
+          code: "end_datetime",
+        },
+        {
+          label: "Actif",
+          code: "is_valid",
+        },
+        {
+          label: "Actions",
+        },
       ]
 
   const handleDeleteAction = async () => {
@@ -137,6 +175,18 @@ const RightsTable: React.FC<RightsTableProps> = ({
     }
   }
 
+  const createSortHandler =
+    (property: any) => (event: React.MouseEvent<unknown>) => {
+      const isAsc: boolean =
+        order.orderBy === property && order.orderDirection === "asc"
+      const _orderDirection = isAsc ? "desc" : "asc"
+
+      setOrder({
+        orderBy: property,
+        orderDirection: _orderDirection,
+      })
+    }
+
   return (
     <Grid container justify="flex-end">
       <TableContainer component={Paper}>
@@ -145,18 +195,33 @@ const RightsTable: React.FC<RightsTableProps> = ({
             <TableRow className={classes.tableHead}>
               {columns.map((column) => (
                 <TableCell
+                  sortDirection={
+                    order.orderBy === column.code ? order.orderDirection : false
+                  }
                   align={
                     displayName
-                      ? column === "Nom"
+                      ? column.label === "Nom" || column.label === "Périmètre"
                         ? "left"
                         : "center"
-                      : column === "Périmètre"
-                      ? "left"
                       : "center"
                   }
                   className={classes.tableHeadCell}
                 >
-                  {column}
+                  {column.label !== "Actions" && column.label !== "Nom" ? (
+                    <TableSortLabel
+                      active={order.orderBy === column.code}
+                      direction={
+                        order.orderBy === column.code
+                          ? order.orderDirection
+                          : "asc"
+                      }
+                      onClick={createSortHandler(column.code)}
+                    >
+                      {column.label}
+                    </TableSortLabel>
+                  ) : (
+                    column.label
+                  )}
                 </TableCell>
               ))}
             </TableRow>

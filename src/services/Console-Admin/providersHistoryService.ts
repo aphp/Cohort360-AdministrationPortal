@@ -1,4 +1,4 @@
-import { AccessData, Profile, Provider } from "types"
+import { AccessData, Order, Profile, Provider } from "types"
 import api from "../api"
 
 export const getProfile = async (providerId?: string) => {
@@ -10,7 +10,11 @@ export const getProfile = async (providerId?: string) => {
     return undefined
   }
 
-  return profileResp.data.results.sort((a : Profile, b: any) => a.cdm_source?.localeCompare(b.cdm_source)) ?? undefined
+  return (
+    profileResp.data.results.sort((a: Profile, b: any) =>
+      a.cdm_source?.localeCompare(b.cdm_source)
+    ) ?? undefined
+  )
 }
 
 export const submitCreateProfile = async (providerData: Provider) => {
@@ -48,9 +52,22 @@ export const editProfile = async (
   }
 }
 
-export const getAccesses = async (providerHistoryId: number, page: number) => {
+export const getAccesses = async (
+  providerHistoryId: number,
+  page: number,
+  order: Order
+) => {
+  const _orderDirection =
+    order.orderBy === "is_valid"
+      ? order.orderDirection === "asc"
+        ? "desc"
+        : "asc"
+      : order.orderDirection
+
   const accessesResp = await api.get(
-    `/accesses/?page=${page}&provider_history_id=${providerHistoryId}&ordering=start_datetime`
+    `/accesses/?page=${page}&provider_history_id=${providerHistoryId}&ordering=${
+      _orderDirection === "desc" ? "-" : ""
+    }${order.orderBy}`
   )
 
   if (accessesResp.status !== 200) {
