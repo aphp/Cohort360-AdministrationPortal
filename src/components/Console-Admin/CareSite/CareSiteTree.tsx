@@ -29,6 +29,7 @@ import { useAppSelector } from "state"
 
 import useStyles from "./styles"
 import { Breadcrumbs } from "@material-ui/core"
+import useDebounce from "./use-debounce"
 
 type ScopeTreeProps = {
   isManageable?: boolean
@@ -73,23 +74,25 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
     _init()
   }, []) // eslint-disable-line
 
+  const debouncedSearchTerm = useDebounce(700, searchInput)
+
   useEffect(() => {
     const _searchInCareSites = async () => {
       setLoading(true)
       const careSiteSearchResp = await searchInCareSites(
         isManageable,
-        searchInput
+        debouncedSearchTerm
       )
       setRootRows(careSiteSearchResp)
       setLoading(false)
     }
 
-    if (searchInput && searchInput?.length > 2) {
+    if (debouncedSearchTerm && debouncedSearchTerm?.length > 2) {
       _searchInCareSites()
-    } else if (!searchInput) {
+    } else if (!debouncedSearchTerm) {
       _init()
     }
-  }, [searchInput]) // eslint-disable-line
+  }, [debouncedSearchTerm]) // eslint-disable-line
 
   useEffect(() => setSelectedItem(defaultSelectedItems), [defaultSelectedItems])
 
