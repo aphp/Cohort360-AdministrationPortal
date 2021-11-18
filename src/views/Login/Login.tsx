@@ -91,7 +91,7 @@ const Login = () => {
         localStorage.setItem(ACCESS_TOKEN, data.jwt.access)
         localStorage.setItem(REFRESH_TOKEN, data.jwt.refresh)
 
-        history.push("/users")
+        history.push("/homepage")
       } else {
         setErrorLogin(true)
       }

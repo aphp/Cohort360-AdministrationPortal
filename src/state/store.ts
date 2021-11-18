@@ -3,9 +3,11 @@ import thunkMiddleware from 'redux-thunk'
 import logger from 'redux-logger'
 
 import me from './me'
+import portailTopBar from './portailTopBar'
 
 const rootReducer = combineReducers({
-  me
+  me,
+  portailTopBar,
 })
 
 export const store = createStore(rootReducer, applyMiddleware(thunkMiddleware, logger))
