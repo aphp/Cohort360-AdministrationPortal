@@ -22,12 +22,11 @@ const smallDrawerWidth = 52
 const largeDrawerWidth = 260
 export { smallDrawerWidth, largeDrawerWidth }
 
-const TopBar: React.FC = (props) => {
+const TopBar: React.FC = () => {
   const classes = useStyles()
   const history = useHistory()
   const { me } = useAppSelector((state) => ({ me: state.me }))
-
-  const seeLogs = me?.seeLogs ?? false
+  const userRights = me?.userRights
 
   const dispatch = useDispatch()
 
@@ -63,19 +62,24 @@ const TopBar: React.FC = (props) => {
             >
               Utilisateurs
             </Button>
-            <Button
-              className={clsx(
-                classes.topBarButton,
-                pathname === "/caresites" ? classes.activeButton : ""
+            {userRights.right_read_admin_accesses_same_level &&
+              userRights.right_read_admin_accesses_inferior_levels &&
+              userRights.right_read_data_accesses_same_level &&
+              userRights.right_read_data_accesses_inferior_levels && (
+                <Button
+                  className={clsx(
+                    classes.topBarButton,
+                    pathname === "/caresites" ? classes.activeButton : ""
+                  )}
+                  onClick={() => history.push("/caresites")}
+                  style={{
+                    borderBottom:
+                      pathname === "/caresites" ? "2px solid #5BC5F2" : "none",
+                  }}
+                >
+                  Périmètres
+                </Button>
               )}
-              onClick={() => history.push("/caresites")}
-              style={{
-                borderBottom:
-                  pathname === "/caresites" ? "2px solid #5BC5F2" : "none",
-              }}
-            >
-              Périmètres
-            </Button>
             <Button
               className={clsx(
                 classes.topBarButton,
@@ -85,7 +89,7 @@ const TopBar: React.FC = (props) => {
             >
               Habilitations
             </Button>
-            {seeLogs && (
+            {userRights.right_read_logs && (
               <Button
                 className={clsx(
                   classes.topBarButton,

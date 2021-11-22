@@ -10,7 +10,7 @@ export type MeState = null | {
   providerSourceValue: string
   yearOfBirth: number | null
   displayName: string | null
-  seeLogs: boolean
+  userRights: any
   // [key: string]: number | string | boolean | Date | null
 }
 
