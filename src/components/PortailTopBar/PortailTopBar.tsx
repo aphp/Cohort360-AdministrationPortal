@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import clsx from 'clsx'
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { AppBar, Toolbar, Grid, Button, List, ListItem, ListItemText, ListItemIcon, IconButton, Collapse, Link } from '@material-ui/core'
+import { AppBar, Toolbar, Grid, List, ListItem, ListItemText, ListItemIcon, IconButton, Collapse, Link } from '@material-ui/core'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 
@@ -24,8 +24,11 @@ const PortailTopBar: React.FC = (props) => {
     const classes = useStyles()
     const history = useHistory()
     const dispatch = useDispatch()
+    
     const { me, open } = useAppSelector((state) => ({ me: state.me, open: state.portailTopBar }))
+    
     const pathname = window.location.pathname
+    const seeLogs = me?.seeLogs ?? false
 
     const handleDisplayConsoleAdmin = () => {
       dispatch<any>(openAction())
@@ -42,88 +45,112 @@ const PortailTopBar: React.FC = (props) => {
     }
 
     return (
-      <AppBar position="static" className={classes.appbar}>
-        <Toolbar>
-          <Grid
-            container
-            alignItems="center"
-            justify="space-between"
-            style={{ height: "100%" }}
-          >
+      <>
+        <AppBar position="static" className={classes.appbar}>
+          <Toolbar>
             <Grid
               container
-              item
               alignItems="center"
-              xs={9}
+              justify="space-between"
               style={{ height: "100%" }}
             >
-              <img
-                src={PortailLogo}
-                alt="Portail logo"
-                className={classes.logoIcon}
-              />
-
-              <List>
-                <ListItem button onClick={handleDisplayConsoleAdmin}>
-                  <ListItemText primary='Console-admin'/>
-                  {displayConsoleAdmin ? <ExpandLess color="action" /> : <ExpandMore color="action" />}
-                </ListItem>
-              </List>
-              <List>
-                <ListItem button onClick={handleDisplayEspaceJupyter}>
-                  <ListItemText primary='Espace Jupyter'/>
-                  {displayEspaceJupyter ? <ExpandLess color="action" /> : <ExpandMore color="action" />}
-                </ListItem>
-              </List>
-
-            </Grid>
-  
-            <Grid container item alignItems="center" justify="flex-end" xs={3}>
-              <ListItemIcon className={classes.listIcon}>
-                <div className={classes.avatar}>
-                  {me && `${(me.firstName || "?")[0]}${(me.lastName || "?")[0]}`}
-                </div>
-              </ListItemIcon>
-  
-              <IconButton
-                onClick={() => {
-                  localStorage.clear()
-                //   logoutRoute()
-                  dispatch<any>(logoutAction())
-                  history.push("/")
-                }}
+              <Grid
+                container
+                item
+                alignItems="center"
+                xs={9}
+                style={{ height: "100%" }}
               >
-                <LogoutIcon className={classes.logoutIcon} />
-              </IconButton>
+                <img
+                  src={PortailLogo}
+                  alt="Portail logo"
+                  className={classes.logoIcon}
+                />
+
+                <List>
+                  <ListItem 
+                    className={clsx(
+                      classes.topBarButton,
+                      pathname === '/console-admin' ? classes.activeButton : ''
+                    )}
+                    button
+                    onClick={handleDisplayConsoleAdmin}
+                  >
+                    <ListItemText primary='Console-admin'/>
+                    {displayConsoleAdmin ? <ExpandLess color="action" /> : <ExpandMore color="action" />}
+                  </ListItem>
+                </List>
+                <List>
+                  <ListItem 
+                    className={clsx(
+                      classes.topBarButton,
+                      pathname === '/espace-jupyter' ? classes.activeButton : ''
+                    )}
+                    button
+                    onClick={handleDisplayEspaceJupyter}
+                  >
+                    <ListItemText primary='Espace Jupyter'/>
+                    {displayEspaceJupyter ? <ExpandLess color="action" /> : <ExpandMore color="action" />}
+                  </ListItem>
+                </List>
+              </Grid>
+  
+              <Grid container item alignItems="center" justify="flex-end" xs={3}>
+                <ListItemIcon className={classes.listIcon}>
+                  <div className={classes.avatar}>
+                    {me && `${(me.firstName || "?")[0]}${(me.lastName || "?")[0]}`}
+                  </div>
+                </ListItemIcon>
+  
+                <IconButton
+                  onClick={() => {
+                    localStorage.clear()
+                    // logoutRoute()
+                    dispatch<any>(logoutAction())
+                    history.push("/")
+                  }}
+                >
+                  <LogoutIcon className={classes.logoutIcon} />
+                </IconButton>
+              </Grid>
             </Grid>
+          </Toolbar>
+        </AppBar>
+        <Grid id="je suis laaaaaaaaaaa" container className={classes.GridCollapses}>
+          <Grid id="je suis invisible" className={classes.invisibleGrid}>
+
           </Grid>
-        </Toolbar>
-        <Grid>
-          <Collapse in={displayConsoleAdmin}>
-            <List>
-              <ListItem>
-                <Link className={classes.nestedTitle} href="/users">Utilisateurs</Link>
-              </ListItem>
-              <ListItem>
-                <Link className={classes.nestedTitle} href="/caresites">Périmètres</Link>
-              </ListItem>
-              <ListItem>
-                <Link className={classes.nestedTitle} href="/habilitation">Habilitations</Link>
-              </ListItem>
-              <ListItem>
-                <Link className={classes.nestedTitle} href="/logs">Logs</Link>
-              </ListItem>
-            </List>
-          </Collapse>
-          <Collapse in={displayEspaceJupyter}>
-            <List>
-              <ListItem>
-                <Link className={classes.nestedTitle} href="/transfert">Transfert</Link>
-              </ListItem>
-            </List>
-          </Collapse>
+          <Grid id="Console admin collapse">
+            <Collapse className={classes.collapse} in={displayConsoleAdmin}>
+              <List>
+                <ListItem>
+                  <Link className={classes.nestedTitle} href="/console-admin/users">Utilisateurs</Link>
+                </ListItem>
+                <ListItem>
+                  <Link className={classes.nestedTitle} href="/console-admin/caresites">Périmètres</Link>
+                </ListItem>
+                <ListItem>
+                  <Link className={classes.nestedTitle} href="/console-admin/habilitations">Habilitations</Link>
+                </ListItem>
+                {seeLogs && (
+                  <ListItem>
+                    <Link className={classes.nestedTitle} href="/console-admin/logs">Logs</Link>
+                  </ListItem>
+                )}
+              </List>
+            </Collapse>
+          </Grid>
+          <Grid id="Espace Jupyter collapse">
+            <Collapse className={classes.collapse} in={displayEspaceJupyter}>
+              <List>
+                <ListItem>
+                  <Link className={classes.nestedTitle} href="/espace-jupyter/transfert">Transfert Jupyter</Link>
+                </ListItem>
+              </List>
+            </Collapse>
+          </Grid>
         </Grid>
-      </AppBar>
+      </>
     )
 }
 

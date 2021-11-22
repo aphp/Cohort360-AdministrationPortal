@@ -268,7 +268,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                           <IconButton
                             onClick={() => {
                               history.push({
-                                pathname: "/logs",
+                                pathname: "/console-admin/logs",
                                 search: `?careSiteId=${
                                   _row.care_site_id
                                 }&careSiteName=${_row.name

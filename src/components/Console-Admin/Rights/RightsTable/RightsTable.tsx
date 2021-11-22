@@ -376,7 +376,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
                               <IconButton
                                 onClick={() => {
                                   history.push({
-                                    pathname: "/logs",
+                                    pathname: "/console-admin/logs",
                                     search: `?access=${access.care_site_history_id}`,
                                   })
                                 }}

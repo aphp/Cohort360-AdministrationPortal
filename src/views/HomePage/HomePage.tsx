@@ -9,7 +9,7 @@ const HomePage = () => {
   return (
     <div>
       <Typography variant='h1'>Bienvenue sur le site de l'eds</Typography>
-      <Button onClick={() => (history.push('/users'))}>cliquer ici</Button>
+      <Button onClick={() => (history.push('/console-admin/users'))}>cliquer ici</Button>
     </div>
   )
 }

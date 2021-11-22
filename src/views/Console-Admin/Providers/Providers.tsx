@@ -1,20 +1,15 @@
-import React from "react";
-// import { useSelector } from "react-redux";
-import clsx from "clsx";
+import React from "react"
+import clsx from "clsx"
 
-import { Grid, Typography } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core"
 
-import ProvidersTable from "components/Console-Admin/providers/ProvidersTable/ProvidersTable";
+import ProvidersTable from "components/Console-Admin/providers/ProvidersTable/ProvidersTable"
 
-// import { IReduxStore } from "types";
 
-import useStyles from "./styles";
+import useStyles from "./styles"
 
 const ProfilesView: React.FC = () => {
   const classes = useStyles();
-
-  // const [selectedItems, onChangeSelectedItem] = useState([])
-  //   const { drawerOpen } = useSelector((state: IReduxStore) => state.ui);
 
   return (
     <Grid container direction="column" className={clsx(classes.appBar, {})}>

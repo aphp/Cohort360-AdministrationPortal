@@ -47,6 +47,17 @@ const useStyles = makeStyles(() => ({
       fontSize: 13,
       lineHeight: '25px'
     },
+    invisibleGrid:{
+      width: 161
+    },
+    GridCollapses: {
+      paddingLeft: '24px',
+      paddingRight: '24px'
+    },
+    collapse: {
+      backgroundColor: "#232E6A",
+      width: 168
+    }
 }))
 
 export default useStyles

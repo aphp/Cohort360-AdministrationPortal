@@ -105,7 +105,7 @@ const ProvidersTable = () => {
         const urlOrderingDirection = orderDirection === "desc" ? "-" : ""
 
         history.push({
-          pathname: "/users",
+          pathname: "/console-admin/users",
           search: `?page=${_page}&ordering=${urlOrderingDirection}${orderBy}${urlSearch}`,
         })
       }
@@ -217,7 +217,7 @@ const ProvidersTable = () => {
                       className={classes.tableBodyRows}
                       hover
                       onClick={() =>
-                        history.push(`/user-profile/${provider.provider_id}`)
+                        history.push(`/console-admin/user-profile/${provider.provider_id}`)
                       }
                     >
                       <TableCell align="center">
@@ -266,7 +266,7 @@ const ProvidersTable = () => {
                               onClick={(event) => {
                                 event.stopPropagation()
                                 history.push({
-                                  pathname: "/logs",
+                                  pathname: "/console-admin/logs",
                                   search: `?user=${provider.provider_source_value}`,
                                 })
                               }}
