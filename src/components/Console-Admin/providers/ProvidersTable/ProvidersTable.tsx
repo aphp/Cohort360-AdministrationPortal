@@ -31,10 +31,10 @@ import SearchBar from "../../../SearchBar/SearchBar"
 
 import { getProviders } from "services/Console-Admin/providersService"
 import useStyles from "./styles"
-import { Provider } from "types"
+import { Provider, UserRole } from "types"
 
 type ProvidersTableProps = {
-  userRights: any
+  userRights: UserRole
 }
 
 const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {

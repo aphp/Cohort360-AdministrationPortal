@@ -24,7 +24,7 @@ import {
   getManageableCareSites,
   getCareSites,
 } from "services/Console-Admin/careSiteService"
-import { ScopeTreeRow } from "types"
+import { ScopeTreeRow, UserRole } from "types"
 import { useAppSelector } from "state"
 
 import useStyles from "./styles"
@@ -36,6 +36,7 @@ type ScopeTreeProps = {
   defaultSelectedItems: ScopeTreeRow | null
   onChangeSelectedItem: (selectedItems: ScopeTreeRow) => void
   searchInput?: string
+  userRights: UserRole
 }
 
 const ScopeTree: React.FC<ScopeTreeProps> = ({
@@ -43,6 +44,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
   defaultSelectedItems,
   onChangeSelectedItem,
   searchInput,
+  userRights,
 }) => {
   const classes = useStyles()
   const history = useHistory()
@@ -53,7 +55,6 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
   const [selectedItems, setSelectedItem] = useState(defaultSelectedItems)
 
   const practitioner = useAppSelector((state) => state.me)
-  const seeLogs = practitioner?.seeLogs ?? false
 
   const fetchScopeTree = async () => {
     if (practitioner) {
@@ -266,7 +267,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                     </TableCell>
 
                     <TableCell align="right">
-                      {seeLogs && (
+                      {userRights.right_read_logs && (
                         <Tooltip title="Voir les logs du périmètre">
                           <IconButton
                             onClick={() => {
