@@ -32,37 +32,61 @@ import SearchBar from "../../../SearchBar/SearchBar"
 import { getProviders } from "services/Console-Admin/providersService"
 import useStyles from "./styles"
 import { Provider } from "types"
-import { useAppSelector } from "state"
 
-const ProvidersTable = () => {
+type ProvidersTableProps = {
+  userRights: any
+}
+
+const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
   const classes = useStyles()
   const history = useHistory()
 
-  const { me } = useAppSelector((state) => ({ me: state.me }))
-
-  const seeLogs = me?.seeLogs ?? false
-
-  const columns = [
-    {
-      label: "Identifiant APH",
-      code: "provider_source_value",
-    },
-    {
-      label: "Nom",
-      code: "lastname",
-    },
-    {
-      label: "Prénom",
-      code: "firstname",
-    },
-    {
-      label: "Email",
-      code: "email",
-    },
-    {
-      label: "Actions",
-    },
-  ]
+  const columns =
+    !userRights.right_read_admin_accesses_same_level &&
+    !userRights.right_read_admin_accesses_inferior_levels &&
+    !userRights.right_read_data_accesses_same_level &&
+    !userRights.right_read_data_accesses_inferior_levels &&
+    !userRights.right_edit_users &&
+    !userRights.right_read_logs
+      ? [
+          {
+            label: "Identifiant APH",
+            code: "provider_source_value",
+          },
+          {
+            label: "Nom",
+            code: "lastname",
+          },
+          {
+            label: "Prénom",
+            code: "firstname",
+          },
+          {
+            label: "Email",
+            code: "email",
+          },
+        ]
+      : [
+          {
+            label: "Identifiant APH",
+            code: "provider_source_value",
+          },
+          {
+            label: "Nom",
+            code: "lastname",
+          },
+          {
+            label: "Prénom",
+            code: "firstname",
+          },
+          {
+            label: "Email",
+            code: "email",
+          },
+          {
+            label: "Actions",
+          },
+        ]
 
   const [providers, setProviders] = useState<Provider[] | null>(null)
   const [page, setPage] = useState(1)
@@ -148,16 +172,23 @@ const ProvidersTable = () => {
 
   return (
     <Grid container justify="flex-end">
-      <Grid container item justify="space-between" style={{ margin: "12px 0" }}>
-        <Button
-          variant="contained"
-          disableElevation
-          startIcon={<PersonAddIcon height="15px" fill="#FFF" />}
-          className={classes.searchButton}
-          onClick={() => setSelectedProvider({})}
-        >
-          Nouvel utilisateur
-        </Button>
+      <Grid
+        container
+        item
+        justify={userRights.right_add_users ? "space-between" : "flex-end"}
+        style={{ margin: "12px 0" }}
+      >
+        {userRights.right_add_users && (
+          <Button
+            variant="contained"
+            disableElevation
+            startIcon={<PersonAddIcon height="15px" fill="#FFF" />}
+            className={classes.searchButton}
+            onClick={() => setSelectedProvider({})}
+          >
+            Nouvel utilisateur
+          </Button>
+        )}
         <Grid container item xs={6} justify="flex-end" alignItems="center">
           <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
         </Grid>
@@ -216,9 +247,16 @@ const ProvidersTable = () => {
                       key={provider.provider_id}
                       className={classes.tableBodyRows}
                       hover
-                      onClick={() =>
-                        history.push(`/user-profile/${provider.provider_id}`)
-                      }
+                      onClick={() => {
+                        if (
+                          userRights.right_read_admin_accesses_same_level &&
+                          userRights.right_read_admin_accesses_inferior_levels &&
+                          userRights.right_read_data_accesses_same_level &&
+                          userRights.right_read_data_accesses_inferior_levels
+                        ) {
+                          history.push(`/user-profile/${provider.provider_id}`)
+                        }
+                      }}
                     >
                       <TableCell align="center">
                         {provider.provider_source_value}
@@ -229,35 +267,42 @@ const ProvidersTable = () => {
                         {provider.email ?? "-"}
                       </TableCell>
                       <TableCell align="center">
-                        <Tooltip
-                          title="Visualiser les accès de l'utilisateur"
-                          style={{ padding: "0 12px" }}
-                        >
-                          <IconButton
-                            onClick={(event) => {
-                              event.stopPropagation()
-                              history.push(
-                                `/user-profile/${provider.provider_id}`
-                              )
-                            }}
+                        {userRights.right_read_admin_accesses_same_level &&
+                          userRights.right_read_admin_accesses_inferior_levels &&
+                          userRights.right_read_data_accesses_same_level &&
+                          userRights.right_read_data_accesses_inferior_levels && (
+                            <Tooltip
+                              title="Visualiser les accès de l'utilisateur"
+                              style={{ padding: "0 12px" }}
+                            >
+                              <IconButton
+                                onClick={(event) => {
+                                  event.stopPropagation()
+                                  history.push(
+                                    `/user-profile/${provider.provider_id}`
+                                  )
+                                }}
+                              >
+                                <VisibilityIcon />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+                        {userRights.right_edit_users && (
+                          <Tooltip
+                            title="Éditer l'utilisateur"
+                            style={{ padding: "0 12px" }}
                           >
-                            <VisibilityIcon />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip
-                          title="Éditer l'utilisateur"
-                          style={{ padding: "0 12px" }}
-                        >
-                          <IconButton
-                            onClick={(event) => {
-                              event.stopPropagation()
-                              setSelectedProvider(provider)
-                            }}
-                          >
-                            <EditIcon />
-                          </IconButton>
-                        </Tooltip>
-                        {seeLogs && (
+                            <IconButton
+                              onClick={(event) => {
+                                event.stopPropagation()
+                                setSelectedProvider(provider)
+                              }}
+                            >
+                              <EditIcon />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                        {userRights.right_read_logs && (
                           <Tooltip
                             title="Voir les logs de l'utilisateur"
                             style={{ padding: "0 12px" }}

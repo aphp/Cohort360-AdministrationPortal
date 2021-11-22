@@ -107,13 +107,7 @@ export type Profile = {
 
 // Roles
 
-export type Role = {
-  role_id?: number
-  insert_datetime?: string | null
-  update_datetime?: string | null
-  delete_datetime?: string | null
-  help_text?: string[]
-  name?: string
+export type UserRole = {
   right_edit_roles: boolean | null
   right_read_logs: boolean | null
   right_add_users: boolean | null
@@ -131,6 +125,15 @@ export type Role = {
   right_read_patient_pseudo_anonymised: boolean | null
   right_export_jupyter_patient_nominative: boolean | null
   right_export_jupyter_patient_pseudo_anonymised: boolean | null
+}
+
+export type Role = UserRole & {
+  role_id?: number
+  insert_datetime?: string | null
+  update_datetime?: string | null
+  delete_datetime?: string | null
+  help_text?: string[]
+  name?: string
   invalid_reason?: string | null
 }
 
