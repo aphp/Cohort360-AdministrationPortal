@@ -26,7 +26,7 @@ import AddIcon from "@material-ui/icons/Add"
 import VisibilityIcon from "@material-ui/icons/Visibility"
 
 import useStyles from "./styles"
-import { Role } from "types"
+import { Role, UserRole } from "types"
 import {
   getRoles,
   //  deleteRole
@@ -54,7 +54,11 @@ const defaultRole: Role = {
   right_export_jupyter_patient_pseudo_anonymised: false,
 }
 
-const RolesTable: React.FC = () => {
+type RolesTableProps = {
+  userRights: UserRole
+}
+
+const RolesTable: React.FC<RolesTableProps> = ({ userRights }) => {
   const classes = useStyles()
 
   const columns = ["Habilitation", "Actions"]
@@ -117,17 +121,19 @@ const RolesTable: React.FC = () => {
 
   return (
     <Grid container justify="flex-end">
-      <Grid container justify="flex-end" alignItems="center">
-        <Button
-          variant="contained"
-          disableElevation
-          startIcon={<AddIcon height="15px" fill="#FFF" />}
-          className={classes.buttons}
-          onClick={() => setSelectedRole(defaultRole)}
-        >
-          Nouvelle habilitation
-        </Button>
-      </Grid>
+      {userRights.right_edit_roles && (
+        <Grid container justify="flex-end" alignItems="center">
+          <Button
+            variant="contained"
+            disableElevation
+            startIcon={<AddIcon height="15px" fill="#FFF" />}
+            className={classes.buttons}
+            onClick={() => setSelectedRole(defaultRole)}
+          >
+            Nouvelle habilitation
+          </Button>
+        </Grid>
+      )}
       <TableContainer component={Paper} style={{ marginBottom: 50 }}>
         <Table className={classes.table}>
           <TableHead>
@@ -196,6 +202,7 @@ const RolesTable: React.FC = () => {
       {selectedRole && (
         <RoleDialog
           open
+          userRights={userRights}
           selectedRole={selectedRole}
           onClose={() => setSelectedRole(null)}
           onAddRoleSuccess={setAddRoleSuccess}

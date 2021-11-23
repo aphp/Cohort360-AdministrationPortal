@@ -1,8 +1,8 @@
-import { BackendUserReceived, MeState } from "types"
+import { BackendUserReceived, MeState, UserRole } from "types"
 
 export const buildPartialUser = (
   responseProvider: BackendUserReceived,
-  userRights: any
+  userRights: UserRole
 ): MeState => {
   return {
     providerId: responseProvider.provider_id ?? 0,
