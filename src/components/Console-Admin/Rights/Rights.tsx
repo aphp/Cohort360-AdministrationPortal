@@ -8,16 +8,17 @@ import useStyles from "./styles"
 import AddAccessForm from "../providers/AddAccessForm/AddAccessForm"
 import RightsTable from "./RightsTable/RightsTable"
 import { getAccesses } from "services/Console-Admin/providersHistoryService"
-import { Access, Order, Profile } from "types"
+import { Access, Order, Profile, UserRole } from "types"
 import { Alert } from "@material-ui/lab"
 
 type RightsProps = {
   right: Profile
+  userRights: UserRole
 }
 
 const orderDefault = { orderBy: "is_valid", orderDirection: "asc" } as Order
 
-const Rights: React.FC<RightsProps> = ({ right }) => {
+const Rights: React.FC<RightsProps> = ({ right, userRights }) => {
   const classes = useStyles()
 
   const [open, setOpen] = useState(false)
@@ -67,17 +68,21 @@ const Rights: React.FC<RightsProps> = ({ right }) => {
         <Typography align="left" variant="h2" className={classes.title}>
           Type de droit : {right.cdm_source}
         </Typography>
-        {right.cdm_source === "MANUAL" && (
-          <Button
-            variant="contained"
-            disableElevation
-            startIcon={<AddIcon height="15px" fill="#FFF" />}
-            className={classes.searchButton}
-            onClick={() => setOpen(true)}
-          >
-            Nouvel accès
-          </Button>
-        )}
+        {right.cdm_source === "MANUAL" &&
+          (userRights.right_manage_admin_accesses_same_level ||
+            userRights.right_manage_admin_accesses_inferior_levels ||
+            userRights.right_manage_data_accesses_same_level ||
+            userRights.right_manage_data_accesses_inferior_levels) && (
+            <Button
+              variant="contained"
+              disableElevation
+              startIcon={<AddIcon height="15px" fill="#FFF" />}
+              className={classes.searchButton}
+              onClick={() => setOpen(true)}
+            >
+              Nouvel accès
+            </Button>
+          )}
       </Grid>
 
       <RightsTable
@@ -90,6 +95,7 @@ const Rights: React.FC<RightsProps> = ({ right }) => {
         getAccesses={_getAccesses}
         order={order}
         setOrder={setOrder}
+        userRights={userRights}
       />
 
       <AddAccessForm
@@ -98,6 +104,7 @@ const Rights: React.FC<RightsProps> = ({ right }) => {
         entityId={right.provider_history_id}
         onSuccess={setAddAccessSuccess}
         onFail={setAddAccessFail}
+        userRights={userRights}
       />
       {addAccessSuccess && (
         <Snackbar
