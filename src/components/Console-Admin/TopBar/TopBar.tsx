@@ -17,6 +17,7 @@ import { logout as logoutAction } from "state/me"
 import { logout as logoutRoute } from "services/authentication"
 import { useAppSelector } from "state"
 import useStyles from "./styles"
+import { userDefaultRoles } from "utils/userRoles"
 
 const smallDrawerWidth = 52
 const largeDrawerWidth = 260
@@ -26,7 +27,7 @@ const TopBar: React.FC = () => {
   const classes = useStyles()
   const history = useHistory()
   const { me } = useAppSelector((state) => ({ me: state.me }))
-  const userRights = me?.userRights
+  const userRights = me?.userRights ?? userDefaultRoles
 
   const dispatch = useDispatch()
 
