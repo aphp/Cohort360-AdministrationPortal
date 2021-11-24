@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useHistory } from "react-router-dom"
 import { useDispatch } from "react-redux"
-// import { AxiosError } from "axios"
 import {
   Button,
   Dialog,
@@ -14,12 +13,14 @@ import {
 } from "@material-ui/core"
 
 import { buildPartialUser } from "services/Console-Admin/userService"
-import { authenticate /**getCsrfToken**/ } from "services/authentication"
+import { authenticate } from "services/authentication"
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants"
 import { login as loginAction } from "state/me"
 import logo from "assets/images/logo1.png"
 import { ErrorDialogProps } from "types"
 import useStyles from "./styles"
+import NoRights from "components/Console-Admin/ErrorView/NoRights"
+import { userDefaultRoles } from "utils/userRoles"
 
 const ErrorDialog: React.FC<ErrorDialogProps> = ({ open, setErrorLogin }) => {
   const _setErrorLogin = () => {
@@ -49,24 +50,13 @@ const Login = () => {
   const [username, setUsername] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [errorLogin, setErrorLogin] = useState<boolean>(false)
+  const [noRights, setNoRights] = useState<boolean>(false)
 
   useEffect(() => {
     localStorage.removeItem("user")
     localStorage.removeItem("access")
     localStorage.removeItem("refresh")
   }, [])
-
-  // const [hasCsrfCookie, setHasCsrfCookie] = useState(false)
-  // if (!hasCsrfCookie) {
-  //   getCsrfToken()
-  //     .then((res: any) => {
-  //       console.log("Got csrf cookie", res)
-  //       setHasCsrfCookie(true)
-  //     })
-  //     .catch((err: AxiosError) => {
-  //       console.error("Error while getting csrf cookie", err)
-  //     })
-  // }
 
   const onLogin = async () => {
     try {
@@ -77,21 +67,43 @@ const Login = () => {
 
       const { status, data = {} } = response
       if (status === 200) {
-        let seeLogs = false
+        let _userRights = userDefaultRoles
 
         if (data.accesses) {
           for (const access of data.accesses) {
+            if (access.role.right_edit_roles) {
+              _userRights.right_edit_roles = true
+            }
             if (access.role.right_read_logs) {
-              seeLogs = true
+              _userRights.right_read_logs = true
+            }
+            if (access.role.right_read_admin_accesses_same_level) {
+              _userRights.right_read_admin_accesses_same_level = true
+            }
+            if (access.role.right_read_admin_accesses_inferior_levels) {
+              _userRights.right_read_admin_accesses_inferior_levels = true
+            }
+            if (access.role.right_read_data_accesses_same_level) {
+              _userRights.right_read_data_accesses_same_level = true
+            }
+            if (access.role.right_read_data_accesses_inferior_levels) {
+              _userRights.right_read_data_accesses_inferior_levels = true
+            }
+            if (access.role.right_read_users) {
+              _userRights.right_read_users = true
             }
           }
         }
-        dispatch(loginAction(buildPartialUser(data.provider, seeLogs)))
+        dispatch(loginAction(buildPartialUser(data.provider, _userRights)))
 
         localStorage.setItem(ACCESS_TOKEN, data.jwt.access)
         localStorage.setItem(REFRESH_TOKEN, data.jwt.refresh)
 
-        history.push("/homepage")
+        if (!_userRights.right_read_users) {
+          setNoRights(true)
+        } else {
+          history.push("/homepage")
+        }
       } else {
         setErrorLogin(true)
       }
@@ -105,6 +117,8 @@ const Login = () => {
     e.preventDefault()
     onLogin()
   }
+
+  if (noRights) return <NoRights />
 
   return (
     <>

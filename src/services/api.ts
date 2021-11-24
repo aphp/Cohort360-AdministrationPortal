@@ -21,11 +21,9 @@ api.interceptors.response.use(
   },
   async function (error) {
     if (
-      error?.response?.status === 403 &&
-      !error.config.url.includes("/accesses/?care_site_id") &&
-      !error.config.url.includes("/profiles/") &&
-      !error.config.url.includes("/roles/") &&
-      !error.config.url.includes("/logs/")
+      error?.response?.status === 401 ||
+      (error?.response?.status === 403 &&
+        error.config.url.includes("/accounts/refresh/"))
     ) {
       localStorage.clear()
       window.location.href = "/"

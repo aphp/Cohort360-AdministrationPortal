@@ -24,17 +24,19 @@ import {
   getManageableCareSites,
   getCareSites,
 } from "services/Console-Admin/careSiteService"
-import { ScopeTreeRow } from "types"
+import { ScopeTreeRow, UserRole } from "types"
 import { useAppSelector } from "state"
 
 import useStyles from "./styles"
 import { Breadcrumbs } from "@material-ui/core"
+import useDebounce from "./use-debounce"
 
 type ScopeTreeProps = {
   isManageable?: boolean
   defaultSelectedItems: ScopeTreeRow | null
   onChangeSelectedItem: (selectedItems: ScopeTreeRow) => void
   searchInput?: string
+  userRights: UserRole
 }
 
 const ScopeTree: React.FC<ScopeTreeProps> = ({
@@ -42,6 +44,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
   defaultSelectedItems,
   onChangeSelectedItem,
   searchInput,
+  userRights,
 }) => {
   const classes = useStyles()
   const history = useHistory()
@@ -52,7 +55,6 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
   const [selectedItems, setSelectedItem] = useState(defaultSelectedItems)
 
   const practitioner = useAppSelector((state) => state.me)
-  const seeLogs = practitioner?.seeLogs ?? false
 
   const fetchScopeTree = async () => {
     if (practitioner) {
@@ -73,23 +75,25 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
     _init()
   }, []) // eslint-disable-line
 
+  const debouncedSearchTerm = useDebounce(700, searchInput)
+
   useEffect(() => {
     const _searchInCareSites = async () => {
       setLoading(true)
       const careSiteSearchResp = await searchInCareSites(
         isManageable,
-        searchInput
+        debouncedSearchTerm
       )
       setRootRows(careSiteSearchResp)
       setLoading(false)
     }
 
-    if (searchInput && searchInput?.length > 2) {
+    if (debouncedSearchTerm && debouncedSearchTerm?.length > 2) {
       _searchInCareSites()
-    } else if (!searchInput) {
+    } else if (!debouncedSearchTerm) {
       _init()
     }
-  }, [searchInput]) // eslint-disable-line
+  }, [debouncedSearchTerm]) // eslint-disable-line
 
   useEffect(() => setSelectedItem(defaultSelectedItems), [defaultSelectedItems])
 
@@ -263,7 +267,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                     </TableCell>
 
                     <TableCell align="right">
-                      {seeLogs && (
+                      {userRights.right_read_logs && (
                         <Tooltip title="Voir les logs du périmètre">
                           <IconButton
                             onClick={() => {

@@ -28,10 +28,11 @@ import {
   createRoles,
   submitEditRoles,
 } from "services/Console-Admin/rolesService"
-import { Role, RoleKeys } from "types"
+import { Role, RoleKeys, UserRole } from "types"
 
 type RoleDialogProps = {
   open: boolean
+  userRights: UserRole
   selectedRole: Role
   onClose: () => void
   onAddRoleSuccess: (success: boolean) => void
@@ -42,6 +43,7 @@ type RoleDialogProps = {
 
 const RoleDialog: React.FC<RoleDialogProps> = ({
   open,
+  userRights,
   selectedRole,
   onClose,
   onAddRoleSuccess,
@@ -307,15 +309,17 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
             Valider
           </Button>
         ) : (
-          <Button
-            variant="contained"
-            disableElevation
-            endIcon={<EditIcon height="15px" fill="#FFF" />}
-            onClick={() => setEditMode(true)}
-            className={classes.buttons}
-          >
-            Éditer
-          </Button>
+          userRights.right_edit_roles && (
+            <Button
+              variant="contained"
+              disableElevation
+              endIcon={<EditIcon height="15px" fill="#FFF" />}
+              onClick={() => setEditMode(true)}
+              className={classes.buttons}
+            >
+              Éditer
+            </Button>
+          )
         )}
       </DialogActions>
     </Dialog>

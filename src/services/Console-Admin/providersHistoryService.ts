@@ -80,6 +80,26 @@ export const getAccesses = async (
   }
 }
 
+export const getUserAccesses = async (providerSourceValue?: string) => {
+  try {
+    const getUserAccessesResp = await api.get(
+      `/accesses/?provider_source_value=${providerSourceValue}`
+    )
+
+    if (getUserAccessesResp.status !== 200) {
+      return []
+    }
+
+    return getUserAccessesResp.data.results ?? []
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération des accès de l'utilisateur",
+      error
+    )
+    return []
+  }
+}
+
 export const submitCreateAccess = async (accessData: AccessData) => {
   try {
     const createAccessResp = await api.post(`/accesses/`, accessData)

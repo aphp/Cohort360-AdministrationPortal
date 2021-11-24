@@ -34,12 +34,11 @@ import TimerOffIcon from "@material-ui/icons/TimerOff"
 
 import useStyles from "./styles"
 import EditAccessForm from "../../providers/EditAccessForm/EditAccessForm"
-import { Access, Order, Role } from "types"
+import { Access, Order, Role, UserRole } from "types"
 import { Alert } from "@material-ui/lab"
 import moment from "moment"
 import { getRoles } from "services/Console-Admin/rolesService"
 import { onDeleteOrTerminateAccess } from "services/Console-Admin/providersHistoryService"
-import { useAppSelector } from "state"
 
 type RightsTableProps = {
   displayName: boolean
@@ -51,6 +50,7 @@ type RightsTableProps = {
   getAccesses: () => void
   order: Order
   setOrder: (order: Order) => void
+  userRights: UserRole
 }
 
 const RightsTable: React.FC<RightsTableProps> = ({
@@ -63,6 +63,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
   getAccesses,
   order,
   setOrder,
+  userRights,
 }) => {
   const classes = useStyles()
   const history = useHistory()
@@ -75,9 +76,6 @@ const RightsTable: React.FC<RightsTableProps> = ({
   const [deleteAccessSuccess, setDeleteAccessSuccess] = useState(false)
   const [deleteAccessFail, setDeleteAccessFail] = useState(false)
   const [terminateAccess, setTerminateAccess] = useState(false)
-
-  const { me } = useAppSelector((state) => ({ me: state.me }))
-  const seeLogs = me?.seeLogs ?? false
 
   const rowsPerPage = 100
 
@@ -120,9 +118,6 @@ const RightsTable: React.FC<RightsTableProps> = ({
           label: "Actif",
           code: "is_valid",
         },
-        {
-          label: "Actions",
-        },
       ]
     : [
         {
@@ -145,10 +140,16 @@ const RightsTable: React.FC<RightsTableProps> = ({
           label: "Actif",
           code: "is_valid",
         },
-        {
-          label: "Actions",
-        },
       ]
+
+  const _columns =
+    userRights.right_manage_admin_accesses_same_level ||
+    userRights.right_manage_admin_accesses_inferior_levels ||
+    userRights.right_manage_data_accesses_same_level ||
+    userRights.right_manage_data_accesses_inferior_levels ||
+    userRights.right_read_logs
+      ? [...columns, { label: "Actions" }]
+      : [...columns]
 
   const handleDeleteAction = async () => {
     try {
@@ -193,7 +194,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
         <Table className={classes.table}>
           <TableHead>
             <TableRow className={classes.tableHead}>
-              {columns.map((column) => (
+              {_columns.map((column) => (
                 <TableCell
                   sortDirection={
                     order.orderBy === column.code ? order.orderDirection : false
@@ -311,84 +312,102 @@ const RightsTable: React.FC<RightsTableProps> = ({
                         )}
                       </Tooltip>
                     </TableCell>
-                    <TableCell align="center">
-                      <Grid
-                        container
-                        item
-                        alignContent="center"
-                        justify="space-between"
-                      >
-                        <Grid item xs={seeLogs ? 4 : 6}>
-                          {(access.actual_start_datetime ||
-                            access.actual_end_datetime) && (
-                            <Tooltip title="Éditer l'accès">
-                              <IconButton
-                                onClick={() => {
-                                  setSelectedAccess(access)
-                                }}
-                                style={{ padding: "4px 12px" }}
+                    {(userRights.right_manage_admin_accesses_same_level ||
+                      userRights.right_manage_admin_accesses_inferior_levels ||
+                      userRights.right_manage_data_accesses_same_level ||
+                      userRights.right_manage_data_accesses_inferior_levels ||
+                      userRights.right_read_logs) && (
+                      <TableCell align="center">
+                        <Grid
+                          container
+                          item
+                          alignContent="center"
+                          justify="space-between"
+                        >
+                          {(userRights.right_manage_admin_accesses_same_level ||
+                            userRights.right_manage_admin_accesses_inferior_levels ||
+                            userRights.right_manage_data_accesses_same_level ||
+                            userRights.right_manage_data_accesses_inferior_levels) && (
+                            <>
+                              <Grid
+                                item
+                                xs={userRights.right_read_logs ? 4 : 6}
                               >
-                                <EditIcon />
-                              </IconButton>
-                            </Tooltip>
+                                {(access.actual_start_datetime ||
+                                  access.actual_end_datetime) && (
+                                  <Tooltip title="Éditer l'accès">
+                                    <IconButton
+                                      onClick={() => {
+                                        setSelectedAccess(access)
+                                      }}
+                                      style={{ padding: "4px 12px" }}
+                                    >
+                                      <EditIcon />
+                                    </IconButton>
+                                  </Tooltip>
+                                )}
+                              </Grid>
+                              <Grid
+                                item
+                                xs={userRights.right_read_logs ? 4 : 6}
+                              >
+                                {access.actual_start_datetime &&
+                                  moment(
+                                    access.actual_start_datetime
+                                  ).isSameOrBefore(moment(), "day") &&
+                                  access.is_valid && (
+                                    <Tooltip title="Clôturer l'accès">
+                                      <IconButton
+                                        onClick={() => {
+                                          setDeleteAccess(access)
+                                          setTerminateAccess(true)
+                                        }}
+                                        style={{ padding: "4px 12px" }}
+                                      >
+                                        <TimerOffIcon />
+                                      </IconButton>
+                                    </Tooltip>
+                                  )}
+                                {access.actual_start_datetime &&
+                                  moment(access.actual_start_datetime).isAfter(
+                                    moment(),
+                                    "day"
+                                  ) && (
+                                    <Tooltip title="Supprimer l'accès">
+                                      <IconButton
+                                        onClick={() => {
+                                          setDeleteAccess(access)
+                                          setTerminateAccess(false)
+                                        }}
+                                        style={{ padding: "4px 12px" }}
+                                      >
+                                        <DeleteIcon />
+                                      </IconButton>
+                                    </Tooltip>
+                                  )}
+                              </Grid>
+                            </>
+                          )}
+                          {userRights.right_read_logs && (
+                            <Grid item xs={4}>
+                              <Tooltip title="Voir les logs de l'accès">
+                                <IconButton
+                                  onClick={() => {
+                                    history.push({
+                                      pathname: "/console-admin/logs",
+                                      search: `?access=${access.care_site_history_id}`,
+                                    })
+                                  }}
+                                  style={{ padding: "4px 12px" }}
+                                >
+                                  <AssignmentIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </Grid>
                           )}
                         </Grid>
-                        <Grid item xs={seeLogs ? 4 : 6}>
-                          {access.actual_start_datetime &&
-                            moment(access.actual_start_datetime).isSameOrBefore(
-                              moment(),
-                              "day"
-                            ) &&
-                            access.is_valid && (
-                              <Tooltip title="Clôturer l'accès">
-                                <IconButton
-                                  onClick={() => {
-                                    setDeleteAccess(access)
-                                    setTerminateAccess(true)
-                                  }}
-                                  style={{ padding: "4px 12px" }}
-                                >
-                                  <TimerOffIcon />
-                                </IconButton>
-                              </Tooltip>
-                            )}
-                          {access.actual_start_datetime &&
-                            moment(access.actual_start_datetime).isAfter(
-                              moment(),
-                              "day"
-                            ) && (
-                              <Tooltip title="Supprimer l'accès">
-                                <IconButton
-                                  onClick={() => {
-                                    setDeleteAccess(access)
-                                    setTerminateAccess(false)
-                                  }}
-                                  style={{ padding: "4px 12px" }}
-                                >
-                                  <DeleteIcon />
-                                </IconButton>
-                              </Tooltip>
-                            )}
-                        </Grid>
-                        {seeLogs && (
-                          <Grid item xs={4}>
-                            <Tooltip title="Voir les logs de l'accès">
-                              <IconButton
-                                onClick={() => {
-                                  history.push({
-                                    pathname: "/console-admin/logs",
-                                    search: `?access=${access.care_site_history_id}`,
-                                  })
-                                }}
-                                style={{ padding: "4px 12px" }}
-                              >
-                                <AssignmentIcon />
-                              </IconButton>
-                            </Tooltip>
-                          </Grid>
-                        )}
-                      </Grid>
-                    </TableCell>
+                      </TableCell>
+                    )}
                   </TableRow>
                 )
               })
