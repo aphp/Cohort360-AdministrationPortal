@@ -20,6 +20,8 @@ import { login as loginAction } from "state/me"
 import logo from "assets/images/logo1.png"
 import { ErrorDialogProps } from "types"
 import useStyles from "./styles"
+import NoRights from "components/Console-Admin/ErrorView/NoRights"
+import { getUserRights } from "utils/userRoles"
 
 const ErrorDialog: React.FC<ErrorDialogProps> = ({ open, setErrorLogin }) => {
   const _setErrorLogin = () => {
@@ -49,6 +51,7 @@ const Login = () => {
   const [username, setUsername] = useState<string>("")
   const [password, setPassword] = useState<string>("")
   const [errorLogin, setErrorLogin] = useState<boolean>(false)
+  const [noRights, setNoRights] = useState<boolean>(false)
 
   useEffect(() => {
     localStorage.removeItem("user")
@@ -77,21 +80,17 @@ const Login = () => {
 
       const { status, data = {} } = response
       if (status === 200) {
-        let seeLogs = false
-
-        if (data.accesses) {
-          for (const access of data.accesses) {
-            if (access.role.right_read_logs) {
-              seeLogs = true
-            }
-          }
-        }
-        dispatch(loginAction(buildPartialUser(data.provider, seeLogs)))
+        const _userRights = await getUserRights(undefined, data.accesses)
+        dispatch(loginAction(buildPartialUser(data.provider, _userRights)))
 
         localStorage.setItem(ACCESS_TOKEN, data.jwt.access)
         localStorage.setItem(REFRESH_TOKEN, data.jwt.refresh)
 
-        history.push("/users")
+        if (!_userRights.right_read_users) {
+          setNoRights(true)
+        } else {
+          history.push("/users")
+        }
       } else {
         setErrorLogin(true)
       }
@@ -105,6 +104,8 @@ const Login = () => {
     e.preventDefault()
     onLogin()
   }
+
+  if (noRights) return <NoRights />
 
   return (
     <>

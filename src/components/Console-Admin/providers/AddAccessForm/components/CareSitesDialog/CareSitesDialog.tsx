@@ -12,7 +12,7 @@ import {
 import useStyles from "./styles"
 import CareSiteTree from "components/Console-Admin/CareSite/CareSiteTree"
 import SearchBar from "components/SearchBar/SearchBar"
-import { ScopeTreeRow } from "types"
+import { ScopeTreeRow, UserRole } from "types"
 
 type CareSitesDialogProps = {
   careSite: ScopeTreeRow | null
@@ -20,6 +20,7 @@ type CareSitesDialogProps = {
   open: boolean
   onClose: () => void
   isManageable: boolean
+  userRights: UserRole
 }
 
 const CareSitesDialog: React.FC<CareSitesDialogProps> = ({
@@ -28,6 +29,7 @@ const CareSitesDialog: React.FC<CareSitesDialogProps> = ({
   open,
   onClose,
   isManageable,
+  userRights,
 }) => {
   const classes = useStyles()
   const [searchInput, setSearchInput] = useState("")
@@ -62,6 +64,7 @@ const CareSitesDialog: React.FC<CareSitesDialogProps> = ({
               defaultSelectedItems={careSite}
               onChangeSelectedItem={onChangeCareSite}
               searchInput={searchInput}
+              userRights={userRights}
             />
           </Paper>
         </Grid>

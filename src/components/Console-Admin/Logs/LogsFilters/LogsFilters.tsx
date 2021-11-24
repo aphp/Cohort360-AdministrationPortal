@@ -22,12 +22,13 @@ import EditIcon from "@material-ui/icons/Edit"
 import CareSitesDialog from "../../providers/AddAccessForm/components/CareSitesDialog/CareSitesDialog"
 
 import useStyles from "./styles"
-import { LogsFiltersObject, ScopeTreeRow } from "types"
+import { LogsFiltersObject, ScopeTreeRow, UserRole } from "types"
 
 type LogsFiltersProps = {
   filters: LogsFiltersObject
   onChangeFilters: (filters: LogsFiltersObject) => void
   onClose: () => void
+  userRights: UserRole
 }
 
 const httpMethods = ["DELETE", "GET", "PATCH", "PUT", "POST"]
@@ -37,6 +38,7 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
   filters,
   onChangeFilters,
   onClose,
+  userRights,
 }) => {
   const classes = useStyles()
 
@@ -246,6 +248,7 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
         open={openPerimeters}
         onClose={() => setOpenPerimeters(false)}
         isManageable={false}
+        userRights={userRights}
       />
     </Dialog>
   )
