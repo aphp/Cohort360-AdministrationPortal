@@ -20,7 +20,7 @@ import logo from "assets/images/logo1.png"
 import { ErrorDialogProps } from "types"
 import useStyles from "./styles"
 import NoRights from "components/Console-Admin/ErrorView/NoRights"
-import { userDefaultRoles } from "utils/userRoles"
+import { getUserRights } from "utils/userRoles"
 
 const ErrorDialog: React.FC<ErrorDialogProps> = ({ open, setErrorLogin }) => {
   const _setErrorLogin = () => {
@@ -67,33 +67,7 @@ const Login = () => {
 
       const { status, data = {} } = response
       if (status === 200) {
-        let _userRights = userDefaultRoles
-
-        if (data.accesses) {
-          for (const access of data.accesses) {
-            if (access.role.right_edit_roles) {
-              _userRights.right_edit_roles = true
-            }
-            if (access.role.right_read_logs) {
-              _userRights.right_read_logs = true
-            }
-            if (access.role.right_read_admin_accesses_same_level) {
-              _userRights.right_read_admin_accesses_same_level = true
-            }
-            if (access.role.right_read_admin_accesses_inferior_levels) {
-              _userRights.right_read_admin_accesses_inferior_levels = true
-            }
-            if (access.role.right_read_data_accesses_same_level) {
-              _userRights.right_read_data_accesses_same_level = true
-            }
-            if (access.role.right_read_data_accesses_inferior_levels) {
-              _userRights.right_read_data_accesses_inferior_levels = true
-            }
-            if (access.role.right_read_users) {
-              _userRights.right_read_users = true
-            }
-          }
-        }
+        const _userRights = await getUserRights(undefined, data.accesses)
         dispatch(loginAction(buildPartialUser(data.provider, _userRights)))
 
         localStorage.setItem(ACCESS_TOKEN, data.jwt.access)
