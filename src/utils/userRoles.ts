@@ -1,5 +1,5 @@
 import { getUserAccesses } from "services/Console-Admin/providersHistoryService"
-import { UserRole } from "types"
+import { Access, UserRole } from "types"
 
 export const userDefaultRoles: UserRole = {
   right_edit_roles: false,
@@ -21,13 +21,21 @@ export const userDefaultRoles: UserRole = {
   right_export_jupyter_patient_pseudo_anonymised: false,
 }
 
-export const getUserRights = async (providerSourceValue?: string) => {
+export const getUserRights = async (
+  providerSourceValue?: string,
+  data?: Access[]
+) => {
   try {
     let _userRights = userDefaultRoles
-    const getUserRightsResponse = await getUserAccesses(providerSourceValue)
+    let userRightsResponse = null
+    if (providerSourceValue) {
+      userRightsResponse = await getUserAccesses(providerSourceValue)
+    } else {
+      userRightsResponse = data
+    }
 
-    if (getUserRightsResponse) {
-      for (const access of getUserRightsResponse) {
+    if (userRightsResponse) {
+      for (const access of userRightsResponse) {
         if (access.role.right_edit_roles) {
           _userRights.right_edit_roles = true
         }
@@ -41,7 +49,7 @@ export const getUserRights = async (providerSourceValue?: string) => {
           _userRights.right_edit_users = true
         }
         if (access.role.right_read_users) {
-          _userRights.right_edit_users = true
+          _userRights.right_read_users = true
         }
         if (access.role.right_manage_admin_accesses_same_level) {
           _userRights.right_manage_admin_accesses_same_level = true
@@ -72,6 +80,12 @@ export const getUserRights = async (providerSourceValue?: string) => {
         }
         if (access.role.right_read_patient_pseudo_anonymised) {
           _userRights.right_read_patient_pseudo_anonymised = true
+        }
+        if (access.role.right_export_jupyter_patient_nominative) {
+          _userRights.right_export_jupyter_patient_nominative = true
+        }
+        if (access.role.right_export_jupyter_patient_pseudo_anonymised) {
+          _userRights.right_export_jupyter_patient_pseudo_anonymised = true
         }
       }
     }
