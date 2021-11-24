@@ -1,34 +1,19 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 import moment from "moment"
 
 import { CircularProgress, Grid, Paper, Typography } from "@material-ui/core"
 
-import { getLogs } from "services/Console-Admin/logsService"
 import { Log } from "types"
 
 import useStyles from "./styles"
 
-const LogsTable: React.FC = () => {
+type LogsTableProps = {
+  loading: boolean
+  logs?: Log[]
+}
+
+const LogsTable: React.FC<LogsTableProps> = ({ loading, logs }) => {
   const classes = useStyles()
-  const [loading, setLoading] = useState(false)
-  const [logs, setLogs] = useState<Log[] | null>(null)
-
-  useEffect(() => {
-    const _getLogs = async () => {
-      try {
-        setLoading(true)
-        const logsResp = await getLogs()
-
-        setLogs(logsResp)
-        setLoading(false)
-      } catch (error) {
-        console.error("Erreur lors de la récupération des logs", error)
-        setLoading(false)
-      }
-    }
-
-    _getLogs()
-  }, []) // eslint-disable-line
 
   const setSwaggerMethodColor = (method?: string) => {
     switch (method) {
@@ -66,14 +51,9 @@ const LogsTable: React.FC = () => {
               >
                 <div className={classes.divCentered}>
                   <Typography variant="h3" style={{ lineHeight: 2 }}>
-                    {log.user_details?.provider_name}
+                    ID :
                   </Typography>
-                  <Typography>&nbsp;- {log.user}</Typography>
-                </div>
-                <div className={classes.divCentered}>
-                  <Typography variant="h3" style={{ lineHeight: 2 }}>
-                    Date :
-                  </Typography>
+                  <Typography>&nbsp;{log.id} -</Typography>
                   <Typography>
                     &nbsp;
                     {log.requested_at
@@ -82,10 +62,57 @@ const LogsTable: React.FC = () => {
                   </Typography>
                 </div>
                 <div className={classes.divCentered}>
+                  <Typography
+                    variant="h3"
+                    style={{
+                      lineHeight: 2,
+                      backgroundColor: setSwaggerMethodColor(log.method),
+                    }}
+                    className={classes.swaggerMethod}
+                  >
+                    {log.method}
+                  </Typography>
+                  <Typography>
+                    &nbsp;- {log.view_method?.toLocaleUpperCase()} -
+                  </Typography>
+                  <Typography
+                    variant="h3"
+                    style={{
+                      lineHeight: 2,
+                      color:
+                        log.status_code && log.status_code < 300
+                          ? "#00A255"
+                          : "#ED6D91",
+                    }}
+                  >
+                    &nbsp;{log.status_code}
+                  </Typography>
+                </div>
+                <div className={classes.divCentered}>
+                  <Typography variant="h3" style={{ lineHeight: 2 }}>
+                    {log.user_details?.provider_name}
+                  </Typography>
+                  <Typography>&nbsp;- {log.user}</Typography>
+                </div>
+                <div className={classes.divCentered}>
                   <Typography variant="h3" style={{ lineHeight: 2 }}>
                     URL :
                   </Typography>
                   <Typography>&nbsp;{log.path}</Typography>
+                </div>
+              </Grid>
+              <Grid
+                container
+                item
+                xs={6}
+                direction="column"
+                alignItems="flex-end"
+              >
+                <div className={classes.divCentered}>
+                  <Typography variant="h3" style={{ lineHeight: 2 }}>
+                    Temps de réponse :
+                  </Typography>
+                  <Typography>&nbsp;{log.response_ms}ms</Typography>
                 </div>
                 <div className={classes.divCentered}>
                   <Typography variant="h3" style={{ lineHeight: 2 }}>
@@ -104,55 +131,6 @@ const LogsTable: React.FC = () => {
                     Hôte :
                   </Typography>
                   <Typography>&nbsp;{log.host}</Typography>
-                </div>
-              </Grid>
-              <Grid
-                container
-                item
-                xs={6}
-                direction="column"
-                alignItems="flex-end"
-              >
-                <div className={classes.divCentered}>
-                  <Typography variant="h3" style={{ lineHeight: 2 }}>
-                    ID :
-                  </Typography>
-                  <Typography>&nbsp;{log.id}</Typography>
-                </div>
-                <div className={classes.divCentered}>
-                  <Typography
-                    variant="h3"
-                    style={{
-                      lineHeight: 2,
-                      backgroundColor: setSwaggerMethodColor(log.method),
-                    }}
-                    className={classes.swaggerMethod}
-                  >
-                    {log.method}
-                  </Typography>
-                  <Typography>
-                    &nbsp;- {log.view_method?.toLocaleUpperCase()}
-                  </Typography>
-                </div>
-                <div className={classes.divCentered}>
-                  <Typography
-                    variant="h3"
-                    style={{
-                      lineHeight: 2,
-                      color:
-                        log.status_code && log.status_code < 300
-                          ? "#00A255"
-                          : "#ED6D91",
-                    }}
-                  >
-                    {log.status_code}
-                  </Typography>
-                </div>
-                <div className={classes.divCentered}>
-                  <Typography variant="h3" style={{ lineHeight: 2 }}>
-                    Temps de réponse :
-                  </Typography>
-                  <Typography>&nbsp;{log.response_ms}ms</Typography>
                 </div>
               </Grid>
               <Grid

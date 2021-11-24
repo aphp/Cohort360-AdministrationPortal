@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
-// import { useDispatch } from "react-redux"
 
 import {
   Button,
@@ -22,6 +21,7 @@ import {
 import Alert from "@material-ui/lab/Alert"
 import Pagination from "@material-ui/lab/Pagination"
 
+import AssignmentIcon from "@material-ui/icons/Assignment"
 import EditIcon from "@material-ui/icons/Edit"
 import PersonAddIcon from "@material-ui/icons/PersonAdd"
 import VisibilityIcon from "@material-ui/icons/Visibility"
@@ -31,34 +31,62 @@ import SearchBar from "../../../SearchBar/SearchBar"
 
 import { getProviders } from "services/Console-Admin/providersService"
 import useStyles from "./styles"
-import { Provider } from "types"
+import { Provider, UserRole } from "types"
 
-const ProvidersTable = () => {
+type ProvidersTableProps = {
+  userRights: UserRole
+}
+
+const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
   const classes = useStyles()
-  // const dispatch = useDispatch()
   const history = useHistory()
 
-  const columns = [
-    {
-      label: "Identifiant APH",
-      code: "provider_source_value",
-    },
-    {
-      label: "Nom",
-      code: "lastname",
-    },
-    {
-      label: "Prénom",
-      code: "firstname",
-    },
-    {
-      label: "Email",
-      code: "email",
-    },
-    {
-      label: "Actions",
-    },
-  ]
+  const columns =
+    !userRights.right_read_admin_accesses_same_level &&
+    !userRights.right_read_admin_accesses_inferior_levels &&
+    !userRights.right_read_data_accesses_same_level &&
+    !userRights.right_read_data_accesses_inferior_levels &&
+    !userRights.right_edit_users &&
+    !userRights.right_read_logs
+      ? [
+          {
+            label: "Identifiant APH",
+            code: "provider_source_value",
+          },
+          {
+            label: "Nom",
+            code: "lastname",
+          },
+          {
+            label: "Prénom",
+            code: "firstname",
+          },
+          {
+            label: "Email",
+            code: "email",
+          },
+        ]
+      : [
+          {
+            label: "Identifiant APH",
+            code: "provider_source_value",
+          },
+          {
+            label: "Nom",
+            code: "lastname",
+          },
+          {
+            label: "Prénom",
+            code: "firstname",
+          },
+          {
+            label: "Email",
+            code: "email",
+          },
+          {
+            label: "Actions",
+          },
+        ]
 
   const [providers, setProviders] = useState<Provider[] | null>(null)
   const [page, setPage] = useState(1)
@@ -101,7 +129,7 @@ const ProvidersTable = () => {
         const urlOrderingDirection = orderDirection === "desc" ? "-" : ""
 
         history.push({
-          pathname: "/users",
+          pathname: "/console-admin/users",
           search: `?page=${_page}&ordering=${urlOrderingDirection}${orderBy}${urlSearch}`,
         })
       }
@@ -144,16 +172,23 @@ const ProvidersTable = () => {
 
   return (
     <Grid container justify="flex-end">
-      <Grid container item justify="space-between" style={{ margin: "12px 0" }}>
-        <Button
-          variant="contained"
-          disableElevation
-          startIcon={<PersonAddIcon height="15px" fill="#FFF" />}
-          className={classes.searchButton}
-          onClick={() => setSelectedProvider({})}
-        >
-          Nouvel utilisateur
-        </Button>
+      <Grid
+        container
+        item
+        justify={userRights.right_add_users ? "space-between" : "flex-end"}
+        style={{ margin: "12px 0" }}
+      >
+        {userRights.right_add_users && (
+          <Button
+            variant="contained"
+            disableElevation
+            startIcon={<PersonAddIcon height="15px" fill="#FFF" />}
+            className={classes.searchButton}
+            onClick={() => setSelectedProvider({})}
+          >
+            Nouvel utilisateur
+          </Button>
+        )}
         <Grid container item xs={6} justify="flex-end" alignItems="center">
           <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
         </Grid>
@@ -212,9 +247,16 @@ const ProvidersTable = () => {
                       key={provider.provider_id}
                       className={classes.tableBodyRows}
                       hover
-                      onClick={() =>
-                        history.push(`/user-profile/${provider.provider_id}`)
-                      }
+                      onClick={() => {
+                        if (
+                          userRights.right_read_admin_accesses_same_level &&
+                          userRights.right_read_admin_accesses_inferior_levels &&
+                          userRights.right_read_data_accesses_same_level &&
+                          userRights.right_read_data_accesses_inferior_levels
+                        ) {
+                          history.push(`/console-admin/user-profile/${provider.provider_id}`)
+                        }
+                      }}
                     >
                       <TableCell align="center">
                         {provider.provider_source_value}
@@ -225,34 +267,59 @@ const ProvidersTable = () => {
                         {provider.email ?? "-"}
                       </TableCell>
                       <TableCell align="center">
-                        <Tooltip
-                          title="Visualiser les accès de l'utilisateur"
-                          style={{ padding: "0 12px" }}
-                        >
-                          <IconButton
-                            onClick={(event) => {
-                              event.stopPropagation()
-                              history.push(
-                                `/user-profile/${provider.provider_id}`
-                              )
-                            }}
+                        {userRights.right_read_admin_accesses_same_level &&
+                          userRights.right_read_admin_accesses_inferior_levels &&
+                          userRights.right_read_data_accesses_same_level &&
+                          userRights.right_read_data_accesses_inferior_levels && (
+                            <Tooltip
+                              title="Visualiser les accès de l'utilisateur"
+                              style={{ padding: "0 12px" }}
+                            >
+                              <IconButton
+                                onClick={(event) => {
+                                  event.stopPropagation()
+                                  history.push(
+                                    `/console-admin/user-profile/${provider.provider_id}`
+                                  )
+                                }}
+                              >
+                                <VisibilityIcon />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+                        {userRights.right_edit_users && (
+                          <Tooltip
+                            title="Éditer l'utilisateur"
+                            style={{ padding: "0 12px" }}
                           >
-                            <VisibilityIcon />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip
-                          title="Éditer l'utilisateur"
-                          style={{ padding: "0 12px" }}
-                        >
-                          <IconButton
-                            onClick={(event) => {
-                              event.stopPropagation()
-                              setSelectedProvider(provider)
-                            }}
+                            <IconButton
+                              onClick={(event) => {
+                                event.stopPropagation()
+                                setSelectedProvider(provider)
+                              }}
+                            >
+                              <EditIcon />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                        {userRights.right_read_logs && (
+                          <Tooltip
+                            title="Voir les logs de l'utilisateur"
+                            style={{ padding: "0 12px" }}
                           >
-                            <EditIcon />
-                          </IconButton>
-                        </Tooltip>
+                            <IconButton
+                              onClick={(event) => {
+                                event.stopPropagation()
+                                history.push({
+                                  pathname: "/console-admin/logs",
+                                  search: `?user=${provider.provider_source_value}`,
+                                })
+                              }}
+                            >
+                              <AssignmentIcon />
+                            </IconButton>
+                          </Tooltip>
+                        )}
                       </TableCell>
                     </TableRow>
                   )

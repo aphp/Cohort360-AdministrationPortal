@@ -11,7 +11,11 @@ import {
 } from "services/Console-Admin/careSiteService"
 import RightsTable from "components/Console-Admin/Rights/RightsTable/RightsTable"
 import SearchBar from "components/SearchBar/SearchBar"
-import { Access } from "types"
+import { Access, Order } from "types"
+import { getUserRights, userDefaultRoles } from "utils/userRoles"
+import { useAppSelector } from "state"
+
+const orderDefault = { orderBy: "is_valid", orderDirection: "asc" } as Order
 
 const CareSiteHistory: React.FC = () => {
   const classes = useStyles()
@@ -22,10 +26,13 @@ const CareSiteHistory: React.FC = () => {
   const [careSiteAccesses, setCareSiteAccesses] = useState<
     Access[] | undefined
   >()
+  const [userRights, setUserRights] = useState(userDefaultRoles)
   const [searchInput, setSearchInput] = useState("")
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
+  const [order, setOrder] = useState(orderDefault)
 
+  const { me } = useAppSelector((state) => ({ me: state.me }))
   const { careSiteId } = useParams<{ careSiteId: string }>()
 
   const _getCareSiteAccesses = async () => {
@@ -37,6 +44,7 @@ const CareSiteHistory: React.FC = () => {
 
       const careSiteAccessesResp = await getCareSiteAccesses(
         careSiteId,
+        order,
         page,
         searchInput
       )
@@ -57,8 +65,25 @@ const CareSiteHistory: React.FC = () => {
   }, [searchInput])
 
   useEffect(() => {
+    const _getUserRights = async () => {
+      try {
+        setLoadingPage(true)
+        const getUserRightsResponse = await getUserRights(
+          me?.providerSourceValue
+        )
+
+        setUserRights(getUserRightsResponse)
+      } catch (error) {
+        console.error(
+          "Erreur lors de la récupération des habilitations de l'utilisateur",
+          error
+        )
+      }
+    }
+
+    _getUserRights()
     _getCareSiteAccesses()
-  }, [careSiteId]) // eslint-disable-line
+  }, [careSiteId, order]) // eslint-disable-line
 
   useEffect(() => {
     const fetchCareSiteAccesses = async () => {
@@ -67,6 +92,7 @@ const CareSiteHistory: React.FC = () => {
 
         const careSiteAccessesResp = await getCareSiteAccesses(
           careSiteId,
+          order,
           page,
           searchInput
         )
@@ -122,6 +148,9 @@ const CareSiteHistory: React.FC = () => {
                   total={total}
                   accesses={careSiteAccesses}
                   getAccesses={_getCareSiteAccesses}
+                  order={order}
+                  setOrder={setOrder}
+                  userRights={userRights}
                 />
               </>
             ) : (

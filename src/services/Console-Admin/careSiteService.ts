@@ -1,5 +1,5 @@
 import api from "../api"
-import { CareSite, ScopeTreeRow } from "types"
+import { CareSite, Order, ScopeTreeRow } from "types"
 
 const loadingItem: ScopeTreeRow = {
   care_site_id: "loading",
@@ -75,7 +75,8 @@ const parseChildren = (children?: CareSite[]) => {
 }
 
 export const getCareSitesChildren = async (
-  careSite: ScopeTreeRow | null
+  careSite: ScopeTreeRow | null,
+  getSubItem?: boolean
 ): Promise<ScopeTreeRow[]> => {
   if (!careSite) return []
   const children = await api.get(
@@ -83,22 +84,24 @@ export const getCareSitesChildren = async (
   )
   if (!children) return []
 
-  const childrenData: CareSite[] =
+  const childrenData: any[] =
     children && children.data && children.status === 200
       ? children.data.results
       : []
 
-  let _childrenData = childrenData
-    ? childrenData?.map<ScopeTreeRow>((childrenData) => {
-        return {
-          ...childrenData,
-          name:
-            `${childrenData.care_site_source_value} - ${childrenData.care_site_name}` ??
-            "",
-          children: [loadingItem],
-        }
-      })
-    : []
+  let _childrenData: ScopeTreeRow[] = []
+
+  for (const child of childrenData) {
+    const scopeRow: ScopeTreeRow = child as ScopeTreeRow
+
+    scopeRow.name =
+      `${child.care_site_source_value} - ${child.care_site_name}` ?? ""
+    scopeRow.children =
+      getSubItem === true
+        ? await getCareSitesChildren(child as ScopeTreeRow)
+        : [loadingItem]
+    _childrenData = [..._childrenData, scopeRow]
+  }
 
   _childrenData = _childrenData.filter(
     (child) => child.care_site_id !== careSite.care_site_id
@@ -128,12 +131,22 @@ export const getManageableCareSites = async (): Promise<ScopeTreeRow[]> => {
 
 export const getCareSiteAccesses = async (
   careSiteId: string,
+  order: Order,
   page?: number,
   searchInput?: string
 ) => {
+  const _orderDirection =
+    order.orderBy === "is_valid"
+      ? order.orderDirection === "asc"
+        ? "desc"
+        : "asc"
+      : order.orderDirection
+
   const searchFilter = searchInput ? `&search=${searchInput}` : ""
   const careSiteAccessesResp = await api.get(
-    `/accesses/?care_site_id=${careSiteId}&page=${page}${searchFilter}`
+    `/accesses/?care_site_id=${careSiteId}&page=${page}&ordering=${
+      _orderDirection === "desc" ? "-" : ""
+    }${order.orderBy}${searchFilter}`
   )
 
   if (careSiteAccessesResp.status !== 200) return undefined

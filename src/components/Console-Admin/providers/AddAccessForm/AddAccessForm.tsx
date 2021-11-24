@@ -25,7 +25,7 @@ import useStyles from "./styles"
 import { getAssignableRoles } from "services/Console-Admin/rolesService"
 import { submitCreateAccess } from "services/Console-Admin/providersHistoryService"
 import CareSitesDialog from "./components/CareSitesDialog/CareSitesDialog"
-import { ScopeTreeRow } from "types"
+import { ScopeTreeRow, UserRole } from "types"
 
 type AddAccessFormProps = {
   open: boolean
@@ -33,6 +33,7 @@ type AddAccessFormProps = {
   entityId: number
   onSuccess: (success: boolean) => void
   onFail: (fail: boolean) => void
+  userRights: UserRole
 }
 
 const AddAccessForm: React.FC<AddAccessFormProps> = ({
@@ -41,6 +42,7 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
   entityId,
   onSuccess,
   onFail,
+  userRights,
 }) => {
   const classes = useStyles()
 
@@ -301,6 +303,8 @@ const AddAccessForm: React.FC<AddAccessFormProps> = ({
         onChangeCareSite={setCareSite}
         open={openPerimeters}
         onClose={() => setOpenPerimeters(false)}
+        isManageable={true}
+        userRights={userRights}
       />
     </Dialog>
   )

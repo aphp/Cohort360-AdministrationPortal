@@ -2,10 +2,11 @@ import React from 'react'
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 
 import AutoLogoutContainer from '../AutoLogoutContainer'
-import TopBar from '../../Console-Admin/TopBar/TopBar'
+// import TopBar from '../../Console-Admin/TopBar/TopBar'
 import { useAppSelector } from 'state/index'
 import PrivateRoute from '../PrivateRoute'
 import Config from './config'
+import PortailTopBar from 'components/PortailTopBar/PortailTopBar'
 
 
 
@@ -16,7 +17,8 @@ const Layout = (props) => {
     <>
       {me && <AutoLogoutContainer />}
 
-      {props.displayTopBar && <TopBar />}
+      {/* {props.displayTopBar && <TopBar />} */}
+      {props.displayPortailTopBar && <PortailTopBar />}
 
       {props.children}
     </>

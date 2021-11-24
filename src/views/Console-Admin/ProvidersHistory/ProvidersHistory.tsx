@@ -8,17 +8,39 @@ import Rights from "components/Console-Admin/Rights/Rights"
 import useStyles from "./styles"
 import { Profile, Provider } from "types"
 import { getProvider } from "services/Console-Admin/providersService"
+import { useAppSelector } from "state"
+import { getUserRights, userDefaultRoles } from "utils/userRoles"
 
 const ProviderHistory: React.FC = () => {
   const classes = useStyles()
 
   const [loading, setLoading] = useState(false)
   const [provider, setProvider] = useState<Provider | undefined>()
+  const [userRights, setUserRights] = useState(userDefaultRoles)
   const [rights, setRights] = useState<Profile[] | undefined>()
+  const { me } = useAppSelector((state) => ({ me: state.me }))
 
   const { providerId } = useParams<{ providerId: string }>()
 
   useEffect(() => {
+    const _getUserRights = async () => {
+      try {
+        setLoading(true)
+
+        const getUserRightsResponse = await getUserRights(
+          me?.providerSourceValue
+        )
+
+        setUserRights(getUserRightsResponse)
+      } catch (error) {
+        console.error(
+          "Erreur lors de la récupération des habilitations de l'utilisateur",
+          error
+        )
+        setLoading(false)
+      }
+    }
+
     const getProviderHistory = async () => {
       try {
         setLoading(true)
@@ -42,8 +64,9 @@ const ProviderHistory: React.FC = () => {
       }
     }
 
+    _getUserRights()
     getProviderHistory()
-  }, [providerId])
+  }, [providerId]) // eslint-disable-line
 
   return (
     <Grid container direction="column">
@@ -61,7 +84,7 @@ const ProviderHistory: React.FC = () => {
                 rights.length > 0 ? (
                   <>
                     {rights.map((userRight: Profile) => (
-                      <Rights right={userRight} />
+                      <Rights right={userRight} userRights={userRights} />
                     ))}
                   </>
                 ) : (

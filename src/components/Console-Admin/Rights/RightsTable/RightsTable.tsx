@@ -17,11 +17,13 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TableSortLabel,
   Tooltip,
   Typography,
 } from "@material-ui/core"
 import Pagination from "@material-ui/lab/Pagination"
 
+import AssignmentIcon from "@material-ui/icons/Assignment"
 import CancelIcon from "@material-ui/icons/Cancel"
 import CheckCircleIcon from "@material-ui/icons/CheckCircle"
 import DeleteIcon from "@material-ui/icons/Delete"
@@ -32,7 +34,7 @@ import TimerOffIcon from "@material-ui/icons/TimerOff"
 
 import useStyles from "./styles"
 import EditAccessForm from "../../providers/EditAccessForm/EditAccessForm"
-import { Access, Role } from "types"
+import { Access, Order, Role, UserRole } from "types"
 import { Alert } from "@material-ui/lab"
 import moment from "moment"
 import { getRoles } from "services/Console-Admin/rolesService"
@@ -46,6 +48,9 @@ type RightsTableProps = {
   total: number
   accesses: Access[] | undefined
   getAccesses: () => void
+  order: Order
+  setOrder: (order: Order) => void
+  userRights: UserRole
 }
 
 const RightsTable: React.FC<RightsTableProps> = ({
@@ -56,6 +61,9 @@ const RightsTable: React.FC<RightsTableProps> = ({
   total,
   accesses,
   getAccesses,
+  order,
+  setOrder,
+  userRights,
 }) => {
   const classes = useStyles()
   const history = useHistory()
@@ -91,21 +99,57 @@ const RightsTable: React.FC<RightsTableProps> = ({
 
   const columns = displayName
     ? [
-        "Nom",
-        "Habilitation",
-        "Date de début",
-        "Date de fin",
-        "Actif",
-        "Actions",
+        {
+          label: "Nom",
+        },
+        {
+          label: "Habilitation",
+          code: "role_name",
+        },
+        {
+          label: "Date de début",
+          code: "start_datetime",
+        },
+        {
+          label: "Date de fin",
+          code: "end_datetime",
+        },
+        {
+          label: "Actif",
+          code: "is_valid",
+        },
       ]
     : [
-        "Périmètre",
-        "Habilitation",
-        "Date de début",
-        "Date de fin",
-        "Actif",
-        "Actions",
+        {
+          label: "Périmètre",
+          code: "care_site_name",
+        },
+        {
+          label: "Habilitation",
+          code: "role_name",
+        },
+        {
+          label: "Date de début",
+          code: "start_datetime",
+        },
+        {
+          label: "Date de fin",
+          code: "end_datetime",
+        },
+        {
+          label: "Actif",
+          code: "is_valid",
+        },
       ]
+
+  const _columns =
+    userRights.right_manage_admin_accesses_same_level ||
+    userRights.right_manage_admin_accesses_inferior_levels ||
+    userRights.right_manage_data_accesses_same_level ||
+    userRights.right_manage_data_accesses_inferior_levels ||
+    userRights.right_read_logs
+      ? [...columns, { label: "Actions" }]
+      : [...columns]
 
   const handleDeleteAction = async () => {
     try {
@@ -132,26 +176,53 @@ const RightsTable: React.FC<RightsTableProps> = ({
     }
   }
 
+  const createSortHandler =
+    (property: any) => (event: React.MouseEvent<unknown>) => {
+      const isAsc: boolean =
+        order.orderBy === property && order.orderDirection === "asc"
+      const _orderDirection = isAsc ? "desc" : "asc"
+
+      setOrder({
+        orderBy: property,
+        orderDirection: _orderDirection,
+      })
+    }
+
   return (
     <Grid container justify="flex-end">
       <TableContainer component={Paper}>
         <Table className={classes.table}>
           <TableHead>
             <TableRow className={classes.tableHead}>
-              {columns.map((column) => (
+              {_columns.map((column) => (
                 <TableCell
+                  sortDirection={
+                    order.orderBy === column.code ? order.orderDirection : false
+                  }
                   align={
                     displayName
-                      ? column === "Nom"
+                      ? column.label === "Nom" || column.label === "Périmètre"
                         ? "left"
                         : "center"
-                      : column === "Périmètre"
-                      ? "left"
                       : "center"
                   }
                   className={classes.tableHeadCell}
                 >
-                  {column}
+                  {column.label !== "Actions" && column.label !== "Nom" ? (
+                    <TableSortLabel
+                      active={order.orderBy === column.code}
+                      direction={
+                        order.orderBy === column.code
+                          ? order.orderDirection
+                          : "asc"
+                      }
+                      onClick={createSortHandler(column.code)}
+                    >
+                      {column.label}
+                    </TableSortLabel>
+                  ) : (
+                    column.label
+                  )}
                 </TableCell>
               ))}
             </TableRow>
@@ -202,7 +273,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
                                 (role: Role) => role.role_id === access.role_id
                               )
                               ?.help_text.map((text) => (
-                                <Typography>{text}</Typography>
+                                <Typography>- {text}</Typography>
                               ))}
                           >
                             <InfoIcon
@@ -241,61 +312,102 @@ const RightsTable: React.FC<RightsTableProps> = ({
                         )}
                       </Tooltip>
                     </TableCell>
-                    <TableCell align="center">
-                      <Grid
-                        container
-                        item
-                        alignContent="center"
-                        justify="space-between"
-                      >
-                        <Grid item xs={6}>
-                          {(access.actual_start_datetime ||
-                            access.actual_end_datetime) && (
-                            <Tooltip title="Éditer l'accès">
-                              <IconButton
-                                onClick={() => {
-                                  setSelectedAccess(access)
-                                }}
-                                style={{ padding: "4px 12px" }}
+                    {(userRights.right_manage_admin_accesses_same_level ||
+                      userRights.right_manage_admin_accesses_inferior_levels ||
+                      userRights.right_manage_data_accesses_same_level ||
+                      userRights.right_manage_data_accesses_inferior_levels ||
+                      userRights.right_read_logs) && (
+                      <TableCell align="center">
+                        <Grid
+                          container
+                          item
+                          alignContent="center"
+                          justify="space-between"
+                        >
+                          {(userRights.right_manage_admin_accesses_same_level ||
+                            userRights.right_manage_admin_accesses_inferior_levels ||
+                            userRights.right_manage_data_accesses_same_level ||
+                            userRights.right_manage_data_accesses_inferior_levels) && (
+                            <>
+                              <Grid
+                                item
+                                xs={userRights.right_read_logs ? 4 : 6}
                               >
-                                <EditIcon />
-                              </IconButton>
-                            </Tooltip>
+                                {(access.actual_start_datetime ||
+                                  access.actual_end_datetime) && (
+                                  <Tooltip title="Éditer l'accès">
+                                    <IconButton
+                                      onClick={() => {
+                                        setSelectedAccess(access)
+                                      }}
+                                      style={{ padding: "4px 12px" }}
+                                    >
+                                      <EditIcon />
+                                    </IconButton>
+                                  </Tooltip>
+                                )}
+                              </Grid>
+                              <Grid
+                                item
+                                xs={userRights.right_read_logs ? 4 : 6}
+                              >
+                                {access.actual_start_datetime &&
+                                  moment(
+                                    access.actual_start_datetime
+                                  ).isSameOrBefore(moment(), "day") &&
+                                  access.is_valid && (
+                                    <Tooltip title="Clôturer l'accès">
+                                      <IconButton
+                                        onClick={() => {
+                                          setDeleteAccess(access)
+                                          setTerminateAccess(true)
+                                        }}
+                                        style={{ padding: "4px 12px" }}
+                                      >
+                                        <TimerOffIcon />
+                                      </IconButton>
+                                    </Tooltip>
+                                  )}
+                                {access.actual_start_datetime &&
+                                  moment(access.actual_start_datetime).isAfter(
+                                    moment(),
+                                    "day"
+                                  ) && (
+                                    <Tooltip title="Supprimer l'accès">
+                                      <IconButton
+                                        onClick={() => {
+                                          setDeleteAccess(access)
+                                          setTerminateAccess(false)
+                                        }}
+                                        style={{ padding: "4px 12px" }}
+                                      >
+                                        <DeleteIcon />
+                                      </IconButton>
+                                    </Tooltip>
+                                  )}
+                              </Grid>
+                            </>
+                          )}
+                          {userRights.right_read_logs && (
+                            <Grid item xs={4}>
+                              <Tooltip title="Voir les logs de l'accès">
+                                <IconButton
+                                  onClick={() => {
+                                    history.push({
+                                      pathname: "/console-admin/logs",
+                                      search: `?access=${access.care_site_history_id}`,
+                                    })
+                                  }}
+                                  style={{ padding: "4px 12px" }}
+                                >
+                                  <AssignmentIcon />
+                                </IconButton>
+                              </Tooltip>
+                            </Grid>
                           )}
                         </Grid>
-                        <Grid item xs={6}>
-                          {access.actual_start_datetime &&
-                            moment(access.actual_start_datetime).isBefore() &&
-                            access.is_valid && (
-                              <Tooltip title="Clôturer l'accès">
-                                <IconButton
-                                  onClick={() => {
-                                    setDeleteAccess(access)
-                                    setTerminateAccess(true)
-                                  }}
-                                  style={{ padding: "4px 12px" }}
-                                >
-                                  <TimerOffIcon />
-                                </IconButton>
-                              </Tooltip>
-                            )}
-                          {access.actual_start_datetime &&
-                            moment(access.actual_start_datetime).isAfter() && (
-                              <Tooltip title="Supprimer l'accès">
-                                <IconButton
-                                  onClick={() => {
-                                    setDeleteAccess(access)
-                                    setTerminateAccess(false)
-                                  }}
-                                  style={{ padding: "4px 12px" }}
-                                >
-                                  <DeleteIcon />
-                                </IconButton>
-                              </Tooltip>
-                            )}
-                        </Grid>
-                      </Grid>
-                    </TableCell>
+                      </TableCell>
+                    )}
                   </TableRow>
                 )
               })
@@ -319,13 +431,15 @@ const RightsTable: React.FC<RightsTableProps> = ({
         page={page}
       />
 
-      <EditAccessForm
-        open={selectedAccess ? true : false}
-        onClose={() => setSelectedAccess(null)}
-        access={selectedAccess}
-        onSuccess={setEditAccessSuccess}
-        onFail={setEditAccessFail}
-      />
+      {selectedAccess && (
+        <EditAccessForm
+          open
+          onClose={() => setSelectedAccess(null)}
+          access={selectedAccess}
+          onSuccess={setEditAccessSuccess}
+          onFail={setEditAccessFail}
+        />
+      )}
 
       <Dialog
         open={deleteAccess ? true : false}

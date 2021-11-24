@@ -8,14 +8,17 @@ import useStyles from "./styles"
 import AddAccessForm from "../providers/AddAccessForm/AddAccessForm"
 import RightsTable from "./RightsTable/RightsTable"
 import { getAccesses } from "services/Console-Admin/providersHistoryService"
-import { Access, Profile } from "types"
+import { Access, Order, Profile, UserRole } from "types"
 import { Alert } from "@material-ui/lab"
 
 type RightsProps = {
   right: Profile
+  userRights: UserRole
 }
 
-const Rights: React.FC<RightsProps> = ({ right }) => {
+const orderDefault = { orderBy: "is_valid", orderDirection: "asc" } as Order
+
+const Rights: React.FC<RightsProps> = ({ right, userRights }) => {
   const classes = useStyles()
 
   const [open, setOpen] = useState(false)
@@ -25,12 +28,17 @@ const Rights: React.FC<RightsProps> = ({ right }) => {
   const [loading, setLoading] = useState(false)
   const [addAccessSuccess, setAddAccessSuccess] = useState(false)
   const [addAccessFail, setAddAccessFail] = useState(false)
+  const [order, setOrder] = useState(orderDefault)
 
   const _getAccesses = async () => {
     try {
       setLoading(true)
 
-      const rightsResp = await getAccesses(right.provider_history_id, page)
+      const rightsResp = await getAccesses(
+        right.provider_history_id,
+        page,
+        order
+      )
 
       setAccesses(rightsResp?.accesses)
       setTotal(rightsResp?.total)
@@ -43,7 +51,7 @@ const Rights: React.FC<RightsProps> = ({ right }) => {
 
   useEffect(() => {
     _getAccesses()
-  }, [accesses?.length, page]) // eslint-disable-line
+  }, [accesses?.length, order, page]) // eslint-disable-line
 
   useEffect(() => {
     if (addAccessSuccess) _getAccesses()
@@ -60,17 +68,21 @@ const Rights: React.FC<RightsProps> = ({ right }) => {
         <Typography align="left" variant="h2" className={classes.title}>
           Type de droit : {right.cdm_source}
         </Typography>
-        {right.cdm_source === "MANUAL" && (
-          <Button
-            variant="contained"
-            disableElevation
-            startIcon={<AddIcon height="15px" fill="#FFF" />}
-            className={classes.searchButton}
-            onClick={() => setOpen(true)}
-          >
-            Nouvel accès
-          </Button>
-        )}
+        {right.cdm_source === "MANUAL" &&
+          (userRights.right_manage_admin_accesses_same_level ||
+            userRights.right_manage_admin_accesses_inferior_levels ||
+            userRights.right_manage_data_accesses_same_level ||
+            userRights.right_manage_data_accesses_inferior_levels) && (
+            <Button
+              variant="contained"
+              disableElevation
+              startIcon={<AddIcon height="15px" fill="#FFF" />}
+              className={classes.searchButton}
+              onClick={() => setOpen(true)}
+            >
+              Nouvel accès
+            </Button>
+          )}
       </Grid>
 
       <RightsTable
@@ -81,6 +93,9 @@ const Rights: React.FC<RightsProps> = ({ right }) => {
         total={total}
         accesses={accesses}
         getAccesses={_getAccesses}
+        order={order}
+        setOrder={setOrder}
+        userRights={userRights}
       />
 
       <AddAccessForm
@@ -89,6 +104,7 @@ const Rights: React.FC<RightsProps> = ({ right }) => {
         entityId={right.provider_history_id}
         onSuccess={setAddAccessSuccess}
         onFail={setAddAccessFail}
+        userRights={userRights}
       />
       {addAccessSuccess && (
         <Snackbar

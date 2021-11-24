@@ -10,6 +10,7 @@ export type MeState = null | {
   providerSourceValue: string
   yearOfBirth: number | null
   displayName: string | null
+  userRights: UserRole
   // [key: string]: number | string | boolean | Date | null
 }
 
@@ -39,6 +40,7 @@ export type BackendUserReceived = {
   is_main_admin: boolean
   dea: string | null
   npi: string | null
+  accesses: Access[]
 }
 
 // --CONSOLE-ADMIN--
@@ -105,14 +107,9 @@ export type Profile = {
 
 // Roles
 
-export type Role = {
-  role_id?: number
-  insert_datetime?: string | null
-  update_datetime?: string | null
-  delete_datetime?: string | null
-  help_text?: string[]
-  name?: string
+export type UserRole = {
   right_edit_roles: boolean | null
+  right_read_logs: boolean | null
   right_add_users: boolean | null
   right_edit_users: boolean | null
   right_read_users: boolean | null
@@ -128,6 +125,15 @@ export type Role = {
   right_read_patient_pseudo_anonymised: boolean | null
   right_export_jupyter_patient_nominative: boolean | null
   right_export_jupyter_patient_pseudo_anonymised: boolean | null
+}
+
+export type Role = UserRole & {
+  role_id?: number
+  insert_datetime?: string | null
+  update_datetime?: string | null
+  delete_datetime?: string | null
+  help_text?: string[]
+  name?: string
   invalid_reason?: string | null
 }
 
@@ -221,4 +227,22 @@ export type Log = {
   username_persistent?: string
   view?: string
   view_method?: string
+}
+
+export type LogsFiltersObject = {
+  user: null | string
+  afterDate: null | string
+  beforeDate: null | string
+  statusCode: string[]
+  httpMethod: string[]
+  access: null | string
+  careSite: {
+    careSiteId: null | string | number
+    careSiteName: null | string
+  }
+}
+
+export type Order = {
+  orderBy: string
+  orderDirection: "asc" | "desc"
 }

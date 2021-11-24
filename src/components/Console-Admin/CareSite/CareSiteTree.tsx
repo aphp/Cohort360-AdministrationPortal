@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react"
+import { useHistory } from "react-router-dom"
 
-import Grid from "@material-ui/core/Grid"
 import CircularProgress from "@material-ui/core/CircularProgress"
+import Grid from "@material-ui/core/Grid"
 import IconButton from "@material-ui/core/IconButton"
 import Radio from "@material-ui/core/Radio"
 import TableRow from "@material-ui/core/TableRow"
 import TableCell from "@material-ui/core/TableCell"
+import Tooltip from "@material-ui/core/Tooltip"
 import Typography from "@material-ui/core/Typography"
 import Skeleton from "@material-ui/lab/Skeleton"
 
+import AssignmentIcon from "@material-ui/icons/Assignment"
 import KeyboardArrowRightIcon from "@material-ui/icons/ChevronRight"
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown"
 
@@ -21,17 +24,19 @@ import {
   getManageableCareSites,
   getCareSites,
 } from "services/Console-Admin/careSiteService"
-import { ScopeTreeRow } from "types"
+import { ScopeTreeRow, UserRole } from "types"
 import { useAppSelector } from "state"
 
 import useStyles from "./styles"
 import { Breadcrumbs } from "@material-ui/core"
+import useDebounce from "./use-debounce"
 
 type ScopeTreeProps = {
   isManageable?: boolean
   defaultSelectedItems: ScopeTreeRow | null
   onChangeSelectedItem: (selectedItems: ScopeTreeRow) => void
   searchInput?: string
+  userRights: UserRole
 }
 
 const ScopeTree: React.FC<ScopeTreeProps> = ({
@@ -39,8 +44,10 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
   defaultSelectedItems,
   onChangeSelectedItem,
   searchInput,
+  userRights,
 }) => {
   const classes = useStyles()
+  const history = useHistory()
 
   const [openPopulation, onChangeOpenPopulations] = useState<number[]>([])
   const [rootRows, setRootRows] = useState<ScopeTreeRow[]>([])
@@ -68,23 +75,25 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
     _init()
   }, []) // eslint-disable-line
 
+  const debouncedSearchTerm = useDebounce(700, searchInput)
+
   useEffect(() => {
     const _searchInCareSites = async () => {
       setLoading(true)
       const careSiteSearchResp = await searchInCareSites(
         isManageable,
-        searchInput
+        debouncedSearchTerm
       )
       setRootRows(careSiteSearchResp)
       setLoading(false)
     }
 
-    if (searchInput && searchInput?.length > 2) {
+    if (debouncedSearchTerm && debouncedSearchTerm?.length > 2) {
       _searchInCareSites()
-    } else if (!searchInput) {
+    } else if (!debouncedSearchTerm) {
       _init()
     }
-  }, [searchInput]) // eslint-disable-line
+  }, [debouncedSearchTerm]) // eslint-disable-line
 
   useEffect(() => setSelectedItem(defaultSelectedItems), [defaultSelectedItems])
 
@@ -115,7 +124,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                 )
               : true
             if (foundItem) {
-              item.children = await getCareSitesChildren(item)
+              item.children = await getCareSitesChildren(item, true)
             }
           } else if (item.children && item.children.length !== 0) {
             item.children = [...(await replaceChildren(item.children))]
@@ -151,6 +160,13 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
       disablePadding: false,
       disableOrderBy: true,
       label: "Nom",
+    },
+    {
+      id: "",
+      align: "center",
+      disablePadding: true,
+      disableOrderBy: true,
+      label: "",
     },
   ]
 
@@ -247,6 +263,28 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                         </Breadcrumbs>
                       ) : (
                         <Typography>{_row.name}</Typography>
+                      )}
+                    </TableCell>
+
+                    <TableCell align="right">
+                      {userRights.right_read_logs && (
+                        <Tooltip title="Voir les logs du périmètre">
+                          <IconButton
+                            onClick={() => {
+                              history.push({
+                                pathname: "/console-admin/logs",
+                                search: `?careSiteId=${
+                                  _row.care_site_id
+                                }&careSiteName=${_row.name
+                                  .split(" ")
+                                  .join(".")}`,
+                              })
+                            }}
+                            style={{ padding: "4px 12px" }}
+                          >
+                            <AssignmentIcon />
+                          </IconButton>
+                        </Tooltip>
                       )}
                     </TableCell>
                   </TableRow>
