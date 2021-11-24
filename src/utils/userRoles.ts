@@ -26,7 +26,8 @@ export const getUserRights = async (
   data?: Access[]
 ) => {
   try {
-    let _userRights = userDefaultRoles
+    let _userRights = { ...userDefaultRoles }
+
     let userRightsResponse = null
     if (providerSourceValue) {
       userRightsResponse = await getUserAccesses(providerSourceValue)
