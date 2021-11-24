@@ -279,7 +279,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                                 onClick={(event) => {
                                   event.stopPropagation()
                                   history.push(
-                                    `/user-profile/${provider.provider_id}`
+                                    `/console-admin/user-profile/${provider.provider_id}`
                                   )
                                 }}
                               >

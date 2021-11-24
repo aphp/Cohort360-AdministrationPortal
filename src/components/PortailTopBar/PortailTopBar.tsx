@@ -11,7 +11,9 @@ import PortailLogo from 'assets/images/portail-white.png'
 
 import { useAppSelector } from 'state'
 import {logout as logoutAction} from 'state/me'
+import { userDefaultRoles } from "utils/userRoles"
 import { open as openAction} from 'state/portailTopBar'
+import { logout as logoutRoute } from "services/authentication"
 
 import useStyles from './styles'
 
@@ -27,13 +29,14 @@ const PortailTopBar: React.FC = (props) => {
     
     const { me, open } = useAppSelector((state) => ({ me: state.me, open: state.portailTopBar }))
     
-    const pathname = window.location.pathname
-    const seeLogs = me?.seeLogs ?? false
+    // const pathname = window.location.pathname
+    const userRights = me?.userRights ?? userDefaultRoles
 
     const handleDisplayConsoleAdmin = () => {
       dispatch<any>(openAction())
       if (open) {
         setDisplayConsoleAdmin(!displayConsoleAdmin)
+        setDisplayEspaceJupyter(false)
       }
     }
 
@@ -41,6 +44,7 @@ const PortailTopBar: React.FC = (props) => {
       dispatch<any>(openAction())
       if (open) {
         setDisplayEspaceJupyter(!displayEspaceJupyter)
+        setDisplayConsoleAdmin(false)
       }
     }
 
@@ -71,7 +75,7 @@ const PortailTopBar: React.FC = (props) => {
                   <ListItem 
                     className={clsx(
                       classes.topBarButton,
-                      pathname === '/console-admin' ? classes.activeButton : ''
+                      // pathname === '/console-admin' ? classes.activeButton : ''
                     )}
                     button
                     onClick={handleDisplayConsoleAdmin}
@@ -84,7 +88,7 @@ const PortailTopBar: React.FC = (props) => {
                   <ListItem 
                     className={clsx(
                       classes.topBarButton,
-                      pathname === '/espace-jupyter' ? classes.activeButton : ''
+                      // pathname === '/espace-jupyter' ? classes.activeButton : ''
                     )}
                     button
                     onClick={handleDisplayEspaceJupyter}
@@ -105,7 +109,7 @@ const PortailTopBar: React.FC = (props) => {
                 <IconButton
                   onClick={() => {
                     localStorage.clear()
-                    // logoutRoute()
+                    logoutRoute()
                     dispatch<any>(logoutAction())
                     history.push("/")
                   }}
@@ -126,13 +130,18 @@ const PortailTopBar: React.FC = (props) => {
                 <ListItem>
                   <Link className={classes.nestedTitle} href="/console-admin/users">Utilisateurs</Link>
                 </ListItem>
-                <ListItem>
-                  <Link className={classes.nestedTitle} href="/console-admin/caresites">Périmètres</Link>
-                </ListItem>
+                {userRights.right_read_admin_accesses_same_level &&
+                  userRights.right_read_admin_accesses_inferior_levels &&
+                  userRights.right_read_data_accesses_same_level &&
+                  userRights.right_read_data_accesses_inferior_levels && (
+                  <ListItem>
+                    <Link className={classes.nestedTitle} href="/console-admin/caresites">Périmètres</Link>
+                  </ListItem>
+                )}
                 <ListItem>
                   <Link className={classes.nestedTitle} href="/console-admin/habilitations">Habilitations</Link>
                 </ListItem>
-                {seeLogs && (
+                {userRights.right_read_logs && (
                   <ListItem>
                     <Link className={classes.nestedTitle} href="/console-admin/logs">Logs</Link>
                   </ListItem>
