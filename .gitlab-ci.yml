@@ -26,7 +26,8 @@ build:
       - build/
     expire_in: 1 week
   script:
-    - echo "Build"
+    - echo $STANDARD_CD_BRANCHES
+    - echo $PROTECTED_CD_BRANCHES
     - npm install
     - npm audit fix
     - CI=false npm run build
