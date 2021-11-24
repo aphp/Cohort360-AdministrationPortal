@@ -46,7 +46,7 @@ const PortailTopBar: React.FC = (props) => {
 
     return (
       <>
-        <AppBar position="static" className={classes.appbar}>
+        <AppBar className={classes.appbar}>
           <Toolbar>
             <Grid
               container

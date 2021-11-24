@@ -2,7 +2,8 @@ import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({
     appbar: {
-        backgroundColor: "#232E6A"
+      backgroundColor: "#232E6A",
+      position: 'absolute'
     },
     avatar: {
       color: "white",
@@ -51,6 +52,7 @@ const useStyles = makeStyles(() => ({
       width: 161
     },
     GridCollapses: {
+      marginTop: '61px',
       paddingLeft: '24px',
       paddingRight: '24px'
     },
