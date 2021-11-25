@@ -64,7 +64,7 @@ const CareSites: React.FC = () => {
           direction="column"
           alignItems="flex-end"
         >
-          <Typography variant="h1" color="primary" className={classes.title}>
+          <Typography variant="h1" align="center" className={classes.title}>
             Liste des périmètres
           </Typography>
 
@@ -94,7 +94,9 @@ const CareSites: React.FC = () => {
               disabled={!selectedItem}
               className={classes.button}
               onClick={() =>
-                history.push(`/caresite/${selectedItem?.care_site_id}`)
+                history.push(
+                  `/console-admin/caresite/${selectedItem?.care_site_id}`
+                )
               }
             >
               Valider

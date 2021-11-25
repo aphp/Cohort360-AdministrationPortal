@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import clsx from "clsx"
 
 import { CircularProgress, Grid, Typography } from "@material-ui/core"
 
@@ -9,7 +8,6 @@ import { useAppSelector } from "state"
 import { getUserRights, userDefaultRoles } from "utils/userRoles"
 
 import useStyles from "./styles"
-
 
 const ProfilesView: React.FC = () => {
   const classes = useStyles()
@@ -41,10 +39,10 @@ const ProfilesView: React.FC = () => {
   }, []) // eslint-disable-line
 
   return (
-    <Grid id="qui suis-je" container direction="column" className={clsx(classes.appBar, {})}>
+    <Grid id="qui suis-je" container direction="column">
       <Grid container justify="center">
         <Grid container item xs={12} sm={9}>
-          <Typography variant="h1" color="primary" className={classes.title}>
+          <Typography variant="h1" align="center" className={classes.title}>
             Liste des utilisateurs
           </Typography>
           {loading ? (
