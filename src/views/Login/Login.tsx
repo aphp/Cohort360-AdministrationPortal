@@ -93,8 +93,8 @@ const Login = () => {
   if (noRights) return <NoRights />
 
   return (
-    <>
-      <Grid container component="main" className={classes.root}>
+    <Grid container component="main" className={classes.root}>
+      <Grid container className={classes.container}>
         <Grid item xs={false} sm={6} md={6} className={classes.image} />
 
         <Grid
@@ -103,7 +103,6 @@ const Login = () => {
           xs={12}
           sm={6}
           md={6}
-          // elevation={6}
           direction="column"
           justify="center"
           alignItems="center"
@@ -112,7 +111,7 @@ const Login = () => {
           <Grid container item xs={8} lg={6} direction="column" alignItems="center">
             <img className={classes.logo} src={logo} alt="Logo Cohort360" />
 
-            <Typography color="primary" className={classes.bienvenue}>
+            <Typography className={classes.bienvenue}>
               Bienvenue ! Connectez-vous.
             </Typography>
 
@@ -155,17 +154,13 @@ const Login = () => {
                   Connexion
                 </Button>
               </Grid>
-
-              {/* <Box mt={10} alignItems="center">
-								<Footer />
-							</Box> */}
             </form>
           </Grid>
         </Grid>
       </Grid>
 
       <ErrorDialog open={errorLogin !== false} setErrorLogin={setErrorLogin} />
-    </>
+    </Grid>
   )
 }
 

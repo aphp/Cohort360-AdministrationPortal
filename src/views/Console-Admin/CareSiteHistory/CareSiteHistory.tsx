@@ -100,7 +100,7 @@ const CareSiteHistory: React.FC = () => {
           <CircularProgress className={classes.loading} />
         ) : (
           <Grid container item xs={12} sm={9}>
-            <Typography variant="h1" color="primary" className={classes.title}>
+            <Typography variant="h1" align="center" className={classes.title}>
               Périmètre {careSiteName}
             </Typography>
             {careSiteAccesses ? (

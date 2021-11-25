@@ -44,7 +44,7 @@ const CareSites: React.FC = () => {
     <Grid container direction="column">
       <Grid container justify="center" alignItems="center">
         <Grid container item xs={12} sm={9} direction="column" alignItems="flex-end">
-          <Typography variant="h1" color="primary" className={classes.title}>
+          <Typography variant="h1" align="center" className={classes.title}>
             Liste des périmètres
           </Typography>
 
@@ -73,7 +73,7 @@ const CareSites: React.FC = () => {
               disableElevation
               disabled={!selectedItem}
               className={classes.button}
-              onClick={() => history.push(`/caresite/${selectedItem?.care_site_id}`)}
+              onClick={() => history.push(`/console-admin/caresite/${selectedItem?.care_site_id}`)}
             >
               Valider
             </Button>
