@@ -14,6 +14,8 @@ export type MeState = null | {
   // [key: string]: number | string | boolean | Date | null
 }
 
+export type portailTopBar = null | boolean
+
 // Authentication
 
 export type Authentication = {

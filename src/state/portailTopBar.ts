@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { portailTopBar } from 'types'
 
-const initialState = true
+const initialState: portailTopBar = true
 
 const portailTopBarSlice = createSlice({
   name: 'portailTopBar',
