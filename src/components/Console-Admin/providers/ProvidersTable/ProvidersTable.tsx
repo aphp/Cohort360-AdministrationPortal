@@ -249,12 +249,14 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                       hover
                       onClick={() => {
                         if (
-                          userRights.right_read_admin_accesses_same_level &&
-                          userRights.right_read_admin_accesses_inferior_levels &&
-                          userRights.right_read_data_accesses_same_level &&
+                          userRights.right_read_admin_accesses_same_level ||
+                          userRights.right_read_admin_accesses_inferior_levels ||
+                          userRights.right_read_data_accesses_same_level ||
                           userRights.right_read_data_accesses_inferior_levels
                         ) {
-                          history.push(`/console-admin/user-profile/${provider.provider_id}`)
+                          history.push(
+                            `/console-admin/user-profile/${provider.provider_id}`
+                          )
                         }
                       }}
                     >
@@ -266,11 +268,17 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                       <TableCell align="center">
                         {provider.email ?? "-"}
                       </TableCell>
-                      <TableCell align="center">
-                        {userRights.right_read_admin_accesses_same_level &&
-                          userRights.right_read_admin_accesses_inferior_levels &&
-                          userRights.right_read_data_accesses_same_level &&
-                          userRights.right_read_data_accesses_inferior_levels && (
+                      {(userRights.right_read_admin_accesses_same_level ||
+                        userRights.right_read_admin_accesses_inferior_levels ||
+                        userRights.right_read_data_accesses_same_level ||
+                        userRights.right_read_data_accesses_inferior_levels ||
+                        userRights.right_edit_users ||
+                        userRights.right_read_logs) && (
+                        <TableCell align="center">
+                          {(userRights.right_read_admin_accesses_same_level ||
+                            userRights.right_read_admin_accesses_inferior_levels ||
+                            userRights.right_read_data_accesses_same_level ||
+                            userRights.right_read_data_accesses_inferior_levels) && (
                             <Tooltip
                               title="Visualiser les accès de l'utilisateur"
                               style={{ padding: "0 12px" }}
@@ -287,40 +295,41 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                               </IconButton>
                             </Tooltip>
                           )}
-                        {userRights.right_edit_users && (
-                          <Tooltip
-                            title="Éditer l'utilisateur"
-                            style={{ padding: "0 12px" }}
-                          >
-                            <IconButton
-                              onClick={(event) => {
-                                event.stopPropagation()
-                                setSelectedProvider(provider)
-                              }}
+                          {userRights.right_edit_users && (
+                            <Tooltip
+                              title="Éditer l'utilisateur"
+                              style={{ padding: "0 12px" }}
                             >
-                              <EditIcon />
-                            </IconButton>
-                          </Tooltip>
-                        )}
-                        {userRights.right_read_logs && (
-                          <Tooltip
-                            title="Voir les logs de l'utilisateur"
-                            style={{ padding: "0 12px" }}
-                          >
-                            <IconButton
-                              onClick={(event) => {
-                                event.stopPropagation()
-                                history.push({
-                                  pathname: "/console-admin/logs",
-                                  search: `?user=${provider.provider_source_value}`,
-                                })
-                              }}
+                              <IconButton
+                                onClick={(event) => {
+                                  event.stopPropagation()
+                                  setSelectedProvider(provider)
+                                }}
+                              >
+                                <EditIcon />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+                          {userRights.right_read_logs && (
+                            <Tooltip
+                              title="Voir les logs de l'utilisateur"
+                              style={{ padding: "0 12px" }}
                             >
-                              <AssignmentIcon />
-                            </IconButton>
-                          </Tooltip>
-                        )}
-                      </TableCell>
+                              <IconButton
+                                onClick={(event) => {
+                                  event.stopPropagation()
+                                  history.push({
+                                    pathname: "/console-admin/logs",
+                                    search: `?user=${provider.provider_source_value}`,
+                                  })
+                                }}
+                              >
+                                <AssignmentIcon />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+                        </TableCell>
+                      )}
                     </TableRow>
                   )
                 )

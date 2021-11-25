@@ -63,24 +63,24 @@ const TopBar: React.FC = () => {
             >
               Utilisateurs
             </Button>
-            {userRights.right_read_admin_accesses_same_level &&
-              userRights.right_read_admin_accesses_inferior_levels &&
-              userRights.right_read_data_accesses_same_level &&
-              userRights.right_read_data_accesses_inferior_levels && (
-                <Button
-                  className={clsx(
-                    classes.topBarButton,
-                    pathname === "/caresites" ? classes.activeButton : ""
-                  )}
-                  onClick={() => history.push("/caresites")}
-                  style={{
-                    borderBottom:
-                      pathname === "/caresites" ? "2px solid #5BC5F2" : "none",
-                  }}
-                >
-                  Périmètres
-                </Button>
-              )}
+            {(userRights.right_read_admin_accesses_same_level ||
+              userRights.right_read_admin_accesses_inferior_levels ||
+              userRights.right_read_data_accesses_same_level ||
+              userRights.right_read_data_accesses_inferior_levels) && (
+              <Button
+                className={clsx(
+                  classes.topBarButton,
+                  pathname === "/caresites" ? classes.activeButton : ""
+                )}
+                onClick={() => history.push("/caresites")}
+                style={{
+                  borderBottom:
+                    pathname === "/caresites" ? "2px solid #5BC5F2" : "none",
+                }}
+              >
+                Périmètres
+              </Button>
+            )}
             <Button
               className={clsx(
                 classes.topBarButton,
