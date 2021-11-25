@@ -5,7 +5,6 @@ import { Provider } from "react-redux"
 
 import AppNavigation from "./components/routes/AppNavigation/AppNavigation"
 import { store } from "./state/store"
-import "./App.css"
 import MomentUtils from "@date-io/moment"
 import { MuiPickersUtilsProvider } from "@material-ui/pickers"
 
@@ -15,14 +14,12 @@ moment.locale("fr")
 
 const App = () => {
   return (
-    <div className="App">
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <Provider store={store}>
           <CssBaseline />
           <AppNavigation />
         </Provider>
       </MuiPickersUtilsProvider>
-    </div>
   )
 }
 
