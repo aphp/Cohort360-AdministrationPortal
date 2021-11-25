@@ -14,10 +14,10 @@ const useStyles = makeStyles(() => ({
     }
   },
   button: {
-    backgroundColor: "#5BC5F2",
-    color: "#FFF",
+    backgroundColor: '#5BC5F2',
+    color: '#FFF',
     borderRadius: 25,
-    height: 30,
+    height: 30
   },
   filter: {
     marginBottom: 24
@@ -43,8 +43,8 @@ const useStyles = makeStyles(() => ({
   },
   infoIcon: {
     height: 20,
-    margin: "0 5px -5px 0"
-  }, 
+    margin: '0 5px -5px 0'
+  },
   tooltip: {
     maxWidth: 500
   }

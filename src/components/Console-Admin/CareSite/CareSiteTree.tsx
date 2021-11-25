@@ -1,35 +1,35 @@
-import React, { useEffect, useState } from "react"
-import { useHistory } from "react-router-dom"
+import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 
-import CircularProgress from "@material-ui/core/CircularProgress"
-import Grid from "@material-ui/core/Grid"
-import IconButton from "@material-ui/core/IconButton"
-import Radio from "@material-ui/core/Radio"
-import TableRow from "@material-ui/core/TableRow"
-import TableCell from "@material-ui/core/TableCell"
-import Tooltip from "@material-ui/core/Tooltip"
-import Typography from "@material-ui/core/Typography"
-import Skeleton from "@material-ui/lab/Skeleton"
+import CircularProgress from '@material-ui/core/CircularProgress'
+import Grid from '@material-ui/core/Grid'
+import IconButton from '@material-ui/core/IconButton'
+import Radio from '@material-ui/core/Radio'
+import TableRow from '@material-ui/core/TableRow'
+import TableCell from '@material-ui/core/TableCell'
+import Tooltip from '@material-ui/core/Tooltip'
+import Typography from '@material-ui/core/Typography'
+import Skeleton from '@material-ui/lab/Skeleton'
 
-import AssignmentIcon from "@material-ui/icons/Assignment"
-import KeyboardArrowRightIcon from "@material-ui/icons/ChevronRight"
-import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown"
+import AssignmentIcon from '@material-ui/icons/Assignment'
+import KeyboardArrowRightIcon from '@material-ui/icons/ChevronRight'
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
 
-import EnhancedTable from "../EnhancedTable"
+import EnhancedTable from '../EnhancedTable'
 
 import {
   getScopeCareSites,
   getCareSitesChildren,
   searchInCareSites,
   getManageableCareSites,
-  getCareSites,
-} from "services/Console-Admin/careSiteService"
-import { ScopeTreeRow, UserRole } from "types"
-import { useAppSelector } from "state"
+  getCareSites
+} from 'services/Console-Admin/careSiteService'
+import { ScopeTreeRow, UserRole } from 'types'
+import { useAppSelector } from 'state'
 
-import useStyles from "./styles"
-import { Breadcrumbs } from "@material-ui/core"
-import useDebounce from "./use-debounce"
+import useStyles from './styles'
+import { Breadcrumbs } from '@material-ui/core'
+import useDebounce from './use-debounce'
 
 type ScopeTreeProps = {
   isManageable?: boolean
@@ -44,7 +44,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
   defaultSelectedItems,
   onChangeSelectedItem,
   searchInput,
-  userRights,
+  userRights
 }) => {
   const classes = useStyles()
   const history = useHistory()
@@ -58,9 +58,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
 
   const fetchScopeTree = async () => {
     if (practitioner) {
-      const rootRows = await getScopeCareSites(
-        isManageable ? getManageableCareSites : getCareSites
-      )
+      const rootRows = await getScopeCareSites(isManageable ? getManageableCareSites : getCareSites)
       setRootRows(rootRows)
     }
   }
@@ -80,10 +78,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
   useEffect(() => {
     const _searchInCareSites = async () => {
       setLoading(true)
-      const careSiteSearchResp = await searchInCareSites(
-        isManageable,
-        debouncedSearchTerm
-      )
+      const careSiteSearchResp = await searchInCareSites(isManageable, debouncedSearchTerm)
       setRootRows(careSiteSearchResp)
       setLoading(false)
     }
@@ -107,9 +102,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
     const index = _openPopulation.indexOf(rowId)
 
     if (index !== -1) {
-      _openPopulation = _openPopulation.filter(
-        (care_site_id) => care_site_id !== rowId
-      )
+      _openPopulation = _openPopulation.filter((care_site_id) => care_site_id !== rowId)
       onChangeOpenPopulations(_openPopulation)
     } else {
       _openPopulation = [..._openPopulation, rowId]
@@ -119,9 +112,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
         for (const item of items) {
           if (item.care_site_id === rowId) {
             const foundItem = item.children
-              ? item.children.find(
-                  (i: ScopeTreeRow) => i.care_site_id === "loading"
-                )
+              ? item.children.find((i: ScopeTreeRow) => i.care_site_id === 'loading')
               : true
             if (foundItem) {
               item.children = await getCareSitesChildren(item, true)
@@ -148,37 +139,37 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
 
   const searchModeHeadCells = [
     {
-      id: "",
-      align: "left",
+      id: '',
+      align: 'left',
       disablePadding: true,
       disableOrderBy: true,
-      label: "",
+      label: ''
     },
     {
-      id: "name",
-      align: "left",
+      id: 'name',
+      align: 'left',
       disablePadding: false,
       disableOrderBy: true,
-      label: "Nom",
+      label: 'Nom'
     },
     {
-      id: "",
-      align: "center",
+      id: '',
+      align: 'center',
       disablePadding: true,
       disableOrderBy: true,
-      label: "",
-    },
+      label: ''
+    }
   ]
 
   const headCells = [
     {
-      id: "",
-      align: "left",
+      id: '',
+      align: 'left',
       disablePadding: true,
       disableOrderBy: true,
-      label: "",
+      label: ''
     },
-    ...searchModeHeadCells,
+    ...searchModeHeadCells
   ]
 
   return (
@@ -200,7 +191,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
 
             const _displayLine = (_row: ScopeTreeRow, level: number) => (
               <>
-                {_row.care_site_id === "loading" ? (
+                {_row.care_site_id === 'loading' ? (
                   <TableRow hover key={Math.random()}>
                     <TableCell colSpan={5}>
                       <Skeleton animation="wave" />
@@ -211,27 +202,21 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                     hover
                     key={_row.care_site_id}
                     classes={{
-                      root:
-                        level % 2 === 0 ? classes.mainRow : classes.secondRow,
+                      root: level % 2 === 0 ? classes.mainRow : classes.secondRow
                     }}
                   >
                     {!searchInput && (
                       <TableCell>
                         {_row.children && _row.children.length > 0 && (
                           <IconButton
-                            onClick={() =>
-                              _clickToDeploy(_row.care_site_id as number)
-                            }
+                            onClick={() => _clickToDeploy(_row.care_site_id as number)}
                             style={{
                               marginLeft: level * 35,
                               padding: 0,
-                              marginRight: -30,
+                              marginRight: -30
                             }}
                           >
-                            {openPopulation.find(
-                              (care_site_id) =>
-                                _row.care_site_id === care_site_id
-                            ) ? (
+                            {openPopulation.find((care_site_id) => _row.care_site_id === care_site_id) ? (
                               <KeyboardArrowDownIcon />
                             ) : (
                               <KeyboardArrowRightIcon />
@@ -244,19 +229,17 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                     <TableCell align="center" padding="checkbox">
                       <Radio
                         color="secondary"
-                        checked={
-                          selectedItems?.care_site_id === _row.care_site_id
-                        }
+                        checked={selectedItems?.care_site_id === _row.care_site_id}
                         onChange={() => _clickToSelect(_row)}
-                        inputProps={{ "aria-labelledby": labelId }}
+                        inputProps={{ 'aria-labelledby': labelId }}
                       />
                     </TableCell>
 
                     <TableCell>
                       {searchInput ? (
                         <Breadcrumbs maxItems={2}>
-                          {_row.name.split(">").map((name: any) => (
-                            <Typography style={{ color: "#153D8A" }}>
+                          {_row.name.split('>').map((name: any, index: number) => (
+                            <Typography key={index} style={{ color: '#153D8A' }}>
                               {name}
                             </Typography>
                           ))}
@@ -272,15 +255,13 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                           <IconButton
                             onClick={() => {
                               history.push({
-                                pathname: "/console-admin/logs",
-                                search: `?careSiteId=${
-                                  _row.care_site_id
-                                }&careSiteName=${_row.name
-                                  .split(" ")
-                                  .join(".")}`,
+                                pathname: '/console-admin/logs',
+                                search: `?careSiteId=${_row.care_site_id}&careSiteName=${_row.name
+                                  .split(' ')
+                                  .join('.')}`
                               })
                             }}
-                            style={{ padding: "4px 12px" }}
+                            style={{ padding: '4px 12px' }}
                           >
                             <AssignmentIcon />
                           </IconButton>
@@ -296,13 +277,9 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
               return (
                 <React.Fragment key={Math.random()}>
                   {_displayLine(_row, level)}
-                  {openPopulation.find(
-                    (care_site_id) => _row.care_site_id === care_site_id
-                  ) &&
+                  {openPopulation.find((care_site_id) => _row.care_site_id === care_site_id) &&
                     _row.children &&
-                    _row.children.map((child: ScopeTreeRow) =>
-                      _displayChildren(child, level + 1)
-                    )}
+                    _row.children.map((child: ScopeTreeRow) => _displayChildren(child, level + 1))}
                 </React.Fragment>
               )
             }
@@ -310,13 +287,9 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
             return (
               <React.Fragment key={Math.random()}>
                 {_displayLine(row, 0)}
-                {openPopulation.find(
-                  (care_site_id) => row.care_site_id === care_site_id
-                ) &&
+                {openPopulation.find((care_site_id) => row.care_site_id === care_site_id) &&
                   row.children &&
-                  row.children.map((child: ScopeTreeRow) =>
-                    _displayChildren(child, 1)
-                  )}
+                  row.children.map((child: ScopeTreeRow) => _displayChildren(child, 1))}
               </React.Fragment>
             )
           }}

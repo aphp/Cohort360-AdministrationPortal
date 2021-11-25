@@ -3,13 +3,12 @@ import { Typography, Button } from '@material-ui/core'
 import { useHistory } from 'react-router-dom'
 
 const HomePage = () => {
-
   const history = useHistory()
 
   return (
     <div>
-      <Typography variant='h1'>Bienvenue sur le site de l'eds</Typography>
-      <Button onClick={() => (history.push('/console-admin/users'))}>cliquer ici</Button>
+      <Typography variant="h1">Bienvenue sur le site de l'eds</Typography>
+      <Button onClick={() => history.push('/console-admin/users')}>cliquer ici</Button>
     </div>
   )
 }

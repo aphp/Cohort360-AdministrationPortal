@@ -22,7 +22,7 @@ const Config = [
     exact: true,
     path: '/',
     name: 'Login',
-    component: Login,
+    component: Login
   },
 
   /**
@@ -50,7 +50,7 @@ const Config = [
     path: '/console-admin/users',
     name: 'Users',
     isPrivate: true,
-    component: Providers,
+    component: Providers
   },
 
   /**
@@ -63,7 +63,7 @@ const Config = [
     displayPortailTopBar: true,
     path: '/console-admin/user-profile/:providerId',
     isPrivate: true,
-    component: ProvidersHistory,
+    component: ProvidersHistory
   },
 
   /**
@@ -77,7 +77,7 @@ const Config = [
     path: '/console-admin/caresites',
     name: 'CareSites',
     isPrivate: true,
-    component: CareSites,
+    component: CareSites
   },
 
   /**
@@ -91,7 +91,7 @@ const Config = [
     path: '/console-admin/caresite/:careSiteId',
     name: 'CareSite',
     isPrivate: true,
-    component: CareSiteHistory,
+    component: CareSiteHistory
   },
 
   /**
@@ -105,7 +105,7 @@ const Config = [
     path: '/console-admin/habilitations',
     name: 'Habilitations',
     isPrivate: true,
-    component: Habilitations,
+    component: Habilitations
   },
 
   /**
@@ -119,7 +119,7 @@ const Config = [
     path: '/console-admin/logs',
     name: 'Logs',
     isPrivate: true,
-    component: Logs,
+    component: Logs
   },
 
   /*************************************************************** Jupyter View ********************************************************************** */
@@ -135,7 +135,7 @@ const Config = [
     path: '/espace-jupyter/transfert',
     name: 'Logs',
     isPrivate: true,
-    component: Transfert,
+    component: Transfert
   },
 
   /**
@@ -149,8 +149,8 @@ const Config = [
     path: '/espace-jupyter/creationespace',
     name: 'Logs',
     isPrivate: true,
-    component: CreationEspace,
-  },
+    component: CreationEspace
+  }
 ]
 
 export default Config

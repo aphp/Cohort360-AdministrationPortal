@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from 'react'
 
-import { Button, Grid, Snackbar, Typography } from "@material-ui/core"
+import { Button, Grid, Snackbar, Typography } from '@material-ui/core'
 
-import AddIcon from "@material-ui/icons/Add"
+import AddIcon from '@material-ui/icons/Add'
 
-import useStyles from "./styles"
-import AddAccessForm from "../providers/AddAccessForm/AddAccessForm"
-import RightsTable from "./RightsTable/RightsTable"
-import { getAccesses } from "services/Console-Admin/providersHistoryService"
-import { Access, Order, Profile, UserRole } from "types"
-import { Alert } from "@material-ui/lab"
+import useStyles from './styles'
+import AddAccessForm from '../providers/AddAccessForm/AddAccessForm'
+import RightsTable from './RightsTable/RightsTable'
+import { getAccesses } from 'services/Console-Admin/providersHistoryService'
+import { Access, Order, Profile, UserRole } from 'types'
+import { Alert } from '@material-ui/lab'
 
 type RightsProps = {
   right: Profile
   userRights: UserRole
 }
 
-const orderDefault = { orderBy: "is_valid", orderDirection: "asc" } as Order
+const orderDefault = { orderBy: 'is_valid', orderDirection: 'asc' } as Order
 
 const Rights: React.FC<RightsProps> = ({ right, userRights }) => {
   const classes = useStyles()
@@ -34,17 +34,13 @@ const Rights: React.FC<RightsProps> = ({ right, userRights }) => {
     try {
       setLoading(true)
 
-      const rightsResp = await getAccesses(
-        right.provider_history_id,
-        page,
-        order
-      )
+      const rightsResp = await getAccesses(right.provider_history_id, page, order)
 
       setAccesses(rightsResp?.accesses)
       setTotal(rightsResp?.total)
       setLoading(false)
     } catch (error) {
-      console.error("Erreur lors de la récupération des accès", error)
+      console.error('Erreur lors de la récupération des accès', error)
       setLoading(false)
     }
   }
@@ -68,7 +64,7 @@ const Rights: React.FC<RightsProps> = ({ right, userRights }) => {
         <Typography align="left" variant="h2" className={classes.title}>
           Type de droit : {right.cdm_source}
         </Typography>
-        {right.cdm_source === "MANUAL" &&
+        {right.cdm_source === 'MANUAL' &&
           (userRights.right_manage_admin_accesses_same_level ||
             userRights.right_manage_admin_accesses_inferior_levels ||
             userRights.right_manage_data_accesses_same_level ||
@@ -111,7 +107,7 @@ const Rights: React.FC<RightsProps> = ({ right, userRights }) => {
           open
           onClose={() => setAddAccessSuccess(false)}
           autoHideDuration={3000}
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
           <Alert severity="success" onClose={() => setAddAccessSuccess(false)}>
             Le droit a bien été créé.
@@ -123,7 +119,7 @@ const Rights: React.FC<RightsProps> = ({ right, userRights }) => {
           open
           onClose={() => setAddAccessFail(false)}
           autoHideDuration={3000}
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
           <Alert severity="error" onClose={() => setAddAccessFail(false)}>
             Erreur lors de la création du droit.

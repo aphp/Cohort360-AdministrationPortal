@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react"
-import { useHistory } from "react-router-dom"
-import { useDispatch } from "react-redux"
+import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import {
   Button,
   Dialog,
@@ -9,22 +9,22 @@ import {
   DialogContentText,
   Grid,
   TextField,
-  Typography,
-} from "@material-ui/core"
+  Typography
+} from '@material-ui/core'
 
-import { buildPartialUser } from "services/Console-Admin/userService"
-import { authenticate } from "services/authentication"
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants"
-import { login as loginAction } from "state/me"
-import logo from "assets/images/logo1.png"
-import { ErrorDialogProps } from "types"
-import useStyles from "./styles"
-import NoRights from "components/Console-Admin/ErrorView/NoRights"
-import { getUserRights } from "utils/userRoles"
+import { buildPartialUser } from 'services/Console-Admin/userService'
+import { authenticate } from 'services/authentication'
+import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../constants'
+import { login as loginAction } from 'state/me'
+import logo from 'assets/images/logo1.png'
+import { ErrorDialogProps } from 'types'
+import useStyles from './styles'
+import NoRights from 'components/Console-Admin/ErrorView/NoRights'
+import { getUserRights } from 'utils/userRoles'
 
 const ErrorDialog: React.FC<ErrorDialogProps> = ({ open, setErrorLogin }) => {
   const _setErrorLogin = () => {
-    if (setErrorLogin && typeof setErrorLogin === "function") {
+    if (setErrorLogin && typeof setErrorLogin === 'function') {
       setErrorLogin(false)
     }
   }
@@ -32,9 +32,7 @@ const ErrorDialog: React.FC<ErrorDialogProps> = ({ open, setErrorLogin }) => {
   return (
     <Dialog open={open}>
       <DialogContent>
-        <DialogContentText>
-          Votre code APH ou votre mot de passe est incorrect
-        </DialogContentText>
+        <DialogContentText>Votre code APH ou votre mot de passe est incorrect</DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={_setErrorLogin}>Ok</Button>
@@ -47,15 +45,15 @@ const Login = () => {
   const history = useHistory()
   const classes = useStyles()
   const dispatch = useDispatch()
-  const [username, setUsername] = useState<string>("")
-  const [password, setPassword] = useState<string>("")
+  const [username, setUsername] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
   const [errorLogin, setErrorLogin] = useState<boolean>(false)
   const [noRights, setNoRights] = useState<boolean>(false)
 
   useEffect(() => {
-    localStorage.removeItem("user")
-    localStorage.removeItem("access")
-    localStorage.removeItem("refresh")
+    localStorage.removeItem('user')
+    localStorage.removeItem('access')
+    localStorage.removeItem('refresh')
   }, [])
 
   const onLogin = async () => {
@@ -76,7 +74,7 @@ const Login = () => {
         if (!_userRights.right_read_users) {
           setNoRights(true)
         } else {
-          history.push("/homepage")
+          history.push('/homepage')
         }
       } else {
         setErrorLogin(true)
@@ -111,14 +109,7 @@ const Login = () => {
           alignItems="center"
           className={classes.rightPanel}
         >
-          <Grid
-            container
-            item
-            xs={8}
-            lg={6}
-            direction="column"
-            alignItems="center"
-          >
+          <Grid container item xs={8} lg={6} direction="column" alignItems="center">
             <img className={classes.logo} src={logo} alt="Logo Cohort360" />
 
             <Typography color="primary" className={classes.bienvenue}>

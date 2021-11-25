@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react"
-import { useHistory } from "react-router-dom"
+import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 
 import {
   Button,
@@ -19,26 +19,26 @@ import {
   TableRow,
   TableSortLabel,
   Tooltip,
-  Typography,
-} from "@material-ui/core"
-import Pagination from "@material-ui/lab/Pagination"
+  Typography
+} from '@material-ui/core'
+import Pagination from '@material-ui/lab/Pagination'
 
-import AssignmentIcon from "@material-ui/icons/Assignment"
-import CancelIcon from "@material-ui/icons/Cancel"
-import CheckCircleIcon from "@material-ui/icons/CheckCircle"
-import DeleteIcon from "@material-ui/icons/Delete"
-import EditIcon from "@material-ui/icons/Edit"
-import InfoIcon from "@material-ui/icons/Info"
-import LaunchIcon from "@material-ui/icons/Launch"
-import TimerOffIcon from "@material-ui/icons/TimerOff"
+import AssignmentIcon from '@material-ui/icons/Assignment'
+import CancelIcon from '@material-ui/icons/Cancel'
+import CheckCircleIcon from '@material-ui/icons/CheckCircle'
+import DeleteIcon from '@material-ui/icons/Delete'
+import EditIcon from '@material-ui/icons/Edit'
+import InfoIcon from '@material-ui/icons/Info'
+import LaunchIcon from '@material-ui/icons/Launch'
+import TimerOffIcon from '@material-ui/icons/TimerOff'
 
-import useStyles from "./styles"
-import EditAccessForm from "../../providers/EditAccessForm/EditAccessForm"
-import { Access, Order, Role, UserRole } from "types"
-import { Alert } from "@material-ui/lab"
-import moment from "moment"
-import { getRoles } from "services/Console-Admin/rolesService"
-import { onDeleteOrTerminateAccess } from "services/Console-Admin/providersHistoryService"
+import useStyles from './styles'
+import EditAccessForm from '../../providers/EditAccessForm/EditAccessForm'
+import { Access, Order, Role, UserRole } from 'types'
+import { Alert } from '@material-ui/lab'
+import moment from 'moment'
+import { getRoles } from 'services/Console-Admin/rolesService'
+import { onDeleteOrTerminateAccess } from 'services/Console-Admin/providersHistoryService'
 
 type RightsTableProps = {
   displayName: boolean
@@ -63,7 +63,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
   getAccesses,
   order,
   setOrder,
-  userRights,
+  userRights
 }) => {
   const classes = useStyles()
   const history = useHistory()
@@ -85,7 +85,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
         const rolesResp = await getRoles()
         setRoles(rolesResp)
       } catch (error) {
-        console.error("Erreur lors de la récupération des habilitations", error)
+        console.error('Erreur lors de la récupération des habilitations', error)
       }
     }
 
@@ -100,46 +100,46 @@ const RightsTable: React.FC<RightsTableProps> = ({
   const columns = displayName
     ? [
         {
-          label: "Nom",
+          label: 'Nom'
         },
         {
-          label: "Habilitation",
-          code: "role_name",
+          label: 'Habilitation',
+          code: 'role_name'
         },
         {
-          label: "Date de début",
-          code: "start_datetime",
+          label: 'Date de début',
+          code: 'start_datetime'
         },
         {
-          label: "Date de fin",
-          code: "end_datetime",
+          label: 'Date de fin',
+          code: 'end_datetime'
         },
         {
-          label: "Actif",
-          code: "is_valid",
-        },
+          label: 'Actif',
+          code: 'is_valid'
+        }
       ]
     : [
         {
-          label: "Périmètre",
-          code: "care_site_name",
+          label: 'Périmètre',
+          code: 'care_site_name'
         },
         {
-          label: "Habilitation",
-          code: "role_name",
+          label: 'Habilitation',
+          code: 'role_name'
         },
         {
-          label: "Date de début",
-          code: "start_datetime",
+          label: 'Date de début',
+          code: 'start_datetime'
         },
         {
-          label: "Date de fin",
-          code: "end_datetime",
+          label: 'Date de fin',
+          code: 'end_datetime'
         },
         {
-          label: "Actif",
-          code: "is_valid",
-        },
+          label: 'Actif',
+          code: 'is_valid'
+        }
       ]
 
   const _columns =
@@ -148,15 +148,12 @@ const RightsTable: React.FC<RightsTableProps> = ({
     userRights.right_manage_data_accesses_same_level ||
     userRights.right_manage_data_accesses_inferior_levels ||
     userRights.right_read_logs
-      ? [...columns, { label: "Actions" }]
+      ? [...columns, { label: 'Actions' }]
       : [...columns]
 
   const handleDeleteAction = async () => {
     try {
-      const terminateAccessResp = await onDeleteOrTerminateAccess(
-        terminateAccess,
-        deleteAccess?.care_site_history_id
-      )
+      const terminateAccessResp = await onDeleteOrTerminateAccess(terminateAccess, deleteAccess?.care_site_history_id)
 
       if (terminateAccessResp) {
         setDeleteAccessSuccess(true)
@@ -167,26 +164,21 @@ const RightsTable: React.FC<RightsTableProps> = ({
       getAccesses()
       setDeleteAccess(null)
     } catch (error) {
-      console.error(
-        "Erreur lors de la suppression ou la clôture de l'accès",
-        error
-      )
+      console.error("Erreur lors de la suppression ou la clôture de l'accès", error)
       setDeleteAccessFail(true)
       setDeleteAccess(null)
     }
   }
 
-  const createSortHandler =
-    (property: any) => (event: React.MouseEvent<unknown>) => {
-      const isAsc: boolean =
-        order.orderBy === property && order.orderDirection === "asc"
-      const _orderDirection = isAsc ? "desc" : "asc"
+  const createSortHandler = (property: any) => () => {
+    const isAsc: boolean = order.orderBy === property && order.orderDirection === 'asc'
+    const _orderDirection = isAsc ? 'desc' : 'asc'
 
-      setOrder({
-        orderBy: property,
-        orderDirection: _orderDirection,
-      })
-    }
+    setOrder({
+      orderBy: property,
+      orderDirection: _orderDirection
+    })
+  }
 
   return (
     <Grid container justify="flex-end">
@@ -194,28 +186,23 @@ const RightsTable: React.FC<RightsTableProps> = ({
         <Table className={classes.table}>
           <TableHead>
             <TableRow className={classes.tableHead}>
-              {_columns.map((column) => (
+              {_columns.map((column, index) => (
                 <TableCell
-                  sortDirection={
-                    order.orderBy === column.code ? order.orderDirection : false
-                  }
+                  key={index}
+                  sortDirection={order.orderBy === column.code ? order.orderDirection : false}
                   align={
                     displayName
-                      ? column.label === "Nom" || column.label === "Périmètre"
-                        ? "left"
-                        : "center"
-                      : "center"
+                      ? column.label === 'Nom' || column.label === 'Périmètre'
+                        ? 'left'
+                        : 'center'
+                      : 'center'
                   }
                   className={classes.tableHeadCell}
                 >
-                  {column.label !== "Actions" && column.label !== "Nom" ? (
+                  {column.label !== 'Actions' && column.label !== 'Nom' ? (
                     <TableSortLabel
                       active={order.orderBy === column.code}
-                      direction={
-                        order.orderBy === column.code
-                          ? order.orderDirection
-                          : "asc"
-                      }
+                      direction={order.orderBy === column.code ? order.orderDirection : 'asc'}
                       onClick={createSortHandler(column.code)}
                     >
                       {column.label}
@@ -242,23 +229,17 @@ const RightsTable: React.FC<RightsTableProps> = ({
                   <TableRow key={access.id} className={classes.tableBodyRows}>
                     {displayName && (
                       <TableCell align="left">
-                        {access.provider_history.lastname}{" "}
-                        {access.provider_history.firstname}
+                        {access.provider_history.lastname} {access.provider_history.firstname}
                         <IconButton
-                          onClick={() =>
-                            history.push(
-                              `/user-profile/${access.provider_history.provider_id}`
-                            )
-                          }
+                          onClick={() => history.push(`/user-profile/${access.provider_history.provider_id}`)}
                         >
                           <LaunchIcon fontSize="small" />
                         </IconButton>
                       </TableCell>
                     )}
                     {!displayName && (
-                      <TableCell align={"left"}>
-                        {access.care_site.care_site_source_value} -{" "}
-                        {access.care_site.care_site_name}
+                      <TableCell align={'left'}>
+                        {access.care_site.care_site_source_value} - {access.care_site.care_site_name}
                       </TableCell>
                     )}
                     <TableCell align="center">
@@ -269,46 +250,28 @@ const RightsTable: React.FC<RightsTableProps> = ({
                             classes={{ tooltip: classes.tooltip }}
                             // @ts-ignore
                             title={roles
-                              .find(
-                                (role: Role) => role.role_id === access.role_id
-                              )
-                              ?.help_text.map((text) => (
-                                <Typography>- {text}</Typography>
+                              .find((role: Role) => role.role_id === access.role_id)
+                              ?.help_text.map((text, index: number) => (
+                                <Typography key={index}>- {text}</Typography>
                               ))}
                           >
-                            <InfoIcon
-                              color="action"
-                              fontSize="small"
-                              className={classes.infoIcon}
-                            />
+                            <InfoIcon color="action" fontSize="small" className={classes.infoIcon} />
                           </Tooltip>
                         )}
                       </div>
                     </TableCell>
                     <TableCell align="center">
-                      {access.actual_start_datetime
-                        ? moment(access.actual_start_datetime).format(
-                            "DD/MM/YYYY"
-                          )
-                        : "-"}
+                      {access.actual_start_datetime ? moment(access.actual_start_datetime).format('DD/MM/YYYY') : '-'}
                     </TableCell>
                     <TableCell align="center">
-                      {access.actual_end_datetime
-                        ? moment(access.actual_end_datetime).format(
-                            "DD/MM/YYYY"
-                          )
-                        : "-"}
+                      {access.actual_end_datetime ? moment(access.actual_end_datetime).format('DD/MM/YYYY') : '-'}
                     </TableCell>
                     <TableCell align="center">
-                      <Tooltip
-                        title={
-                          access.is_valid ? "Accès actif" : "Accès inactif"
-                        }
-                      >
+                      <Tooltip title={access.is_valid ? 'Accès actif' : 'Accès inactif'}>
                         {access.is_valid ? (
-                          <CheckCircleIcon style={{ color: "#BDEA88" }} />
+                          <CheckCircleIcon style={{ color: '#BDEA88' }} />
                         ) : (
-                          <CancelIcon style={{ color: "#ED6D91" }} />
+                          <CancelIcon style={{ color: '#ED6D91' }} />
                         )}
                       </Tooltip>
                     </TableCell>
@@ -318,43 +281,29 @@ const RightsTable: React.FC<RightsTableProps> = ({
                       userRights.right_manage_data_accesses_inferior_levels ||
                       userRights.right_read_logs) && (
                       <TableCell align="center">
-                        <Grid
-                          container
-                          item
-                          alignContent="center"
-                          justify="space-between"
-                        >
+                        <Grid container item alignContent="center" justify="space-between">
                           {(userRights.right_manage_admin_accesses_same_level ||
                             userRights.right_manage_admin_accesses_inferior_levels ||
                             userRights.right_manage_data_accesses_same_level ||
                             userRights.right_manage_data_accesses_inferior_levels) && (
                             <>
-                              <Grid
-                                item
-                                xs={userRights.right_read_logs ? 4 : 6}
-                              >
-                                {(access.actual_start_datetime ||
-                                  access.actual_end_datetime) && (
+                              <Grid item xs={userRights.right_read_logs ? 4 : 6}>
+                                {(access.actual_start_datetime || access.actual_end_datetime) && (
                                   <Tooltip title="Éditer l'accès">
                                     <IconButton
                                       onClick={() => {
                                         setSelectedAccess(access)
                                       }}
-                                      style={{ padding: "4px 12px" }}
+                                      style={{ padding: '4px 12px' }}
                                     >
                                       <EditIcon />
                                     </IconButton>
                                   </Tooltip>
                                 )}
                               </Grid>
-                              <Grid
-                                item
-                                xs={userRights.right_read_logs ? 4 : 6}
-                              >
+                              <Grid item xs={userRights.right_read_logs ? 4 : 6}>
                                 {access.actual_start_datetime &&
-                                  moment(
-                                    access.actual_start_datetime
-                                  ).isSameOrBefore(moment(), "day") &&
+                                  moment(access.actual_start_datetime).isSameOrBefore(moment(), 'day') &&
                                   access.is_valid && (
                                     <Tooltip title="Clôturer l'accès">
                                       <IconButton
@@ -362,24 +311,21 @@ const RightsTable: React.FC<RightsTableProps> = ({
                                           setDeleteAccess(access)
                                           setTerminateAccess(true)
                                         }}
-                                        style={{ padding: "4px 12px" }}
+                                        style={{ padding: '4px 12px' }}
                                       >
                                         <TimerOffIcon />
                                       </IconButton>
                                     </Tooltip>
                                   )}
                                 {access.actual_start_datetime &&
-                                  moment(access.actual_start_datetime).isAfter(
-                                    moment(),
-                                    "day"
-                                  ) && (
+                                  moment(access.actual_start_datetime).isAfter(moment(), 'day') && (
                                     <Tooltip title="Supprimer l'accès">
                                       <IconButton
                                         onClick={() => {
                                           setDeleteAccess(access)
                                           setTerminateAccess(false)
                                         }}
-                                        style={{ padding: "4px 12px" }}
+                                        style={{ padding: '4px 12px' }}
                                       >
                                         <DeleteIcon />
                                       </IconButton>
@@ -394,11 +340,11 @@ const RightsTable: React.FC<RightsTableProps> = ({
                                 <IconButton
                                   onClick={() => {
                                     history.push({
-                                      pathname: "/console-admin/logs",
-                                      search: `?access=${access.care_site_history_id}`,
+                                      pathname: '/console-admin/logs',
+                                      search: `?access=${access.care_site_history_id}`
                                     })
                                   }}
-                                  style={{ padding: "4px 12px" }}
+                                  style={{ padding: '4px 12px' }}
                                 >
                                   <AssignmentIcon />
                                 </IconButton>
@@ -414,9 +360,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
             ) : (
               <TableRow>
                 <TableCell colSpan={7}>
-                  <Typography className={classes.loadingSpinnerContainer}>
-                    Aucun résultat à afficher
-                  </Typography>
+                  <Typography className={classes.loadingSpinnerContainer}>Aucun résultat à afficher</Typography>
                 </TableCell>
               </TableRow>
             )}
@@ -441,15 +385,11 @@ const RightsTable: React.FC<RightsTableProps> = ({
         />
       )}
 
-      <Dialog
-        open={deleteAccess ? true : false}
-        onClose={() => setDeleteAccess(null)}
-      >
+      <Dialog open={deleteAccess ? true : false} onClose={() => setDeleteAccess(null)}>
         <DialogContent>
           <Typography>
-            Êtes-vous sûr(e) de vouloir{" "}
-            {terminateAccess ? "clôturer" : "supprimer"} cet accès sur le
-            périmètre {deleteAccess?.care_site.care_site_name} ?
+            Êtes-vous sûr(e) de vouloir {terminateAccess ? 'clôturer' : 'supprimer'} cet accès sur le périmètre{' '}
+            {deleteAccess?.care_site.care_site_name} ?
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -468,7 +408,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
             if (deleteAccessSuccess) setDeleteAccessSuccess(false)
           }}
           autoHideDuration={3000}
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
           <Alert
             severity="success"
@@ -478,8 +418,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
             }}
           >
             {editAccessSuccess && "Les dates d'accès ont bien été éditées."}
-            {deleteAccessSuccess &&
-              `L'accès a bien été ${terminateAccess ? "clôturé" : "supprimé"}.`}
+            {deleteAccessSuccess && `L'accès a bien été ${terminateAccess ? 'clôturé' : 'supprimé'}.`}
           </Alert>
         </Snackbar>
       )}
@@ -491,7 +430,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
             if (deleteAccessFail) setDeleteAccessFail(false)
           }}
           autoHideDuration={3000}
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
           <Alert
             severity="error"
@@ -501,10 +440,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
             }}
           >
             {editAccessFail && "Erreur lors de l'édition de l'accès."}
-            {deleteAccessFail &&
-              `Erreur lors de la ${
-                terminateAccess ? "clôture" : "suppression"
-              } de l'accès.`}
+            {deleteAccessFail && `Erreur lors de la ${terminateAccess ? 'clôture' : 'suppression'} de l'accès.`}
           </Alert>
         </Snackbar>
       )}

@@ -7,7 +7,7 @@ import portailTopBar from './portailTopBar'
 
 const rootReducer = combineReducers({
   me,
-  portailTopBar,
+  portailTopBar
 })
 
 export const store = createStore(rootReducer, applyMiddleware(thunkMiddleware, logger))

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from 'react'
 
 import {
   Button,
@@ -16,19 +16,16 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Typography,
-} from "@material-ui/core"
+  Typography
+} from '@material-ui/core'
 
-import CancelIcon from "@material-ui/icons/Cancel"
-import CheckCircleIcon from "@material-ui/icons/CheckCircle"
-import EditIcon from "@material-ui/icons/Edit"
+import CancelIcon from '@material-ui/icons/Cancel'
+import CheckCircleIcon from '@material-ui/icons/CheckCircle'
+import EditIcon from '@material-ui/icons/Edit'
 
-import useStyles from "./styles"
-import {
-  createRoles,
-  submitEditRoles,
-} from "services/Console-Admin/rolesService"
-import { Role, RoleKeys, UserRole } from "types"
+import useStyles from './styles'
+import { createRoles, submitEditRoles } from 'services/Console-Admin/rolesService'
+import { Role, RoleKeys, UserRole } from 'types'
 
 type RoleDialogProps = {
   open: boolean
@@ -49,7 +46,7 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
   onAddRoleSuccess,
   onEditRoleSuccess,
   onAddRoleFail,
-  onEditRoleFail,
+  onEditRoleFail
 }) => {
   const classes = useStyles()
 
@@ -59,95 +56,94 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
 
   const isEditable = selectedRole?.role_id ? true : false
 
-  const columns = ["Droit", "Statut"]
+  const columns = ['Droit', 'Statut']
 
   const rows = [
     {
-      label: "Gestion des habilitations",
+      label: 'Gestion des habilitations',
       status: role?.right_edit_roles,
-      keyName: "right_edit_roles",
+      keyName: 'right_edit_roles'
     },
     {
-      label: "Consulter la liste des logs",
+      label: 'Consulter la liste des logs',
       status: role?.right_read_logs,
-      keyName: "right_read_logs",
+      keyName: 'right_read_logs'
     },
     {
-      label: "Ajouter un utilisateur / profil",
+      label: 'Ajouter un utilisateur / profil',
       status: role?.right_add_users,
-      keyName: "right_add_users",
+      keyName: 'right_add_users'
     },
     {
-      label: "Modifier un utilisateur / profil",
+      label: 'Modifier un utilisateur / profil',
       status: role?.right_edit_users,
-      keyName: "right_edit_users",
+      keyName: 'right_edit_users'
     },
     {
-      label: "Consulter la liste des utilisateurs / profils",
+      label: 'Consulter la liste des utilisateurs / profils',
       status: role?.right_read_users,
-      keyName: "right_read_users",
+      keyName: 'right_read_users'
     },
     {
       label: "Éditer les accès administrateurs d'un périmètre",
       status: role?.right_manage_admin_accesses_same_level,
-      keyName: "right_manage_admin_accesses_same_level",
+      keyName: 'right_manage_admin_accesses_same_level'
     },
     {
       label: "Consulter la liste des accès administrateur d'un périmètre",
       status: role?.right_read_admin_accesses_same_level,
-      keyName: "right_read_admin_accesses_same_level",
+      keyName: 'right_read_admin_accesses_same_level'
     },
     {
-      label: "Éditer les accès administrateurs des sous-périmètres",
+      label: 'Éditer les accès administrateurs des sous-périmètres',
       status: role?.right_manage_admin_accesses_inferior_levels,
-      keyName: "right_manage_admin_accesses_inferior_levels",
+      keyName: 'right_manage_admin_accesses_inferior_levels'
     },
     {
-      label: "Consulter la liste des accès administrateur des sous-périmètres",
+      label: 'Consulter la liste des accès administrateur des sous-périmètres',
       status: role?.right_read_admin_accesses_inferior_levels,
-      keyName: "right_read_admin_accesses_inferior_levels",
+      keyName: 'right_read_admin_accesses_inferior_levels'
     },
     {
       label: "Éditer les accès aux données patients d'un périmètre",
       status: role?.right_manage_data_accesses_same_level,
-      keyName: "right_manage_data_accesses_same_level",
+      keyName: 'right_manage_data_accesses_same_level'
     },
     {
       label: "Consulter la liste des accès aux données patients d'un périmètre",
       status: role?.right_read_data_accesses_same_level,
-      keyName: "right_read_data_accesses_same_level",
+      keyName: 'right_read_data_accesses_same_level'
     },
     {
-      label: "Éditer les accès aux données patients des sous-périmètres",
+      label: 'Éditer les accès aux données patients des sous-périmètres',
       status: role?.right_manage_data_accesses_inferior_levels,
-      keyName: "right_manage_data_accesses_inferior_levels",
+      keyName: 'right_manage_data_accesses_inferior_levels'
     },
     {
-      label:
-        "Consulter la liste des accès aux données patients des sous-périmètres",
+      label: 'Consulter la liste des accès aux données patients des sous-périmètres',
       status: role?.right_read_data_accesses_inferior_levels,
-      keyName: "right_read_data_accesses_inferior_levels",
+      keyName: 'right_read_data_accesses_inferior_levels'
     },
     {
-      label: "Lecture des données patients nominatives",
+      label: 'Lecture des données patients nominatives',
       status: role?.right_read_patient_nominative,
-      keyName: "right_read_patient_nominative",
+      keyName: 'right_read_patient_nominative'
     },
     {
-      label: "Lecture des données patients pseudonymisées",
+      label: 'Lecture des données patients pseudonymisées',
       status: role?.right_read_patient_pseudo_anonymised,
-      keyName: "right_read_patient_pseudo_anonymised",
+      keyName: 'right_read_patient_pseudo_anonymised'
     },
     {
-      label: "Export des données patients nominatives",
+      label: 'Export des données patients nominatives',
       status: role?.right_export_jupyter_patient_nominative,
-      keyName: "right_export_jupyter_patient_nominative",
+      keyName: 'right_export_jupyter_patient_nominative'
     },
     {
-      label: "Export des données patients pseudonymisées",
+      label: 'Export des données patients pseudonymisées',
       status: role?.right_export_jupyter_patient_pseudo_anonymised,
-      keyName: "right_export_jupyter_patient_pseudo_anonymised",
-    },
+      keyName: 'right_export_jupyter_patient_pseudo_anonymised'
+    }
   ]
 
   useEffect(() => {
@@ -175,29 +171,18 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
         right_add_users: role?.right_add_users,
         right_edit_users: role?.right_edit_users,
         right_read_users: role?.right_read_users,
-        right_manage_admin_accesses_same_level:
-          role?.right_manage_admin_accesses_same_level,
-        right_read_admin_accesses_same_level:
-          role?.right_read_admin_accesses_same_level,
-        right_manage_admin_accesses_inferior_levels:
-          role?.right_manage_admin_accesses_inferior_levels,
-        right_read_admin_accesses_inferior_levels:
-          role?.right_read_admin_accesses_inferior_levels,
-        right_manage_data_accesses_same_level:
-          role?.right_manage_data_accesses_same_level,
-        right_read_data_accesses_same_level:
-          role?.right_read_data_accesses_same_level,
-        right_manage_data_accesses_inferior_levels:
-          role?.right_manage_data_accesses_inferior_levels,
-        right_read_data_accesses_inferior_levels:
-          role?.right_read_data_accesses_inferior_levels,
+        right_manage_admin_accesses_same_level: role?.right_manage_admin_accesses_same_level,
+        right_read_admin_accesses_same_level: role?.right_read_admin_accesses_same_level,
+        right_manage_admin_accesses_inferior_levels: role?.right_manage_admin_accesses_inferior_levels,
+        right_read_admin_accesses_inferior_levels: role?.right_read_admin_accesses_inferior_levels,
+        right_manage_data_accesses_same_level: role?.right_manage_data_accesses_same_level,
+        right_read_data_accesses_same_level: role?.right_read_data_accesses_same_level,
+        right_manage_data_accesses_inferior_levels: role?.right_manage_data_accesses_inferior_levels,
+        right_read_data_accesses_inferior_levels: role?.right_read_data_accesses_inferior_levels,
         right_read_patient_nominative: role?.right_read_patient_nominative,
-        right_read_patient_pseudo_anonymised:
-          role?.right_read_patient_pseudo_anonymised,
-        right_export_jupyter_patient_nominative:
-          role?.right_export_jupyter_patient_nominative,
-        right_export_jupyter_patient_pseudo_anonymised:
-          role?.right_export_jupyter_patient_pseudo_anonymised,
+        right_read_patient_pseudo_anonymised: role?.right_read_patient_pseudo_anonymised,
+        right_export_jupyter_patient_nominative: role?.right_export_jupyter_patient_nominative,
+        right_export_jupyter_patient_pseudo_anonymised: role?.right_export_jupyter_patient_pseudo_anonymised
       }
 
       if (isEditable) {
@@ -212,12 +197,7 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
 
       onClose()
     } catch (error) {
-      console.error(
-        `Erreur lors de ${
-          isEditable ? "l'édition" : "la création"
-        } de l'habilitation`,
-        error
-      )
+      console.error(`Erreur lors de ${isEditable ? "l'édition" : 'la création'} de l'habilitation`, error)
       isEditable ? onEditRoleFail(true) : onAddRoleFail(true)
       onClose()
     }
@@ -226,7 +206,7 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md">
       <DialogTitle className={classes.title}>
-        {isEditable ? role?.name : "Créer une nouvelle habilitation :"}
+        {isEditable ? role?.name : 'Créer une nouvelle habilitation :'}
       </DialogTitle>
       <DialogContent className={classes.dialog}>
         {(isEditable && editMode) || !isEditable ? (
@@ -239,16 +219,13 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
               autoFocus
               placeholder="Nom de l'habilitation"
               value={role?.name}
-              onChange={(event) => _onChangeValue("name", event.target.value)}
+              onChange={(event) => _onChangeValue('name', event.target.value)}
               error={errorName}
-              helperText={
-                errorName &&
-                "Le nom de l'habilitation doit contenir au moins 4 caractères."
-              }
+              helperText={errorName && "Le nom de l'habilitation doit contenir au moins 4 caractères."}
             />
           </Grid>
         ) : (
-          ""
+          ''
         )}
         <TableContainer component={Paper}>
           <Table className={classes.table}>
@@ -257,7 +234,7 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
                 {columns.map((column, index) => (
                   <TableCell
                     key={index}
-                    align={column === "Droit" ? "left" : "right"}
+                    align={column === 'Droit' ? 'left' : 'right'}
                     className={classes.tableHeadCell}
                   >
                     {column}
@@ -269,9 +246,7 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
             <TableBody>
               {rows.map((row, index) => (
                 <TableRow key={index} className={classes.tableBodyRows}>
-                  <TableCell className={classes.tableBodyCell}>
-                    {row.label}
-                  </TableCell>
+                  <TableCell className={classes.tableBodyCell}>{row.label}</TableCell>
                   <TableCell align="right" className={classes.tableBodyCell}>
                     {(isEditable && editMode) || !isEditable ? (
                       <Switch
@@ -283,9 +258,9 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
                         }
                       />
                     ) : row.status ? (
-                      <CheckCircleIcon style={{ color: "#BDEA88" }} />
+                      <CheckCircleIcon style={{ color: '#BDEA88' }} />
                     ) : (
-                      <CancelIcon style={{ color: "#ED6D91" }} />
+                      <CancelIcon style={{ color: '#ED6D91' }} />
                     )}
                   </TableCell>
                 </TableRow>
@@ -296,7 +271,7 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary">
-          {isEditable ? "Fermer" : "Annuler"}
+          {isEditable ? 'Fermer' : 'Annuler'}
         </Button>
         {(isEditable && editMode) || !isEditable ? (
           <Button

@@ -8,11 +8,9 @@ import PrivateRoute from '../PrivateRoute'
 import Config from './config'
 import PortailTopBar from 'components/PortailTopBar/PortailTopBar'
 
-
-
 const Layout = (props) => {
-
   const me = useAppSelector((state) => state.me)
+
   return (
     <>
       {me && <AutoLogoutContainer />}
@@ -32,7 +30,7 @@ const AppNavigation = () => (
         const MyComponent = route.component
         return route.isPrivate ? (
           <PrivateRoute
-            key={index}s
+            key={index}
             exact={route.exact}
             path={route.path}
             render={(props) => {

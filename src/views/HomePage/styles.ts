@@ -1,12 +1,12 @@
-import { makeStyles } from "@material-ui/core"
+import { makeStyles } from '@material-ui/core'
 
 const useStyles = makeStyles(() => ({
   root: {
-    height: "100%"
+    height: '100%'
   },
   appbar: {
-    backgroundColor: "#232E6A",
-  },
+    backgroundColor: '#232E6A'
+  }
 }))
 
 export default useStyles

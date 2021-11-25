@@ -1,23 +1,16 @@
-import React from "react"
-import { useHistory } from "react-router-dom"
-import { useDispatch } from "react-redux"
-import clsx from "clsx"
-import {
-  AppBar,
-  Button,
-  Grid,
-  IconButton,
-  ListItemIcon,
-  Toolbar,
-} from "@material-ui/core"
+import React from 'react'
+import { useHistory } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import clsx from 'clsx'
+import { AppBar, Button, Grid, IconButton, ListItemIcon, Toolbar } from '@material-ui/core'
 
-import { ReactComponent as LogoutIcon } from "assets/icones/power-off.svg"
-import consoleLogo from "assets/images/console-white.png"
-import { logout as logoutAction } from "state/me"
-import { logout as logoutRoute } from "services/authentication"
-import { useAppSelector } from "state"
-import useStyles from "./styles"
-import { userDefaultRoles } from "utils/userRoles"
+import { ReactComponent as LogoutIcon } from 'assets/icones/power-off.svg'
+import consoleLogo from 'assets/images/console-white.png'
+import { logout as logoutAction } from 'state/me'
+import { logout as logoutRoute } from 'services/authentication'
+import { useAppSelector } from 'state'
+import useStyles from './styles'
+import { userDefaultRoles } from 'utils/userRoles'
 
 const smallDrawerWidth = 52
 const largeDrawerWidth = 260
@@ -36,30 +29,12 @@ const TopBar: React.FC = () => {
   return (
     <AppBar position="static" className={classes.appbar}>
       <Toolbar>
-        <Grid
-          container
-          alignItems="center"
-          justify="space-between"
-          style={{ height: "100%" }}
-        >
-          <Grid
-            container
-            item
-            alignItems="center"
-            xs={9}
-            style={{ height: "100%" }}
-          >
-            <img
-              src={consoleLogo}
-              alt="Console logo"
-              className={classes.logoIcon}
-            />
+        <Grid container alignItems="center" justify="space-between" style={{ height: '100%' }}>
+          <Grid container item alignItems="center" xs={9} style={{ height: '100%' }}>
+            <img src={consoleLogo} alt="Console logo" className={classes.logoIcon} />
             <Button
-              className={clsx(
-                classes.topBarButton,
-                pathname === "/users" ? classes.activeButton : ""
-              )}
-              onClick={() => history.push("/users")}
+              className={clsx(classes.topBarButton, pathname === '/users' ? classes.activeButton : '')}
+              onClick={() => history.push('/users')}
             >
               Utilisateurs
             </Button>
@@ -68,35 +43,25 @@ const TopBar: React.FC = () => {
               userRights.right_read_data_accesses_same_level ||
               userRights.right_read_data_accesses_inferior_levels) && (
               <Button
-                className={clsx(
-                  classes.topBarButton,
-                  pathname === "/caresites" ? classes.activeButton : ""
-                )}
-                onClick={() => history.push("/caresites")}
+                className={clsx(classes.topBarButton, pathname === '/caresites' ? classes.activeButton : '')}
+                onClick={() => history.push('/caresites')}
                 style={{
-                  borderBottom:
-                    pathname === "/caresites" ? "2px solid #5BC5F2" : "none",
+                  borderBottom: pathname === '/caresites' ? '2px solid #5BC5F2' : 'none'
                 }}
               >
                 Périmètres
               </Button>
             )}
             <Button
-              className={clsx(
-                classes.topBarButton,
-                pathname === "/habilitations" ? classes.activeButton : ""
-              )}
-              onClick={() => history.push("/habilitations")}
+              className={clsx(classes.topBarButton, pathname === '/habilitations' ? classes.activeButton : '')}
+              onClick={() => history.push('/habilitations')}
             >
               Habilitations
             </Button>
             {userRights.right_read_logs && (
               <Button
-                className={clsx(
-                  classes.topBarButton,
-                  pathname === "/logs" ? classes.activeButton : ""
-                )}
-                onClick={() => history.push("/logs")}
+                className={clsx(classes.topBarButton, pathname === '/logs' ? classes.activeButton : '')}
+                onClick={() => history.push('/logs')}
               >
                 Logs
               </Button>
@@ -105,9 +70,7 @@ const TopBar: React.FC = () => {
 
           <Grid container item alignItems="center" justify="flex-end" xs={3}>
             <ListItemIcon className={classes.listIcon}>
-              <div className={classes.avatar}>
-                {me && `${(me.firstName || "?")[0]}${(me.lastName || "?")[0]}`}
-              </div>
+              <div className={classes.avatar}>{me && `${(me.firstName || '?')[0]}${(me.lastName || '?')[0]}`}</div>
             </ListItemIcon>
 
             <IconButton
@@ -115,7 +78,7 @@ const TopBar: React.FC = () => {
                 localStorage.clear()
                 logoutRoute()
                 dispatch<any>(logoutAction())
-                history.push("/")
+                history.push('/')
               }}
             >
               <LogoutIcon className={classes.logoutIcon} />

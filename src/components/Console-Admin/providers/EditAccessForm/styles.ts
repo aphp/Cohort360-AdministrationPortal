@@ -37,7 +37,7 @@ const useStyles = makeStyles(() => ({
   },
   infoIcon: {
     height: 20,
-    margin: "0 5px -5px 0"
+    margin: '0 5px -5px 0'
   }
 }))
 

@@ -1,4 +1,4 @@
-import { makeStyles, createStyles } from "@material-ui/core/styles";
+import { makeStyles, createStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -6,7 +6,7 @@ const useStyles = makeStyles(() =>
       minHeight: 75
     },
     dialog: {
-      height: "calc(100% - 50px)"
+      height: 'calc(100% - 50px)'
     },
     title: {
       ' & h2': {
@@ -18,6 +18,6 @@ const useStyles = makeStyles(() =>
       }
     }
   })
-);
+)
 
-export default useStyles;
+export default useStyles

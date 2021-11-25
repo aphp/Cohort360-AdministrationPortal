@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react"
-import { useHistory } from "react-router-dom"
+import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 
 import {
   Button,
@@ -16,22 +16,22 @@ import {
   Typography,
   Paper,
   Tooltip,
-  Snackbar,
-} from "@material-ui/core"
-import Alert from "@material-ui/lab/Alert"
-import Pagination from "@material-ui/lab/Pagination"
+  Snackbar
+} from '@material-ui/core'
+import Alert from '@material-ui/lab/Alert'
+import Pagination from '@material-ui/lab/Pagination'
 
-import AssignmentIcon from "@material-ui/icons/Assignment"
-import EditIcon from "@material-ui/icons/Edit"
-import PersonAddIcon from "@material-ui/icons/PersonAdd"
-import VisibilityIcon from "@material-ui/icons/Visibility"
+import AssignmentIcon from '@material-ui/icons/Assignment'
+import EditIcon from '@material-ui/icons/Edit'
+import PersonAddIcon from '@material-ui/icons/PersonAdd'
+import VisibilityIcon from '@material-ui/icons/Visibility'
 
-import ProviderDialog from "../ProviderForm/ProviderForm"
-import SearchBar from "../../../SearchBar/SearchBar"
+import ProviderDialog from '../ProviderForm/ProviderForm'
+import SearchBar from '../../../SearchBar/SearchBar'
 
-import { getProviders } from "services/Console-Admin/providersService"
-import useStyles from "./styles"
-import { Provider, UserRole } from "types"
+import { getProviders } from 'services/Console-Admin/providersService'
+import useStyles from './styles'
+import { Provider, UserRole } from 'types'
 
 type ProvidersTableProps = {
   userRights: UserRole
@@ -50,42 +50,42 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
     !userRights.right_read_logs
       ? [
           {
-            label: "Identifiant APH",
-            code: "provider_source_value",
+            label: 'Identifiant APH',
+            code: 'provider_source_value'
           },
           {
-            label: "Nom",
-            code: "lastname",
+            label: 'Nom',
+            code: 'lastname'
           },
           {
-            label: "Prénom",
-            code: "firstname",
+            label: 'Prénom',
+            code: 'firstname'
           },
           {
-            label: "Email",
-            code: "email",
-          },
+            label: 'Email',
+            code: 'email'
+          }
         ]
       : [
           {
-            label: "Identifiant APH",
-            code: "provider_source_value",
+            label: 'Identifiant APH',
+            code: 'provider_source_value'
           },
           {
-            label: "Nom",
-            code: "lastname",
+            label: 'Nom',
+            code: 'lastname'
           },
           {
-            label: "Prénom",
-            code: "firstname",
+            label: 'Prénom',
+            code: 'firstname'
           },
           {
-            label: "Email",
-            code: "email",
+            label: 'Email',
+            code: 'email'
           },
           {
-            label: "Actions",
-          },
+            label: 'Actions'
+          }
         ]
 
   const [providers, setProviders] = useState<Provider[] | null>(null)
@@ -93,14 +93,12 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
   const [refreshed /*setRefreshed*/] = useState(true)
-  const [orderBy, setOrderBy] = useState<string>("lastname")
-  const [orderDirection, setOrderDirection] = useState<"asc" | "desc">("asc")
-  const [searchInput, setSearchInput] = useState("")
+  const [orderBy, setOrderBy] = useState<string>('lastname')
+  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc')
+  const [searchInput, setSearchInput] = useState('')
   const [addProviderSuccess, setAddProviderSuccess] = useState(false)
   const [addProviderFail, setAddProviderFail] = useState(false)
-  const [selectedProvider, setSelectedProvider] = useState<Provider | null>(
-    null
-  )
+  const [selectedProvider, setSelectedProvider] = useState<Provider | null>(null)
   const [editProviderSuccess, setEditProviderSuccess] = useState(false)
   const [editProviderFail, setEditProviderFail] = useState(false)
 
@@ -117,66 +115,52 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
     if (editProviderSuccess) getData(orderBy, orderDirection)
   }, [addProviderSuccess, editProviderSuccess]) // eslint-disable-line
 
-  const getData = async (
-    orderBy: string,
-    orderDirection: string,
-    page?: number
-  ) => {
+  const getData = async (orderBy: string, orderDirection: string, page?: number) => {
     try {
       const _page = page ? page : 1
       if (refreshed) {
-        const urlSearch = searchInput ? `&search=${searchInput}` : ""
-        const urlOrderingDirection = orderDirection === "desc" ? "-" : ""
+        const urlSearch = searchInput ? `&search=${searchInput}` : ''
+        const urlOrderingDirection = orderDirection === 'desc' ? '-' : ''
 
         history.push({
-          pathname: "/console-admin/users",
-          search: `?page=${_page}&ordering=${urlOrderingDirection}${orderBy}${urlSearch}`,
+          pathname: '/console-admin/users',
+          search: `?page=${_page}&ordering=${urlOrderingDirection}${orderBy}${urlSearch}`
         })
       }
 
       setLoading(true)
 
-      const providersResp = await getProviders(
-        orderBy,
-        orderDirection,
-        _page,
-        searchInput
-      )
+      const providersResp = await getProviders(orderBy, orderDirection, _page, searchInput)
 
       if (providersResp) {
-        setProviders(
-          providersResp.providers.length === 0
-            ? undefined
-            : providersResp.providers
-        )
+        setProviders(providersResp.providers.length === 0 ? undefined : providersResp.providers)
         setTotal(providersResp.total)
       }
 
       setLoading(false)
     } catch (error) {
-      console.error("Erreur lors de la récupération des providers", error)
+      console.error('Erreur lors de la récupération des providers', error)
       setProviders(null)
       setTotal(0)
       setLoading(false)
     }
   }
 
-  const createSortHandler =
-    (property: any) => (event: React.MouseEvent<unknown>) => {
-      const isAsc: boolean = orderBy === property && orderDirection === "asc"
-      const _orderDirection = isAsc ? "desc" : "asc"
+  const createSortHandler = (property: any) => () => {
+    const isAsc: boolean = orderBy === property && orderDirection === 'asc'
+    const _orderDirection = isAsc ? 'desc' : 'asc'
 
-      setOrderDirection(_orderDirection)
-      setOrderBy(property)
-    }
+    setOrderDirection(_orderDirection)
+    setOrderBy(property)
+  }
 
   return (
     <Grid container justify="flex-end">
       <Grid
         container
         item
-        justify={userRights.right_add_users ? "space-between" : "flex-end"}
-        style={{ margin: "12px 0" }}
+        justify={userRights.right_add_users ? 'space-between' : 'flex-end'}
+        style={{ margin: '12px 0' }}
       >
         {userRights.right_add_users && (
           <Button
@@ -197,20 +181,17 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
         <Table className={classes.table}>
           <TableHead>
             <TableRow className={classes.tableHead}>
-              {columns.map((column) => (
+              {columns.map((column, index: number) => (
                 <TableCell
-                  sortDirection={
-                    orderBy === column.code ? orderDirection : false
-                  }
+                  key={index}
+                  sortDirection={orderBy === column.code ? orderDirection : false}
                   align="center"
                   className={classes.tableHeadCell}
                 >
-                  {column.label !== "Actions" ? (
+                  {column.label !== 'Actions' ? (
                     <TableSortLabel
                       active={orderBy === column.code}
-                      direction={
-                        orderBy === column.code ? orderDirection : "asc"
-                      }
+                      direction={orderBy === column.code ? orderDirection : 'asc'}
                       onClick={createSortHandler(column.code)}
                     >
                       {column.label}
@@ -234,9 +215,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
             ) : !providers ? (
               <TableRow>
                 <TableCell colSpan={7}>
-                  <Typography className={classes.loadingSpinnerContainer}>
-                    Aucun résultat à afficher
-                  </Typography>
+                  <Typography className={classes.loadingSpinnerContainer}>Aucun résultat à afficher</Typography>
                 </TableCell>
               </TableRow>
             ) : (
@@ -254,20 +233,14 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                           userRights.right_read_data_accesses_same_level ||
                           userRights.right_read_data_accesses_inferior_levels
                         ) {
-                          history.push(
-                            `/console-admin/user-profile/${provider.provider_id}`
-                          )
+                          history.push(`/console-admin/user-profile/${provider.provider_id}`)
                         }
                       }}
                     >
-                      <TableCell align="center">
-                        {provider.provider_source_value}
-                      </TableCell>
+                      <TableCell align="center">{provider.provider_source_value}</TableCell>
                       <TableCell align="center">{provider.lastname}</TableCell>
                       <TableCell align="center">{provider.firstname}</TableCell>
-                      <TableCell align="center">
-                        {provider.email ?? "-"}
-                      </TableCell>
+                      <TableCell align="center">{provider.email ?? '-'}</TableCell>
                       {(userRights.right_read_admin_accesses_same_level ||
                         userRights.right_read_admin_accesses_inferior_levels ||
                         userRights.right_read_data_accesses_same_level ||
@@ -279,16 +252,11 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                             userRights.right_read_admin_accesses_inferior_levels ||
                             userRights.right_read_data_accesses_same_level ||
                             userRights.right_read_data_accesses_inferior_levels) && (
-                            <Tooltip
-                              title="Visualiser les accès de l'utilisateur"
-                              style={{ padding: "0 12px" }}
-                            >
+                            <Tooltip title="Visualiser les accès de l'utilisateur" style={{ padding: '0 12px' }}>
                               <IconButton
                                 onClick={(event) => {
                                   event.stopPropagation()
-                                  history.push(
-                                    `/console-admin/user-profile/${provider.provider_id}`
-                                  )
+                                  history.push(`/console-admin/user-profile/${provider.provider_id}`)
                                 }}
                               >
                                 <VisibilityIcon />
@@ -296,10 +264,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                             </Tooltip>
                           )}
                           {userRights.right_edit_users && (
-                            <Tooltip
-                              title="Éditer l'utilisateur"
-                              style={{ padding: "0 12px" }}
-                            >
+                            <Tooltip title="Éditer l'utilisateur" style={{ padding: '0 12px' }}>
                               <IconButton
                                 onClick={(event) => {
                                   event.stopPropagation()
@@ -311,16 +276,13 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                             </Tooltip>
                           )}
                           {userRights.right_read_logs && (
-                            <Tooltip
-                              title="Voir les logs de l'utilisateur"
-                              style={{ padding: "0 12px" }}
-                            >
+                            <Tooltip title="Voir les logs de l'utilisateur" style={{ padding: '0 12px' }}>
                               <IconButton
                                 onClick={(event) => {
                                   event.stopPropagation()
                                   history.push({
-                                    pathname: "/console-admin/logs",
-                                    search: `?user=${provider.provider_source_value}`,
+                                    pathname: '/console-admin/logs',
+                                    search: `?user=${provider.provider_source_value}`
                                   })
                                 }}
                               >
@@ -366,7 +328,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
             if (editProviderSuccess) setEditProviderSuccess(false)
           }}
           autoHideDuration={3000}
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
           <Alert
             severity="success"
@@ -388,7 +350,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
             if (editProviderFail) setEditProviderFail(false)
           }}
           autoHideDuration={3000}
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
           <Alert
             severity="error"

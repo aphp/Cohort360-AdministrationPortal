@@ -1,18 +1,10 @@
-import React, { useState } from "react"
-import {
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Grid,
-  Paper,
-} from "@material-ui/core"
+import React, { useState } from 'react'
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Grid, Paper } from '@material-ui/core'
 
-import useStyles from "./styles"
-import CareSiteTree from "components/Console-Admin/CareSite/CareSiteTree"
-import SearchBar from "components/SearchBar/SearchBar"
-import { ScopeTreeRow, UserRole } from "types"
+import useStyles from './styles'
+import CareSiteTree from 'components/Console-Admin/CareSite/CareSiteTree'
+import SearchBar from 'components/SearchBar/SearchBar'
+import { ScopeTreeRow, UserRole } from 'types'
 
 type CareSitesDialogProps = {
   careSite: ScopeTreeRow | null
@@ -29,10 +21,10 @@ const CareSitesDialog: React.FC<CareSitesDialogProps> = ({
   open,
   onClose,
   isManageable,
-  userRights,
+  userRights
 }) => {
   const classes = useStyles()
-  const [searchInput, setSearchInput] = useState("")
+  const [searchInput, setSearchInput] = useState('')
 
   const onCancel = () => {
     onChangeCareSite(null)
@@ -44,21 +36,13 @@ const CareSitesDialog: React.FC<CareSitesDialogProps> = ({
   }
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      fullWidth={true}
-      maxWidth="md"
-      className={classes.dialog}
-    >
-      <DialogTitle className={classes.title}>
-        Sélectionner un périmètre :
-      </DialogTitle>
+    <Dialog open={open} onClose={onClose} fullWidth={true} maxWidth="md" className={classes.dialog}>
+      <DialogTitle className={classes.title}>Sélectionner un périmètre :</DialogTitle>
       <DialogContent className={classes.content}>
         <Grid container item xs={12} direction="column" alignItems="flex-end">
           <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
 
-          <Paper style={{ width: "100%", marginTop: 12 }}>
+          <Paper style={{ width: '100%', marginTop: 12 }}>
             <CareSiteTree
               isManageable={isManageable}
               defaultSelectedItems={careSite}
