@@ -15,7 +15,7 @@ export const store = createStore(rootReducer, applyMiddleware(thunkMiddleware, l
 store.subscribe(() => {
   // Auto save store inside localStorage
   const _store = store.getState() ?? {}
-  const { me } = _store
+  const { me, portailTopBar } = _store
 
   localStorage.setItem('user', JSON.stringify(me))
 })
