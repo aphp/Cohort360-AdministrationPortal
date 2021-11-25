@@ -111,9 +111,7 @@ const Login = () => {
           <Grid container item xs={8} lg={6} direction="column" alignItems="center">
             <img className={classes.logo} src={logo} alt="Logo Cohort360" />
 
-            <Typography className={classes.bienvenue}>
-              Bienvenue ! Connectez-vous.
-            </Typography>
+            <Typography className={classes.bienvenue}>Bienvenue ! Connectez-vous.</Typography>
 
             <form className={classes.form} noValidate onSubmit={_onSubmit}>
               <Grid container item direction="column" alignItems="center">

@@ -57,7 +57,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "lint": "eslint --ext .jsx,.js,.ts,.tsx src/"
+    "lint": "eslint --fix --ext .jsx,.js,.ts,.tsx src/",
+    "fixlint": "eslint --fix --ext .jsx,.js,.ts,.tsx src/"
   },
   "eslintConfig": {
     "extends": "react-app"
