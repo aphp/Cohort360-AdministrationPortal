@@ -33,7 +33,7 @@ import LaunchIcon from '@material-ui/icons/Launch'
 import TimerOffIcon from '@material-ui/icons/TimerOff'
 
 import useStyles from './styles'
-import EditAccessForm from '../../providers/EditAccessForm/EditAccessForm'
+import AccessForm from '../AccessForm/AccessForm'
 import { Access, Order, Role, UserRole } from 'types'
 import { Alert } from '@material-ui/lab'
 import moment from 'moment'
@@ -376,12 +376,13 @@ const RightsTable: React.FC<RightsTableProps> = ({
       />
 
       {selectedAccess && (
-        <EditAccessForm
+        <AccessForm
           open
           onClose={() => setSelectedAccess(null)}
           access={selectedAccess}
           onSuccess={setEditAccessSuccess}
           onFail={setEditAccessFail}
+          userRights={userRights}
         />
       )}
 

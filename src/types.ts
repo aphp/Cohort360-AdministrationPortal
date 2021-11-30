@@ -167,7 +167,7 @@ export type Access = {
   provider_history: Provider
   provider_history_id: number
   care_site: CareSite
-  role: Role
+  role: { name: string; role_id: number; help_text: string[] }
   entry_created_by: number
   created_by: string
   start_datetime: string

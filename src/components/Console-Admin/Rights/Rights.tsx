@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
 
 import { Button, Grid, Snackbar, Typography } from '@material-ui/core'
+import { Alert } from '@material-ui/lab'
 
 import AddIcon from '@material-ui/icons/Add'
 
-import useStyles from './styles'
-import AddAccessForm from '../providers/AddAccessForm/AddAccessForm'
+import AccessForm from './AccessForm/AccessForm'
 import RightsTable from './RightsTable/RightsTable'
 import { getAccesses } from 'services/Console-Admin/providersHistoryService'
 import { Access, Order, Profile, UserRole } from 'types'
-import { Alert } from '@material-ui/lab'
+
+import useStyles from './styles'
 
 type RightsProps = {
   right: Profile
@@ -93,8 +94,7 @@ const Rights: React.FC<RightsProps> = ({ right, userRights }) => {
         setOrder={setOrder}
         userRights={userRights}
       />
-
-      <AddAccessForm
+      <AccessForm
         open={open}
         onClose={onClose}
         entityId={right.provider_history_id}
