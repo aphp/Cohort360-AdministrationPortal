@@ -48,17 +48,18 @@ const useStyles = makeStyles(() => ({
     fontSize: 13,
     lineHeight: '25px'
   },
-  invisibleGrid: {
-    width: 161
-  },
   GridCollapses: {
     marginTop: '61px',
     paddingLeft: '24px',
     paddingRight: '24px'
   },
+  invisibleGrid: {
+    width: 161
+  },
   collapse: {
     backgroundColor: '#232E6A',
-    width: 140
+    borderRadius: 4,
+    marginTop: 8
   }
 }))
 

@@ -6,6 +6,8 @@ import {
   AppBar,
   Toolbar,
   Grid,
+  Menu,
+  MenuItem,
   List,
   ListItem,
   ListItemText,
@@ -13,7 +15,9 @@ import {
   IconButton,
   Collapse,
   Link,
-  Typography
+  Typography,
+  Tooltip,
+  Button
 } from '@material-ui/core'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import ExpandLess from '@material-ui/icons/ExpandLess'
@@ -61,78 +65,145 @@ const PortailTopBar: React.FC = (props) => {
     }
   }
 
+  const handleClose = () => {
+    setDisplayConsoleAdmin(false)
+    setDisplayEspaceJupyter(false)
+  }
+
   return (
     <>
-      <Grid>
-        <Typography>
-          <p>salut</p>
-        </Typography>
-      </Grid>
+      <AppBar className={classes.appbar}>
+        <Toolbar>
+          <Grid container alignItems="center" justify="space-between" style={{ height: '100%' }}>
+            <Grid container item alignItems="center" xs={9} style={{ height: '100%' }}>
+              <img src={PortailLogo} alt="Portail logo" className={classes.logoIcon} />
+              <Grid>
+                <Button onClick={handleDisplayConsoleAdmin}>Console admin</Button>
+              </Grid>
+              <Grid>
+                <Button onClick={handleDisplayEspaceJupyter}>Espace Jupyter</Button>
+                <Menu open={displayConsoleAdmin} onClose={handleClose}>
+                  <MenuItem>
+                    <Link>Utilisateurs</Link>
+                  </MenuItem>
+                </Menu>
+              </Grid>
+            </Grid>
+
+            <Grid container item alignItems="center" justify="flex-end" xs={3}>
+              <ListItemIcon className={classes.listIcon}>
+                <div className={classes.avatar}>{me && `${(me.firstName || '?')[0]}${(me.lastName || '?')[0]}`}</div>
+              </ListItemIcon>
+
+              <IconButton
+                onClick={() => {
+                  localStorage.clear()
+                  logoutRoute()
+                  dispatch<any>(logoutAction())
+                  history.push('/')
+                }}
+              >
+                <LogoutIcon className={classes.logoutIcon} />
+              </IconButton>
+            </Grid>
+          </Grid>
+        </Toolbar>
+      </AppBar>
+      {/* <Grid id="je suis laaaaaaaaaaa" container className={classes.GridCollapses}>
+        <Grid id="je suis invisible" className={classes.invisibleGrid}></Grid>
+        <Grid id="Console admin collapse">
+          <Menu
+            id="Je suis le Menu"
+            className={classes.collapse}
+            open={displayConsoleAdmin}
+            onClose={handleClose}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+          >
+            <MenuItem id="je suis le menuItem 1">
+              <Link className={classes.nestedTitle} href="/console-admin/users">
+                Utilisateurs
+              </Link>
+            </MenuItem>
+            {(userRights.right_read_admin_accesses_same_level ||
+              userRights.right_read_admin_accesses_inferior_levels ||
+              userRights.right_read_data_accesses_same_level ||
+              userRights.right_read_data_accesses_inferior_levels) && (
+              <MenuItem>
+                <Link className={classes.nestedTitle} href="/console-admin/caresites">
+                  Périmètres
+                </Link>
+              </MenuItem>
+            )}
+            <MenuItem>
+              <Link className={classes.nestedTitle} href="/console-admin/habilitations">
+                Habilitations
+              </Link>
+            </MenuItem>
+            {userRights.right_read_logs && (
+              <MenuItem>
+                <Link className={classes.nestedTitle} href="/console-admin/logs">
+                  Logs
+                </Link>
+              </MenuItem>
+            )}
+          </Menu>
+        </Grid>
+        <Grid id="Espace Jupyter collapse">
+          <Menu
+            className={classes.collapse}
+            open={displayEspaceJupyter}
+            onClose={handleClose}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+            transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+          >
+            <MenuItem>
+              <Link className={classes.nestedTitle} href="/espace-jupyter/transfert">
+                Transfert Jupyter
+              </Link>
+            </MenuItem>
+          </Menu>
+        </Grid>
+      </Grid> */}
     </>
     // <>
     //   <AppBar className={classes.appbar}>
     //     <Toolbar>
-    //       <Grid
-    //         container
-    //         alignItems="center"
-    //         justify="space-between"
-    //         style={{ height: "100%" }}
-    //       >
-    //         <Grid
-    //           container
-    //           item
-    //           alignItems="center"
-    //           xs={9}
-    //           style={{ height: "100%" }}
-    //         >
-    //           <img
-    //             src={PortailLogo}
-    //             alt="Portail logo"
-    //             className={classes.logoIcon}
-    //           />
+    //       <Grid container alignItems="center" justify="space-between" style={{ height: '100%' }}>
+    //         <Grid container item alignItems="center" xs={9} style={{ height: '100%' }}>
+    //           <img src={PortailLogo} alt="Portail logo" className={classes.logoIcon} />
 
     //           <List>
     //             <ListItem
     //               // className={clsx(
     //               //   classes.topBarButton
-    //                 // pathname === '/console-admin' ? classes.activeButton : ''
+    //               // pathname === '/console-admin' ? classes.activeButton : ''
     //               // )}
     //               button
     //               onClick={handleDisplayConsoleAdmin}
     //             >
     //               <ListItemText primary="Console-admin" />
-    //               {displayConsoleAdmin ? (
-    //                 <ExpandLess color="action" />
-    //               ) : (
-    //                 <ExpandMore color="action" />
-    //               )}
+    //               {displayConsoleAdmin ? <ExpandLess color="action" /> : <ExpandMore color="action" />}
     //             </ListItem>
     //           </List>
     //           <List>
     //             <ListItem
     //               // className={clsx(
     //               //   classes.topBarButton
-    //                 // pathname === '/espace-jupyter' ? classes.activeButton : ''
+    //               // pathname === '/espace-jupyter' ? classes.activeButton : ''
     //               // )}
     //               button
     //               onClick={handleDisplayEspaceJupyter}
     //             >
     //               <ListItemText primary="Espace Jupyter" />
-    //               {displayEspaceJupyter ? (
-    //                 <ExpandLess color="action" />
-    //               ) : (
-    //                 <ExpandMore color="action" />
-    //               )}
+    //               {displayEspaceJupyter ? <ExpandLess color="action" /> : <ExpandMore color="action" />}
     //             </ListItem>
     //           </List>
     //         </Grid>
 
     //         <Grid container item alignItems="center" justify="flex-end" xs={3}>
     //           <ListItemIcon className={classes.listIcon}>
-    //             <div className={classes.avatar}>
-    //               {me &&
-    //                 `${(me.firstName || "?")[0]}${(me.lastName || "?")[0]}`}
-    //             </div>
+    //             <div className={classes.avatar}>{me && `${(me.firstName || '?')[0]}${(me.lastName || '?')[0]}`}</div>
     //           </ListItemIcon>
 
     //           <IconButton
@@ -140,7 +211,7 @@ const PortailTopBar: React.FC = (props) => {
     //               localStorage.clear()
     //               logoutRoute()
     //               dispatch<any>(logoutAction())
-    //               history.push("/")
+    //               history.push('/')
     //             }}
     //           >
     //             <LogoutIcon className={classes.logoutIcon} />
@@ -149,20 +220,13 @@ const PortailTopBar: React.FC = (props) => {
     //       </Grid>
     //     </Toolbar>
     //   </AppBar>
-    //   <Grid
-    //     id="je suis laaaaaaaaaaa"
-    //     container
-    //     className={classes.GridCollapses}
-    //   >
+    //   <Grid id="je suis laaaaaaaaaaa" container className={classes.GridCollapses}>
     //     <Grid id="je suis invisible" className={classes.invisibleGrid}></Grid>
     //     <Grid id="Console admin collapse">
     //       <Collapse className={classes.collapse} in={displayConsoleAdmin}>
     //         <List>
     //           <ListItem>
-    //             <Link
-    //               className={classes.nestedTitle}
-    //               href="/console-admin/users"
-    //             >
+    //             <Link className={classes.nestedTitle} href="/console-admin/users">
     //               Utilisateurs
     //             </Link>
     //           </ListItem>
@@ -171,28 +235,19 @@ const PortailTopBar: React.FC = (props) => {
     //             userRights.right_read_data_accesses_same_level ||
     //             userRights.right_read_data_accesses_inferior_levels) && (
     //             <ListItem>
-    //               <Link
-    //                 className={classes.nestedTitle}
-    //                 href="/console-admin/caresites"
-    //               >
+    //               <Link className={classes.nestedTitle} href="/console-admin/caresites">
     //                 Périmètres
     //               </Link>
     //             </ListItem>
     //           )}
     //           <ListItem>
-    //             <Link
-    //               className={classes.nestedTitle}
-    //               href="/console-admin/habilitations"
-    //             >
+    //             <Link className={classes.nestedTitle} href="/console-admin/habilitations">
     //               Habilitations
     //             </Link>
     //           </ListItem>
     //           {userRights.right_read_logs && (
     //             <ListItem>
-    //               <Link
-    //                 className={classes.nestedTitle}
-    //                 href="/console-admin/logs"
-    //               >
+    //               <Link className={classes.nestedTitle} href="/console-admin/logs">
     //                 Logs
     //               </Link>
     //             </ListItem>
@@ -204,10 +259,7 @@ const PortailTopBar: React.FC = (props) => {
     //       <Collapse className={classes.collapse} in={displayEspaceJupyter}>
     //         <List>
     //           <ListItem>
-    //             <Link
-    //               className={classes.nestedTitle}
-    //               href="/espace-jupyter/transfert"
-    //             >
+    //             <Link className={classes.nestedTitle} href="/espace-jupyter/transfert">
     //               Transfert Jupyter
     //             </Link>
     //           </ListItem>
