@@ -2,8 +2,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({
   appbar: {
-    backgroundColor: '#232E6A',
-    position: 'absolute'
+    backgroundColor: '#232E6A'
   },
   avatar: {
     color: 'white',
@@ -43,23 +42,19 @@ const useStyles = makeStyles(() => ({
       marginTop: 2
     }
   },
-  nestedTitle: {
-    color: '#D0D7D8',
-    fontSize: 13,
-    lineHeight: '25px'
-  },
-  GridCollapses: {
-    marginTop: '61px',
-    paddingLeft: '24px',
-    paddingRight: '24px'
-  },
-  invisibleGrid: {
-    width: 161
-  },
-  collapse: {
+  paper: {
     backgroundColor: '#232E6A',
-    borderRadius: 4,
-    marginTop: 8
+    color: '#FFFFFF',
+    width: 140,
+    borderRadius: '0 0 4px 4px'
+  },
+  menuItem: {
+    '&:hover': {
+      backgroundColor: '#2E3C8A'
+    }
+  },
+  activeMenuItem: {
+    backgroundColor: '#2E3C8A'
   }
 }))
 
