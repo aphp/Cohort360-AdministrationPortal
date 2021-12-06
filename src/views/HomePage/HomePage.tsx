@@ -20,7 +20,7 @@ const HomePage = () => {
         </Typography>
         <Grid container item justify="space-around">
           <Grid container item className={classes.box} xs={12} sm={4} direction="column" alignItems="center">
-            <ComputerIcon style={{ fontSize: 50, marginBottom: 12 }} />
+            <ComputerIcon style={{ fontSize: 100, marginBottom: 12 }} />
             <Typography variant="h6" style={{ fontSize: 16, marginBottom: 28, lineHeight: 'inherit' }}>
               Console Admin
             </Typography>
@@ -58,7 +58,7 @@ const HomePage = () => {
             </Button>
           </Grid>
           <Grid container item className={classes.box} xs={12} sm={4} direction="column" alignItems="center">
-            <FlipCameraAndroidIcon style={{ fontSize: 50, marginBottom: 12 }} />
+            <FlipCameraAndroidIcon style={{ fontSize: 100, marginBottom: 12 }} />
             <Typography variant="h6" style={{ fontSize: 16, marginBottom: 28, lineHeight: 'inherit' }}>
               Espace Jupyter
             </Typography>
