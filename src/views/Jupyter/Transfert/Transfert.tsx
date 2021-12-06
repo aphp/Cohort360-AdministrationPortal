@@ -1,14 +1,6 @@
 import React, { useState } from 'react'
 
-import {
-  Button,
-  CircularProgress,
-  CssBaseline,
-  Grid,
-  //   MenuItem,
-  Select,
-  Typography
-} from '@material-ui/core'
+import { Button, CircularProgress, CssBaseline, Grid, MenuItem, Select, Typography } from '@material-ui/core'
 
 import useStyles from './styles'
 
@@ -17,6 +9,33 @@ const defaultTransfer = {
   user: '',
   cohort: ''
 }
+
+const environments = [
+  {
+    label: 'Jupyter 1',
+    code: 'Bug request'
+  },
+  {
+    label: 'Jupyter 2',
+    code: 'Feature request'
+  },
+  {
+    label: 'Jupyter 3',
+    code: 'Other'
+  }
+]
+
+const fakeUsers = [
+  'Audrey Villard',
+  'Alexandre Martin',
+  'Julien Dubiel',
+  'Victor Mariot',
+  'Salah Bouyahia',
+  'Nicolas Puchois',
+  'Mourad Sellam'
+]
+
+const cohorts = ['Cohorte 1', 'Cohorte 2', 'Cohorte 3', 'Cohorte 4', 'Cohorte 5', 'Cohorte 6']
 
 const ERROR_ENVIRONMENT = 'error_environment'
 const ERROR_USER = 'error_user'
@@ -47,7 +66,7 @@ const Transfert: React.FC = () => {
           ) : (
             <>
               <Typography variant="h1" color="primary" className={classes.title} align="center">
-                Page des transfert Jupyter
+                Transfert Jupyter
               </Typography>
 
               <Typography align="left" variant="h3">
@@ -64,7 +83,13 @@ const Transfert: React.FC = () => {
                   backgroundColor: 'white'
                 }}
                 error={error === ERROR_ENVIRONMENT}
-              ></Select>
+              >
+                {environments.map((environment, index) => (
+                  <MenuItem key={index} value={environment.code}>
+                    {environment.label}
+                  </MenuItem>
+                ))}
+              </Select>
 
               <Typography align="left" variant="h3">
                 Choix de l'utilisateur
@@ -80,7 +105,13 @@ const Transfert: React.FC = () => {
                   backgroundColor: 'white'
                 }}
                 error={error === ERROR_USER}
-              ></Select>
+              >
+                {fakeUsers.map((fakeUser, index) => (
+                  <MenuItem key={index} value={fakeUser}>
+                    {fakeUser}
+                  </MenuItem>
+                ))}
+              </Select>
 
               <Typography align="left" variant="h3">
                 Choix de la cohorte d'un utilisateur
@@ -97,7 +128,13 @@ const Transfert: React.FC = () => {
                 }}
                 error={error === ERROR_COHORT}
                 disabled={transferRequest.user === '' ? true : false}
-              ></Select>
+              >
+                {cohorts.map((cohort, index) => (
+                  <MenuItem key={index} value={cohort}>
+                    {cohort}
+                  </MenuItem>
+                ))}
+              </Select>
 
               <Button variant="contained" disableElevation className={classes.validateButton}>
                 Envoyer
