@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react"
-import { CircularProgress, Grid, Typography } from "@material-ui/core"
-import Alert from "@material-ui/lab/Alert"
-import { useParams } from "react-router"
+import React, { useEffect, useState } from 'react'
+import { CircularProgress, Grid, Typography } from '@material-ui/core'
+import Alert from '@material-ui/lab/Alert'
+import { useParams } from 'react-router'
 
-import { getProfile } from "services/Console-Admin/providersHistoryService"
-import Rights from "components/Console-Admin/Rights/Rights"
-import useStyles from "./styles"
-import { Profile, Provider } from "types"
-import { getProvider } from "services/Console-Admin/providersService"
-import { useAppSelector } from "state"
-import { getUserRights, userDefaultRoles } from "utils/userRoles"
+import { getProfile } from 'services/Console-Admin/providersHistoryService'
+import Rights from 'components/Console-Admin/Rights/Rights'
+import useStyles from './styles'
+import { Profile, Provider } from 'types'
+import { getProvider } from 'services/Console-Admin/providersService'
+import { useAppSelector } from 'state'
+import { getUserRights, userDefaultRoles } from 'utils/userRoles'
 
 const ProviderHistory: React.FC = () => {
   const classes = useStyles()
@@ -27,16 +27,11 @@ const ProviderHistory: React.FC = () => {
       try {
         setLoading(true)
 
-        const getUserRightsResponse = await getUserRights(
-          me?.providerSourceValue
-        )
+        const getUserRightsResponse = await getUserRights(me?.providerSourceValue)
 
         setUserRights(getUserRightsResponse)
       } catch (error) {
-        console.error(
-          "Erreur lors de la récupération des habilitations de l'utilisateur",
-          error
-        )
+        console.error("Erreur lors de la récupération des habilitations de l'utilisateur", error)
         setLoading(false)
       }
     }
@@ -55,10 +50,7 @@ const ProviderHistory: React.FC = () => {
 
         setLoading(false)
       } catch (error) {
-        console.error(
-          "Erreur lors de la récupération du provider ou du profile",
-          error
-        )
+        console.error('Erreur lors de la récupération du provider ou du profile', error)
         setRights(undefined)
         setLoading(false)
       }
@@ -75,16 +67,15 @@ const ProviderHistory: React.FC = () => {
           <CircularProgress className={classes.loading} />
         ) : (
           <Grid container item xs={12} sm={9}>
-            <Typography variant="h1" color="primary" className={classes.title}>
-              {provider?.provider_name} - id APH :{" "}
-              {provider?.provider_source_value}
+            <Typography variant="h1" align="center" className={classes.title}>
+              {provider?.provider_name} - id APH : {provider?.provider_source_value}
             </Typography>
             <>
               {rights ? (
                 rights.length > 0 ? (
                   <>
-                    {rights.map((userRight: Profile) => (
-                      <Rights right={userRight} userRights={userRights} />
+                    {rights.map((userRight: Profile, index: number) => (
+                      <Rights key={index} right={userRight} userRights={userRights} />
                     ))}
                   </>
                 ) : (
@@ -94,8 +85,8 @@ const ProviderHistory: React.FC = () => {
                 )
               ) : (
                 <Alert severity="error" className={classes.alert}>
-                  Erreur lors de la récupération des données de l'utilisateur,
-                  veuillez réessayer ultérieurement ou vérifier vos droits.
+                  Erreur lors de la récupération des données de l'utilisateur, veuillez réessayer ultérieurement ou
+                  vérifier vos droits.
                 </Alert>
               )}
             </>

@@ -1,5 +1,5 @@
-import api from "../api"
-import { Role } from "../../types"
+import api from '../api'
+import { Role } from '../../types'
 
 export const getRoles = async () => {
   const rolesResp = await api.get(`/roles/?ordering=name`)
@@ -10,14 +10,10 @@ export const getRoles = async () => {
   return rolesResp.data.results ?? undefined
 }
 
-export const getAssignableRoles = async (
-  careSiteId?: string | number | null
-) => {
+export const getAssignableRoles = async (careSiteId?: string | number | null) => {
   if (!careSiteId) return undefined
 
-  const assignableRolesResp = await api.get(
-    `/roles/assignable/?care_site_id=${careSiteId}`
-  )
+  const assignableRolesResp = await api.get(`/roles/assignable/?care_site_id=${careSiteId}`)
 
   if (assignableRolesResp.status !== 200) {
     return undefined
@@ -28,7 +24,7 @@ export const getAssignableRoles = async (
       if (a.name && b.name) {
         if (a.name > b.name) {
           return 1
-        } else if (a.name > b.name) {
+        } else if (a.name < b.name) {
           return -1
         }
         return 0

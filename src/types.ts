@@ -14,6 +14,8 @@ export type MeState = null | {
   // [key: string]: number | string | boolean | Date | null
 }
 
+export type portailTopBar = null | boolean
+
 // Authentication
 
 export type Authentication = {
@@ -47,7 +49,7 @@ export type BackendUserReceived = {
 
 // Service
 
-export type CareSiteType = "AP-HP" | "Hopital" | "Groupe Hospitalier"
+export type CareSiteType = 'AP-HP' | 'Hopital' | 'Groupe Hospitalier'
 
 export type CareSite = {
   care_site_id: number
@@ -138,23 +140,23 @@ export type Role = UserRole & {
 }
 
 export type RoleKeys =
-  | "name"
-  | "right_edit_roles"
-  | "right_add_users"
-  | "right_edit_users"
-  | "right_read_users"
-  | "right_manage_admin_accesses_same_level"
-  | "right_read_admin_accesses_same_level"
-  | "right_manage_admin_accesses_inferior_levels"
-  | "right_read_admin_accesses_inferior_levels"
-  | "right_manage_data_accesses_same_level"
-  | "right_read_data_accesses_same_level"
-  | "right_manage_data_accesses_inferior_levels"
-  | "right_read_data_accesses_inferior_levels"
-  | "right_read_patient_nominative"
-  | "right_read_patient_pseudo_anonymised"
-  | "right_export_jupyter_patient_nominative"
-  | "right_export_jupyter_patient_pseudo_anonymised"
+  | 'name'
+  | 'right_edit_roles'
+  | 'right_add_users'
+  | 'right_edit_users'
+  | 'right_read_users'
+  | 'right_manage_admin_accesses_same_level'
+  | 'right_read_admin_accesses_same_level'
+  | 'right_manage_admin_accesses_inferior_levels'
+  | 'right_read_admin_accesses_inferior_levels'
+  | 'right_manage_data_accesses_same_level'
+  | 'right_read_data_accesses_same_level'
+  | 'right_manage_data_accesses_inferior_levels'
+  | 'right_read_data_accesses_inferior_levels'
+  | 'right_read_patient_nominative'
+  | 'right_read_patient_pseudo_anonymised'
+  | 'right_export_jupyter_patient_nominative'
+  | 'right_export_jupyter_patient_pseudo_anonymised'
 
 // Access
 
@@ -165,7 +167,7 @@ export type Access = {
   provider_history: Provider
   provider_history_id: number
   care_site: CareSite
-  role: Role
+  role: { name: string; role_id: number; help_text: string[] }
   entry_created_by: number
   created_by: string
   start_datetime: string
@@ -244,5 +246,5 @@ export type LogsFiltersObject = {
 
 export type Order = {
   orderBy: string
-  orderDirection: "asc" | "desc"
+  orderDirection: 'asc' | 'desc'
 }

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react"
-import moment from "moment"
+import React, { useEffect, useState } from 'react'
+import moment from 'moment'
 
 import {
   Button,
@@ -11,18 +11,18 @@ import {
   Grid,
   IconButton,
   TextField,
-  Typography,
-} from "@material-ui/core"
-import Autocomplete from "@material-ui/lab/Autocomplete"
-import { KeyboardDatePicker } from "@material-ui/pickers"
-import { MaterialUiPickersDate } from "@material-ui/pickers/typings/date"
+  Typography
+} from '@material-ui/core'
+import Autocomplete from '@material-ui/lab/Autocomplete'
+import { KeyboardDatePicker } from '@material-ui/pickers'
+import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date'
 
-import EditIcon from "@material-ui/icons/Edit"
+import EditIcon from '@material-ui/icons/Edit'
 
-import CareSitesDialog from "../../providers/AddAccessForm/components/CareSitesDialog/CareSitesDialog"
+import CareSitesDialog from '../../Rights/AccessForm/components/CareSitesDialog/CareSitesDialog'
 
-import useStyles from "./styles"
-import { LogsFiltersObject, ScopeTreeRow, UserRole } from "types"
+import useStyles from './styles'
+import { LogsFiltersObject, ScopeTreeRow, UserRole } from 'types'
 
 type LogsFiltersProps = {
   filters: LogsFiltersObject
@@ -31,22 +31,17 @@ type LogsFiltersProps = {
   userRights: UserRole
 }
 
-const httpMethods = ["DELETE", "GET", "PATCH", "PUT", "POST"]
-const statusCodes = ["200", "201", "204", "400", "401", "403", "404", "500"]
+const httpMethods = ['DELETE', 'GET', 'PATCH', 'PUT', 'POST']
+const statusCodes = ['200', '201', '204', '400', '401', '403', '404', '500']
 
-const LogsFilters: React.FC<LogsFiltersProps> = ({
-  filters,
-  onChangeFilters,
-  onClose,
-  userRights,
-}) => {
+const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onClose, userRights }) => {
   const classes = useStyles()
 
   const formattedCareSite = filters.careSite.careSiteId
     ? {
-        care_site_id: filters.careSite.careSiteId ?? "",
-        name: filters.careSite.careSiteName ?? "",
-        children: [],
+        care_site_id: filters.careSite.careSiteId ?? '',
+        name: filters.careSite.careSiteName ?? '',
+        children: []
       }
     : null
 
@@ -54,9 +49,7 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
   const [dateError, setDateError] = useState(false)
   const [userError, setUserError] = useState(false)
   const [openPerimeters, setOpenPerimeters] = useState(false)
-  const [selectedCareSite, setSelectedCareSite] = useState<ScopeTreeRow | null>(
-    formattedCareSite
-  )
+  const [selectedCareSite, setSelectedCareSite] = useState<ScopeTreeRow | null>(formattedCareSite)
 
   useEffect(() => {
     if (moment(_filters.afterDate).isAfter(_filters.beforeDate)) {
@@ -76,10 +69,7 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
     }
   }, [_filters])
 
-  const _onChangeValue = (
-    key: "user" | "afterDate" | "beforeDate" | "statusCode" | "httpMethod",
-    value: any
-  ) => {
+  const _onChangeValue = (key: 'user' | 'afterDate' | 'beforeDate' | 'statusCode' | 'httpMethod', value: any) => {
     const _filtersCopy = { ..._filters }
     _filtersCopy[key] = value
 
@@ -91,8 +81,8 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
       ..._filters,
       careSite: {
         careSiteId: selectedCareSite?.care_site_id.toString() ?? null,
-        careSiteName: selectedCareSite?.name ?? null,
-      },
+        careSiteName: selectedCareSite?.name ?? null
+      }
     }
     onChangeFilters(_filtersCopy)
     onClose()
@@ -111,12 +101,9 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
             autoFocus
             placeholder="Identifiant APH"
             value={_filters.user}
-            onChange={(event) => _onChangeValue("user", event.target.value)}
+            onChange={(event) => _onChangeValue('user', event.target.value)}
             error={userError}
-            helperText={
-              userError &&
-              "L'identifiant APH ne doit contenir que des chiffres (entre 3 et 7 maximum)."
-            }
+            helperText={userError && "L'identifiant APH ne doit contenir que des chiffres (entre 3 et 7 maximum)."}
             inputProps={{ maxlength: 7 }}
           />
         </Grid>
@@ -125,14 +112,10 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
           <Autocomplete
             multiple
             options={statusCodes}
-            onChange={(event, value) => _onChangeValue("statusCode", value)}
+            onChange={(event, value) => _onChangeValue('statusCode', value)}
             renderOption={(option) => <React.Fragment>{option}</React.Fragment>}
             renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Sélectionner les codes de statut"
-                variant="outlined"
-              />
+              <TextField {...params} label="Sélectionner les codes de statut" variant="outlined" />
             )}
             value={_filters.statusCode}
             style={{ marginTop: 16 }}
@@ -143,14 +126,10 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
           <Autocomplete
             multiple
             options={httpMethods}
-            onChange={(event, value) => _onChangeValue("httpMethod", value)}
+            onChange={(event, value) => _onChangeValue('httpMethod', value)}
             renderOption={(option) => <React.Fragment>{option}</React.Fragment>}
             renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Sélectionner les méthodes HTTP"
-                variant="outlined"
-              />
+              <TextField {...params} label="Sélectionner les méthodes HTTP" variant="outlined" />
             )}
             value={_filters.httpMethod}
             style={{ marginTop: 16 }}
@@ -165,12 +144,10 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
             <KeyboardDatePicker
               clearable
               error={dateError}
-              style={{ width: "calc(100% - 120px)" }}
+              style={{ width: 'calc(100% - 120px)' }}
               invalidDateMessage='La date doit être au format "JJ/MM/AAAA"'
               format="DD/MM/YYYY"
-              onChange={(date: MaterialUiPickersDate) =>
-                _onChangeValue("afterDate", date ?? null)
-              }
+              onChange={(date: MaterialUiPickersDate) => _onChangeValue('afterDate', date ?? null)}
               value={_filters.afterDate}
             />
           </Grid>
@@ -182,38 +159,25 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
             <KeyboardDatePicker
               clearable
               error={dateError}
-              style={{ width: "calc(100% - 120px)" }}
+              style={{ width: 'calc(100% - 120px)' }}
               invalidDateMessage='La date doit être au format "JJ/MM/AAAA"'
               format="DD/MM/YYYY"
-              onChange={(date: MaterialUiPickersDate) =>
-                _onChangeValue("beforeDate", date ?? null)
-              }
+              onChange={(date: MaterialUiPickersDate) => _onChangeValue('beforeDate', date ?? null)}
               value={_filters.beforeDate}
             />
           </Grid>
           {dateError && (
             <Typography className={classes.dateError}>
-              Vous ne pouvez pas sélectionner de date de début supérieure à la
-              date de fin.
+              Vous ne pouvez pas sélectionner de date de début supérieure à la date de fin.
             </Typography>
           )}
         </Grid>
-        <Grid
-          container
-          justify="space-between"
-          alignItems="center"
-          className={classes.filter}
-        >
+        <Grid container justify="space-between" alignItems="center" className={classes.filter}>
           <Typography variant="h3">Périmètre :</Typography>
           {selectedCareSite ? (
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <Typography>
-                {selectedCareSite.name.split(".").join(" ")}
-              </Typography>
-              <IconButton
-                onClick={() => setOpenPerimeters(true)}
-                style={{ padding: "0 8px" }}
-              >
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <Typography>{selectedCareSite.name.split('.').join(' ')}</Typography>
+              <IconButton onClick={() => setOpenPerimeters(true)} style={{ padding: '0 8px' }}>
                 <EditIcon />
               </IconButton>
             </div>
@@ -233,11 +197,7 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
         <Button onClick={onClose} color="secondary">
           Annuler
         </Button>
-        <Button
-          disabled={dateError || userError}
-          onClick={onSubmit}
-          color="primary"
-        >
+        <Button disabled={dateError || userError} onClick={onSubmit} color="primary">
           Valider
         </Button>
       </DialogActions>

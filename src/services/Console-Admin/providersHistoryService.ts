@@ -1,5 +1,5 @@
-import { AccessData, Order, Profile, Provider } from "types"
-import api from "../api"
+import { AccessData, Order, Profile, Provider } from 'types'
+import api from '../api'
 
 export const getProfile = async (providerId?: string) => {
   if (!providerId) return undefined
@@ -10,17 +10,13 @@ export const getProfile = async (providerId?: string) => {
     return undefined
   }
 
-  return (
-    profileResp.data.results.sort((a: Profile, b: any) =>
-      a.cdm_source?.localeCompare(b.cdm_source)
-    ) ?? undefined
-  )
+  return profileResp.data.results.sort((a: Profile, b: any) => a.cdm_source?.localeCompare(b.cdm_source)) ?? undefined
 }
 
 export const submitCreateProfile = async (providerData: Provider) => {
   try {
     const resCheckProfiles = await api.post(`/profiles/check/`, {
-      provider_source_value: providerData.provider_source_value,
+      provider_source_value: providerData.provider_source_value
     })
 
     if (resCheckProfiles.status === 200) {
@@ -30,20 +26,14 @@ export const submitCreateProfile = async (providerData: Provider) => {
       return false
     }
   } catch (error) {
-    console.error("Erreur lors de la création de profil", error)
+    console.error('Erreur lors de la création de profil', error)
     return false
   }
 }
 
-export const editProfile = async (
-  providerHistoryId: string,
-  profileData: {}
-) => {
+export const editProfile = async (providerHistoryId: string, profileData: {}) => {
   try {
-    const editProfileResp = await api.patch(
-      `/profiles/${providerHistoryId}/`,
-      profileData
-    )
+    const editProfileResp = await api.patch(`/profiles/${providerHistoryId}/`, profileData)
 
     return editProfileResp.status === 200
   } catch (error) {
@@ -52,21 +42,13 @@ export const editProfile = async (
   }
 }
 
-export const getAccesses = async (
-  providerHistoryId: number,
-  page: number,
-  order: Order
-) => {
+export const getAccesses = async (providerHistoryId: number, page: number, order: Order) => {
   const _orderDirection =
-    order.orderBy === "is_valid"
-      ? order.orderDirection === "asc"
-        ? "desc"
-        : "asc"
-      : order.orderDirection
+    order.orderBy === 'is_valid' ? (order.orderDirection === 'asc' ? 'desc' : 'asc') : order.orderDirection
 
   const accessesResp = await api.get(
     `/accesses/?page=${page}&provider_history_id=${providerHistoryId}&ordering=${
-      _orderDirection === "desc" ? "-" : ""
+      _orderDirection === 'desc' ? '-' : ''
     }${order.orderBy}`
   )
 
@@ -76,15 +58,13 @@ export const getAccesses = async (
 
   return {
     accesses: accessesResp.data.results ?? undefined,
-    total: accessesResp.data.count ?? 0,
+    total: accessesResp.data.count ?? 0
   }
 }
 
 export const getUserAccesses = async (providerSourceValue?: string) => {
   try {
-    const getUserAccessesResp = await api.get(
-      `/accesses/?provider_source_value=${providerSourceValue}`
-    )
+    const getUserAccessesResp = await api.get(`/accesses/?provider_source_value=${providerSourceValue}`)
 
     if (getUserAccessesResp.status !== 200) {
       return []
@@ -92,10 +72,7 @@ export const getUserAccesses = async (providerSourceValue?: string) => {
 
     return getUserAccessesResp.data.results ?? []
   } catch (error) {
-    console.error(
-      "Erreur lors de la récupération des accès de l'utilisateur",
-      error
-    )
+    console.error("Erreur lors de la récupération des accès de l'utilisateur", error)
     return []
   }
 }
@@ -111,15 +88,9 @@ export const submitCreateAccess = async (accessData: AccessData) => {
   }
 }
 
-export const submitEditAccess = async (
-  editData: AccessData,
-  careSiteHistoryId?: number
-) => {
+export const submitEditAccess = async (editData: AccessData, careSiteHistoryId?: number) => {
   try {
-    const editAccessResp = await api.patch(
-      `/accesses/${careSiteHistoryId}/`,
-      editData
-    )
+    const editAccessResp = await api.patch(`/accesses/${careSiteHistoryId}/`, editData)
 
     return editAccessResp.status === 200
   } catch (error) {
@@ -128,29 +99,19 @@ export const submitEditAccess = async (
   }
 }
 
-export const onDeleteOrTerminateAccess = async (
-  terminateAccess: boolean,
-  careSiteHistoryId?: number
-) => {
+export const onDeleteOrTerminateAccess = async (terminateAccess: boolean, careSiteHistoryId?: number) => {
   try {
     if (terminateAccess) {
-      const terminateAccessResp = await api.patch(
-        `/accesses/${careSiteHistoryId}/close/`
-      )
+      const terminateAccessResp = await api.patch(`/accesses/${careSiteHistoryId}/close/`)
 
       return terminateAccessResp.status === 200
     } else {
-      const deleteAccessResp = await api.delete(
-        `/accesses/${careSiteHistoryId}/`
-      )
+      const deleteAccessResp = await api.delete(`/accesses/${careSiteHistoryId}/`)
 
       return deleteAccessResp.status === 204
     }
   } catch (error) {
-    console.error(
-      "Erreur lors de la suppression ou la clôture d'un accès",
-      error
-    )
+    console.error("Erreur lors de la suppression ou la clôture d'un accès", error)
     return false
   }
 }

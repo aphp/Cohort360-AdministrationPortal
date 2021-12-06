@@ -2,21 +2,21 @@ import React from 'react'
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 
 import AutoLogoutContainer from '../AutoLogoutContainer'
-import TopBar from '../../Console-Admin/TopBar/TopBar'
+// import TopBar from '../../Console-Admin/TopBar/TopBar'
 import { useAppSelector } from 'state/index'
 import PrivateRoute from '../PrivateRoute'
 import Config from './config'
-
-
+import PortailTopBar from 'components/PortailTopBar/PortailTopBar'
 
 const Layout = (props) => {
-
   const me = useAppSelector((state) => state.me)
+
   return (
     <>
       {me && <AutoLogoutContainer />}
 
-      {props.displayTopBar && <TopBar />}
+      {/* {props.displayTopBar && <TopBar />} */}
+      {props.displayPortailTopBar && <PortailTopBar />}
 
       {props.children}
     </>
@@ -30,7 +30,7 @@ const AppNavigation = () => (
         const MyComponent = route.component
         return route.isPrivate ? (
           <PrivateRoute
-            key={index}s
+            key={index}
             exact={route.exact}
             path={route.path}
             render={(props) => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from 'react'
 
 import {
   Button,
@@ -16,25 +16,25 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Tooltip,
+  Tooltip
   // Typography,
-} from "@material-ui/core"
-import Alert from "@material-ui/lab/Alert"
+} from '@material-ui/core'
+import Alert from '@material-ui/lab/Alert'
 
-import AddIcon from "@material-ui/icons/Add"
+import AddIcon from '@material-ui/icons/Add'
 // import DeleteIcon from "@material-ui/icons/Delete"
-import VisibilityIcon from "@material-ui/icons/Visibility"
+import VisibilityIcon from '@material-ui/icons/Visibility'
 
-import useStyles from "./styles"
-import { Role, UserRole } from "types"
+import useStyles from './styles'
+import { Role, UserRole } from 'types'
 import {
-  getRoles,
+  getRoles
   //  deleteRole
-} from "services/Console-Admin/rolesService"
-import RoleDialog from "../RoleDialog/RoleDialog"
+} from 'services/Console-Admin/rolesService'
+import RoleDialog from '../RoleDialog/RoleDialog'
 
 const defaultRole: Role = {
-  name: "",
+  name: '',
   right_edit_roles: false,
   right_read_logs: false,
   right_add_users: false,
@@ -51,7 +51,7 @@ const defaultRole: Role = {
   right_read_patient_nominative: false,
   right_read_patient_pseudo_anonymised: false,
   right_export_jupyter_patient_nominative: false,
-  right_export_jupyter_patient_pseudo_anonymised: false,
+  right_export_jupyter_patient_pseudo_anonymised: false
 }
 
 type RolesTableProps = {
@@ -61,7 +61,7 @@ type RolesTableProps = {
 const RolesTable: React.FC<RolesTableProps> = ({ userRights }) => {
   const classes = useStyles()
 
-  const columns = ["Habilitation", "Actions"]
+  const columns = ['Habilitation', 'Actions']
 
   const [_roles, setRoles] = useState<Role[] | null>(null)
   const [loading, setLoading] = useState(false)
@@ -85,7 +85,7 @@ const RolesTable: React.FC<RolesTableProps> = ({ userRights }) => {
     // if (_deleteRole) _getRoles()
   }, [
     addRoleSuccess,
-    editRoleSuccess,
+    editRoleSuccess
     //  _deleteRole
   ]) // eslint-disable-line
 
@@ -97,7 +97,7 @@ const RolesTable: React.FC<RolesTableProps> = ({ userRights }) => {
       setRoles(rolesResp)
       setLoading(false)
     } catch (error) {
-      console.error("Erreur lors de la récupération des habilitations", error)
+      console.error('Erreur lors de la récupération des habilitations', error)
       setLoading(false)
     }
   }
@@ -138,9 +138,10 @@ const RolesTable: React.FC<RolesTableProps> = ({ userRights }) => {
         <Table className={classes.table}>
           <TableHead>
             <TableRow className={classes.tableHead}>
-              {columns.map((column) => (
+              {columns.map((column, index: number) => (
                 <TableCell
-                  align={column === "Habilitation" ? "left" : "right"}
+                  key={index}
+                  align={column === 'Habilitation' ? 'left' : 'right'}
                   className={classes.tableHeadCell}
                 >
                   {column}
@@ -162,11 +163,7 @@ const RolesTable: React.FC<RolesTableProps> = ({ userRights }) => {
               _roles.map((role: Role) => {
                 return (
                   role && (
-                    <TableRow
-                      key={role.role_id}
-                      className={classes.tableBodyRows}
-                      hover
-                    >
+                    <TableRow key={role.role_id} className={classes.tableBodyRows} hover>
                       <TableCell align="left">{role.name}</TableCell>
                       <TableCell align="right">
                         <Tooltip title="Visualiser l'habilitation">
@@ -175,7 +172,7 @@ const RolesTable: React.FC<RolesTableProps> = ({ userRights }) => {
                               event.stopPropagation()
                               setSelectedRole(role)
                             }}
-                            style={{ padding: "0 12px" }}
+                            style={{ padding: '0 12px' }}
                           >
                             <VisibilityIcon />
                           </IconButton>
@@ -238,7 +235,7 @@ const RolesTable: React.FC<RolesTableProps> = ({ userRights }) => {
             // if (deleteRoleSuccess) setDeleteRoleSuccess(false)
           }}
           autoHideDuration={3000}
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
           <Alert
             severity="success"
@@ -263,7 +260,7 @@ const RolesTable: React.FC<RolesTableProps> = ({ userRights }) => {
             // if (deleteRoleFail) setDeleteRoleFail(false)
           }}
           autoHideDuration={3000}
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
           <Alert
             severity="error"

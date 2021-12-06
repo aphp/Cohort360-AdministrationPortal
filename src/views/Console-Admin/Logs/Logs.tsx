@@ -1,26 +1,20 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from 'react'
 
-import {
-  Button,
-  Chip,
-  CircularProgress,
-  Grid,
-  Typography,
-} from "@material-ui/core"
-import Pagination from "@material-ui/lab/Pagination"
+import { Button, Chip, CircularProgress, Grid, Typography } from '@material-ui/core'
+import Pagination from '@material-ui/lab/Pagination'
 
-import LogsFilters from "components/Console-Admin/Logs/LogsFilters/LogsFilters"
-import LogsTable from "components/Console-Admin/Logs/LogsTable/LogsTable"
+import LogsFilters from 'components/Console-Admin/Logs/LogsFilters/LogsFilters'
+import LogsTable from 'components/Console-Admin/Logs/LogsTable/LogsTable'
 
-import { getLogs } from "services/Console-Admin/logsService"
-import { Log, LogsFiltersObject } from "types"
+import { getLogs } from 'services/Console-Admin/logsService'
+import { Log, LogsFiltersObject } from 'types'
 
-import { ReactComponent as FilterIcon } from "assets/icones/filter.svg"
+import { ReactComponent as FilterIcon } from 'assets/icones/filter.svg'
 
-import useStyles from "./styles"
-import moment from "moment"
-import { getUserRights, userDefaultRoles } from "utils/userRoles"
-import { useAppSelector } from "state"
+import useStyles from './styles'
+import moment from 'moment'
+import { getUserRights, userDefaultRoles } from 'utils/userRoles'
+import { useAppSelector } from 'state'
 
 const filtersDefault = {
   user: null,
@@ -29,17 +23,17 @@ const filtersDefault = {
   afterDate: null,
   beforeDate: null,
   access: null,
-  careSite: { careSiteId: null, careSiteName: null },
+  careSite: { careSiteId: null, careSiteName: null }
 }
 
 const Logs: React.FC = () => {
   const classes = useStyles()
 
   const search = window.location.search
-  const user = new URLSearchParams(search).get("user")
-  const access = new URLSearchParams(search).get("access")
-  const careSiteId = new URLSearchParams(search).get("careSiteId")
-  const careSiteName = new URLSearchParams(search).get("careSiteName")
+  const user = new URLSearchParams(search).get('user')
+  const access = new URLSearchParams(search).get('access')
+  const careSiteId = new URLSearchParams(search).get('careSiteId')
+  const careSiteName = new URLSearchParams(search).get('careSiteName')
 
   const [loading, setLoading] = useState(false)
   const [openFilters, setOpenFilters] = useState(false)
@@ -48,7 +42,7 @@ const Logs: React.FC = () => {
     ...filtersDefault,
     user: user,
     access: access,
-    careSite: { careSiteId: careSiteId, careSiteName: careSiteName },
+    careSite: { careSiteId: careSiteId, careSiteName: careSiteName }
   })
   const [logs, setLogs] = useState<Log[] | undefined>(undefined)
   const [page, setPage] = useState(1)
@@ -65,7 +59,7 @@ const Logs: React.FC = () => {
       setTotal(logsResp?.total)
       setLoading(false)
     } catch (error) {
-      console.error("Erreur lors de la récupération des logs", error)
+      console.error('Erreur lors de la récupération des logs', error)
       setLoading(false)
     }
   }
@@ -75,16 +69,11 @@ const Logs: React.FC = () => {
       try {
         setLoading(true)
 
-        const getUserRightsResponse = await getUserRights(
-          me?.providerSourceValue
-        )
+        const getUserRightsResponse = await getUserRights(me?.providerSourceValue)
 
         setUserRights(getUserRightsResponse)
       } catch (error) {
-        console.error(
-          "Erreur lors de la récupération des habilitations de l'utilisateur",
-          error
-        )
+        console.error("Erreur lors de la récupération des habilitations de l'utilisateur", error)
         setLoading(false)
       }
     }
@@ -97,20 +86,18 @@ const Logs: React.FC = () => {
     const _filters = { ...filters }
 
     switch (filterName) {
-      case "user":
-      case "afterDate":
-      case "beforeDate":
-      case "access":
+      case 'user':
+      case 'afterDate':
+      case 'beforeDate':
+      case 'access':
         _filters[filterName] = null
         break
-      case "careSite":
-        _filters["careSite"] = { careSiteId: null, careSiteName: null }
+      case 'careSite':
+        _filters['careSite'] = { careSiteId: null, careSiteName: null }
         break
-      case "httpMethod":
-      case "statusCode":
-        _filters[filterName] = _filters[filterName].filter(
-          (item) => item !== value
-        )
+      case 'httpMethod':
+      case 'statusCode':
+        _filters[filterName] = _filters[filterName].filter((item) => item !== value)
         break
     }
 
@@ -122,7 +109,7 @@ const Logs: React.FC = () => {
       <Grid container direction="column">
         <Grid container justify="center">
           <Grid container item xs={12} sm={9} justify="flex-end">
-            <Typography variant="h1" color="primary" className={classes.title}>
+            <Typography variant="h1" align="center" className={classes.title}>
               Liste des logs
             </Typography>
 
@@ -149,27 +136,29 @@ const Logs: React.FC = () => {
                     <Chip
                       className={classes.filterChip}
                       label={`Utilisateur : ${filters.user}`}
-                      onDelete={() => handleDeleteChip("user")}
+                      onDelete={() => handleDeleteChip('user')}
                       color="primary"
                       variant="outlined"
                     />
                   )}
                   {filters.httpMethod.length > 0 &&
-                    filters.httpMethod.map((method) => (
+                    filters.httpMethod.map((method: string, index: number) => (
                       <Chip
+                        key={index}
                         className={classes.filterChip}
                         label={`Méthode : ${method}`}
-                        onDelete={() => handleDeleteChip("httpMethod", method)}
+                        onDelete={() => handleDeleteChip('httpMethod', method)}
                         color="primary"
                         variant="outlined"
                       />
                     ))}
                   {filters.statusCode.length > 0 &&
-                    filters.statusCode.map((code) => (
+                    filters.statusCode.map((code: string, index: number) => (
                       <Chip
+                        key={index}
                         className={classes.filterChip}
                         label={`Code : ${code}`}
-                        onDelete={() => handleDeleteChip("statusCode", code)}
+                        onDelete={() => handleDeleteChip('statusCode', code)}
                         color="primary"
                         variant="outlined"
                       />
@@ -177,10 +166,8 @@ const Logs: React.FC = () => {
                   {filters.afterDate && (
                     <Chip
                       className={classes.filterChip}
-                      label={`Après le : ${moment(filters.afterDate).format(
-                        "DD/MM/YYYY"
-                      )}`}
-                      onDelete={() => handleDeleteChip("afterDate")}
+                      label={`Après le : ${moment(filters.afterDate).format('DD/MM/YYYY')}`}
+                      onDelete={() => handleDeleteChip('afterDate')}
                       color="primary"
                       variant="outlined"
                     />
@@ -188,10 +175,8 @@ const Logs: React.FC = () => {
                   {filters.beforeDate && (
                     <Chip
                       className={classes.filterChip}
-                      label={`Avant le : ${moment(filters.beforeDate).format(
-                        "DD/MM/YYYY"
-                      )}`}
-                      onDelete={() => handleDeleteChip("beforeDate")}
+                      label={`Avant le : ${moment(filters.beforeDate).format('DD/MM/YYYY')}`}
+                      onDelete={() => handleDeleteChip('beforeDate')}
                       color="primary"
                       variant="outlined"
                     />
@@ -200,7 +185,7 @@ const Logs: React.FC = () => {
                     <Chip
                       className={classes.filterChip}
                       label={`Accès : ${filters.access}`}
-                      onDelete={() => handleDeleteChip("access")}
+                      onDelete={() => handleDeleteChip('access')}
                       color="primary"
                       variant="outlined"
                     />
@@ -208,10 +193,8 @@ const Logs: React.FC = () => {
                   {filters.careSite.careSiteId && (
                     <Chip
                       className={classes.filterChip}
-                      label={`Périmètre : ${filters.careSite.careSiteName
-                        ?.split(".")
-                        .join(" ")}`}
-                      onDelete={() => handleDeleteChip("careSite")}
+                      label={`Périmètre : ${filters.careSite.careSiteName?.split('.').join(' ')}`}
+                      onDelete={() => handleDeleteChip('careSite')}
                       color="primary"
                       variant="outlined"
                     />

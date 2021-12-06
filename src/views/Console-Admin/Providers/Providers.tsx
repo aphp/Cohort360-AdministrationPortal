@@ -1,16 +1,12 @@
-import React, { useEffect, useState } from "react"
-// import { useSelector } from "react-redux";
-import clsx from "clsx"
+import React, { useEffect, useState } from 'react'
+import { CircularProgress, Grid, Typography } from '@material-ui/core'
 
-import { CircularProgress, Grid, Typography } from "@material-ui/core"
+import ProvidersTable from 'components/Console-Admin/providers/ProvidersTable/ProvidersTable'
 
-import ProvidersTable from "components/Console-Admin/providers/ProvidersTable/ProvidersTable"
+import { useAppSelector } from 'state'
+import { getUserRights, userDefaultRoles } from 'utils/userRoles'
 
-import { useAppSelector } from "state"
-// import { IReduxStore } from "types";
-
-import useStyles from "./styles"
-import { getUserRights, userDefaultRoles } from "utils/userRoles"
+import useStyles from './styles'
 
 const ProfilesView: React.FC = () => {
   const classes = useStyles()
@@ -23,17 +19,12 @@ const ProfilesView: React.FC = () => {
       try {
         setLoading(true)
 
-        const getUserRightsResponse = await getUserRights(
-          me?.providerSourceValue
-        )
+        const getUserRightsResponse = await getUserRights(me?.providerSourceValue)
 
         setUserRights(getUserRightsResponse)
         setLoading(false)
       } catch (error) {
-        console.error(
-          "Erreur lors de la récupération des habilitations de l'utilisateur",
-          error
-        )
+        console.error("Erreur lors de la récupération des habilitations de l'utilisateur", error)
         setLoading(false)
       }
     }
@@ -41,14 +32,11 @@ const ProfilesView: React.FC = () => {
     _getUserRights()
   }, []) // eslint-disable-line
 
-  // const [selectedItems, onChangeSelectedItem] = useState([])
-  //   const { drawerOpen } = useSelector((state: IReduxStore) => state.ui);
-
   return (
-    <Grid container direction="column" className={clsx(classes.appBar, {})}>
+    <Grid id="qui suis-je" container direction="column">
       <Grid container justify="center">
         <Grid container item xs={12} sm={9}>
-          <Typography variant="h1" color="primary" className={classes.title}>
+          <Typography variant="h1" align="center" className={classes.title}>
             Liste des utilisateurs
           </Typography>
           {loading ? (

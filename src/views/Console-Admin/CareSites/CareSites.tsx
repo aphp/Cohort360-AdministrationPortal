@@ -1,31 +1,23 @@
-import React, { useEffect, useState } from "react"
-import { useHistory } from "react-router-dom"
-import { useAppSelector } from "state"
+import React, { useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
+import { useAppSelector } from 'state'
 
-import {
-  Button,
-  CircularProgress,
-  Grid,
-  Paper,
-  Typography,
-} from "@material-ui/core"
+import { Button, CircularProgress, Grid, Paper, Typography } from '@material-ui/core'
 
-import CareSiteTree from "components/Console-Admin/CareSite/CareSiteTree"
-import SearchBar from "components/SearchBar/SearchBar"
+import CareSiteTree from 'components/Console-Admin/CareSite/CareSiteTree'
+import SearchBar from 'components/SearchBar/SearchBar'
 
-import useStyles from "./styles"
-import { ScopeTreeRow } from "types"
-import { getUserRights, userDefaultRoles } from "utils/userRoles"
+import useStyles from './styles'
+import { ScopeTreeRow } from 'types'
+import { getUserRights, userDefaultRoles } from 'utils/userRoles'
 
 const CareSites: React.FC = () => {
   const classes = useStyles()
   const history = useHistory()
   const [userRights, setUserRights] = useState(userDefaultRoles)
 
-  const [selectedItem, onChangeSelectedItem] = useState<ScopeTreeRow | null>(
-    null
-  )
-  const [searchInput, setSearchInput] = useState("")
+  const [selectedItem, onChangeSelectedItem] = useState<ScopeTreeRow | null>(null)
+  const [searchInput, setSearchInput] = useState('')
   const [loading, setLoading] = useState(false)
 
   const { me } = useAppSelector((state) => ({ me: state.me }))
@@ -35,17 +27,12 @@ const CareSites: React.FC = () => {
       try {
         setLoading(true)
 
-        const getUserRightsResponse = await getUserRights(
-          me?.providerSourceValue
-        )
+        const getUserRightsResponse = await getUserRights(me?.providerSourceValue)
 
         setUserRights(getUserRightsResponse)
         setLoading(false)
       } catch (error) {
-        console.error(
-          "Erreur lors de la récupération des habilitations de l'utilisateur",
-          error
-        )
+        console.error("Erreur lors de la récupération des habilitations de l'utilisateur", error)
         setLoading(false)
       }
     }
@@ -56,15 +43,8 @@ const CareSites: React.FC = () => {
   return (
     <Grid container direction="column">
       <Grid container justify="center" alignItems="center">
-        <Grid
-          container
-          item
-          xs={12}
-          sm={9}
-          direction="column"
-          alignItems="flex-end"
-        >
-          <Typography variant="h1" color="primary" className={classes.title}>
+        <Grid container item xs={12} sm={9} direction="column" alignItems="flex-end">
+          <Typography variant="h1" align="center" className={classes.title}>
             Liste des périmètres
           </Typography>
 
@@ -75,7 +55,7 @@ const CareSites: React.FC = () => {
               <CircularProgress />
             </Grid>
           ) : (
-            <Paper style={{ width: "100%", marginTop: 12, marginBottom: 100 }}>
+            <Paper style={{ width: '100%', marginTop: 12, marginBottom: 100 }}>
               <CareSiteTree
                 defaultSelectedItems={selectedItem}
                 onChangeSelectedItem={onChangeSelectedItem}
@@ -93,9 +73,7 @@ const CareSites: React.FC = () => {
               disableElevation
               disabled={!selectedItem}
               className={classes.button}
-              onClick={() =>
-                history.push(`/caresite/${selectedItem?.care_site_id}`)
-              }
+              onClick={() => history.push(`/console-admin/caresite/${selectedItem?.care_site_id}`)}
             >
               Valider
             </Button>

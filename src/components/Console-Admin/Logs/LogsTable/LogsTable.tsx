@@ -1,11 +1,11 @@
-import React from "react"
-import moment from "moment"
+import React from 'react'
+import moment from 'moment'
 
-import { CircularProgress, Grid, Paper, Typography } from "@material-ui/core"
+import { CircularProgress, Grid, Paper, Typography } from '@material-ui/core'
 
-import { Log } from "types"
+import { Log } from 'types'
 
-import useStyles from "./styles"
+import useStyles from './styles'
 
 type LogsTableProps = {
   loading: boolean
@@ -17,16 +17,16 @@ const LogsTable: React.FC<LogsTableProps> = ({ loading, logs }) => {
 
   const setSwaggerMethodColor = (method?: string) => {
     switch (method) {
-      case "GET":
-        return "#61AFFE"
-      case "DELETE":
-        return "#F93E3E"
-      case "PATCH":
-        return "#50E3C2"
-      case "POST":
-        return "#49CC90"
+      case 'GET':
+        return '#61AFFE'
+      case 'DELETE':
+        return '#F93E3E'
+      case 'PATCH':
+        return '#50E3C2'
+      case 'POST':
+        return '#49CC90'
       default:
-        return "#FFF"
+        return '#FFF'
     }
   }
 
@@ -35,20 +35,10 @@ const LogsTable: React.FC<LogsTableProps> = ({ loading, logs }) => {
       {loading ? (
         <CircularProgress size={30} />
       ) : logs && logs.length > 0 ? (
-        logs.map((log: Log) => {
+        logs.map((log: Log, index: number) => {
           return (
-            <Grid
-              container
-              component={Paper}
-              style={{ padding: 12, marginBottom: 8 }}
-            >
-              <Grid
-                container
-                item
-                justify="flex-start"
-                xs={6}
-                direction="column"
-              >
+            <Grid container key={index} component={Paper} style={{ padding: 12, marginBottom: 8 }}>
+              <Grid container item justify="flex-start" xs={6} direction="column">
                 <div className={classes.divCentered}>
                   <Typography variant="h3" style={{ lineHeight: 2 }}>
                     ID :
@@ -56,9 +46,7 @@ const LogsTable: React.FC<LogsTableProps> = ({ loading, logs }) => {
                   <Typography>&nbsp;{log.id} -</Typography>
                   <Typography>
                     &nbsp;
-                    {log.requested_at
-                      ? moment(log.requested_at).format("DD/MM/YYYY")
-                      : "-"}
+                    {log.requested_at ? moment(log.requested_at).format('DD/MM/YYYY') : '-'}
                   </Typography>
                 </div>
                 <div className={classes.divCentered}>
@@ -66,23 +54,18 @@ const LogsTable: React.FC<LogsTableProps> = ({ loading, logs }) => {
                     variant="h3"
                     style={{
                       lineHeight: 2,
-                      backgroundColor: setSwaggerMethodColor(log.method),
+                      backgroundColor: setSwaggerMethodColor(log.method)
                     }}
                     className={classes.swaggerMethod}
                   >
                     {log.method}
                   </Typography>
-                  <Typography>
-                    &nbsp;- {log.view_method?.toLocaleUpperCase()} -
-                  </Typography>
+                  <Typography>&nbsp;- {log.view_method?.toLocaleUpperCase()} -</Typography>
                   <Typography
                     variant="h3"
                     style={{
                       lineHeight: 2,
-                      color:
-                        log.status_code && log.status_code < 300
-                          ? "#00A255"
-                          : "#ED6D91",
+                      color: log.status_code && log.status_code < 300 ? '#00A255' : '#ED6D91'
                     }}
                   >
                     &nbsp;{log.status_code}
@@ -101,13 +84,7 @@ const LogsTable: React.FC<LogsTableProps> = ({ loading, logs }) => {
                   <Typography>&nbsp;{log.path}</Typography>
                 </div>
               </Grid>
-              <Grid
-                container
-                item
-                xs={6}
-                direction="column"
-                alignItems="flex-end"
-              >
+              <Grid container item xs={6} direction="column" alignItems="flex-end">
                 <div className={classes.divCentered}>
                   <Typography variant="h3" style={{ lineHeight: 2 }}>
                     Temps de réponse :
@@ -133,13 +110,7 @@ const LogsTable: React.FC<LogsTableProps> = ({ loading, logs }) => {
                   <Typography>&nbsp;{log.host}</Typography>
                 </div>
               </Grid>
-              <Grid
-                container
-                item
-                direction="column"
-                alignItems="flex-start"
-                className={classes.separator}
-              >
+              <Grid container item direction="column" alignItems="flex-start" className={classes.separator}>
                 <Typography variant="h3" style={{ lineHeight: 2 }}>
                   Data :
                 </Typography>
@@ -169,12 +140,7 @@ const LogsTable: React.FC<LogsTableProps> = ({ loading, logs }) => {
           )
         })
       ) : (
-        <Grid
-          container
-          component={Paper}
-          style={{ padding: 12, marginBottom: 8 }}
-          justify="center"
-        >
+        <Grid container component={Paper} style={{ padding: 12, marginBottom: 8 }} justify="center">
           <Typography align="center">Aucun résultat à afficher.</Typography>
         </Grid>
       )}

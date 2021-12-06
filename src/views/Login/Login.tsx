@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react"
-import { useHistory } from "react-router-dom"
-import { useDispatch } from "react-redux"
-// import { AxiosError } from "axios"
+import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import {
   Button,
   Dialog,
@@ -10,22 +9,22 @@ import {
   DialogContentText,
   Grid,
   TextField,
-  Typography,
-} from "@material-ui/core"
+  Typography
+} from '@material-ui/core'
 
-import { buildPartialUser } from "services/Console-Admin/userService"
-import { authenticate /**getCsrfToken**/ } from "services/authentication"
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants"
-import { login as loginAction } from "state/me"
-import logo from "assets/images/logo1.png"
-import { ErrorDialogProps } from "types"
-import useStyles from "./styles"
-import NoRights from "components/Console-Admin/ErrorView/NoRights"
-import { getUserRights } from "utils/userRoles"
+import { buildPartialUser } from 'services/Console-Admin/userService'
+import { authenticate } from 'services/authentication'
+import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../constants'
+import { login as loginAction } from 'state/me'
+import logo from 'assets/images/portail-black.png'
+import { ErrorDialogProps } from 'types'
+import useStyles from './styles'
+import NoRights from 'components/Console-Admin/ErrorView/NoRights'
+import { getUserRights } from 'utils/userRoles'
 
 const ErrorDialog: React.FC<ErrorDialogProps> = ({ open, setErrorLogin }) => {
   const _setErrorLogin = () => {
-    if (setErrorLogin && typeof setErrorLogin === "function") {
+    if (setErrorLogin && typeof setErrorLogin === 'function') {
       setErrorLogin(false)
     }
   }
@@ -33,9 +32,7 @@ const ErrorDialog: React.FC<ErrorDialogProps> = ({ open, setErrorLogin }) => {
   return (
     <Dialog open={open}>
       <DialogContent>
-        <DialogContentText>
-          Votre code APH ou votre mot de passe est incorrect
-        </DialogContentText>
+        <DialogContentText>Votre code APH ou votre mot de passe est incorrect</DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={_setErrorLogin}>Ok</Button>
@@ -48,28 +45,16 @@ const Login = () => {
   const history = useHistory()
   const classes = useStyles()
   const dispatch = useDispatch()
-  const [username, setUsername] = useState<string>("")
-  const [password, setPassword] = useState<string>("")
+  const [username, setUsername] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
   const [errorLogin, setErrorLogin] = useState<boolean>(false)
   const [noRights, setNoRights] = useState<boolean>(false)
 
   useEffect(() => {
-    localStorage.removeItem("user")
-    localStorage.removeItem("access")
-    localStorage.removeItem("refresh")
+    localStorage.removeItem('user')
+    localStorage.removeItem('access')
+    localStorage.removeItem('refresh')
   }, [])
-
-  // const [hasCsrfCookie, setHasCsrfCookie] = useState(false)
-  // if (!hasCsrfCookie) {
-  //   getCsrfToken()
-  //     .then((res: any) => {
-  //       console.log("Got csrf cookie", res)
-  //       setHasCsrfCookie(true)
-  //     })
-  //     .catch((err: AxiosError) => {
-  //       console.error("Error while getting csrf cookie", err)
-  //     })
-  // }
 
   const onLogin = async () => {
     try {
@@ -89,7 +74,7 @@ const Login = () => {
         if (!_userRights.right_read_users) {
           setNoRights(true)
         } else {
-          history.push("/users")
+          history.push('/homepage')
         }
       } else {
         setErrorLogin(true)
@@ -108,8 +93,8 @@ const Login = () => {
   if (noRights) return <NoRights />
 
   return (
-    <>
-      <Grid container component="main" className={classes.root}>
+    <Grid container component="main" className={classes.root}>
+      <Grid container className={classes.container}>
         <Grid item xs={false} sm={6} md={6} className={classes.image} />
 
         <Grid
@@ -118,25 +103,15 @@ const Login = () => {
           xs={12}
           sm={6}
           md={6}
-          // elevation={6}
           direction="column"
           justify="center"
           alignItems="center"
           className={classes.rightPanel}
         >
-          <Grid
-            container
-            item
-            xs={8}
-            lg={6}
-            direction="column"
-            alignItems="center"
-          >
-            <img className={classes.logo} src={logo} alt="Logo Cohort360" />
+          <Grid container item xs={8} lg={6} direction="column" alignItems="center">
+            <img className={classes.logo} src={logo} alt="Logo Portail" />
 
-            <Typography color="primary" className={classes.bienvenue}>
-              Bienvenue ! Connectez-vous.
-            </Typography>
+            <Typography className={classes.bienvenue}>Bienvenue ! Connectez-vous.</Typography>
 
             <form className={classes.form} noValidate onSubmit={_onSubmit}>
               <Grid container item direction="column" alignItems="center">
@@ -177,17 +152,13 @@ const Login = () => {
                   Connexion
                 </Button>
               </Grid>
-
-              {/* <Box mt={10} alignItems="center">
-								<Footer />
-							</Box> */}
             </form>
           </Grid>
         </Grid>
       </Grid>
 
       <ErrorDialog open={errorLogin !== false} setErrorLogin={setErrorLogin} />
-    </>
+    </Grid>
   )
 }
 

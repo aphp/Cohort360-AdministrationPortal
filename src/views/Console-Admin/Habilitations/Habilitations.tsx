@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react"
-import { useAppSelector } from "state"
+import React, { useEffect, useState } from 'react'
+import { useAppSelector } from 'state'
 
-import { CircularProgress, Grid, Typography } from "@material-ui/core"
+import { CircularProgress, Grid, Typography } from '@material-ui/core'
 
-import RolesTable from "components/Console-Admin/Roles/RolesTable/RolesTable"
+import RolesTable from 'components/Console-Admin/Roles/RolesTable/RolesTable'
 
-import { getUserRights, userDefaultRoles } from "utils/userRoles"
+import { getUserRights, userDefaultRoles } from 'utils/userRoles'
 
-import useStyles from "./styles"
+import useStyles from './styles'
 
 const Habilitations: React.FC = () => {
   const classes = useStyles()
@@ -21,17 +21,12 @@ const Habilitations: React.FC = () => {
       try {
         setLoading(true)
 
-        const getUserRightsResponse = await getUserRights(
-          me?.providerSourceValue
-        )
+        const getUserRightsResponse = await getUserRights(me?.providerSourceValue)
 
         setUserRights(getUserRightsResponse)
         setLoading(false)
       } catch (error) {
-        console.error(
-          "Erreur lors de la récupération des habilitations de l'utilisateur",
-          error
-        )
+        console.error("Erreur lors de la récupération des habilitations de l'utilisateur", error)
         setLoading(false)
       }
     }
@@ -43,7 +38,7 @@ const Habilitations: React.FC = () => {
     <Grid container direction="column">
       <Grid container justify="center">
         <Grid container item xs={12} sm={9}>
-          <Typography variant="h1" color="primary" className={classes.title}>
+          <Typography variant="h1" align="center" className={classes.title}>
             Liste des habilitations
           </Typography>
           {loading ? (
