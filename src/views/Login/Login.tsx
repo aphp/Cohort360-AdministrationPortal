@@ -16,7 +16,7 @@ import { buildPartialUser } from 'services/Console-Admin/userService'
 import { authenticate } from 'services/authentication'
 import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../constants'
 import { login as loginAction } from 'state/me'
-import logo from 'assets/images/logo1.png'
+import logo from 'assets/images/portail-black.png'
 import { ErrorDialogProps } from 'types'
 import useStyles from './styles'
 import NoRights from 'components/Console-Admin/ErrorView/NoRights'
@@ -109,7 +109,7 @@ const Login = () => {
           className={classes.rightPanel}
         >
           <Grid container item xs={8} lg={6} direction="column" alignItems="center">
-            <img className={classes.logo} src={logo} alt="Logo Cohort360" />
+            <img className={classes.logo} src={logo} alt="Logo Portail" />
 
             <Typography className={classes.bienvenue}>Bienvenue ! Connectez-vous.</Typography>
 
