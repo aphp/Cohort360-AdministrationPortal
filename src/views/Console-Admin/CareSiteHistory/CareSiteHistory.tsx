@@ -37,7 +37,7 @@ const CareSiteHistory: React.FC = () => {
       const careSiteResp = await getCareSite(careSiteId)
       setCareSiteName(careSiteResp ?? 'Inconnu')
 
-      const careSiteAccessesResp = await getCareSiteAccesses(careSiteId, order, page, searchInput)
+      const careSiteAccessesResp = await getCareSiteAccesses(careSiteId, order, page, searchInput.trim())
       setCareSiteAccesses(careSiteAccessesResp?.accesses)
       setTotal(careSiteAccessesResp?.total)
 
@@ -75,7 +75,7 @@ const CareSiteHistory: React.FC = () => {
       try {
         setLoadingData(true)
 
-        const careSiteAccessesResp = await getCareSiteAccesses(careSiteId, order, page, searchInput)
+        const careSiteAccessesResp = await getCareSiteAccesses(careSiteId, order, page, searchInput.trim())
 
         setCareSiteAccesses(careSiteAccessesResp?.accesses)
         setTotal(careSiteAccessesResp?.total)

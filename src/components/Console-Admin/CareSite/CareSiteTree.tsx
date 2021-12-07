@@ -78,7 +78,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
   useEffect(() => {
     const _searchInCareSites = async () => {
       setLoading(true)
-      const careSiteSearchResp = await searchInCareSites(isManageable, debouncedSearchTerm)
+      const careSiteSearchResp = await searchInCareSites(isManageable, debouncedSearchTerm?.trim())
       setRootRows(careSiteSearchResp)
       setLoading(false)
     }
