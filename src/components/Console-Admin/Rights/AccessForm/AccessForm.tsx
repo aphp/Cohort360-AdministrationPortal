@@ -63,7 +63,8 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
   const [dateError, setDateError] = useState(false)
   const [openPerimeters, setOpenPerimeters] = useState(false)
   const [roles, setRoles] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [loadingValidate, setLoadingValidate] = useState(false)
+  const [loadingAssignableRoles, setLoadingAssignableRoles] = useState(false)
 
   const isEdition = access
   const isStartDatePast = _access.actual_start_datetime ? _access.actual_start_datetime.isBefore() : false
@@ -72,16 +73,16 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
   useEffect(() => {
     const _getAssignableRoles = async () => {
       try {
-        setLoading(true)
+        setLoadingAssignableRoles(true)
 
         const assignableRolesResp = await getAssignableRoles(_access.careSite?.care_site_id)
 
         setRoles(assignableRolesResp)
 
-        setLoading(false)
+        setLoadingAssignableRoles(false)
       } catch (error) {
         console.error('Erreur lors de la récupération des habilitations assignables', error)
-        setLoading(false)
+        setLoadingAssignableRoles(false)
       }
     }
 
@@ -118,6 +119,7 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
 
   const onSubmit = async () => {
     try {
+      setLoadingValidate(true)
       let accessData = {} as AccessData
 
       const stringStartDate =
@@ -163,9 +165,11 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
         }
       }
 
+      setLoadingValidate(false)
       resetDialogAndClose()
     } catch (error) {
       console.error(`Erreur lors de ${isEdition ? "l'édition" : 'la création'} d'un accès`)
+      setLoadingValidate(false)
       resetDialogAndClose()
       onFail(true)
     }
@@ -201,7 +205,7 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
             </Grid>
             <Grid container justify="space-between" alignItems="center" className={classes.filter}>
               <Typography variant="h3">Habilitation :</Typography>
-              {loading ? (
+              {loadingAssignableRoles ? (
                 <CircularProgress size={20} />
               ) : roles ? (
                 <Autocomplete
@@ -295,12 +299,16 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
         </Button>
         <Button
           disabled={
-            dateError || (isStartDatePast && isEndDatePast) || (!isEdition && !_access.careSite) || !_access.role
+            loadingValidate ||
+            dateError ||
+            (isStartDatePast && isEndDatePast) ||
+            (!isEdition && !_access.careSite) ||
+            !_access.role
           }
           onClick={onSubmit}
           color="primary"
         >
-          Valider
+          {loadingValidate ? <CircularProgress /> : 'Valider'}
         </Button>
       </DialogActions>
 

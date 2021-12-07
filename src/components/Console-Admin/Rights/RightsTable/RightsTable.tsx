@@ -76,6 +76,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
   const [deleteAccessSuccess, setDeleteAccessSuccess] = useState(false)
   const [deleteAccessFail, setDeleteAccessFail] = useState(false)
   const [terminateAccess, setTerminateAccess] = useState(false)
+  const [loadingOnConfirm, setLoadingOnConfirm] = useState(false)
 
   const rowsPerPage = 100
 
@@ -153,6 +154,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
 
   const handleDeleteAction = async () => {
     try {
+      setLoadingOnConfirm(true)
       const terminateAccessResp = await onDeleteOrTerminateAccess(terminateAccess, deleteAccess?.care_site_history_id)
 
       if (terminateAccessResp) {
@@ -161,10 +163,12 @@ const RightsTable: React.FC<RightsTableProps> = ({
         setDeleteAccessFail(true)
       }
 
+      setLoadingOnConfirm(false)
       getAccesses()
       setDeleteAccess(null)
     } catch (error) {
       console.error("Erreur lors de la suppression ou la clôture de l'accès", error)
+      setLoadingOnConfirm(false)
       setDeleteAccessFail(true)
       setDeleteAccess(null)
     }
@@ -397,7 +401,9 @@ const RightsTable: React.FC<RightsTableProps> = ({
           <Button onClick={() => setDeleteAccess(null)} color="secondary">
             Annuler
           </Button>
-          <Button onClick={handleDeleteAction}>Confirmer</Button>
+          <Button onClick={handleDeleteAction} disabled={loading}>
+            {loadingOnConfirm ? <CircularProgress /> : 'Confirmer'}
+          </Button>
         </DialogActions>
       </Dialog>
 

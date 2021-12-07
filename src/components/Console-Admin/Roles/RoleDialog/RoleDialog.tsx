@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import {
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -53,6 +54,7 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
   const [role, setRole] = useState<Role>(selectedRole)
   const [errorName, setErrorName] = useState(false)
   const [editMode, setEditMode] = useState(false)
+  const [loadingOnValidate, setLoadingOnValidate] = useState(false)
 
   const isEditable = selectedRole?.role_id ? true : false
 
@@ -164,6 +166,8 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
 
   const onSubmit = async () => {
     try {
+      setLoadingOnValidate(true)
+
       const roleData = {
         name: role?.name,
         right_edit_roles: role?.right_edit_roles,
@@ -195,9 +199,11 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
         createRoleResp ? onAddRoleSuccess(true) : onAddRoleFail(true)
       }
 
+      setLoadingOnValidate(false)
       onClose()
     } catch (error) {
       console.error(`Erreur lors de ${isEditable ? "l'édition" : 'la création'} de l'habilitation`, error)
+      setLoadingOnValidate(false)
       isEditable ? onEditRoleFail(true) : onAddRoleFail(true)
       onClose()
     }
@@ -277,22 +283,23 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
           <Button
             variant="contained"
             disableElevation
-            disabled={errorName || !role.name}
+            disabled={loadingOnValidate || errorName || !role.name}
             onClick={() => onSubmit()}
             className={classes.buttons}
           >
-            Valider
+            {loadingOnValidate ? <CircularProgress /> : 'Valider'}
           </Button>
         ) : (
           userRights.right_edit_roles && (
             <Button
               variant="contained"
               disableElevation
+              disabled={loadingOnValidate}
               endIcon={<EditIcon height="15px" fill="#FFF" />}
               onClick={() => setEditMode(true)}
               className={classes.buttons}
             >
-              Éditer
+              {loadingOnValidate ? <CircularProgress /> : 'Éditer'}
             </Button>
           )
         )}

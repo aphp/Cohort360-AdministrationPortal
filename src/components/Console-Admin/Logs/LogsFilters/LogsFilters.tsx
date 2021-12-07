@@ -3,6 +3,7 @@ import moment from 'moment'
 
 import {
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -50,6 +51,7 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
   const [userError, setUserError] = useState(false)
   const [openPerimeters, setOpenPerimeters] = useState(false)
   const [selectedCareSite, setSelectedCareSite] = useState<ScopeTreeRow | null>(formattedCareSite)
+  const [loadingOnValidate, setLoadingOnValidate] = useState(false)
 
   useEffect(() => {
     if (moment(_filters.afterDate).isAfter(_filters.beforeDate)) {
@@ -77,6 +79,7 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
   }
 
   const onSubmit = () => {
+    setLoadingOnValidate(true)
     const _filtersCopy = {
       ..._filters,
       careSite: {
@@ -86,6 +89,7 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
     }
     onChangeFilters(_filtersCopy)
     onClose()
+    setLoadingOnValidate(false)
   }
 
   return (
@@ -197,8 +201,8 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
         <Button onClick={onClose} color="secondary">
           Annuler
         </Button>
-        <Button disabled={dateError || userError} onClick={onSubmit} color="primary">
-          Valider
+        <Button disabled={loadingOnValidate || dateError || userError} onClick={onSubmit} color="primary">
+          {loadingOnValidate ? <CircularProgress /> : 'Valider'}
         </Button>
       </DialogActions>
 
