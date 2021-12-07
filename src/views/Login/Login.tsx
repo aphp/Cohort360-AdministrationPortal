@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import {
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -49,6 +50,7 @@ const Login = () => {
   const [password, setPassword] = useState<string>('')
   const [errorLogin, setErrorLogin] = useState<boolean>(false)
   const [noRights, setNoRights] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
     localStorage.removeItem('user')
@@ -58,10 +60,17 @@ const Login = () => {
 
   const onLogin = async () => {
     try {
-      if (!username || !password) return setErrorLogin(true)
+      setLoading(true)
+      if (!username || !password) {
+        setLoading(false)
+        return setErrorLogin(true)
+      }
 
       const response = await authenticate(username, password)
-      if (!response) return setErrorLogin(true)
+      if (!response) {
+        setLoading(false)
+        return setErrorLogin(true)
+      }
 
       const { status, data = {} } = response
       if (status === 200) {
@@ -77,10 +86,12 @@ const Login = () => {
           history.push('/homepage')
         }
       } else {
+        setLoading(false)
         setErrorLogin(true)
       }
     } catch (err) {
       console.error("Erreur lors de l'authentification", err)
+      setLoading(false)
       setErrorLogin(true)
     }
   }
@@ -142,14 +153,14 @@ const Login = () => {
                 />
 
                 <Button
-                  disabled={!username || !password}
+                  disabled={loading || !username || !password}
                   type="submit"
                   fullWidth
                   variant="contained"
                   color="primary"
                   className={classes.submit}
                 >
-                  Connexion
+                  {loading ? <CircularProgress /> : 'Connexion'}
                 </Button>
               </Grid>
             </form>
