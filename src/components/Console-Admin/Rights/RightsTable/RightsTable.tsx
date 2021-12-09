@@ -104,6 +104,10 @@ const RightsTable: React.FC<RightsTableProps> = ({
           label: 'Nom'
         },
         {
+          label: 'Périmètre parent',
+          code: 'care_site_name'
+        },
+        {
           label: 'Habilitation',
           code: 'role_name'
         },
@@ -241,11 +245,9 @@ const RightsTable: React.FC<RightsTableProps> = ({
                         </IconButton>
                       </TableCell>
                     )}
-                    {!displayName && (
-                      <TableCell align={'left'}>
-                        {access.care_site.care_site_source_value} - {access.care_site.care_site_name}
-                      </TableCell>
-                    )}
+                    <TableCell align={'left'}>
+                      {access.care_site.care_site_source_value} - {access.care_site.care_site_name}
+                    </TableCell>
                     <TableCell align="center">
                       <div className={classes.roleColumn}>
                         {access?.role?.name}
