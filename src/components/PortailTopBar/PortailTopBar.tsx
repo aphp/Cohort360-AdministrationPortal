@@ -34,12 +34,13 @@ const PortailTopBar: React.FC = () => {
     {
       name: 'Utilisateurs',
       pathname: '/console-admin/users',
-      rightsToSee: true
+      rightsToSee: userRights.right_read_users
     },
     {
       name: 'Périmètres',
       pathname: '/console-admin/caresites',
       rightsToSee:
+        userRights.right_read_users ||
         userRights.right_read_admin_accesses_same_level ||
         userRights.right_read_admin_accesses_inferior_levels ||
         userRights.right_read_data_accesses_same_level ||
@@ -48,7 +49,7 @@ const PortailTopBar: React.FC = () => {
     {
       name: 'Habilitations',
       pathname: '/console-admin/habilitations',
-      rightsToSee: true
+      rightsToSee: userRights.right_read_users
     },
     {
       name: 'Logs',
@@ -61,7 +62,10 @@ const PortailTopBar: React.FC = () => {
     {
       name: 'Transfert Jupyter',
       pathname: `/espace-jupyter/transfert`,
-      rightsToSee: true
+      rightsToSee:
+        userRights.right_manage_review_transfer_jupyter ||
+        userRights.right_review_transfer_jupyter ||
+        userRights.right_manage_transfer_jupyter
     }
   ]
 
@@ -79,19 +83,26 @@ const PortailTopBar: React.FC = () => {
         <Grid container alignItems="center" justify="space-between" style={{ height: '100%' }}>
           <Grid container item alignItems="center" xs={9} style={{ height: '100%' }}>
             <img src={PortailLogo} alt="Portail logo" className={classes.logoIcon} />
-            <Button
-              onClick={handleClickConsoleAdmin}
-              className={clsx(
-                classes.topBarButton,
-                (pathname.includes('users') ||
-                  pathname.includes('caresites') ||
-                  pathname.includes('habilitations') ||
-                  pathname.includes('logs')) &&
-                  classes.activeButton
-              )}
-            >
-              Console admin
-            </Button>
+            {(userRights.right_read_users ||
+              userRights.right_read_admin_accesses_same_level ||
+              userRights.right_read_admin_accesses_inferior_levels ||
+              userRights.right_read_data_accesses_same_level ||
+              userRights.right_read_data_accesses_inferior_levels ||
+              userRights.right_read_logs) && (
+              <Button
+                onClick={handleClickConsoleAdmin}
+                className={clsx(
+                  classes.topBarButton,
+                  (pathname.includes('users') ||
+                    pathname.includes('caresites') ||
+                    pathname.includes('habilitations') ||
+                    pathname.includes('logs')) &&
+                    classes.activeButton
+                )}
+              >
+                Console admin
+              </Button>
+            )}
             <Menu
               anchorEl={anchorElConsole}
               anchorOrigin={{
@@ -122,12 +133,18 @@ const PortailTopBar: React.FC = () => {
                   )
               )}
             </Menu>
-            <Button
-              onClick={handleClickEspaceJupyter}
-              className={clsx(classes.topBarButton, pathname.includes('transfert') ? classes.activeButton : '')}
-            >
-              Espace Jupyter
-            </Button>
+            {(userRights.right_manage_review_transfer_jupyter ||
+              userRights.right_review_transfer_jupyter ||
+              userRights.right_manage_transfer_jupyter ||
+              userRights.right_transfer_jupyter_nominative ||
+              userRights.right_transfer_jupyter_pseudo_anonymised) && (
+              <Button
+                onClick={handleClickEspaceJupyter}
+                className={clsx(classes.topBarButton, pathname.includes('transfert') ? classes.activeButton : '')}
+              >
+                Espace Jupyter
+              </Button>
+            )}
             <Menu
               anchorEl={anchorElJupyter}
               anchorOrigin={{

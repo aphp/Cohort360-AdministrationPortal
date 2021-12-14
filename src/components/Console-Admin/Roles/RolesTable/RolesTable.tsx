@@ -32,26 +32,11 @@ import {
   //  deleteRole
 } from 'services/Console-Admin/rolesService'
 import RoleDialog from '../RoleDialog/RoleDialog'
+import { userDefaultRoles } from 'utils/userRoles'
 
 const defaultRole: Role = {
   name: '',
-  right_edit_roles: false,
-  right_read_logs: false,
-  right_add_users: false,
-  right_edit_users: false,
-  right_read_users: false,
-  right_manage_admin_accesses_same_level: false,
-  right_read_admin_accesses_same_level: false,
-  right_manage_admin_accesses_inferior_levels: false,
-  right_read_admin_accesses_inferior_levels: false,
-  right_manage_data_accesses_same_level: false,
-  right_read_data_accesses_same_level: false,
-  right_manage_data_accesses_inferior_levels: false,
-  right_read_data_accesses_inferior_levels: false,
-  right_read_patient_nominative: false,
-  right_read_patient_pseudo_anonymised: false,
-  right_export_jupyter_patient_nominative: false,
-  right_export_jupyter_patient_pseudo_anonymised: false
+  ...userDefaultRoles
 }
 
 type RolesTableProps = {

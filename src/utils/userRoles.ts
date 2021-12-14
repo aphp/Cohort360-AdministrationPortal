@@ -18,7 +18,21 @@ export const userDefaultRoles: UserRole = {
   right_read_patient_nominative: false,
   right_read_patient_pseudo_anonymised: false,
   right_export_jupyter_patient_nominative: false,
-  right_export_jupyter_patient_pseudo_anonymised: false
+  right_export_jupyter_patient_pseudo_anonymised: false,
+  right_manage_review_transfer_jupyter: false,
+  right_review_transfer_jupyter: false,
+  right_manage_transfer_jupyter: false,
+  right_transfer_jupyter_nominative: false,
+  right_transfer_jupyter_pseudo_anonymised: false,
+  right_manage_review_export_csv: false,
+  right_review_export_csv: false,
+  right_manage_export_csv: false,
+  right_export_csv_nominative: false,
+  right_export_csv_pseudo_anonymised: false,
+  right_read_env_unix_users: false,
+  right_manage_env_unix_users: false,
+  right_manage_env_users_apps: false,
+  right_manage_env_users_links: false
 }
 
 export const getUserRights = async (providerSourceValue?: string, data?: Access[]) => {
@@ -85,6 +99,51 @@ export const getUserRights = async (providerSourceValue?: string, data?: Access[
           }
           if (access.role.right_export_jupyter_patient_pseudo_anonymised) {
             _userRights.right_export_jupyter_patient_pseudo_anonymised = true
+          }
+          if (access.role.right_export_jupyter_patient_pseudo_anonymised) {
+            _userRights.right_export_jupyter_patient_pseudo_anonymised = true
+          }
+          if (access.role.right_manage_review_transfer_jupyter) {
+            _userRights.right_manage_review_transfer_jupyter = true
+          }
+          if (access.role.right_review_transfer_jupyter) {
+            _userRights.right_review_transfer_jupyter = true
+          }
+          if (access.role.right_manage_transfer_jupyter) {
+            _userRights.right_manage_transfer_jupyter = true
+          }
+          if (access.role.right_transfer_jupyter_nominative) {
+            _userRights.right_transfer_jupyter_nominative = true
+          }
+          if (access.role.right_transfer_jupyter_pseudo_anonymised) {
+            _userRights.right_transfer_jupyter_pseudo_anonymised = true
+          }
+          if (access.role.right_manage_review_export_csv) {
+            _userRights.right_manage_review_export_csv = true
+          }
+          if (access.role.right_review_export_csv) {
+            _userRights.right_review_export_csv = true
+          }
+          if (access.role.right_manage_export_csv) {
+            _userRights.right_manage_export_csv = true
+          }
+          if (access.role.right_export_csv_nominative) {
+            _userRights.right_export_csv_nominative = true
+          }
+          if (access.role.right_export_csv_pseudo_anonymised) {
+            _userRights.right_export_csv_pseudo_anonymised = true
+          }
+          if (access.role.right_read_env_unix_users) {
+            _userRights.right_read_env_unix_users = true
+          }
+          if (access.role.right_manage_env_unix_users) {
+            _userRights.right_manage_env_unix_users = true
+          }
+          if (access.role.right_manage_env_users_apps) {
+            _userRights.right_manage_env_users_apps = true
+          }
+          if (access.role.right_manage_env_users_links) {
+            _userRights.right_manage_env_users_links = true
           }
         }
       }

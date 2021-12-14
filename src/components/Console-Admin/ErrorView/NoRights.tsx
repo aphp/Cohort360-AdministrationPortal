@@ -21,9 +21,7 @@ const CohortRightOrNotExist = () => {
           </Grid>
           <Grid item style={{ padding: '8px 32px' }}>
             <Typography style={{ marginBottom: 16 }} variant="h5" align="center">
-              Vous n'avez pas accès au Portail d'administration. Merci de vous rapprocher de votre coordinateur pour
-              demander la création de votre compte Portail d'administration ainsi qu'un créneau de formation obligatoire
-              pour utiliser l'application.
+              Vous n'avez pas accès au Portail d'administration.
             </Typography>
             <Typography style={{ marginBottom: 16 }} align="center">
               S'il s'agit d'une erreur, vous pouvez contacter le support Portail d'administration à l'adresse suivante:
