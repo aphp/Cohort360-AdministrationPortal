@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import {
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -53,6 +54,7 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
   const [role, setRole] = useState<Role>(selectedRole)
   const [errorName, setErrorName] = useState(false)
   const [editMode, setEditMode] = useState(false)
+  const [loadingOnValidate, setLoadingOnValidate] = useState(false)
 
   const isEditable = selectedRole?.role_id ? true : false
 
@@ -143,6 +145,78 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
       label: 'Export des données patients pseudonymisées',
       status: role?.right_export_jupyter_patient_pseudo_anonymised,
       keyName: 'right_export_jupyter_patient_pseudo_anonymised'
+    },
+    {
+      label:
+        'Gérer les accès permettant de valider ou non les demandes de transfert de données vers des environnements Jupyter',
+      status: role?.right_manage_review_transfer_jupyter,
+      keyName: 'right_manage_review_transfer_jupyter'
+    },
+    {
+      label: 'Valider ou non les demandes de transfert de données vers des environnements Jupyter',
+      status: role?.right_review_transfer_jupyter,
+      keyName: 'right_review_transfer_jupyter'
+    },
+    {
+      label:
+        'Gérer les accès permettant de réaliser des demandes de transfert de données vers des environnements Jupyter',
+      status: role?.right_manage_transfer_jupyter,
+      keyName: 'right_manage_transfer_jupyter'
+    },
+    {
+      label: 'Demander à transférer ses cohortes de patients sous forme nominative vers un environnement Jupyter',
+      status: role?.right_transfer_jupyter_nominative,
+      keyName: 'right_transfer_jupyter_nominative'
+    },
+    {
+      label: 'Demander à transférer ses cohortes de patients sous forme pseudonymisée vers un environnement Jupyter',
+      status: role?.right_transfer_jupyter_pseudo_anonymised,
+      keyName: 'right_transfer_jupyter_pseudo_anonymised'
+    },
+    {
+      label: "Gérer les accès permettant de valider ou non les demandes d'export de données en format CSV",
+      status: role?.right_manage_review_export_csv,
+      keyName: 'right_manage_review_export_csv'
+    },
+    {
+      label: "Valider ou non les demandes d'export de données en format CSV",
+      status: role?.right_review_export_csv,
+      keyName: 'right_review_export_csv'
+    },
+    {
+      label: "Gérer les accès permettant de réaliser des demandes d'export de données en format CSV",
+      status: role?.right_manage_export_csv,
+      keyName: 'right_manage_export_csv'
+    },
+    {
+      label: 'Demander à exporter ses cohortes de patients sous forme nominative en format CSV',
+      status: role?.right_export_csv_nominative,
+      keyName: 'right_export_csv_nominative'
+    },
+    {
+      label: 'Demander à exporter ses cohortes de patients sous forme pseudonymisée en format CSV',
+      status: role?.right_export_csv_pseudo_anonymised,
+      keyName: 'right_export_csv_pseudo_anonymised'
+    },
+    {
+      label: 'Lire les informations liées aux environnements de travail',
+      status: role?.right_read_env_unix_users,
+      keyName: 'right_read_env_unix_users'
+    },
+    {
+      label: 'Gérer les environnements de travail',
+      status: role?.right_manage_env_unix_users,
+      keyName: 'right_manage_env_unix_users'
+    },
+    {
+      label: 'Gérer la disponibilité des applications dans les environnements de travail',
+      status: role?.right_manage_env_users_apps,
+      keyName: 'right_manage_env_users_apps'
+    },
+    {
+      label: 'Gérer les accès des utilisateurs aux environnements de travail',
+      status: role?.right_manage_env_users_links,
+      keyName: 'right_manage_env_users_links'
     }
   ]
 
@@ -164,25 +238,41 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
 
   const onSubmit = async () => {
     try {
+      setLoadingOnValidate(true)
+
       const roleData = {
         name: role?.name,
-        right_edit_roles: role?.right_edit_roles,
-        right_read_logs: role?.right_read_logs,
-        right_add_users: role?.right_add_users,
-        right_edit_users: role?.right_edit_users,
-        right_read_users: role?.right_read_users,
-        right_manage_admin_accesses_same_level: role?.right_manage_admin_accesses_same_level,
-        right_read_admin_accesses_same_level: role?.right_read_admin_accesses_same_level,
-        right_manage_admin_accesses_inferior_levels: role?.right_manage_admin_accesses_inferior_levels,
-        right_read_admin_accesses_inferior_levels: role?.right_read_admin_accesses_inferior_levels,
-        right_manage_data_accesses_same_level: role?.right_manage_data_accesses_same_level,
-        right_read_data_accesses_same_level: role?.right_read_data_accesses_same_level,
-        right_manage_data_accesses_inferior_levels: role?.right_manage_data_accesses_inferior_levels,
-        right_read_data_accesses_inferior_levels: role?.right_read_data_accesses_inferior_levels,
-        right_read_patient_nominative: role?.right_read_patient_nominative,
-        right_read_patient_pseudo_anonymised: role?.right_read_patient_pseudo_anonymised,
-        right_export_jupyter_patient_nominative: role?.right_export_jupyter_patient_nominative,
-        right_export_jupyter_patient_pseudo_anonymised: role?.right_export_jupyter_patient_pseudo_anonymised
+        right_edit_roles: role?.right_edit_roles ?? false,
+        right_read_logs: role?.right_read_logs ?? false,
+        right_add_users: role?.right_add_users ?? false,
+        right_edit_users: role?.right_edit_users ?? false,
+        right_read_users: role?.right_read_users ?? false,
+        right_manage_admin_accesses_same_level: role?.right_manage_admin_accesses_same_level ?? false,
+        right_read_admin_accesses_same_level: role?.right_read_admin_accesses_same_level ?? false,
+        right_manage_admin_accesses_inferior_levels: role?.right_manage_admin_accesses_inferior_levels ?? false,
+        right_read_admin_accesses_inferior_levels: role?.right_read_admin_accesses_inferior_levels ?? false,
+        right_manage_data_accesses_same_level: role?.right_manage_data_accesses_same_level ?? false,
+        right_read_data_accesses_same_level: role?.right_read_data_accesses_same_level ?? false,
+        right_manage_data_accesses_inferior_levels: role?.right_manage_data_accesses_inferior_levels ?? false,
+        right_read_data_accesses_inferior_levels: role?.right_read_data_accesses_inferior_levels ?? false,
+        right_read_patient_nominative: role?.right_read_patient_nominative ?? false,
+        right_read_patient_pseudo_anonymised: role?.right_read_patient_pseudo_anonymised ?? false,
+        right_export_jupyter_patient_nominative: role?.right_export_jupyter_patient_nominative ?? false,
+        right_export_jupyter_patient_pseudo_anonymised: role?.right_export_jupyter_patient_pseudo_anonymised ?? false,
+        right_manage_review_transfer_jupyter: role?.right_manage_review_transfer_jupyter ?? false,
+        right_review_transfer_jupyter: role?.right_review_transfer_jupyter ?? false,
+        right_manage_transfer_jupyter: role?.right_manage_transfer_jupyter ?? false,
+        right_transfer_jupyter_nominative: role?.right_transfer_jupyter_nominative ?? false,
+        right_transfer_jupyter_pseudo_anonymised: role?.right_transfer_jupyter_pseudo_anonymised ?? false,
+        right_manage_review_export_csv: role?.right_manage_review_export_csv ?? false,
+        right_review_export_csv: role?.right_review_export_csv ?? false,
+        right_manage_export_csv: role?.right_manage_export_csv ?? false,
+        right_export_csv_nominative: role?.right_export_csv_nominative ?? false,
+        right_export_csv_pseudo_anonymised: role?.right_export_csv_pseudo_anonymised ?? false,
+        right_read_env_unix_users: role?.right_read_env_unix_users ?? false,
+        right_manage_env_unix_users: role?.right_manage_env_unix_users ?? false,
+        right_manage_env_users_apps: role?.right_manage_env_users_apps ?? false,
+        right_manage_env_users_links: role?.right_manage_env_users_links ?? false
       }
 
       if (isEditable) {
@@ -195,9 +285,11 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
         createRoleResp ? onAddRoleSuccess(true) : onAddRoleFail(true)
       }
 
+      setLoadingOnValidate(false)
       onClose()
     } catch (error) {
       console.error(`Erreur lors de ${isEditable ? "l'édition" : 'la création'} de l'habilitation`, error)
+      setLoadingOnValidate(false)
       isEditable ? onEditRoleFail(true) : onAddRoleFail(true)
       onClose()
     }
@@ -277,22 +369,23 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
           <Button
             variant="contained"
             disableElevation
-            disabled={errorName || !role.name}
+            disabled={loadingOnValidate || errorName || !role.name}
             onClick={() => onSubmit()}
             className={classes.buttons}
           >
-            Valider
+            {loadingOnValidate ? <CircularProgress /> : 'Valider'}
           </Button>
         ) : (
           userRights.right_edit_roles && (
             <Button
               variant="contained"
               disableElevation
+              disabled={loadingOnValidate}
               endIcon={<EditIcon height="15px" fill="#FFF" />}
               onClick={() => setEditMode(true)}
               className={classes.buttons}
             >
-              Éditer
+              {loadingOnValidate ? <CircularProgress /> : 'Éditer'}
             </Button>
           )
         )}

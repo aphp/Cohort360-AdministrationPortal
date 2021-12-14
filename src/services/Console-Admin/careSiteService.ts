@@ -153,7 +153,7 @@ export const searchInCareSites = async (isManageable?: boolean, searchInput?: st
     )
 
     if (careSiteSearchResp.data) {
-      return parseCareSiteSearchResults(careSiteSearchResp.data[0].children, searchInput)
+      return parseCareSiteSearchResults(careSiteSearchResp.data[0].children, searchInput.trim())
     } else {
       return []
     }

@@ -6,10 +6,54 @@ import logo from 'assets/images/portail-black.png'
 
 import useStyles from './styles'
 import { useHistory } from 'react-router-dom'
+import { useAppSelector } from 'state'
+import { userDefaultRoles } from 'utils/userRoles'
 
 const HomePage = () => {
   const classes = useStyles()
   const history = useHistory()
+
+  const { me } = useAppSelector((state) => ({ me: state.me }))
+  const userRights = me?.userRights ?? userDefaultRoles
+
+  const consolePages = [
+    {
+      name: 'Liste des utilisateurs',
+      pathname: '/console-admin/users',
+      rightsToSee: userRights.right_read_users
+    },
+    {
+      name: 'Périmètres',
+      pathname: '/console-admin/caresites',
+      rightsToSee:
+        userRights.right_read_users ||
+        userRights.right_read_admin_accesses_same_level ||
+        userRights.right_read_admin_accesses_inferior_levels ||
+        userRights.right_read_data_accesses_same_level ||
+        userRights.right_read_data_accesses_inferior_levels
+    },
+    {
+      name: 'Habilitations',
+      pathname: '/console-admin/habilitations',
+      rightsToSee: userRights.right_read_users
+    },
+    {
+      name: 'Logs',
+      pathname: '/console-admin/logs',
+      rightsToSee: userRights.right_read_logs
+    }
+  ]
+
+  const jupyterPages = [
+    {
+      name: 'Transfert Jupyter',
+      pathname: `/espace-jupyter/transfert`,
+      rightsToSee:
+        userRights.right_manage_review_transfer_jupyter ||
+        userRights.right_review_transfer_jupyter ||
+        userRights.right_manage_transfer_jupyter
+    }
+  ]
 
   return (
     <Grid container direction="column" alignItems="center">
@@ -19,58 +63,59 @@ const HomePage = () => {
           Bienvenue sur le portail de l'EDS
         </Typography>
         <Grid container item justify="space-around">
-          <Grid container item className={classes.box} xs={12} sm={4} direction="column" alignItems="center">
-            <ComputerIcon style={{ fontSize: 100, marginBottom: 12 }} />
-            <Typography variant="h6" style={{ fontSize: 16, marginBottom: 28, lineHeight: 'inherit' }}>
-              Console Admin
-            </Typography>
-            <Button
-              variant="contained"
-              disableElevation
-              onClick={() => history.push('/console-admin/users')}
-              className={classes.linkButton}
-            >
-              Liste des utilisateurs
-            </Button>
-            <Button
-              variant="contained"
-              disableElevation
-              onClick={() => history.push('/console-admin/caresites')}
-              className={classes.linkButton}
-            >
-              Périmètres
-            </Button>
-            <Button
-              variant="contained"
-              disableElevation
-              onClick={() => history.push('/console-admin/habilitations')}
-              className={classes.linkButton}
-            >
-              Habilitations
-            </Button>
-            <Button
-              variant="contained"
-              disableElevation
-              onClick={() => history.push('/console-admin/logs')}
-              className={classes.linkButton}
-            >
-              Logs
-            </Button>
-          </Grid>
-          <Grid container item className={classes.box} xs={12} sm={4} direction="column" alignItems="center">
-            <FlipCameraAndroidIcon style={{ fontSize: 100, marginBottom: 12 }} />
-            <Typography variant="h6" style={{ fontSize: 16, marginBottom: 28, lineHeight: 'inherit' }}>
-              Espace Jupyter
-            </Typography>
-            <Button
-              variant="contained"
-              disableElevation
-              onClick={() => history.push('/espace-jupyter/transfert')}
-              className={classes.linkButton}
-            >
-              Transfert Jupyter
-            </Button>
-          </Grid>
+          {(userRights.right_read_users ||
+            userRights.right_read_admin_accesses_same_level ||
+            userRights.right_read_admin_accesses_inferior_levels ||
+            userRights.right_read_data_accesses_same_level ||
+            userRights.right_read_data_accesses_inferior_levels ||
+            userRights.right_read_logs) && (
+            <Grid container item className={classes.box} xs={12} sm={4} direction="column" alignItems="center">
+              <ComputerIcon style={{ fontSize: 100, marginBottom: 12 }} />
+              <Typography variant="h6" style={{ fontSize: 16, marginBottom: 28, lineHeight: 'inherit' }}>
+                Console Admin
+              </Typography>
+              {consolePages.map(
+                (page, index: number) =>
+                  page.rightsToSee && (
+                    <Button
+                      key={index}
+                      variant="contained"
+                      disableElevation
+                      onClick={() => history.push(page.pathname)}
+                      className={classes.linkButton}
+                    >
+                      {page.name}
+                    </Button>
+                  )
+              )}
+            </Grid>
+          )}
+          {(userRights.right_manage_review_transfer_jupyter ||
+            userRights.right_review_transfer_jupyter ||
+            userRights.right_manage_transfer_jupyter ||
+            userRights.right_transfer_jupyter_nominative ||
+            userRights.right_transfer_jupyter_pseudo_anonymised) && (
+            <Grid container item className={classes.box} xs={12} sm={4} direction="column" alignItems="center">
+              <FlipCameraAndroidIcon style={{ fontSize: 100, marginBottom: 12 }} />
+              <Typography variant="h6" style={{ fontSize: 16, marginBottom: 28, lineHeight: 'inherit' }}>
+                Espace Jupyter
+              </Typography>
+              {jupyterPages.map(
+                (page, index: number) =>
+                  page.rightsToSee && (
+                    <Button
+                      key={index}
+                      variant="contained"
+                      disableElevation
+                      onClick={() => history.push(page.pathname)}
+                      className={classes.linkButton}
+                    >
+                      {page.name}
+                    </Button>
+                  )
+              )}
+            </Grid>
+          )}
         </Grid>
       </Grid>
     </Grid>

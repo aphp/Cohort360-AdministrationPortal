@@ -49,6 +49,7 @@ const ProviderDialog: React.FC<ProviderDialogProps> = ({
   const [provider, setProvider] = useState<Provider | null>(selectedProvider || defaultProvider)
   const [providerHistoryId, setProviderHistoryId] = useState('')
   const [loading, setLoading] = useState(false)
+  const [loadingOnValidate, setLoadingOnValidate] = useState(false)
 
   const [error, setError] = useState(false)
   const [providerSourceValueError, setProviderSourceValueError] = useState(false)
@@ -123,6 +124,7 @@ const ProviderDialog: React.FC<ProviderDialogProps> = ({
 
   const onSubmit = async () => {
     try {
+      setLoadingOnValidate(true)
       if (isEdition) {
         const providerData = {
           firstname: provider?.firstname,
@@ -145,6 +147,8 @@ const ProviderDialog: React.FC<ProviderDialogProps> = ({
         createProfileResp ? onAddProviderSuccess(true) : onAddProviderFail(true)
       }
 
+      setLoadingOnValidate(false)
+
       setProvider(defaultProvider)
       onClose()
     } catch (error) {
@@ -152,6 +156,7 @@ const ProviderDialog: React.FC<ProviderDialogProps> = ({
       isEdition ? onEditProviderFail(true) : onAddProviderFail(true)
 
       setProvider(defaultProvider)
+      setLoadingOnValidate(false)
       onClose()
     }
   }
@@ -250,6 +255,7 @@ const ProviderDialog: React.FC<ProviderDialogProps> = ({
         </Button>
         <Button
           disabled={
+            loadingOnValidate ||
             error ||
             providerSourceValueError ||
             lastNameError ||
@@ -263,7 +269,7 @@ const ProviderDialog: React.FC<ProviderDialogProps> = ({
           onClick={onSubmit}
           color="primary"
         >
-          Valider
+          {loadingOnValidate ? <CircularProgress /> : 'Valider'}
         </Button>
       </DialogActions>
     </Dialog>

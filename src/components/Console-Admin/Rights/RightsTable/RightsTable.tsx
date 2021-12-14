@@ -76,6 +76,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
   const [deleteAccessSuccess, setDeleteAccessSuccess] = useState(false)
   const [deleteAccessFail, setDeleteAccessFail] = useState(false)
   const [terminateAccess, setTerminateAccess] = useState(false)
+  const [loadingOnConfirm, setLoadingOnConfirm] = useState(false)
 
   const rowsPerPage = 100
 
@@ -101,6 +102,10 @@ const RightsTable: React.FC<RightsTableProps> = ({
     ? [
         {
           label: 'Nom'
+        },
+        {
+          label: 'Périmètre parent',
+          code: 'care_site_name'
         },
         {
           label: 'Habilitation',
@@ -153,6 +158,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
 
   const handleDeleteAction = async () => {
     try {
+      setLoadingOnConfirm(true)
       const terminateAccessResp = await onDeleteOrTerminateAccess(terminateAccess, deleteAccess?.care_site_history_id)
 
       if (terminateAccessResp) {
@@ -161,10 +167,12 @@ const RightsTable: React.FC<RightsTableProps> = ({
         setDeleteAccessFail(true)
       }
 
+      setLoadingOnConfirm(false)
       getAccesses()
       setDeleteAccess(null)
     } catch (error) {
       console.error("Erreur lors de la suppression ou la clôture de l'accès", error)
+      setLoadingOnConfirm(false)
       setDeleteAccessFail(true)
       setDeleteAccess(null)
     }
@@ -237,11 +245,9 @@ const RightsTable: React.FC<RightsTableProps> = ({
                         </IconButton>
                       </TableCell>
                     )}
-                    {!displayName && (
-                      <TableCell align={'left'}>
-                        {access.care_site.care_site_source_value} - {access.care_site.care_site_name}
-                      </TableCell>
-                    )}
+                    <TableCell align={'left'}>
+                      {access.care_site.care_site_source_value} - {access.care_site.care_site_name}
+                    </TableCell>
                     <TableCell align="center">
                       <div className={classes.roleColumn}>
                         {access?.role?.name}
@@ -281,7 +287,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
                       userRights.right_manage_data_accesses_inferior_levels ||
                       userRights.right_read_logs) && (
                       <TableCell align="center">
-                        <Grid container item alignContent="center" justify="space-between">
+                        <Grid container item alignContent="center" justify="space-between" wrap="nowrap">
                           {(userRights.right_manage_admin_accesses_same_level ||
                             userRights.right_manage_admin_accesses_inferior_levels ||
                             userRights.right_manage_data_accesses_same_level ||
@@ -397,7 +403,9 @@ const RightsTable: React.FC<RightsTableProps> = ({
           <Button onClick={() => setDeleteAccess(null)} color="secondary">
             Annuler
           </Button>
-          <Button onClick={handleDeleteAction}>Confirmer</Button>
+          <Button onClick={handleDeleteAction} disabled={loading}>
+            {loadingOnConfirm ? <CircularProgress /> : 'Confirmer'}
+          </Button>
         </DialogActions>
       </Dialog>
 
