@@ -4,6 +4,7 @@ import moment from 'moment'
 
 export const getLogs = async (filters: LogsFiltersObject, page: number) => {
   try {
+    const urlsFilter = filters.url ? `&path_contains=${filters.url.code}` : ''
     const userFilter = filters.user ? `&user=${filters.user}` : ''
     const statusCodeFilter = filters.statusCode.length > 0 ? `&status_code=${filters.statusCode.join()}` : ''
     const httpMethodFilter = filters.httpMethod.length > 0 ? `&method=${filters.httpMethod.join()}` : ''
@@ -17,7 +18,7 @@ export const getLogs = async (filters: LogsFiltersObject, page: number) => {
     const careSiteFilters = filters.careSite.careSiteId ? `&response="care_site_id":${filters.careSite.careSiteId}` : ''
 
     const getLogsResp = await api.get(
-      `/logs/?page=${page}${userFilter}${statusCodeFilter}${httpMethodFilter}${afterDateFilter}${beforeDateFilter}${accessFilters}${careSiteFilters}`
+      `/logs/?page=${page}${urlsFilter}${userFilter}${statusCodeFilter}${httpMethodFilter}${afterDateFilter}${beforeDateFilter}${accessFilters}${careSiteFilters}`
     )
 
     const logsResp = getLogsResp?.data.results ?? []
