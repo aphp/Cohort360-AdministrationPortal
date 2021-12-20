@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { useAppSelector } from 'state'
 
 import { Button, CircularProgress, Grid, Paper, Typography } from '@material-ui/core'
 
@@ -20,14 +19,12 @@ const CareSites: React.FC = () => {
   const [searchInput, setSearchInput] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const { me } = useAppSelector((state) => ({ me: state.me }))
-
   useEffect(() => {
     const _getUserRights = async () => {
       try {
         setLoading(true)
 
-        const getUserRightsResponse = await getUserRights(me?.providerSourceValue)
+        const getUserRightsResponse = await getUserRights()
 
         setUserRights(getUserRightsResponse)
         setLoading(false)

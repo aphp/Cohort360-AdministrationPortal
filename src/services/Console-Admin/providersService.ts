@@ -1,12 +1,13 @@
 import api from 'services/api'
+import { Order } from 'types'
 
-export const getProviders = async (orderBy: string, orderDirection: string, page?: number, searchInput?: string) => {
+export const getProviders = async (order: Order, page?: number, searchInput?: string) => {
   const searchFilter = searchInput ? `&search=${searchInput}` : ''
 
   const providersResp = await api.get(
-    `/providers/?manual_only=true&page=${page}&ordering=${
-      orderDirection === 'desc' ? '-' : ''
-    }${orderBy}${searchFilter}`
+    `/providers/?manual_only=true&page=${page}&ordering=${order.orderDirection === 'desc' ? '-' : ''}${
+      order.orderBy
+    }${searchFilter}`
   )
 
   if (providersResp.status !== 200) {

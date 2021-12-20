@@ -8,7 +8,6 @@ import Rights from 'components/Console-Admin/Rights/Rights'
 import useStyles from './styles'
 import { Profile, Provider } from 'types'
 import { getProvider } from 'services/Console-Admin/providersService'
-import { useAppSelector } from 'state'
 import { getUserRights, userDefaultRoles } from 'utils/userRoles'
 
 const ProviderHistory: React.FC = () => {
@@ -18,7 +17,6 @@ const ProviderHistory: React.FC = () => {
   const [provider, setProvider] = useState<Provider | undefined>()
   const [userRights, setUserRights] = useState(userDefaultRoles)
   const [rights, setRights] = useState<Profile[] | undefined>()
-  const { me } = useAppSelector((state) => ({ me: state.me }))
 
   const { providerId } = useParams<{ providerId: string }>()
 
@@ -27,7 +25,7 @@ const ProviderHistory: React.FC = () => {
       try {
         setLoading(true)
 
-        const getUserRightsResponse = await getUserRights(me?.providerSourceValue)
+        const getUserRightsResponse = await getUserRights()
 
         setUserRights(getUserRightsResponse)
       } catch (error) {

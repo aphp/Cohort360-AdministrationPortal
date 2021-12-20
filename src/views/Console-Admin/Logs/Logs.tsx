@@ -14,7 +14,6 @@ import { ReactComponent as FilterIcon } from 'assets/icones/filter.svg'
 import useStyles from './styles'
 import moment from 'moment'
 import { getUserRights, userDefaultRoles } from 'utils/userRoles'
-import { useAppSelector } from 'state'
 
 const filtersDefault = {
   urls: undefined,
@@ -49,7 +48,6 @@ const Logs: React.FC = () => {
   const [logs, setLogs] = useState<Log[] | undefined>(undefined)
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
-  const { me } = useAppSelector((state) => ({ me: state.me }))
 
   const _getLogs = async () => {
     try {
@@ -70,7 +68,7 @@ const Logs: React.FC = () => {
     try {
       setLoadingRights(true)
 
-      const getUserRightsResponse = await getUserRights(me?.providerSourceValue)
+      const getUserRightsResponse = await getUserRights()
 
       setUserRights(getUserRightsResponse)
       setLoadingRights(false)

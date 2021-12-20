@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 
 import {
   Button,
@@ -29,18 +30,24 @@ import VisibilityIcon from '@material-ui/icons/Visibility'
 import ProviderDialog from '../ProviderForm/ProviderForm'
 import SearchBar from '../../../SearchBar/SearchBar'
 
-import { getProviders } from 'services/Console-Admin/providersService'
 import useStyles from './styles'
-import { Provider, UserRole } from 'types'
+import { Order, Provider, UserRole } from 'types'
+import { useAppSelector } from 'state'
+import { fetchProviders, setSelectedProvider } from 'state/providers'
 
 type ProvidersTableProps = {
   userRights: UserRole
 }
 
+const orderDefault = { orderBy: 'lastname', orderDirection: 'asc' } as Order
+
 const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
   const classes = useStyles()
   const history = useHistory()
-
+  const dispatch = useDispatch()
+  const {
+    providers: { loading, providersList, total, selectedProvider }
+  } = useAppSelector((state) => ({ providers: state.providers }))
   const columns =
     !userRights.right_read_admin_accesses_same_level &&
     !userRights.right_read_admin_accesses_inferior_levels &&
@@ -88,70 +95,42 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
           }
         ]
 
-  const [providers, setProviders] = useState<Provider[] | null>(null)
   const [page, setPage] = useState(1)
-  const [total, setTotal] = useState(0)
-  const [loading, setLoading] = useState(false)
-  const [refreshed /*setRefreshed*/] = useState(true)
-  const [orderBy, setOrderBy] = useState<string>('lastname')
-  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc')
+  const [order, setOrder] = useState(orderDefault)
   const [searchInput, setSearchInput] = useState('')
+
   const [addProviderSuccess, setAddProviderSuccess] = useState(false)
   const [addProviderFail, setAddProviderFail] = useState(false)
-  const [selectedProvider, setSelectedProvider] = useState<Provider | null>(null)
   const [editProviderSuccess, setEditProviderSuccess] = useState(false)
   const [editProviderFail, setEditProviderFail] = useState(false)
 
   useEffect(() => {
     setPage(1)
+    getData()
   }, [searchInput])
 
   useEffect(() => {
-    getData(orderBy, orderDirection, page)
-  }, [orderBy, orderDirection, searchInput, page]) // eslint-disable-line
+    getData()
+  }, [order, page]) // eslint-disable-line
 
-  useEffect(() => {
-    if (addProviderSuccess) getData(orderBy, orderDirection)
-    if (editProviderSuccess) getData(orderBy, orderDirection)
-  }, [addProviderSuccess, editProviderSuccess]) // eslint-disable-line
-
-  const getData = async (orderBy: string, orderDirection: string, page?: number) => {
+  const getData = async () => {
     try {
-      const _page = page ? page : 1
-      if (refreshed) {
-        const urlSearch = searchInput ? `&search=${searchInput}` : ''
-        const urlOrderingDirection = orderDirection === 'desc' ? '-' : ''
+      if (loading) return
 
-        history.push({
-          pathname: '/console-admin/users',
-          search: `?page=${_page}&ordering=${urlOrderingDirection}${orderBy}${urlSearch}`
-        })
-      }
-
-      setLoading(true)
-
-      const providersResp = await getProviders(orderBy, orderDirection, _page, searchInput)
-
-      if (providersResp) {
-        setProviders(providersResp.providers.length === 0 ? undefined : providersResp.providers)
-        setTotal(providersResp.total)
-      }
-
-      setLoading(false)
+      dispatch(fetchProviders({ page, searchInput, order }))
     } catch (error) {
       console.error('Erreur lors de la récupération des providers', error)
-      setProviders(null)
-      setTotal(0)
-      setLoading(false)
     }
   }
 
   const createSortHandler = (property: any) => () => {
-    const isAsc: boolean = orderBy === property && orderDirection === 'asc'
+    const isAsc: boolean = order.orderBy === property && order.orderDirection === 'asc'
     const _orderDirection = isAsc ? 'desc' : 'asc'
 
-    setOrderDirection(_orderDirection)
-    setOrderBy(property)
+    setOrder({
+      orderBy: property,
+      orderDirection: _orderDirection
+    })
   }
 
   return (
@@ -168,7 +147,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
             disableElevation
             startIcon={<PersonAddIcon height="15px" fill="#FFF" />}
             className={classes.searchButton}
-            onClick={() => setSelectedProvider({})}
+            onClick={() => dispatch(setSelectedProvider({}))}
           >
             Nouvel utilisateur
           </Button>
@@ -184,14 +163,14 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
               {columns.map((column, index: number) => (
                 <TableCell
                   key={index}
-                  sortDirection={orderBy === column.code ? orderDirection : false}
+                  sortDirection={order.orderBy === column.code ? order.orderDirection : false}
                   align="center"
                   className={classes.tableHeadCell}
                 >
                   {column.label !== 'Actions' ? (
                     <TableSortLabel
-                      active={orderBy === column.code}
-                      direction={orderBy === column.code ? orderDirection : 'asc'}
+                      active={order.orderBy === column.code}
+                      direction={order.orderBy === column.code ? order.orderDirection : 'asc'}
                       onClick={createSortHandler(column.code)}
                     >
                       {column.label}
@@ -212,14 +191,14 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                   </div>
                 </TableCell>
               </TableRow>
-            ) : !providers ? (
+            ) : providersList && providersList.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={7}>
                   <Typography className={classes.loadingSpinnerContainer}>Aucun résultat à afficher</Typography>
                 </TableCell>
               </TableRow>
             ) : (
-              providers.map((provider: Provider) => {
+              providersList.map((provider: Provider) => {
                 return (
                   provider && (
                     <TableRow
@@ -268,7 +247,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                               <IconButton
                                 onClick={(event) => {
                                   event.stopPropagation()
-                                  setSelectedProvider(provider)
+                                  dispatch(setSelectedProvider(provider))
                                 }}
                               >
                                 <EditIcon />
@@ -308,10 +287,10 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
         page={page}
       />
 
-      {selectedProvider && (
+      {selectedProvider !== null && (
         <ProviderDialog
           open
-          onClose={() => setSelectedProvider(null)}
+          onClose={() => dispatch(setSelectedProvider(null))}
           selectedProvider={selectedProvider}
           onAddProviderSuccess={setAddProviderSuccess}
           onEditProviderSuccess={setEditProviderSuccess}
