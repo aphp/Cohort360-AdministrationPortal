@@ -34,6 +34,7 @@ import useStyles from './styles'
 import { Order, Provider, UserRole } from 'types'
 import { useAppSelector } from 'state'
 import { fetchProviders, setSelectedProvider } from 'state/providers'
+import useDebounce from 'components/Console-Admin/CareSite/use-debounce'
 
 type ProvidersTableProps = {
   userRights: UserRole
@@ -104,10 +105,14 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
   const [editProviderSuccess, setEditProviderSuccess] = useState(false)
   const [editProviderFail, setEditProviderFail] = useState(false)
 
+  const debouncedSearchTerm = useDebounce(500, searchInput)
+
   useEffect(() => {
-    setPage(1)
-    getData()
-  }, [searchInput])
+    if (debouncedSearchTerm) {
+      setPage(1)
+      getData()
+    }
+  }, [debouncedSearchTerm])
 
   useEffect(() => {
     getData()
