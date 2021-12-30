@@ -113,6 +113,10 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
     getData()
   }, [order, page]) // eslint-disable-line
 
+  useEffect(() => {
+    if (addProviderSuccess || editProviderSuccess) getData()
+  }, [addProviderSuccess, editProviderSuccess])
+
   const getData = async () => {
     try {
       if (loading) return
