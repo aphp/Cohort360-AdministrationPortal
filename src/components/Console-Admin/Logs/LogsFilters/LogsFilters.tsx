@@ -32,6 +32,24 @@ type LogsFiltersProps = {
   userRights: UserRole
 }
 
+const urls = [
+  {
+    label: 'Accès',
+    code: 'accesses'
+  },
+  {
+    label: 'Exports',
+    code: 'exports'
+  },
+  {
+    label: 'Habilitations',
+    code: 'roles'
+  },
+  {
+    label: 'Utilisateurs',
+    code: 'profiles'
+  }
+]
 const httpMethods = ['DELETE', 'GET', 'PATCH', 'PUT', 'POST']
 const statusCodes = ['200', '201', '204', '400', '401', '403', '404', '500']
 
@@ -71,7 +89,10 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
     }
   }, [_filters])
 
-  const _onChangeValue = (key: 'user' | 'afterDate' | 'beforeDate' | 'statusCode' | 'httpMethod', value: any) => {
+  const _onChangeValue = (
+    key: 'url' | 'user' | 'afterDate' | 'beforeDate' | 'statusCode' | 'httpMethod',
+    value: any
+  ) => {
     const _filtersCopy = { ..._filters }
     _filtersCopy[key] = value
 
@@ -96,6 +117,18 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
     <Dialog open>
       <DialogTitle>Filtrer par :</DialogTitle>
       <DialogContent className={classes.dialog}>
+        <Grid container direction="column" className={classes.filter}>
+          <Typography variant="h3">URL :</Typography>
+          <Autocomplete
+            options={urls}
+            getOptionLabel={(option) => option.label}
+            onChange={(event, value) => _onChangeValue('url', value)}
+            renderOption={(option) => <React.Fragment>{option.label}</React.Fragment>}
+            renderInput={(params) => <TextField {...params} label="Sélectionner l'URL" variant="outlined" />}
+            value={_filters.url}
+            style={{ marginTop: 16 }}
+          />
+        </Grid>
         <Grid container direction="column" className={classes.filter}>
           <Typography variant="h3">Utilisateur :</Typography>
           <TextField

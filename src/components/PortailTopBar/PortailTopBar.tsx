@@ -82,7 +82,9 @@ const PortailTopBar: React.FC = () => {
       <Toolbar style={{ height: 64 }}>
         <Grid container alignItems="center" justify="space-between" style={{ height: '100%' }}>
           <Grid container item alignItems="center" xs={9} style={{ height: '100%' }}>
-            <img src={PortailLogo} alt="Portail logo" className={classes.logoIcon} />
+            <a href="/homepage">
+              <img src={PortailLogo} alt="Portail logo" className={classes.logoIcon} />
+            </a>
             {(userRights.right_read_users ||
               userRights.right_read_admin_accesses_same_level ||
               userRights.right_read_admin_accesses_inferior_levels ||

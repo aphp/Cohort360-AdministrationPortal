@@ -1,4 +1,4 @@
-import { getUserAccesses } from 'services/Console-Admin/providersHistoryService'
+import api from 'services/api'
 import { Access, UserRole } from 'types'
 
 export const userDefaultRoles: UserRole = {
@@ -35,18 +35,35 @@ export const userDefaultRoles: UserRole = {
   right_manage_env_users_links: false
 }
 
-export const getUserRights = async (providerSourceValue?: string, data?: Access[]) => {
+export const getMyAccesses = async () => {
+  try {
+    const getUserAccessesResp = await api.get(`/accesses/my-accesses/`)
+
+    if (getUserAccessesResp.status !== 200) {
+      return []
+    }
+
+    return getUserAccessesResp.data ?? []
+  } catch (error) {
+    console.error("Erreur lors de la récupération des accès de l'utilisateur", error)
+    return []
+  }
+}
+
+export const getUserRights = async (data?: Access[]) => {
   try {
     const _userRights = { ...userDefaultRoles }
 
     let userRightsResponse = null
-    if (providerSourceValue) {
-      userRightsResponse = await getUserAccesses(providerSourceValue)
-    } else {
+    if (data) {
       userRightsResponse = data
+    } else {
+      userRightsResponse = await getMyAccesses()
     }
 
-    if (userRightsResponse) {
+    console.log(`userRightsResponse`, userRightsResponse)
+
+    if (userRightsResponse && userRightsResponse.length > 0) {
       for (const access of userRightsResponse) {
         if (access.is_valid) {
           if (access.role.right_edit_roles) {
@@ -149,6 +166,7 @@ export const getUserRights = async (providerSourceValue?: string, data?: Access[
       }
     }
 
+    console.log(`_userRights`, _userRights)
     return _userRights
   } catch (error) {
     console.error("Erreur lors de la récupération des habilitations de l'utilisateur")

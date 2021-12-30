@@ -3,11 +3,11 @@ import thunkMiddleware from 'redux-thunk'
 import logger from 'redux-logger'
 
 import me from './me'
-import portailTopBar from './portailTopBar'
+import providers from './providers'
 
 const rootReducer = combineReducers({
   me,
-  portailTopBar
+  providers
 })
 
 export const store = createStore(rootReducer, applyMiddleware(thunkMiddleware, logger))
@@ -15,7 +15,8 @@ export const store = createStore(rootReducer, applyMiddleware(thunkMiddleware, l
 store.subscribe(() => {
   // Auto save store inside localStorage
   const _store = store.getState() ?? {}
-  const { me, portailTopBar } = _store // eslint-disable-line
+  const { me, providers } = _store // eslint-disable-line
 
   localStorage.setItem('user', JSON.stringify(me))
+  localStorage.setItem('providers', JSON.stringify(providers))
 })

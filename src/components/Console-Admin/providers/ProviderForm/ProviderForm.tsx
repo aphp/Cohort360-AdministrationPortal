@@ -15,8 +15,14 @@ import {
 import InfoIcon from '@material-ui/icons/Info'
 
 import useStyles from './styles'
-import { editProfile, getProfile, submitCreateProfile } from 'services/Console-Admin/providersHistoryService'
+import {
+  checkProfile,
+  editProfile,
+  getProfile,
+  submitCreateProfile
+} from 'services/Console-Admin/providersHistoryService'
 import { Profile, Provider } from 'types'
+import useDebounce from 'components/Console-Admin/CareSite/use-debounce'
 
 type ProviderDialogProps = {
   open: boolean
@@ -48,7 +54,7 @@ const ProviderDialog: React.FC<ProviderDialogProps> = ({
 
   const [provider, setProvider] = useState<Provider | null>(selectedProvider || defaultProvider)
   const [providerHistoryId, setProviderHistoryId] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [loadingProviderData, setLoadingProviderData] = useState(false)
   const [loadingOnValidate, setLoadingOnValidate] = useState(false)
 
   const [error, setError] = useState(false)
@@ -69,7 +75,7 @@ const ProviderDialog: React.FC<ProviderDialogProps> = ({
     const _getProfile = async () => {
       try {
         const providerId = provider?.provider_id?.toString()
-        setLoading(true)
+        setLoadingProviderData(true)
 
         const profilesResp = await getProfile(providerId)
 
@@ -79,11 +85,11 @@ const ProviderDialog: React.FC<ProviderDialogProps> = ({
           setProviderHistoryId(manualProfile.provider_history_id)
         }
 
-        setLoading(false)
+        setLoadingProviderData(false)
       } catch (error) {
         console.error('Erreur lors de la récupération du profil', error)
         setError(true)
-        setLoading(false)
+        setLoadingProviderData(false)
       }
     }
 
@@ -91,6 +97,44 @@ const ProviderDialog: React.FC<ProviderDialogProps> = ({
       _getProfile()
     }
   }, []) // eslint-disable-line
+
+  const debouncedSearchTerm = useDebounce(700, provider?.provider_source_value)
+
+  useEffect(() => {
+    const _checkProfile = async () => {
+      try {
+        setLoadingProviderData(true)
+        const checkProfileResp = await checkProfile(provider?.provider_source_value)
+
+        if (checkProfileResp) {
+          setProvider(checkProfileResp)
+        } else {
+          const _provider: Provider = {
+            ...provider,
+            firstname: '',
+            lastname: '',
+            email: ''
+          }
+          setProvider(_provider)
+        }
+        setLoadingProviderData(false)
+      } catch (error) {
+        console.error('Erreur lors de la vérification du profil')
+        const _provider: Provider = {
+          ...provider,
+          firstname: '',
+          lastname: '',
+          email: ''
+        }
+        setProvider(_provider)
+        setLoadingProviderData(false)
+      }
+    }
+
+    if (!isEdition && debouncedSearchTerm && debouncedSearchTerm.length >= 5) {
+      _checkProfile()
+    }
+  }, [debouncedSearchTerm])
 
   useEffect(() => {
     const sevenInt = /^[0-9]{3,7}$/
@@ -115,7 +159,7 @@ const ProviderDialog: React.FC<ProviderDialogProps> = ({
       setFirstNameError(false)
     }
 
-    if (provider?.email && !provider.email.match(aphpMail)) {
+    if (provider?.email && provider?.email.length > 0 && !provider.email.match(aphpMail)) {
       setEmailError(true)
     } else {
       setEmailError(false)
@@ -167,8 +211,10 @@ const ProviderDialog: React.FC<ProviderDialogProps> = ({
         {isEdition ? 'Éditer un utilisateur :' : 'Créer un nouvel utilisateur :'}
       </DialogTitle>
       <DialogContent className={classes.dialog}>
-        {loading ? (
-          <CircularProgress />
+        {isEdition && loadingProviderData ? (
+          <Grid container justify="center" style={{ padding: 16 }}>
+            <CircularProgress />
+          </Grid>
         ) : error ? (
           <Typography>
             Erreur lors de l'édition du profil. Veuillez réessayer ultérieurement ou vérifier vos droits.
@@ -195,57 +241,71 @@ const ProviderDialog: React.FC<ProviderDialogProps> = ({
                 />
               </Grid>
             )}
-            <Grid container direction="column" className={classes.filter}>
-              <Typography variant="h3">Nom :</Typography>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                autoFocus
-                placeholder="Exemple: Dupont"
-                value={provider?.lastname}
-                onChange={(event) => _onChangeValue('lastname', event.target.value)}
-                error={lastNameError}
-                helperText={
-                  lastNameError && "Le nom ne peut pas contenir de chiffres ou de caractères spéciaux hormis ' et -."
-                }
-              />
-            </Grid>
-            <Grid container direction="column" className={classes.filter}>
-              <Typography variant="h3">Prénom :</Typography>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                autoFocus
-                placeholder="Exemple: Jean"
-                value={provider?.firstname}
-                onChange={(event) => _onChangeValue('firstname', event.target.value)}
-                error={firstNameError}
-                helperText={
-                  firstNameError &&
-                  "Le prénom ne peut pas contenir de chiffres ou de caractères spéciaux hormis ' et -."
-                }
-              />
-            </Grid>
-            <Grid container direction="column" className={classes.filter}>
-              <Typography variant="h3">Adresse e-mail :</Typography>
-              <TextField
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                autoFocus
-                placeholder="Exemple: jean.dupont@aphp.fr"
-                value={provider?.email}
-                onChange={(event) => _onChangeValue('email', event.target.value)}
-                error={emailError}
-                helperText={emailError && `L'adresse e-mail doit être du format "prenom.nom@aphp.fr"`}
-              />
-            </Grid>
-            <div>
-              <InfoIcon color="action" className={classes.infoIcon} />
-              <Typography component="span">Tous les champs sont obligatoires.</Typography>
-            </div>
+            {loadingProviderData ? (
+              <Grid container justify="center" style={{ padding: 16 }}>
+                <CircularProgress />
+              </Grid>
+            ) : isEdition || provider?.firstname ? (
+              <>
+                <Grid container direction="column" className={classes.filter}>
+                  <Typography variant="h3">Nom :</Typography>
+                  <TextField
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    autoFocus
+                    placeholder="Exemple: Dupont"
+                    value={provider?.lastname}
+                    onChange={(event) => _onChangeValue('lastname', event.target.value)}
+                    error={lastNameError}
+                    helperText={
+                      lastNameError &&
+                      "Le nom ne peut pas contenir de chiffres ou de caractères spéciaux hormis ' et -."
+                    }
+                  />
+                </Grid>
+                <Grid container direction="column" className={classes.filter}>
+                  <Typography variant="h3">Prénom :</Typography>
+                  <TextField
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    autoFocus
+                    placeholder="Exemple: Jean"
+                    value={provider?.firstname}
+                    onChange={(event) => _onChangeValue('firstname', event.target.value)}
+                    error={firstNameError}
+                    helperText={
+                      firstNameError &&
+                      "Le prénom ne peut pas contenir de chiffres ou de caractères spéciaux hormis ' et -."
+                    }
+                  />
+                </Grid>
+                <Grid container direction="column" className={classes.filter}>
+                  <Typography variant="h3">Adresse e-mail :</Typography>
+                  <TextField
+                    variant="outlined"
+                    margin="normal"
+                    fullWidth
+                    autoFocus
+                    placeholder="Exemple: jean.dupont@aphp.fr"
+                    value={provider?.email}
+                    onChange={(event) => _onChangeValue('email', event.target.value)}
+                    error={emailError}
+                    helperText={emailError && `L'adresse e-mail doit être du format "prenom.nom@aphp.fr"`}
+                  />
+                </Grid>
+                <div>
+                  <InfoIcon color="action" className={classes.infoIcon} />
+                  <Typography component="span">Tous les champs sont obligatoires.</Typography>
+                </div>
+              </>
+            ) : (
+              <div>
+                <InfoIcon color="action" className={classes.infoIcon} />
+                <Typography component="span">Entrez un identifiant APH valide.</Typography>
+              </div>
+            )}
           </>
         )}
       </DialogContent>

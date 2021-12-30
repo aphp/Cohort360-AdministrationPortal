@@ -10,7 +10,6 @@ import RightsTable from 'components/Console-Admin/Rights/RightsTable/RightsTable
 import SearchBar from 'components/SearchBar/SearchBar'
 import { Access, Order } from 'types'
 import { getUserRights, userDefaultRoles } from 'utils/userRoles'
-import { useAppSelector } from 'state'
 
 const orderDefault = { orderBy: 'is_valid', orderDirection: 'asc' } as Order
 
@@ -27,7 +26,6 @@ const CareSiteHistory: React.FC = () => {
   const [total, setTotal] = useState(0)
   const [order, setOrder] = useState(orderDefault)
 
-  const { me } = useAppSelector((state) => ({ me: state.me }))
   const { careSiteId } = useParams<{ careSiteId: string }>()
 
   const _getCareSiteAccesses = async () => {
@@ -58,7 +56,7 @@ const CareSiteHistory: React.FC = () => {
     const _getUserRights = async () => {
       try {
         setLoadingPage(true)
-        const getUserRightsResponse = await getUserRights(me?.providerSourceValue)
+        const getUserRightsResponse = await getUserRights()
 
         setUserRights(getUserRightsResponse)
       } catch (error) {

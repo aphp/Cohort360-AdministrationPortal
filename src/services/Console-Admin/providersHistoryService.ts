@@ -13,18 +13,25 @@ export const getProfile = async (providerId?: string) => {
   return profileResp.data.results.sort((a: Profile, b: any) => a.cdm_source?.localeCompare(b.cdm_source)) ?? undefined
 }
 
-export const submitCreateProfile = async (providerData: Provider) => {
+export const checkProfile = async (providerSourceValue?: string) => {
   try {
+    if (!providerSourceValue) return null
+
     const resCheckProfiles = await api.post(`/profiles/check/`, {
-      provider_source_value: providerData.provider_source_value
+      provider_source_value: providerSourceValue
     })
 
-    if (resCheckProfiles.status === 200) {
-      const createProfile = await api.post(`/profiles/`, providerData)
-      return createProfile.status === 201
-    } else {
-      return false
-    }
+    return resCheckProfiles.data ?? null
+  } catch (error) {
+    console.error('Erreur lors de la recherche du provider', error)
+    return
+  }
+}
+
+export const submitCreateProfile = async (providerData: Provider) => {
+  try {
+    const createProfile = await api.post(`/profiles/`, providerData)
+    return createProfile.status === 201
   } catch (error) {
     console.error('Erreur lors de la création de profil', error)
     return false

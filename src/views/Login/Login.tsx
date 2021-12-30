@@ -74,7 +74,7 @@ const Login = () => {
 
       const { status, data = {} } = response
       if (status === 200) {
-        const _userRights = await getUserRights(undefined, data.accesses)
+        const _userRights = await getUserRights(data.accesses)
         dispatch(loginAction(buildPartialUser(data.provider, _userRights)))
 
         localStorage.setItem(ACCESS_TOKEN, data.jwt.access)

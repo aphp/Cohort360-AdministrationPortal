@@ -246,6 +246,7 @@ export type Log = {
 }
 
 export type LogsFiltersObject = {
+  url?: { label: string; code: string }
   user: null | string
   afterDate: null | string
   beforeDate: null | string

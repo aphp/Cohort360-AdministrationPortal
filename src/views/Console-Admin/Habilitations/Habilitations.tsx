@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useAppSelector } from 'state'
 
 import { CircularProgress, Grid, Typography } from '@material-ui/core'
 
@@ -14,14 +13,12 @@ const Habilitations: React.FC = () => {
   const [userRights, setUserRights] = useState(userDefaultRoles)
   const [loading, setLoading] = useState(false)
 
-  const { me } = useAppSelector((state) => ({ me: state.me }))
-
   useEffect(() => {
     const _getUserRights = async () => {
       try {
         setLoading(true)
 
-        const getUserRightsResponse = await getUserRights(me?.providerSourceValue)
+        const getUserRightsResponse = await getUserRights()
 
         setUserRights(getUserRightsResponse)
         setLoading(false)

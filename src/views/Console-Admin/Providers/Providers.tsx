@@ -3,7 +3,6 @@ import { CircularProgress, Grid, Typography } from '@material-ui/core'
 
 import ProvidersTable from 'components/Console-Admin/providers/ProvidersTable/ProvidersTable'
 
-import { useAppSelector } from 'state'
 import { getUserRights, userDefaultRoles } from 'utils/userRoles'
 
 import useStyles from './styles'
@@ -12,14 +11,13 @@ const ProfilesView: React.FC = () => {
   const classes = useStyles()
   const [userRights, setUserRights] = useState(userDefaultRoles)
   const [loading, setLoading] = useState(false)
-  const { me } = useAppSelector((state) => ({ me: state.me }))
 
   useEffect(() => {
     const _getUserRights = async () => {
       try {
         setLoading(true)
 
-        const getUserRightsResponse = await getUserRights(me?.providerSourceValue)
+        const getUserRightsResponse = await getUserRights()
 
         setUserRights(getUserRightsResponse)
         setLoading(false)

@@ -14,9 +14,9 @@ import { ReactComponent as FilterIcon } from 'assets/icones/filter.svg'
 import useStyles from './styles'
 import moment from 'moment'
 import { getUserRights, userDefaultRoles } from 'utils/userRoles'
-import { useAppSelector } from 'state'
 
 const filtersDefault = {
+  urls: undefined,
   user: null,
   httpMethod: [],
   statusCode: [],
@@ -36,6 +36,7 @@ const Logs: React.FC = () => {
   const careSiteName = new URLSearchParams(search).get('careSiteName')
 
   const [loading, setLoading] = useState(false)
+  const [loadingRights, setLoadingRights] = useState(false)
   const [openFilters, setOpenFilters] = useState(false)
   const [userRights, setUserRights] = useState(userDefaultRoles)
   const [filters, setFilters] = useState<LogsFiltersObject>({
@@ -47,7 +48,6 @@ const Logs: React.FC = () => {
   const [logs, setLogs] = useState<Log[] | undefined>(undefined)
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
-  const { me } = useAppSelector((state) => ({ me: state.me }))
 
   const _getLogs = async () => {
     try {
@@ -64,23 +64,35 @@ const Logs: React.FC = () => {
     }
   }
 
-  useEffect(() => {
-    const _getUserRights = async () => {
-      try {
-        setLoading(true)
+  const _getUserRights = async () => {
+    try {
+      setLoadingRights(true)
 
-        const getUserRightsResponse = await getUserRights(me?.providerSourceValue)
+      const getUserRightsResponse = await getUserRights()
 
-        setUserRights(getUserRightsResponse)
-      } catch (error) {
-        console.error("Erreur lors de la récupération des habilitations de l'utilisateur", error)
-        setLoading(false)
-      }
+      setUserRights(getUserRightsResponse)
+      setLoadingRights(false)
+    } catch (error) {
+      console.error("Erreur lors de la récupération des habilitations de l'utilisateur", error)
+      setLoadingRights(false)
     }
+  }
 
+  useEffect(() => {
     _getUserRights()
+  }, [])
+
+  useEffect(() => {
     _getLogs()
-  }, [filters, page]) // eslint-disable-line
+  }, [page]) // eslint-disable-line
+
+  useEffect(() => {
+    if (page === 1) {
+      _getLogs()
+    } else {
+      setPage(1)
+    }
+  }, [filters])
 
   const handleDeleteChip = (filterName: string, value?: any) => {
     const _filters = { ...filters }
@@ -91,6 +103,9 @@ const Logs: React.FC = () => {
       case 'beforeDate':
       case 'access':
         _filters[filterName] = null
+        break
+      case 'url':
+        _filters['url'] = undefined
         break
       case 'careSite':
         _filters['careSite'] = { careSiteId: null, careSiteName: null }
@@ -113,7 +128,7 @@ const Logs: React.FC = () => {
               Liste des logs
             </Typography>
 
-            {loading ? (
+            {loadingRights ? (
               <Grid container item justify="center">
                 <CircularProgress />
               </Grid>
@@ -132,6 +147,15 @@ const Logs: React.FC = () => {
                 )}
 
                 <Grid container item justify="flex-end">
+                  {filters.url && (
+                    <Chip
+                      className={classes.filterChip}
+                      label={`URL : ${filters.url.label}`}
+                      onDelete={() => handleDeleteChip('url')}
+                      color="primary"
+                      variant="outlined"
+                    />
+                  )}
                   {filters.user && (
                     <Chip
                       className={classes.filterChip}
