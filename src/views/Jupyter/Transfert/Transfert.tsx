@@ -66,30 +66,8 @@ const Transfert: React.FC = () => {
           ) : (
             <>
               <Typography variant="h1" color="primary" className={classes.title} align="center">
-                Transfert Jupyter
+                Transfert vers un environnement de travail
               </Typography>
-
-              <Typography align="left" variant="h3">
-                Choix de l'environnement Jupyter
-              </Typography>
-              <Select
-                required
-                value={transferRequest.environment}
-                onChange={(event) => _onChangeValue('environment', event.target.value as string)}
-                variant="outlined"
-                style={{
-                  marginTop: 16,
-                  marginBottom: 24,
-                  backgroundColor: 'white'
-                }}
-                error={error === ERROR_ENVIRONMENT}
-              >
-                {environments.map((environment, index) => (
-                  <MenuItem key={index} value={environment.code}>
-                    {environment.label}
-                  </MenuItem>
-                ))}
-              </Select>
 
               <Typography align="left" variant="h3">
                 Choix de l'utilisateur
@@ -132,6 +110,28 @@ const Transfert: React.FC = () => {
                 {cohorts.map((cohort, index) => (
                   <MenuItem key={index} value={cohort}>
                     {cohort}
+                  </MenuItem>
+                ))}
+              </Select>
+
+              <Typography align="left" variant="h3">
+                Choix de l'environnement Jupyter
+              </Typography>
+              <Select
+                required
+                value={transferRequest.environment}
+                onChange={(event) => _onChangeValue('environment', event.target.value as string)}
+                variant="outlined"
+                style={{
+                  marginTop: 16,
+                  marginBottom: 24,
+                  backgroundColor: 'white'
+                }}
+                error={error === ERROR_ENVIRONMENT}
+              >
+                {environments.map((environment, index) => (
+                  <MenuItem key={index} value={environment.code}>
+                    {environment.label}
                   </MenuItem>
                 ))}
               </Select>
