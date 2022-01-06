@@ -227,12 +227,19 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                     )}
 
                     <TableCell align="center" padding="checkbox">
-                      <Radio
-                        color="secondary"
-                        checked={selectedItems?.care_site_id === _row.care_site_id}
-                        onChange={() => _clickToSelect(_row)}
-                        inputProps={{ 'aria-labelledby': labelId }}
-                      />
+                      {_row.care_site_type_source_value !== '' &&
+                        !(
+                          _row.care_site_type_source_value.includes('UH') ||
+                          _row.care_site_type_source_value.includes('UC') ||
+                          _row.care_site_type_source_value.includes('UPMT')
+                        ) && (
+                          <Radio
+                            color="secondary"
+                            checked={selectedItems?.care_site_id === _row.care_site_id}
+                            onChange={() => _clickToSelect(_row)}
+                            inputProps={{ 'aria-labelledby': labelId }}
+                          />
+                        )}
                     </TableCell>
 
                     <TableCell>

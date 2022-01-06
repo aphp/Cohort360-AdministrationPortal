@@ -64,6 +64,7 @@ export type CareSite = {
 export type ScopeTreeRow = {
   care_site_id: string | number
   name: string
+  care_site_type_source_value: string
   children: ScopeTreeRow[]
 }
 

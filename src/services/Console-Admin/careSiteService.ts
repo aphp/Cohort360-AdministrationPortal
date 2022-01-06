@@ -4,6 +4,7 @@ import { CareSite, Order, ScopeTreeRow } from 'types'
 const loadingItem: ScopeTreeRow = {
   care_site_id: 'loading',
   name: 'loading',
+  care_site_type_source_value: 'loading',
   children: []
 }
 
@@ -56,6 +57,7 @@ const parseChildren = (children?: CareSite[]) => {
     return {
       ...child,
       name: `${child.care_site_source_value} - ${child.care_site_name}` ?? '',
+      care_site_type_source_value: child.care_site_type_source_value ?? '',
       children: [loadingItem]
     }
   })

@@ -60,6 +60,7 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
     ? {
         care_site_id: filters.careSite.careSiteId ?? '',
         name: filters.careSite.careSiteName ?? '',
+        care_site_type_source_value: '',
         children: []
       }
     : null
