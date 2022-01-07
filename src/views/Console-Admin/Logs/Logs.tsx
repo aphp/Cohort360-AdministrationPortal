@@ -36,7 +36,7 @@ const Logs: React.FC = () => {
   const careSiteName = new URLSearchParams(search).get('careSiteName')
 
   const [loading, setLoading] = useState(false)
-  const [loadingRights, setLoadingRights] = useState(false)
+  const [loadingRights, setLoadingRights] = useState(true)
   const [openFilters, setOpenFilters] = useState(false)
   const [userRights, setUserRights] = useState(userDefaultRoles)
   const [filters, setFilters] = useState<LogsFiltersObject>({
