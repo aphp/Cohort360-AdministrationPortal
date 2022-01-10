@@ -11,7 +11,7 @@ import useStyles from './styles'
 const Habilitations: React.FC = () => {
   const classes = useStyles()
   const [userRights, setUserRights] = useState(userDefaultRoles)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const _getUserRights = async () => {

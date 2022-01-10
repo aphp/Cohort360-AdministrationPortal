@@ -61,8 +61,6 @@ export const getUserRights = async (data?: Access[]) => {
       userRightsResponse = await getMyAccesses()
     }
 
-    console.log(`userRightsResponse`, userRightsResponse)
-
     if (userRightsResponse && userRightsResponse.length > 0) {
       for (const access of userRightsResponse) {
         if (access.is_valid) {
@@ -166,7 +164,6 @@ export const getUserRights = async (data?: Access[]) => {
       }
     }
 
-    console.log(`_userRights`, _userRights)
     return _userRights
   } catch (error) {
     console.error("Erreur lors de la récupération des habilitations de l'utilisateur")

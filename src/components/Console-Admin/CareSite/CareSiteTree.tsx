@@ -69,10 +69,6 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
     setLoading(false)
   }
 
-  useEffect(() => {
-    _init()
-  }, []) // eslint-disable-line
-
   const debouncedSearchTerm = useDebounce(700, searchInput)
 
   useEffect(() => {

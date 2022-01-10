@@ -10,7 +10,7 @@ import useStyles from './styles'
 const ProfilesView: React.FC = () => {
   const classes = useStyles()
   const [userRights, setUserRights] = useState(userDefaultRoles)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const _getUserRights = async () => {
@@ -31,7 +31,7 @@ const ProfilesView: React.FC = () => {
   }, []) // eslint-disable-line
 
   return (
-    <Grid id="qui suis-je" container direction="column">
+    <Grid id="main-grid-providers" container direction="column">
       <Grid container justify="center">
         <Grid container item xs={12} sm={9}>
           <Typography variant="h1" align="center" className={classes.title}>

@@ -17,7 +17,7 @@ const CareSites: React.FC = () => {
 
   const [selectedItem, onChangeSelectedItem] = useState<ScopeTreeRow | null>(null)
   const [searchInput, setSearchInput] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const _getUserRights = async () => {
@@ -45,21 +45,22 @@ const CareSites: React.FC = () => {
             Liste des périmètres
           </Typography>
 
-          <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
-
           {loading ? (
             <Grid container item justify="center">
               <CircularProgress />
             </Grid>
           ) : (
-            <Paper style={{ width: '100%', marginTop: 12, marginBottom: 100 }}>
-              <CareSiteTree
-                defaultSelectedItems={selectedItem}
-                onChangeSelectedItem={onChangeSelectedItem}
-                searchInput={searchInput}
-                userRights={userRights}
-              />
-            </Paper>
+            <>
+              <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
+              <Paper style={{ width: '100%', marginTop: 12, marginBottom: 100 }}>
+                <CareSiteTree
+                  defaultSelectedItems={selectedItem}
+                  onChangeSelectedItem={onChangeSelectedItem}
+                  searchInput={searchInput}
+                  userRights={userRights}
+                />
+              </Paper>
+            </>
           )}
         </Grid>
 
