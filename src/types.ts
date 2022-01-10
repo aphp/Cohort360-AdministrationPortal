@@ -70,6 +70,11 @@ export type ScopeTreeRow = {
 
 // Profile
 
+export type CheckProfile = Provider & {
+  provider?: Provider
+  manual_profile?: Profile
+}
+
 export type Profile = {
   birth_date: string | null
   care_site_id: number | null
