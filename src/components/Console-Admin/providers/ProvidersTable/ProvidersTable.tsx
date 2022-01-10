@@ -108,10 +108,8 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
   const debouncedSearchTerm = useDebounce(500, searchInput)
 
   useEffect(() => {
-    if (debouncedSearchTerm) {
-      setPage(1)
-      getData()
-    }
+    setPage(1)
+    getData()
   }, [debouncedSearchTerm])
 
   useEffect(() => {
