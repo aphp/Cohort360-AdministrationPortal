@@ -237,7 +237,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
                   <TableRow key={access.id} className={classes.tableBodyRows}>
                     {displayName && (
                       <TableCell align="left">
-                        {access.provider_history.lastname} {access.provider_history.firstname}
+                        {access.provider_history.lastname?.toLocaleUpperCase()} {access.provider_history.firstname}
                         <IconButton
                           onClick={() => history.push(`/user-profile/${access.provider_history.provider_id}`)}
                         >

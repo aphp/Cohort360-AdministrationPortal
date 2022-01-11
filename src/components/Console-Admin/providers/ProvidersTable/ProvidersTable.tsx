@@ -224,7 +224,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                       }}
                     >
                       <TableCell align="center">{provider.provider_source_value}</TableCell>
-                      <TableCell align="center">{provider.lastname}</TableCell>
+                      <TableCell align="center">{provider.lastname?.toLocaleUpperCase()}</TableCell>
                       <TableCell align="center">{provider.firstname}</TableCell>
                       <TableCell align="center">{provider.email ?? '-'}</TableCell>
                       {(userRights.right_read_admin_accesses_same_level ||
