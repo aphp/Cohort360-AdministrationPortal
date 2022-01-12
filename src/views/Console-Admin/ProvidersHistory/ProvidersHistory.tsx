@@ -66,7 +66,8 @@ const ProviderHistory: React.FC = () => {
         ) : (
           <Grid container item xs={12} sm={9}>
             <Typography variant="h1" align="center" className={classes.title}>
-              {provider?.provider_name} - id APH : {provider?.provider_source_value}
+              {provider?.lastname?.toLocaleUpperCase()} {provider?.firstname} - id APH :{' '}
+              {provider?.provider_source_value}
             </Typography>
             <>
               {rights ? (
