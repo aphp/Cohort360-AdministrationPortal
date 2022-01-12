@@ -239,7 +239,9 @@ const RightsTable: React.FC<RightsTableProps> = ({
                       <TableCell align="left">
                         {access.provider_history.lastname?.toLocaleUpperCase()} {access.provider_history.firstname}
                         <IconButton
-                          onClick={() => history.push(`/user-profile/${access.provider_history.provider_id}`)}
+                          onClick={() =>
+                            history.push(`/console-admin/user-profile/${access.provider_history.provider_id}`)
+                          }
                         >
                           <LaunchIcon fontSize="small" />
                         </IconButton>
