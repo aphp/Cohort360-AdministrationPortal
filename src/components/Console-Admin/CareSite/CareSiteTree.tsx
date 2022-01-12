@@ -224,11 +224,12 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
 
                     <TableCell align="center" padding="checkbox">
                       {_row.care_site_type_source_value !== '' &&
-                        !(
-                          _row.care_site_type_source_value.includes('UH') ||
-                          _row.care_site_type_source_value.includes('UC') ||
-                          _row.care_site_type_source_value.includes('UPMT')
-                        ) && (
+                        (!isManageable ||
+                          !(
+                            _row.care_site_type_source_value.includes('UH') ||
+                            _row.care_site_type_source_value.includes('UC') ||
+                            _row.care_site_type_source_value.includes('UPMT')
+                          )) && (
                           <Radio
                             color="secondary"
                             checked={selectedItems?.care_site_id === _row.care_site_id}
