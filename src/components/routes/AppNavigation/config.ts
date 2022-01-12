@@ -26,7 +26,7 @@ const Config = [
   },
 
   /**
-   * Portail HonePage View
+   * Portail HomePage View
    */
 
   {
@@ -34,6 +34,7 @@ const Config = [
     displayPortailTopBar: true,
     path: '/homepage',
     name: 'HomePage',
+    isPrivate: true,
     component: HomePage
   },
 
