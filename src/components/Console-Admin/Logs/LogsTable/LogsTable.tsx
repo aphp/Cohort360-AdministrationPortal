@@ -73,7 +73,7 @@ const LogsTable: React.FC<LogsTableProps> = ({ loading, logs }) => {
                 </div>
                 <div className={classes.divCentered}>
                   <Typography variant="h3" style={{ lineHeight: 2 }}>
-                    {log.user_details?.provider_name}
+                    {log.user_details?.lastname?.toLocaleUpperCase()} {log.user_details?.firstname}
                   </Typography>
                   <Typography>&nbsp;- {log.user}</Typography>
                 </div>
