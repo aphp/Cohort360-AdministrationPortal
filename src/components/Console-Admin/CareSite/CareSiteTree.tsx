@@ -89,7 +89,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
   useEffect(() => setSelectedItem(defaultSelectedItems), [defaultSelectedItems])
 
   /**
-   * This function is called when a user click on chevron
+   * This function is called when a user clicks on chevron
    *
    */
   const _clickToDeploy = async (rowId: number) => {
@@ -194,85 +194,87 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                     </TableCell>
                   </TableRow>
                 ) : (
-                  <TableRow
-                    hover
-                    key={_row.care_site_id}
-                    classes={{
-                      root: level % 2 === 0 ? classes.mainRow : classes.secondRow
-                    }}
-                  >
-                    {!searchInput && (
+                  _row.name && (
+                    <TableRow
+                      hover
+                      key={_row.care_site_id}
+                      classes={{
+                        root: level % 2 === 0 ? classes.mainRow : classes.secondRow
+                      }}
+                    >
+                      {!searchInput && (
+                        <TableCell>
+                          {_row.children && _row.children.length > 0 && (
+                            <IconButton
+                              onClick={() => _clickToDeploy(_row.care_site_id as number)}
+                              style={{
+                                marginLeft: level * 35,
+                                padding: 0,
+                                marginRight: -30
+                              }}
+                            >
+                              {openPopulation.find((care_site_id) => _row.care_site_id === care_site_id) ? (
+                                <KeyboardArrowDownIcon />
+                              ) : (
+                                <KeyboardArrowRightIcon />
+                              )}
+                            </IconButton>
+                          )}
+                        </TableCell>
+                      )}
+
+                      <TableCell align="center" padding="checkbox">
+                        {_row.care_site_type_source_value !== '' &&
+                          (!isManageable ||
+                            !(
+                              _row.care_site_type_source_value.includes('UH') ||
+                              _row.care_site_type_source_value.includes('UC') ||
+                              _row.care_site_type_source_value.includes('UPMT')
+                            )) && (
+                            <Radio
+                              color="secondary"
+                              checked={selectedItems?.care_site_id === _row.care_site_id}
+                              onChange={() => _clickToSelect(_row)}
+                              inputProps={{ 'aria-labelledby': labelId }}
+                            />
+                          )}
+                      </TableCell>
+
                       <TableCell>
-                        {_row.children && _row.children.length > 0 && (
-                          <IconButton
-                            onClick={() => _clickToDeploy(_row.care_site_id as number)}
-                            style={{
-                              marginLeft: level * 35,
-                              padding: 0,
-                              marginRight: -30
-                            }}
-                          >
-                            {openPopulation.find((care_site_id) => _row.care_site_id === care_site_id) ? (
-                              <KeyboardArrowDownIcon />
-                            ) : (
-                              <KeyboardArrowRightIcon />
-                            )}
-                          </IconButton>
+                        {searchInput && _row.name ? (
+                          <Breadcrumbs maxItems={2}>
+                            {_row.name.split('>').map((name: any, index: number) => (
+                              <Typography key={index} style={{ color: '#153D8A' }}>
+                                {name}
+                              </Typography>
+                            ))}
+                          </Breadcrumbs>
+                        ) : (
+                          <Typography>{_row.name}</Typography>
                         )}
                       </TableCell>
-                    )}
 
-                    <TableCell align="center" padding="checkbox">
-                      {_row.care_site_type_source_value !== '' &&
-                        (!isManageable ||
-                          !(
-                            _row.care_site_type_source_value.includes('UH') ||
-                            _row.care_site_type_source_value.includes('UC') ||
-                            _row.care_site_type_source_value.includes('UPMT')
-                          )) && (
-                          <Radio
-                            color="secondary"
-                            checked={selectedItems?.care_site_id === _row.care_site_id}
-                            onChange={() => _clickToSelect(_row)}
-                            inputProps={{ 'aria-labelledby': labelId }}
-                          />
+                      <TableCell align="right">
+                        {userRights.right_read_logs && (
+                          <Tooltip title="Voir les logs du périmètre">
+                            <IconButton
+                              onClick={() => {
+                                history.push({
+                                  pathname: '/console-admin/logs',
+                                  search: `?careSiteId=${_row.care_site_id}&careSiteName=${_row.name
+                                    .split(' ')
+                                    .join('.')}`
+                                })
+                              }}
+                              style={{ padding: '4px 12px' }}
+                            >
+                              <AssignmentIcon />
+                            </IconButton>
+                          </Tooltip>
                         )}
-                    </TableCell>
-
-                    <TableCell>
-                      {searchInput ? (
-                        <Breadcrumbs maxItems={2}>
-                          {_row.name.split('>').map((name: any, index: number) => (
-                            <Typography key={index} style={{ color: '#153D8A' }}>
-                              {name}
-                            </Typography>
-                          ))}
-                        </Breadcrumbs>
-                      ) : (
-                        <Typography>{_row.name}</Typography>
-                      )}
-                    </TableCell>
-
-                    <TableCell align="right">
-                      {userRights.right_read_logs && (
-                        <Tooltip title="Voir les logs du périmètre">
-                          <IconButton
-                            onClick={() => {
-                              history.push({
-                                pathname: '/console-admin/logs',
-                                search: `?careSiteId=${_row.care_site_id}&careSiteName=${_row.name
-                                  .split(' ')
-                                  .join('.')}`
-                              })
-                            }}
-                            style={{ padding: '4px 12px' }}
-                          >
-                            <AssignmentIcon />
-                          </IconButton>
-                        </Tooltip>
-                      )}
-                    </TableCell>
-                  </TableRow>
+                      </TableCell>
+                    </TableRow>
+                  )
                 )}
               </>
             )
