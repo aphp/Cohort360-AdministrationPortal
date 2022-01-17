@@ -106,6 +106,11 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
   const [editProviderFail, setEditProviderFail] = useState(false)
 
   const debouncedSearchTerm = useDebounce(500, searchInput)
+  const readAccessesUserRights =
+    userRights.right_read_admin_accesses_same_level ||
+    userRights.right_read_admin_accesses_inferior_levels ||
+    userRights.right_read_data_accesses_same_level ||
+    userRights.right_read_data_accesses_inferior_levels
 
   useEffect(() => {
     setPage(1)
@@ -213,12 +218,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                       className={classes.tableBodyRows}
                       hover
                       onClick={() => {
-                        if (
-                          userRights.right_read_admin_accesses_same_level ||
-                          userRights.right_read_admin_accesses_inferior_levels ||
-                          userRights.right_read_data_accesses_same_level ||
-                          userRights.right_read_data_accesses_inferior_levels
-                        ) {
+                        if (readAccessesUserRights) {
                           history.push(`/console-admin/user-profile/${provider.provider_id}`)
                         }
                       }}
@@ -227,17 +227,9 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                       <TableCell align="center">{provider.lastname?.toLocaleUpperCase()}</TableCell>
                       <TableCell align="center">{provider.firstname}</TableCell>
                       <TableCell align="center">{provider.email ?? '-'}</TableCell>
-                      {(userRights.right_read_admin_accesses_same_level ||
-                        userRights.right_read_admin_accesses_inferior_levels ||
-                        userRights.right_read_data_accesses_same_level ||
-                        userRights.right_read_data_accesses_inferior_levels ||
-                        userRights.right_edit_users ||
-                        userRights.right_read_logs) && (
+                      {(readAccessesUserRights || userRights.right_edit_users || userRights.right_read_logs) && (
                         <TableCell align="center">
-                          {(userRights.right_read_admin_accesses_same_level ||
-                            userRights.right_read_admin_accesses_inferior_levels ||
-                            userRights.right_read_data_accesses_same_level ||
-                            userRights.right_read_data_accesses_inferior_levels) && (
+                          {readAccessesUserRights && (
                             <Tooltip title="Visualiser les accès de l'utilisateur" style={{ padding: '0 12px' }}>
                               <IconButton
                                 onClick={(event) => {
