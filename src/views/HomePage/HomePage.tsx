@@ -35,7 +35,7 @@ const HomePage = () => {
     {
       name: 'Habilitations',
       pathname: '/console-admin/habilitations',
-      rightsToSee: userRights.right_read_users
+      rightsToSee: true
     },
     {
       name: 'Logs',
@@ -63,33 +63,26 @@ const HomePage = () => {
           Bienvenue sur le portail de l'EDS
         </Typography>
         <Grid container item justify="space-around">
-          {(userRights.right_read_users ||
-            userRights.right_read_admin_accesses_same_level ||
-            userRights.right_read_admin_accesses_inferior_levels ||
-            userRights.right_read_data_accesses_same_level ||
-            userRights.right_read_data_accesses_inferior_levels ||
-            userRights.right_read_logs) && (
-            <Grid container item className={classes.box} xs={12} sm={4} direction="column" alignItems="center">
-              <ComputerIcon style={{ fontSize: 100, marginBottom: 12 }} />
-              <Typography variant="h6" style={{ fontSize: 16, marginBottom: 28, lineHeight: 'inherit' }}>
-                Console Admin
-              </Typography>
-              {consolePages.map(
-                (page, index: number) =>
-                  page.rightsToSee && (
-                    <Button
-                      key={index}
-                      variant="contained"
-                      disableElevation
-                      onClick={() => history.push(page.pathname)}
-                      className={classes.linkButton}
-                    >
-                      {page.name}
-                    </Button>
-                  )
-              )}
-            </Grid>
-          )}
+          <Grid container item className={classes.box} xs={12} sm={4} direction="column" alignItems="center">
+            <ComputerIcon style={{ fontSize: 100, marginBottom: 12 }} />
+            <Typography variant="h6" style={{ fontSize: 16, marginBottom: 28, lineHeight: 'inherit' }}>
+              Console Admin
+            </Typography>
+            {consolePages.map(
+              (page, index: number) =>
+                page.rightsToSee && (
+                  <Button
+                    key={index}
+                    variant="contained"
+                    disableElevation
+                    onClick={() => history.push(page.pathname)}
+                    className={classes.linkButton}
+                  >
+                    {page.name}
+                  </Button>
+                )
+            )}
+          </Grid>
           {(userRights.right_manage_review_transfer_jupyter ||
             userRights.right_review_transfer_jupyter ||
             userRights.right_manage_transfer_jupyter ||

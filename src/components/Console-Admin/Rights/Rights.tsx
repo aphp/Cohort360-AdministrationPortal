@@ -31,6 +31,12 @@ const Rights: React.FC<RightsProps> = ({ right, userRights }) => {
   const [addAccessFail, setAddAccessFail] = useState(false)
   const [order, setOrder] = useState(orderDefault)
 
+  const manageAccessesUserRights =
+    userRights.right_manage_admin_accesses_same_level ||
+    userRights.right_manage_admin_accesses_inferior_levels ||
+    userRights.right_manage_data_accesses_same_level ||
+    userRights.right_manage_data_accesses_inferior_levels
+
   const _getAccesses = async () => {
     try {
       setLoading(true)
@@ -65,21 +71,17 @@ const Rights: React.FC<RightsProps> = ({ right, userRights }) => {
         <Typography align="left" variant="h2" className={classes.title}>
           Type de droit : {right.cdm_source}
         </Typography>
-        {right.cdm_source === 'MANUAL' &&
-          (userRights.right_manage_admin_accesses_same_level ||
-            userRights.right_manage_admin_accesses_inferior_levels ||
-            userRights.right_manage_data_accesses_same_level ||
-            userRights.right_manage_data_accesses_inferior_levels) && (
-            <Button
-              variant="contained"
-              disableElevation
-              startIcon={<AddIcon height="15px" fill="#FFF" />}
-              className={classes.searchButton}
-              onClick={() => setOpen(true)}
-            >
-              Nouvel accès
-            </Button>
-          )}
+        {right.cdm_source === 'MANUAL' && manageAccessesUserRights && (
+          <Button
+            variant="contained"
+            disableElevation
+            startIcon={<AddIcon height="15px" fill="#FFF" />}
+            className={classes.searchButton}
+            onClick={() => setOpen(true)}
+          >
+            Nouvel accès
+          </Button>
+        )}
       </Grid>
 
       <RightsTable

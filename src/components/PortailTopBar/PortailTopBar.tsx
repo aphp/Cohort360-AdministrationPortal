@@ -49,7 +49,7 @@ const PortailTopBar: React.FC = () => {
     {
       name: 'Habilitations',
       pathname: '/console-admin/habilitations',
-      rightsToSee: userRights.right_read_users
+      rightsToSee: true
     },
     {
       name: 'Logs',
@@ -85,26 +85,19 @@ const PortailTopBar: React.FC = () => {
             <a href="/homepage">
               <img src={PortailLogo} alt="Portail logo" className={classes.logoIcon} />
             </a>
-            {(userRights.right_read_users ||
-              userRights.right_read_admin_accesses_same_level ||
-              userRights.right_read_admin_accesses_inferior_levels ||
-              userRights.right_read_data_accesses_same_level ||
-              userRights.right_read_data_accesses_inferior_levels ||
-              userRights.right_read_logs) && (
-              <Button
-                onClick={handleClickConsoleAdmin}
-                className={clsx(
-                  classes.topBarButton,
-                  (pathname.includes('users') ||
-                    pathname.includes('caresites') ||
-                    pathname.includes('habilitations') ||
-                    pathname.includes('logs')) &&
-                    classes.activeButton
-                )}
-              >
-                Console admin
-              </Button>
-            )}
+            <Button
+              onClick={handleClickConsoleAdmin}
+              className={clsx(
+                classes.topBarButton,
+                (pathname.includes('users') ||
+                  pathname.includes('caresites') ||
+                  pathname.includes('habilitations') ||
+                  pathname.includes('logs')) &&
+                  classes.activeButton
+              )}
+            >
+              Console admin
+            </Button>
             <Menu
               anchorEl={anchorElConsole}
               anchorOrigin={{

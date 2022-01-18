@@ -80,24 +80,6 @@ const RightsTable: React.FC<RightsTableProps> = ({
 
   const rowsPerPage = 100
 
-  useEffect(() => {
-    const _getRoles = async () => {
-      try {
-        const rolesResp = await getRoles()
-        setRoles(rolesResp)
-      } catch (error) {
-        console.error('Erreur lors de la récupération des habilitations', error)
-      }
-    }
-
-    _getRoles()
-  }, [])
-
-  useEffect(() => {
-    if (editAccessSuccess) getAccesses()
-    if (deleteAccessSuccess) getAccesses()
-  }, [editAccessSuccess, deleteAccessSuccess]) // eslint-disable-line
-
   const columns = displayName
     ? [
         {
@@ -147,14 +129,32 @@ const RightsTable: React.FC<RightsTableProps> = ({
         }
       ]
 
-  const _columns =
+  const manageAccessesUserRights =
     userRights.right_manage_admin_accesses_same_level ||
     userRights.right_manage_admin_accesses_inferior_levels ||
     userRights.right_manage_data_accesses_same_level ||
-    userRights.right_manage_data_accesses_inferior_levels ||
-    userRights.right_read_logs
-      ? [...columns, { label: 'Actions' }]
-      : [...columns]
+    userRights.right_manage_data_accesses_inferior_levels
+
+  const _columns =
+    manageAccessesUserRights || userRights.right_read_logs ? [...columns, { label: 'Actions' }] : [...columns]
+
+  useEffect(() => {
+    const _getRoles = async () => {
+      try {
+        const rolesResp = await getRoles()
+        setRoles(rolesResp)
+      } catch (error) {
+        console.error('Erreur lors de la récupération des habilitations', error)
+      }
+    }
+
+    _getRoles()
+  }, [])
+
+  useEffect(() => {
+    if (editAccessSuccess) getAccesses()
+    if (deleteAccessSuccess) getAccesses()
+  }, [editAccessSuccess, deleteAccessSuccess]) // eslint-disable-line
 
   const handleDeleteAction = async () => {
     try {
@@ -283,17 +283,10 @@ const RightsTable: React.FC<RightsTableProps> = ({
                         )}
                       </Tooltip>
                     </TableCell>
-                    {(userRights.right_manage_admin_accesses_same_level ||
-                      userRights.right_manage_admin_accesses_inferior_levels ||
-                      userRights.right_manage_data_accesses_same_level ||
-                      userRights.right_manage_data_accesses_inferior_levels ||
-                      userRights.right_read_logs) && (
+                    {(manageAccessesUserRights || userRights.right_read_logs) && (
                       <TableCell align="center">
                         <Grid container item alignContent="center" justify="space-between" wrap="nowrap">
-                          {(userRights.right_manage_admin_accesses_same_level ||
-                            userRights.right_manage_admin_accesses_inferior_levels ||
-                            userRights.right_manage_data_accesses_same_level ||
-                            userRights.right_manage_data_accesses_inferior_levels) && (
+                          {manageAccessesUserRights && (
                             <>
                               <Grid item xs={userRights.right_read_logs ? 4 : 6}>
                                 {(access.actual_start_datetime || access.actual_end_datetime) && (
