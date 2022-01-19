@@ -65,6 +65,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
 
   const _init = async () => {
     setLoading(true)
+    onChangeOpenPopulations([])
     await fetchScopeTree()
     setLoading(false)
   }
