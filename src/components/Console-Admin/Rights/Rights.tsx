@@ -35,7 +35,11 @@ const Rights: React.FC<RightsProps> = ({ right, userRights }) => {
     userRights.right_manage_admin_accesses_same_level ||
     userRights.right_manage_admin_accesses_inferior_levels ||
     userRights.right_manage_data_accesses_same_level ||
-    userRights.right_manage_data_accesses_inferior_levels
+    userRights.right_manage_data_accesses_inferior_levels ||
+    userRights.right_manage_review_transfer_jupyter ||
+    userRights.right_manage_transfer_jupyter ||
+    userRights.right_manage_export_csv ||
+    userRights.right_manage_env_unix_users
 
   const _getAccesses = async () => {
     try {
