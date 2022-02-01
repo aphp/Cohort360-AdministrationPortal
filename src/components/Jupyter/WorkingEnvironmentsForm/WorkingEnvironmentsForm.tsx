@@ -96,7 +96,7 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
         setLoading(false)
       } catch (error) {
         setLoading(false)
-        console.log('Erreur lors de la récupération des infos du formulaire', error)
+        console.error('Erreur lors de la récupération des infos du formulaire', error)
       }
     }
 
