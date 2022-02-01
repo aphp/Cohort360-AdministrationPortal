@@ -25,7 +25,7 @@ import {
 import { CheckProfile, Profile, Provider } from 'types'
 import useDebounce from 'components/Console-Admin/CareSite/use-debounce'
 
-type ProviderDialogProps = {
+type ProviderFormProps = {
   open: boolean
   selectedProvider: Provider | null
   onClose: () => void
@@ -42,7 +42,7 @@ const defaultProvider: Provider = {
   email: ''
 }
 
-const ProviderDialog: React.FC<ProviderDialogProps> = ({
+const ProviderForm: React.FC<ProviderFormProps> = ({
   open,
   selectedProvider,
   onClose,
@@ -348,4 +348,4 @@ const ProviderDialog: React.FC<ProviderDialogProps> = ({
   )
 }
 
-export default ProviderDialog
+export default ProviderForm

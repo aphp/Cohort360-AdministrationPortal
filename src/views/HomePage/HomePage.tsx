@@ -49,6 +49,11 @@ const HomePage = () => {
       name: 'Transfert Jupyter',
       pathname: `/espace-jupyter/transfert`,
       rightsToSee: userRights.right_review_transfer_jupyter
+    },
+    {
+      name: 'Environnements de travail',
+      pathname: `/espace-jupyter/working-environments`,
+      rightsToSee: true
     }
   ]
 

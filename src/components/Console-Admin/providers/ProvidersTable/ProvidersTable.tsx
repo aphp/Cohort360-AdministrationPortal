@@ -27,7 +27,7 @@ import EditIcon from '@material-ui/icons/Edit'
 import PersonAddIcon from '@material-ui/icons/PersonAdd'
 import VisibilityIcon from '@material-ui/icons/Visibility'
 
-import ProviderDialog from '../ProviderForm/ProviderForm'
+import ProviderForm from '../ProviderForm/ProviderForm'
 import SearchBar from '../../../SearchBar/SearchBar'
 
 import useStyles from './styles'
@@ -195,7 +195,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {loading && (
+            {loading ? (
               <TableRow>
                 <TableCell colSpan={7}>
                   <div className={classes.loadingSpinnerContainer}>
@@ -203,8 +203,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                   </div>
                 </TableCell>
               </TableRow>
-            )}
-            {!providersList || providersList?.length === 0 ? (
+            ) : !providersList || providersList?.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={7}>
                   <Typography className={classes.loadingSpinnerContainer}>Aucun résultat à afficher</Typography>
@@ -288,7 +287,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
       />
 
       {selectedProvider !== null && (
-        <ProviderDialog
+        <ProviderForm
           open
           onClose={() => dispatch(setSelectedProvider(null))}
           selectedProvider={selectedProvider}
