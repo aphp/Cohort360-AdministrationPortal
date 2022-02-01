@@ -63,6 +63,11 @@ const PortailTopBar: React.FC = () => {
       name: 'Transfert Jupyter',
       pathname: `/espace-jupyter/transfert`,
       rightsToSee: userRights.right_review_transfer_jupyter
+    },
+    {
+      name: 'Environnements',
+      pathname: `/espace-jupyter/working-environments`,
+      rightsToSee: true
     }
   ]
 
@@ -128,7 +133,10 @@ const PortailTopBar: React.FC = () => {
             {userRights.right_review_transfer_jupyter && (
               <Button
                 onClick={handleClickEspaceJupyter}
-                className={clsx(classes.topBarButton, pathname.includes('transfert') ? classes.activeButton : '')}
+                className={clsx(
+                  classes.topBarButton,
+                  (pathname.includes('transfert') || pathname.includes('working-environments')) && classes.activeButton
+                )}
               >
                 Espace Jupyter
               </Button>

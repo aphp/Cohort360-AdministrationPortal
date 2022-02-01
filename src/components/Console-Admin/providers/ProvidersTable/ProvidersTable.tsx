@@ -27,7 +27,7 @@ import EditIcon from '@material-ui/icons/Edit'
 import PersonAddIcon from '@material-ui/icons/PersonAdd'
 import VisibilityIcon from '@material-ui/icons/Visibility'
 
-import ProviderDialog from '../ProviderForm/ProviderForm'
+import ProviderForm from '../ProviderForm/ProviderForm'
 import SearchBar from '../../../SearchBar/SearchBar'
 
 import useStyles from './styles'
@@ -288,7 +288,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
       />
 
       {selectedProvider !== null && (
-        <ProviderDialog
+        <ProviderForm
           open
           onClose={() => dispatch(setSelectedProvider(null))}
           selectedProvider={selectedProvider}

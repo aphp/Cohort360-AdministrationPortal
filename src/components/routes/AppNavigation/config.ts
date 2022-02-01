@@ -9,7 +9,7 @@ import Habilitations from 'views/Console-Admin/Habilitations/Habilitations'
 import Logs from 'views/Console-Admin/Logs/Logs'
 
 import Transfert from 'views/Jupyter/Transfert/Transfert'
-import CreationEspace from 'views/Jupyter/CreationEspace/CreationEspace'
+import WorkingEnvironments from 'views/Jupyter/WorkingEnvironments/WorkingEnvironments'
 
 const Config = [
   /************************************************************** Portail View ************************************************************************ */
@@ -134,23 +134,22 @@ const Config = [
     // displayTopBar: true,
     displayPortailTopBar: true,
     path: '/espace-jupyter/transfert',
-    name: 'Logs',
+    name: 'Transfert Jupyter',
     isPrivate: true,
     component: Transfert
   },
 
   /**
-   * Jupyter Espace Creation View
+   * Jupyter Working Environments View
    */
 
   {
     exact: true,
-    // displayTopBar: true,
     displayPortailTopBar: true,
-    path: '/espace-jupyter/creationespace',
-    name: 'Logs',
+    path: '/espace-jupyter/working-environments',
+    name: 'Environnements de travail',
     isPrivate: true,
-    component: CreationEspace
+    component: WorkingEnvironments
   }
 ]
 

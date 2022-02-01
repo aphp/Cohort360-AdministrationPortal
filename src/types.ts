@@ -269,3 +269,38 @@ export type Order = {
   orderBy: string
   orderDirection: 'asc' | 'desc'
 }
+
+// --JUPYTER--
+
+// TODO: change to workspaces/users type
+export type WorkingEnvironment = {
+  uid: number
+  type: 'default_user' | 'default_cse' | 'default_dsip' | 'default_bdr'
+  identifier: string
+  acronym: string
+  title: string
+  thematic: string
+  description: string
+  status: 'new' | 'validated' | 'not_validated' | 'aborted' | 'in progress' | 'closed'
+  operation_actors: string
+  partners: string
+  lawfulness_of_processing: string
+  data_recipients: string
+  data_conservation_duration?: number
+  insert_datetime: string
+  validation_date?: string
+}
+
+export type RangerHivePolicy = {
+  id: number
+  policy_type: 'default_user' | 'default_cse' | 'default_dsip' | 'default_bdr'
+  db?: string
+  db_tables?: string
+  db_imagerie?: string
+  db_work?: string
+}
+
+export type JupyterMachine = {
+  id: number
+  name: string
+}
