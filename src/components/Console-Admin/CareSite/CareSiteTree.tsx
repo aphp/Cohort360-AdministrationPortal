@@ -150,6 +150,13 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
       label: 'Nom'
     },
     {
+      id: 'type',
+      align: 'center',
+      disablePadding: true,
+      disableOrderBy: true,
+      label: 'Type'
+    },
+    {
       id: '',
       align: 'center',
       disablePadding: true,
@@ -253,6 +260,10 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                         ) : (
                           <Typography>{_row.name}</Typography>
                         )}
+                      </TableCell>
+
+                      <TableCell align="center">
+                        <Typography>{_row.care_site_type_source_value}</Typography>
                       </TableCell>
 
                       <TableCell align="right">
