@@ -184,7 +184,7 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
         {!isEdition && (
           <>
             <Grid container justify="space-between" alignItems="center" className={classes.filter}>
-              <Typography variant="h3">Périmètre :</Typography>
+              <Typography variant="h6">Périmètre :</Typography>
               {_access && _access.careSite ? (
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <Typography>{_access.careSite.name}</Typography>
@@ -204,13 +204,13 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
               )}
             </Grid>
             <Grid container justify="space-between" alignItems="center" className={classes.filter}>
-              <Typography variant="h3">Habilitation :</Typography>
+              <Typography variant="h6">Habilitation :</Typography>
               {loadingAssignableRoles ? (
                 <CircularProgress size={20} />
-              ) : roles ? (
+              ) : (
                 <Autocomplete
                   disabled={!roles}
-                  options={roles}
+                  options={roles ?? []}
                   getOptionLabel={(option) => option.name}
                   onChange={(event, value) => {
                     if (value) _onChangeValue('role', value)
@@ -233,15 +233,19 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
                   value={_access.role}
                   style={{ width: '310px' }}
                 />
-              ) : (
-                <Typography>Choisir un périmètre pour obtenir les habilitations disponibles.</Typography>
               )}
+              <div style={{ marginTop: 12 }}>
+                <InfoIcon color="action" className={classes.infoIcon} />
+                <Typography component="span">
+                  Choisir un périmètre pour obtenir les habilitations disponibles.
+                </Typography>
+              </div>
             </Grid>
           </>
         )}
         {(!isEdition || (isEdition && !_access.actual_start_datetime?.isBefore())) && (
           <Grid container justify="space-between" alignItems="center" className={classes.filter}>
-            <Typography variant="h3">Date de début :</Typography>
+            <Typography variant="h6">Date de début :</Typography>
             <KeyboardDatePicker
               clearable
               minDate={moment()}
@@ -256,7 +260,7 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
         )}
         {(!isEdition || (isEdition && !_access.actual_end_datetime?.isBefore())) && (
           <Grid container justify="space-between" alignItems="center" className={classes.filter}>
-            <Typography variant="h3">Date de fin :</Typography>
+            <Typography variant="h6">Date de fin :</Typography>
             <KeyboardDatePicker
               clearable
               minDate={moment().add(1, 'days')}

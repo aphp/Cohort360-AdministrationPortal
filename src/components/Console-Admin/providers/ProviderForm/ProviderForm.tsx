@@ -224,12 +224,11 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
         ) : (
           <>
             {!isEdition && (
-              <Grid container direction="column" className={classes.filter}>
-                <Typography variant="h3">Identifiant APH :</Typography>
+              <Grid container direction="column">
+                <Typography variant="h6">Identifiant APH :</Typography>
                 <TextField
                   variant="outlined"
                   margin="normal"
-                  fullWidth
                   autoFocus
                   placeholder="Exemple: 4010101"
                   value={provider?.provider_source_value}
@@ -240,6 +239,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
                     "L'identifiant APH ne doit contenir que des chiffres (entre 3 et 7 maximum)."
                   }
                   inputProps={{ maxlength: 7 }}
+                  style={{ margin: '1em' }}
                 />
               </Grid>
             )}
@@ -257,12 +257,11 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
                 </div>
               ) : (
                 <>
-                  <Grid container direction="column" className={classes.filter}>
-                    <Typography variant="h3">Nom :</Typography>
+                  <Grid container direction="column">
+                    <Typography variant="h6">Nom :</Typography>
                     <TextField
                       variant="outlined"
                       margin="normal"
-                      fullWidth
                       autoFocus
                       placeholder="Exemple: Dupont"
                       value={provider?.lastname}
@@ -272,14 +271,14 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
                         lastNameError &&
                         "Le nom ne peut pas contenir de chiffres ou de caractères spéciaux hormis ' et -."
                       }
+                      style={{ margin: '1em' }}
                     />
                   </Grid>
-                  <Grid container direction="column" className={classes.filter}>
-                    <Typography variant="h3">Prénom :</Typography>
+                  <Grid container direction="column">
+                    <Typography variant="h6">Prénom :</Typography>
                     <TextField
                       variant="outlined"
                       margin="normal"
-                      fullWidth
                       autoFocus
                       placeholder="Exemple: Jean"
                       value={provider?.firstname}
@@ -289,20 +288,21 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
                         firstNameError &&
                         "Le prénom ne peut pas contenir de chiffres ou de caractères spéciaux hormis ' et -."
                       }
+                      style={{ margin: '1em' }}
                     />
                   </Grid>
-                  <Grid container direction="column" className={classes.filter}>
-                    <Typography variant="h3">Adresse e-mail :</Typography>
+                  <Grid container direction="column">
+                    <Typography variant="h6">Adresse e-mail :</Typography>
                     <TextField
                       variant="outlined"
                       margin="normal"
-                      fullWidth
                       autoFocus
                       placeholder="Exemple: jean.dupont@aphp.fr"
                       value={provider?.email}
                       onChange={(event) => _onChangeValue('email', event.target.value)}
                       error={emailError}
                       helperText={emailError && `L'adresse e-mail doit être du format "prenom.nom@aphp.fr"`}
+                      style={{ margin: '1em' }}
                     />
                   </Grid>
                   <div>

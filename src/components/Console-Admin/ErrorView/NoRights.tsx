@@ -8,7 +8,7 @@ import WarningIcon from '@material-ui/icons/Report'
 
 import useStyles from './styles'
 
-const CohortRightOrNotExist = () => {
+const PortailNoRights = () => {
   const classes = useStyles()
   const history = useHistory()
 
@@ -40,4 +40,4 @@ const CohortRightOrNotExist = () => {
   )
 }
 
-export default CohortRightOrNotExist
+export default PortailNoRights
