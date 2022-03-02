@@ -6,9 +6,10 @@ import { useParams } from 'react-router'
 import { getProfile } from 'services/Console-Admin/providersHistoryService'
 import Rights from 'components/Console-Admin/Rights/Rights'
 import useStyles from './styles'
-import { Profile, Provider } from 'types'
+import { Profile, Provider, Role } from 'types'
 import { getProvider } from 'services/Console-Admin/providersService'
 import { getUserRights, userDefaultRoles } from 'utils/userRoles'
+import { getRoles } from 'services/Console-Admin/rolesService'
 
 const ProviderHistory: React.FC = () => {
   const classes = useStyles()
@@ -17,10 +18,20 @@ const ProviderHistory: React.FC = () => {
   const [provider, setProvider] = useState<Provider | undefined>()
   const [userRights, setUserRights] = useState(userDefaultRoles)
   const [rights, setRights] = useState<Profile[] | undefined>()
+  const [roles, setRoles] = useState<Role[] | undefined>()
 
   const { providerId } = useParams<{ providerId: string }>()
 
   useEffect(() => {
+    const _getRoles = async () => {
+      try {
+        const rolesResp = await getRoles()
+        setRoles(rolesResp)
+      } catch (error) {
+        console.error('Erreur lors de la récupération des habilitations', error)
+      }
+    }
+
     const _getUserRights = async () => {
       try {
         setLoading(true)
@@ -34,7 +45,7 @@ const ProviderHistory: React.FC = () => {
       }
     }
 
-    const getProviderHistory = async () => {
+    const _getProviderHistory = async () => {
       try {
         setLoading(true)
 
@@ -55,7 +66,8 @@ const ProviderHistory: React.FC = () => {
     }
 
     _getUserRights()
-    getProviderHistory()
+    _getProviderHistory()
+    _getRoles()
   }, [providerId]) // eslint-disable-line
 
   return (
@@ -74,7 +86,7 @@ const ProviderHistory: React.FC = () => {
                 rights.length > 0 ? (
                   <>
                     {rights.map((userRight: Profile, index: number) => (
-                      <Rights key={index} right={userRight} userRights={userRights} />
+                      <Rights key={index} right={userRight} userRights={userRights} roles={roles} />
                     ))}
                   </>
                 ) : (
