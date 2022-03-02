@@ -174,6 +174,11 @@ const RightsTable: React.FC<RightsTableProps> = ({
     })
   }
 
+  const onClose = () => {
+    setSelectedAccess(null)
+    getAccesses()
+  }
+
   return (
     <Grid container justify="flex-end">
       <TableContainer component={Paper}>
@@ -365,7 +370,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
       {selectedAccess && (
         <AccessForm
           open
-          onClose={() => setSelectedAccess(null)}
+          onClose={onClose}
           access={selectedAccess}
           onSuccess={setEditAccessSuccess}
           onFail={setEditAccessFail}

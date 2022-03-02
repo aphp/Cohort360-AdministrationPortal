@@ -59,11 +59,7 @@ const Rights: React.FC<RightsProps> = ({ right, userRights, roles }) => {
 
   useEffect(() => {
     _getAccesses()
-  }, [accesses?.length, order, page]) // eslint-disable-line
-
-  useEffect(() => {
-    if (addAccessSuccess) _getAccesses()
-  }, [addAccessSuccess]) // eslint-disable-line
+  }, [order, page]) // eslint-disable-line
 
   const onClose = () => {
     setOpen(false)
