@@ -84,15 +84,7 @@ const Logs: React.FC = () => {
 
   useEffect(() => {
     _getLogs()
-  }, [page]) // eslint-disable-line
-
-  useEffect(() => {
-    if (page === 1) {
-      _getLogs()
-    } else {
-      setPage(1)
-    }
-  }, [filters])
+  }, [page, filters]) // eslint-disable-line
 
   const handleDeleteChip = (filterName: string, value?: any) => {
     const _filters = { ...filters }
@@ -117,6 +109,7 @@ const Logs: React.FC = () => {
     }
 
     setFilters(_filters)
+    setPage(1)
   }
 
   return (
@@ -242,7 +235,10 @@ const Logs: React.FC = () => {
       {openFilters && (
         <LogsFilters
           filters={filters}
-          onChangeFilters={setFilters}
+          onChangeFilters={(newFilters) => {
+            setFilters(newFilters)
+            setPage(1)
+          }}
           onClose={() => setOpenFilters(false)}
           userRights={userRights}
         />
