@@ -14,7 +14,6 @@ import {
   CircularProgress
 } from '@material-ui/core'
 
-import AddIcon from '@material-ui/icons/Add'
 import DeleteIcon from '@material-ui/icons/Delete'
 
 import useStyles from './styles'
@@ -22,7 +21,6 @@ import { Provider } from 'types'
 
 type ProvidersTableProps = {
   providersList: Provider[]
-  deleteButton?: boolean
   loading?: boolean
   usersAssociated?: Provider[]
   onChangeUsersAssociated: (key: any, value: any) => void
@@ -30,7 +28,6 @@ type ProvidersTableProps = {
 
 const ProvidersTable: React.FC<ProvidersTableProps> = ({
   providersList,
-  deleteButton,
   loading,
   usersAssociated,
   onChangeUsersAssociated
@@ -55,7 +52,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({
       code: 'email'
     },
     {
-      label: deleteButton ? 'Suppression' : 'Ajouter'
+      label: 'Suppression'
     }
   ]
 
@@ -67,23 +64,6 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({
       _usersAssociatedCopy.splice(index, 1)
     }
 
-    onChangeUsersAssociated('usersAssociated', _usersAssociatedCopy)
-  }
-
-  const addItem = (provider: Provider) => {
-    const _usersAssociatedCopy = usersAssociated ?? []
-
-    let alreadyExists = false
-
-    for (const user of _usersAssociatedCopy) {
-      if (user.displayed_name === provider.displayed_name) {
-        alreadyExists = true
-      }
-    }
-
-    if (!alreadyExists) {
-      _usersAssociatedCopy.push(provider)
-    }
     onChangeUsersAssociated('usersAssociated', _usersAssociatedCopy)
   }
 
@@ -124,29 +104,16 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({
                     <TableCell align="center">{provider.firstname}</TableCell>
                     <TableCell align="center">{provider.email ?? '-'}</TableCell>
                     <TableCell align="center">
-                      {deleteButton ? (
-                        <Tooltip title="Supprimer l'utilisateur" style={{ padding: '0 12px' }}>
-                          <IconButton
-                            onClick={(event) => {
-                              event.stopPropagation()
-                              deleteItem(provider)
-                            }}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </Tooltip>
-                      ) : (
-                        <Tooltip title="Ajouter l'utilisateur" style={{ padding: '0 12px' }}>
-                          <IconButton
-                            onClick={(event) => {
-                              event.stopPropagation()
-                              addItem(provider)
-                            }}
-                          >
-                            <AddIcon />
-                          </IconButton>
-                        </Tooltip>
-                      )}
+                      <Tooltip title="Supprimer l'utilisateur" style={{ padding: '0 12px' }}>
+                        <IconButton
+                          onClick={(event) => {
+                            event.stopPropagation()
+                            deleteItem(provider)
+                          }}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 )
