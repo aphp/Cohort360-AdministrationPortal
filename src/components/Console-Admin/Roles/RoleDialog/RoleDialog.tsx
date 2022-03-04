@@ -302,18 +302,18 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
       </DialogTitle>
       <DialogContent className={classes.dialog}>
         {(isEditable && editMode) || !isEditable ? (
-          <Grid container direction="column" className={classes.filter}>
-            <Typography variant="h3">Nom de l'habilitation :</Typography>
+          <Grid container direction="column">
+            <Typography variant="h6">Nom de l'habilitation :</Typography>
             <TextField
               variant="outlined"
               margin="normal"
-              fullWidth
               autoFocus
               placeholder="Nom de l'habilitation"
               value={role?.name}
               onChange={(event) => _onChangeValue('name', event.target.value)}
               error={errorName}
               helperText={errorName && "Le nom de l'habilitation doit contenir au moins 4 caractères."}
+              style={{ margin: '1em' }}
             />
           </Grid>
         ) : (

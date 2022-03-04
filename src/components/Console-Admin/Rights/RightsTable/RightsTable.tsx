@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 
 import {
@@ -37,7 +37,6 @@ import AccessForm from '../AccessForm/AccessForm'
 import { Access, Order, Role, UserRole } from 'types'
 import { Alert } from '@material-ui/lab'
 import moment from 'moment'
-import { getRoles } from 'services/Console-Admin/rolesService'
 import { onDeleteOrTerminateAccess } from 'services/Console-Admin/providersHistoryService'
 
 type RightsTableProps = {
@@ -51,6 +50,7 @@ type RightsTableProps = {
   order: Order
   setOrder: (order: Order) => void
   userRights: UserRole
+  roles?: Role[]
 }
 
 const RightsTable: React.FC<RightsTableProps> = ({
@@ -63,13 +63,13 @@ const RightsTable: React.FC<RightsTableProps> = ({
   getAccesses,
   order,
   setOrder,
-  userRights
+  userRights,
+  roles
 }) => {
   const classes = useStyles()
   const history = useHistory()
 
   const [selectedAccess, setSelectedAccess] = useState<Access | null>(null)
-  const [roles, setRoles] = useState<Role[] | undefined>()
   const [deleteAccess, setDeleteAccess] = useState<Access | null>(null)
   const [editAccessSuccess, setEditAccessSuccess] = useState(false)
   const [editAccessFail, setEditAccessFail] = useState(false)
@@ -142,24 +142,6 @@ const RightsTable: React.FC<RightsTableProps> = ({
   const _columns =
     manageAccessesUserRights || userRights.right_read_logs ? [...columns, { label: 'Actions' }] : [...columns]
 
-  useEffect(() => {
-    const _getRoles = async () => {
-      try {
-        const rolesResp = await getRoles()
-        setRoles(rolesResp)
-      } catch (error) {
-        console.error('Erreur lors de la récupération des habilitations', error)
-      }
-    }
-
-    _getRoles()
-  }, [])
-
-  useEffect(() => {
-    if (editAccessSuccess) getAccesses()
-    if (deleteAccessSuccess) getAccesses()
-  }, [editAccessSuccess, deleteAccessSuccess]) // eslint-disable-line
-
   const handleDeleteAction = async () => {
     try {
       setLoadingOnConfirm(true)
@@ -190,6 +172,11 @@ const RightsTable: React.FC<RightsTableProps> = ({
       orderBy: property,
       orderDirection: _orderDirection
     })
+  }
+
+  const onClose = () => {
+    setSelectedAccess(null)
+    getAccesses()
   }
 
   return (
@@ -383,7 +370,7 @@ const RightsTable: React.FC<RightsTableProps> = ({
       {selectedAccess && (
         <AccessForm
           open
-          onClose={() => setSelectedAccess(null)}
+          onClose={onClose}
           access={selectedAccess}
           onSuccess={setEditAccessSuccess}
           onFail={setEditAccessFail}

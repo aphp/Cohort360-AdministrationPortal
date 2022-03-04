@@ -65,7 +65,7 @@ const Transfert: React.FC = () => {
             <CircularProgress size={60} className={classes.loading} />
           ) : (
             <>
-              <Typography variant="h1" color="primary" className={classes.title} align="center">
+              <Typography variant="h1" className={classes.title} align="center">
                 Transfert vers un environnement de travail
               </Typography>
 

@@ -116,10 +116,10 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
 
   return (
     <Dialog open>
-      <DialogTitle>Filtrer par :</DialogTitle>
+      <DialogTitle className={classes.dialogTitle}>Filtrer par :</DialogTitle>
       <DialogContent className={classes.dialog}>
-        <Grid container direction="column" className={classes.filter}>
-          <Typography variant="h3">URL :</Typography>
+        <Grid container direction="column">
+          <Typography variant="h6">URL :</Typography>
           <Autocomplete
             options={urls}
             getOptionLabel={(option) => option.label}
@@ -127,15 +127,14 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
             renderOption={(option) => <React.Fragment>{option.label}</React.Fragment>}
             renderInput={(params) => <TextField {...params} label="Sélectionner l'URL" variant="outlined" />}
             value={_filters.url}
-            style={{ marginTop: 16 }}
+            style={{ margin: '1em' }}
           />
         </Grid>
-        <Grid container direction="column" className={classes.filter}>
-          <Typography variant="h3">Utilisateur :</Typography>
+        <Grid container direction="column">
+          <Typography variant="h6">Utilisateur :</Typography>
           <TextField
             variant="outlined"
             margin="normal"
-            fullWidth
             autoFocus
             placeholder="Identifiant APH"
             value={_filters.user}
@@ -143,10 +142,11 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
             error={userError}
             helperText={userError && "L'identifiant APH ne doit contenir que des chiffres (entre 3 et 7 maximum)."}
             inputProps={{ maxlength: 7 }}
+            style={{ margin: '1em' }}
           />
         </Grid>
-        <Grid container direction="column" className={classes.filter}>
-          <Typography variant="h3">Code de statut :</Typography>
+        <Grid container direction="column">
+          <Typography variant="h6">Code de statut :</Typography>
           <Autocomplete
             multiple
             options={statusCodes}
@@ -156,11 +156,11 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
               <TextField {...params} label="Sélectionner les codes de statut" variant="outlined" />
             )}
             value={_filters.statusCode}
-            style={{ marginTop: 16 }}
+            style={{ margin: '1em' }}
           />
         </Grid>
-        <Grid container direction="column" className={classes.filter}>
-          <Typography variant="h3">Méthode HTTP :</Typography>
+        <Grid container direction="column">
+          <Typography variant="h6">Méthode HTTP :</Typography>
           <Autocomplete
             multiple
             options={httpMethods}
@@ -170,48 +170,50 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
               <TextField {...params} label="Sélectionner les méthodes HTTP" variant="outlined" />
             )}
             value={_filters.httpMethod}
-            style={{ marginTop: 16 }}
+            style={{ margin: '1em' }}
           />
         </Grid>
-        <Grid container direction="column" className={classes.filter}>
-          <Typography variant="h3">Date :</Typography>
-          <Grid container alignItems="baseline" className={classes.datePickers}>
-            <FormLabel component="legend" className={classes.dateLabel}>
-              Après le :
-            </FormLabel>
-            <KeyboardDatePicker
-              clearable
-              error={dateError}
-              style={{ width: 'calc(100% - 120px)' }}
-              invalidDateMessage='La date doit être au format "JJ/MM/AAAA"'
-              format="DD/MM/YYYY"
-              onChange={(date: MaterialUiPickersDate) => _onChangeValue('afterDate', date ?? null)}
-              value={_filters.afterDate}
-            />
-          </Grid>
+        <Grid container direction="column">
+          <Typography variant="h6">Date :</Typography>
+          <div style={{ marginBottom: '1em' }}>
+            <Grid container alignItems="baseline" className={classes.datePickers}>
+              <FormLabel component="legend" className={classes.dateLabel}>
+                Après le :
+              </FormLabel>
+              <KeyboardDatePicker
+                clearable
+                error={dateError}
+                invalidDateMessage='La date doit être au format "JJ/MM/AAAA"'
+                format="DD/MM/YYYY"
+                onChange={(date: MaterialUiPickersDate) => _onChangeValue('afterDate', date ?? null)}
+                value={_filters.afterDate}
+                style={{ width: 'calc(100% - 120px)' }}
+              />
+            </Grid>
 
-          <Grid container alignItems="baseline" className={classes.datePickers}>
-            <FormLabel component="legend" className={classes.dateLabel}>
-              Avant le :
-            </FormLabel>
-            <KeyboardDatePicker
-              clearable
-              error={dateError}
-              style={{ width: 'calc(100% - 120px)' }}
-              invalidDateMessage='La date doit être au format "JJ/MM/AAAA"'
-              format="DD/MM/YYYY"
-              onChange={(date: MaterialUiPickersDate) => _onChangeValue('beforeDate', date ?? null)}
-              value={_filters.beforeDate}
-            />
-          </Grid>
-          {dateError && (
-            <Typography className={classes.dateError}>
-              Vous ne pouvez pas sélectionner de date de début supérieure à la date de fin.
-            </Typography>
-          )}
+            <Grid container alignItems="baseline" className={classes.datePickers}>
+              <FormLabel component="legend" className={classes.dateLabel}>
+                Avant le :
+              </FormLabel>
+              <KeyboardDatePicker
+                clearable
+                error={dateError}
+                invalidDateMessage='La date doit être au format "JJ/MM/AAAA"'
+                format="DD/MM/YYYY"
+                onChange={(date: MaterialUiPickersDate) => _onChangeValue('beforeDate', date ?? null)}
+                value={_filters.beforeDate}
+                style={{ width: 'calc(100% - 120px)' }}
+              />
+            </Grid>
+            {dateError && (
+              <Typography className={classes.dateError}>
+                Vous ne pouvez pas sélectionner de date de début supérieure à la date de fin.
+              </Typography>
+            )}
+          </div>
         </Grid>
-        <Grid container justify="space-between" alignItems="center" className={classes.filter}>
-          <Typography variant="h3">Périmètre :</Typography>
+        <Grid container justify="space-between" alignItems="center">
+          <Typography variant="h6">Périmètre :</Typography>
           {selectedCareSite ? (
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <Typography>{selectedCareSite.name.split('.').join(' ')}</Typography>

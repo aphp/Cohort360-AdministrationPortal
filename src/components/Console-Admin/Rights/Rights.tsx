@@ -8,18 +8,19 @@ import AddIcon from '@material-ui/icons/Add'
 import AccessForm from './AccessForm/AccessForm'
 import RightsTable from './RightsTable/RightsTable'
 import { getAccesses } from 'services/Console-Admin/providersHistoryService'
-import { Access, Order, Profile, UserRole } from 'types'
+import { Access, Order, Profile, Role, UserRole } from 'types'
 
 import useStyles from './styles'
 
 type RightsProps = {
   right: Profile
   userRights: UserRole
+  roles?: Role[]
 }
 
 const orderDefault = { orderBy: 'is_valid', orderDirection: 'asc' } as Order
 
-const Rights: React.FC<RightsProps> = ({ right, userRights }) => {
+const Rights: React.FC<RightsProps> = ({ right, userRights, roles }) => {
   const classes = useStyles()
 
   const [open, setOpen] = useState(false)
@@ -58,11 +59,7 @@ const Rights: React.FC<RightsProps> = ({ right, userRights }) => {
 
   useEffect(() => {
     _getAccesses()
-  }, [accesses?.length, order, page]) // eslint-disable-line
-
-  useEffect(() => {
-    if (addAccessSuccess) _getAccesses()
-  }, [addAccessSuccess]) // eslint-disable-line
+  }, [order, page]) // eslint-disable-line
 
   const onClose = () => {
     setOpen(false)
@@ -99,6 +96,7 @@ const Rights: React.FC<RightsProps> = ({ right, userRights }) => {
         order={order}
         setOrder={setOrder}
         userRights={userRights}
+        roles={roles}
       />
       <AccessForm
         open={open}
