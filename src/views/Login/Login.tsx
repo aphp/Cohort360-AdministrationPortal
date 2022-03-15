@@ -119,6 +119,10 @@ const Login = () => {
     onLogin()
   }
 
+  useEffect(() => {
+    localStorage.removeItem('providers')
+  })
+
   if (noRights) return <NoRights />
 
   return (
