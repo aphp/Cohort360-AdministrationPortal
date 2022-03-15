@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 
 import {
   Button,
@@ -17,11 +17,13 @@ import {
 } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 
-import useStyles from './styles'
-import { JupyterMachine, UserRole } from 'types'
 import ProvidersTable from './components/ProvidersTable/ProvidersTable'
-import ProviderSearchDialog from './components/ProviderSearchDialog/ProviderSearchDialog'
 import { getWorkingEnvironmentFormInfos } from 'services/Jupyter/workingEnvironmentsService'
+import { getProviders } from 'services/Console-Admin/providersService'
+import useDebounce from 'components/Console-Admin/CareSite/use-debounce'
+import { JupyterMachine, Order, Provider, UserRole } from 'types'
+
+import useStyles from './styles'
 
 type WorkingEnvironmentsFormProps = {
   userRights: UserRole
@@ -32,7 +34,7 @@ type WorkingEnvironmentsFormProps = {
 
 const workingEnvironmentDefault = {
   name: '',
-  usersAssociated: [],
+  usersAssociated: [] as Provider[],
   sshAccess: 'no',
   publicKey: '',
   machines: [],
@@ -44,6 +46,8 @@ const workingEnvironmentDefault = {
 
 const rangerhivePolicies = ['default_user', 'default_cse', 'default_dsip', 'default_bdr']
 
+const orderDefault = { orderBy: 'lastname', orderDirection: 'asc' } as Order
+
 const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
   onClose
   // onAddWorkingEnvironmentSuccess,
@@ -52,10 +56,14 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
   const classes = useStyles()
 
   const [loading, setLoading] = useState(true)
+  const [loadingOnSearch, setLoadingOnSearch] = useState(false)
   const [loadingOnValidate, setLoadingOnValidate] = useState(false)
   const [workingEnvironment, setWorkingEnvironment] = useState(workingEnvironmentDefault)
-  const [open, setOpen] = useState(false)
   const [jupyterMachines, setJupyterMachines] = useState<JupyterMachine[]>([])
+  const [providersSearchResults, setProvidersSearchResults] = useState<Provider[]>([])
+  const [searchInput, setSearchInput] = useState('')
+
+  const debouncedSearchTerm = useDebounce(700, searchInput)
 
   const _onChangeValue = (
     key:
@@ -76,6 +84,25 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
     _workingEnvironmentCopy[key] = value
 
     setWorkingEnvironment(_workingEnvironmentCopy)
+  }
+
+  const addProvider = (provider?: Provider | null) => {
+    if (!provider) return
+
+    const _usersAssociatedCopy = workingEnvironment.usersAssociated ?? []
+
+    let alreadyExists = false
+
+    for (const user of _usersAssociatedCopy) {
+      if (user.displayed_name === provider.displayed_name) {
+        alreadyExists = true
+      }
+    }
+
+    if (!alreadyExists) {
+      _usersAssociatedCopy.push(provider)
+    }
+    _onChangeValue('usersAssociated', _usersAssociatedCopy)
   }
 
   const onSubmit = () => {
@@ -102,6 +129,30 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
 
     _getFormInfos()
   }, [])
+
+  useEffect(() => {
+    const _searchProviders = async () => {
+      try {
+        setLoadingOnSearch(true)
+
+        const providersResp = await getProviders(orderDefault, 1, debouncedSearchTerm)
+
+        setProvidersSearchResults(providersResp.providers)
+
+        setLoadingOnSearch(false)
+      } catch (error) {
+        console.error('Erreur lors de la recherche des utilisateurs')
+        setProvidersSearchResults([])
+        setLoadingOnSearch(false)
+      }
+    }
+
+    if (debouncedSearchTerm && debouncedSearchTerm?.length > 0) {
+      _searchProviders()
+    } else {
+      setProvidersSearchResults([])
+    }
+  }, [debouncedSearchTerm])
 
   return (
     <>
@@ -135,18 +186,44 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
                     de groupe unique) :
                   </FormLabel>
 
-                  <Button
-                    style={{ alignSelf: 'flex-end' }}
-                    variant="contained"
-                    disableElevation
-                    className={classes.button}
-                    onClick={() => setOpen(true)}
-                  >
-                    Ajouter des membres
-                  </Button>
+                  <Autocomplete
+                    noOptionsText="Recherchez un utilisateur"
+                    clearOnEscape
+                    options={providersSearchResults ?? []}
+                    loading={loadingOnSearch}
+                    onChange={(e, value) => {
+                      addProvider(value)
+                      setSearchInput('')
+                    }}
+                    inputValue={searchInput}
+                    onInputChange={() => setSearchInput('')}
+                    getOptionLabel={(option) =>
+                      `${option.provider_source_value} - ${option.lastname?.toLocaleUpperCase()} ${
+                        option.firstname
+                      } - ${option.email}` ?? ''
+                    }
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Rechercher un utilisateur"
+                        variant="outlined"
+                        value={searchInput}
+                        onChange={(e) => setSearchInput(e.target.value)}
+                        InputProps={{
+                          ...params.InputProps,
+                          endAdornment: (
+                            <Fragment>
+                              {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                              {params.InputProps.endAdornment}
+                            </Fragment>
+                          )
+                        }}
+                        style={{ marginBottom: '1em' }}
+                      />
+                    )}
+                  />
 
                   <ProvidersTable
-                    deleteButton
                     providersList={workingEnvironment.usersAssociated}
                     onChangeUsersAssociated={_onChangeValue}
                     usersAssociated={workingEnvironment.usersAssociated}
@@ -264,15 +341,6 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
           </Button>
         </DialogActions>
       </Dialog>
-
-      {open && (
-        <ProviderSearchDialog
-          open
-          usersAssociated={workingEnvironment.usersAssociated}
-          onChangeUsersAssociated={_onChangeValue}
-          onClose={() => setOpen(false)}
-        />
-      )}
     </>
   )
 }

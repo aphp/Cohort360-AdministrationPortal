@@ -26,6 +26,7 @@ const AutoLogoutContainer = () => {
     setDialogIsOpen(false)
     history.push('/')
     // console.log('User a été déconnecté')
+    localStorage.removeItem('providers')
     localStorage.clear()
     dispatch(logoutAction())
     clearTimeout(sessionInactifTimerRef.current)
