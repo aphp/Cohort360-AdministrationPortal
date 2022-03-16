@@ -39,7 +39,7 @@ import { Alert } from '@material-ui/lab'
 import moment from 'moment'
 import { onDeleteOrTerminateAccess } from 'services/Console-Admin/providersHistoryService'
 
-type RightsTableProps = {
+type AccessesTableProps = {
   displayName: boolean
   loading: boolean
   page: number
@@ -53,7 +53,7 @@ type RightsTableProps = {
   roles?: Role[]
 }
 
-const RightsTable: React.FC<RightsTableProps> = ({
+const AccessesTable: React.FC<AccessesTableProps> = ({
   displayName,
   loading,
   page,
@@ -443,4 +443,4 @@ const RightsTable: React.FC<RightsTableProps> = ({
   )
 }
 
-export default RightsTable
+export default AccessesTable
