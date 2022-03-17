@@ -186,7 +186,7 @@ export type Access = {
   is_valid: boolean
   provider_history: Provider
   provider_history_id: number
-  care_site: CareSite
+  care_site?: CareSite
   role: { name: string; role_id: number; help_text: string[] }
   entry_created_by: number
   created_by: string
@@ -275,20 +275,30 @@ export type Order = {
 // TODO: change to workspaces/users type
 export type WorkingEnvironment = {
   uid: number
-  type: 'default_user' | 'default_cse' | 'default_dsip' | 'default_bdr'
-  identifier: string
-  acronym: string
-  title: string
-  thematic: string
-  description: string
-  status: 'new' | 'validated' | 'not_validated' | 'aborted' | 'in progress' | 'closed'
-  operation_actors: string
-  partners: string
-  lawfulness_of_processing: string
-  data_recipients: string
-  data_conservation_duration?: number
-  insert_datetime: string
-  validation_date?: string
+  // kernels: []
+  // jupyter_machines: []
+  // ldap_groups: []
+  // ranger_hive_policy: []
+  username: string
+  name: string
+  firstname: string
+  lastname: string
+  mail: string
+  gid: number
+  group: string
+  home: string
+  conda_enable: boolean
+  conda_py_version: string
+  conda_r: boolean
+  ssh: boolean
+  brat_port: number
+  tensorboard_port: number
+  airflow_port: number
+  db_imagerie: boolean
+  aphp_ldap_group_dn: string
+  spark_port_start: number
+  project: number
+  // status: 'new' | 'validated' | 'not_validated' | 'aborted' | 'in progress' | 'closed'
 }
 
 export type RangerHivePolicy = {
@@ -303,4 +313,11 @@ export type RangerHivePolicy = {
 export type JupyterMachine = {
   id: number
   name: string
+}
+
+export type Column = {
+  label: string
+  code?: string
+  align?: 'inherit' | 'left' | 'center' | 'right' | 'justify'
+  sortableColumn?: boolean
 }
