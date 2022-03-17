@@ -239,7 +239,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
                       </TableCell>
                     )}
                     <TableCell align={'left'}>
-                      {access.care_site.care_site_source_value} - {access.care_site.care_site_name}
+                      {access.care_site?.care_site_source_value} - {access.care_site?.care_site_name}
                     </TableCell>
                     <TableCell align="center">
                       <div className={classes.roleColumn}>
@@ -382,7 +382,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
         <DialogContent>
           <Typography>
             Êtes-vous sûr(e) de vouloir {terminateAccess ? 'clôturer' : 'supprimer'} cet accès sur le périmètre{' '}
-            {deleteAccess?.care_site.care_site_name} ?
+            {deleteAccess?.care_site?.care_site_name} ?
           </Typography>
         </DialogContent>
         <DialogActions>
