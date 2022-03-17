@@ -318,6 +318,6 @@ export type JupyterMachine = {
 export type Column = {
   label: string
   code?: string
-  align?: 'inherit' | 'left' | 'center' | 'right' | 'justify'
+  align: 'inherit' | 'left' | 'center' | 'right' | 'justify'
   sortableColumn?: boolean
 }

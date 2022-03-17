@@ -20,7 +20,6 @@ type DataTableProps = {
   columns: Column[]
   order: Order
   setOrder: (order: Order) => void
-  loading: boolean
   page: number
   setPage: (page: number) => void
   rowsPerPage: number
