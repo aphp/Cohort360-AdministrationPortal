@@ -172,151 +172,148 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
         setPage={setPage}
         rowsPerPage={100}
         total={total}
-        tableRows={
-          loading ? (
-            <TableRow>
-              <TableCell colSpan={7}>
-                <div className={classes.loadingSpinnerContainer}>
-                  <CircularProgress size={50} />
-                </div>
-              </TableCell>
-            </TableRow>
-          ) : accesses && accesses.length > 0 ? (
-            accesses.map((access: Access) => {
-              return (
-                <TableRow key={access.id} className={classes.tableBodyRows}>
-                  {displayName && (
-                    <TableCell align="left">
-                      {access.provider_history.lastname?.toLocaleUpperCase()} {access.provider_history.firstname}
-                      <IconButton
-                        onClick={() =>
-                          history.push(`/console-admin/user-profile/${access.provider_history.provider_id}`)
-                        }
+      >
+        {loading ? (
+          <TableRow>
+            <TableCell colSpan={7}>
+              <div className={classes.loadingSpinnerContainer}>
+                <CircularProgress size={50} />
+              </div>
+            </TableCell>
+          </TableRow>
+        ) : accesses && accesses.length > 0 ? (
+          accesses.map((access: Access) => {
+            return (
+              <TableRow key={access.id} className={classes.tableBodyRows}>
+                {displayName && (
+                  <TableCell align="left">
+                    {access.provider_history.lastname?.toLocaleUpperCase()} {access.provider_history.firstname}
+                    <IconButton
+                      onClick={() => history.push(`/console-admin/user-profile/${access.provider_history.provider_id}`)}
+                    >
+                      <LaunchIcon fontSize="small" />
+                    </IconButton>
+                  </TableCell>
+                )}
+                <TableCell align={'left'}>
+                  {access.care_site?.care_site_source_value} - {access.care_site?.care_site_name}
+                </TableCell>
+                <TableCell align="center">
+                  <div className={classes.roleColumn}>
+                    {access?.role?.name}
+                    {roles && (
+                      <Tooltip
+                        classes={{ tooltip: classes.tooltip }}
+                        // @ts-ignore
+                        title={roles
+                          .find((role: Role) => role.role_id === access.role_id)
+                          ?.help_text.map((text, index: number) => (
+                            <Typography key={index}>- {text}</Typography>
+                          ))}
                       >
-                        <LaunchIcon fontSize="small" />
-                      </IconButton>
-                    </TableCell>
-                  )}
-                  <TableCell align={'left'}>
-                    {access.care_site?.care_site_source_value} - {access.care_site?.care_site_name}
-                  </TableCell>
+                        <InfoIcon color="action" fontSize="small" className={classes.infoIcon} />
+                      </Tooltip>
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell align="center">
+                  {access.actual_start_datetime ? moment(access.actual_start_datetime).format('DD/MM/YYYY') : '-'}
+                </TableCell>
+                <TableCell align="center">
+                  {access.actual_end_datetime ? moment(access.actual_end_datetime).format('DD/MM/YYYY') : '-'}
+                </TableCell>
+                <TableCell align="center">
+                  <Tooltip title={access.is_valid ? 'Accès actif' : 'Accès inactif'}>
+                    {access.is_valid ? (
+                      <CheckCircleIcon style={{ color: '#BDEA88' }} />
+                    ) : (
+                      <CancelIcon style={{ color: '#ED6D91' }} />
+                    )}
+                  </Tooltip>
+                </TableCell>
+                {(manageAccessesUserRights || userRights.right_read_logs) && (
                   <TableCell align="center">
-                    <div className={classes.roleColumn}>
-                      {access?.role?.name}
-                      {roles && (
-                        <Tooltip
-                          classes={{ tooltip: classes.tooltip }}
-                          // @ts-ignore
-                          title={roles
-                            .find((role: Role) => role.role_id === access.role_id)
-                            ?.help_text.map((text, index: number) => (
-                              <Typography key={index}>- {text}</Typography>
-                            ))}
-                        >
-                          <InfoIcon color="action" fontSize="small" className={classes.infoIcon} />
-                        </Tooltip>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell align="center">
-                    {access.actual_start_datetime ? moment(access.actual_start_datetime).format('DD/MM/YYYY') : '-'}
-                  </TableCell>
-                  <TableCell align="center">
-                    {access.actual_end_datetime ? moment(access.actual_end_datetime).format('DD/MM/YYYY') : '-'}
-                  </TableCell>
-                  <TableCell align="center">
-                    <Tooltip title={access.is_valid ? 'Accès actif' : 'Accès inactif'}>
-                      {access.is_valid ? (
-                        <CheckCircleIcon style={{ color: '#BDEA88' }} />
-                      ) : (
-                        <CancelIcon style={{ color: '#ED6D91' }} />
-                      )}
-                    </Tooltip>
-                  </TableCell>
-                  {(manageAccessesUserRights || userRights.right_read_logs) && (
-                    <TableCell align="center">
-                      <Grid container item alignContent="center" justify="space-between" wrap="nowrap">
-                        {manageAccessesUserRights && (
-                          <>
-                            <Grid item xs={userRights.right_read_logs ? 4 : 6}>
-                              {(access.actual_start_datetime || access.actual_end_datetime) && (
-                                <Tooltip title="Éditer l'accès">
+                    <Grid container item alignContent="center" justify="space-between" wrap="nowrap">
+                      {manageAccessesUserRights && (
+                        <>
+                          <Grid item xs={userRights.right_read_logs ? 4 : 6}>
+                            {(access.actual_start_datetime || access.actual_end_datetime) && (
+                              <Tooltip title="Éditer l'accès">
+                                <IconButton
+                                  onClick={() => {
+                                    setSelectedAccess(access)
+                                  }}
+                                  style={{ padding: '4px 12px' }}
+                                >
+                                  <EditIcon />
+                                </IconButton>
+                              </Tooltip>
+                            )}
+                          </Grid>
+                          <Grid item xs={userRights.right_read_logs ? 4 : 6}>
+                            {access.actual_start_datetime &&
+                              moment(access.actual_start_datetime).isSameOrBefore(moment(), 'day') &&
+                              access.is_valid && (
+                                <Tooltip title="Clôturer l'accès">
                                   <IconButton
                                     onClick={() => {
-                                      setSelectedAccess(access)
+                                      setDeleteAccess(access)
+                                      setTerminateAccess(true)
                                     }}
                                     style={{ padding: '4px 12px' }}
                                   >
-                                    <EditIcon />
+                                    <TimerOffIcon />
                                   </IconButton>
                                 </Tooltip>
                               )}
-                            </Grid>
-                            <Grid item xs={userRights.right_read_logs ? 4 : 6}>
-                              {access.actual_start_datetime &&
-                                moment(access.actual_start_datetime).isSameOrBefore(moment(), 'day') &&
-                                access.is_valid && (
-                                  <Tooltip title="Clôturer l'accès">
-                                    <IconButton
-                                      onClick={() => {
-                                        setDeleteAccess(access)
-                                        setTerminateAccess(true)
-                                      }}
-                                      style={{ padding: '4px 12px' }}
-                                    >
-                                      <TimerOffIcon />
-                                    </IconButton>
-                                  </Tooltip>
-                                )}
-                              {access.actual_start_datetime &&
-                                moment(access.actual_start_datetime).isAfter(moment(), 'day') && (
-                                  <Tooltip title="Supprimer l'accès">
-                                    <IconButton
-                                      onClick={() => {
-                                        setDeleteAccess(access)
-                                        setTerminateAccess(false)
-                                      }}
-                                      style={{ padding: '4px 12px' }}
-                                    >
-                                      <DeleteIcon />
-                                    </IconButton>
-                                  </Tooltip>
-                                )}
-                            </Grid>
-                          </>
-                        )}
-                        {userRights.right_read_logs && (
-                          <Grid item xs={4}>
-                            <Tooltip title="Voir les logs de l'accès">
-                              <IconButton
-                                onClick={() => {
-                                  history.push({
-                                    pathname: '/console-admin/logs',
-                                    search: `?access=${access.care_site_history_id}`
-                                  })
-                                }}
-                                style={{ padding: '4px 12px' }}
-                              >
-                                <AssignmentIcon />
-                              </IconButton>
-                            </Tooltip>
+                            {access.actual_start_datetime &&
+                              moment(access.actual_start_datetime).isAfter(moment(), 'day') && (
+                                <Tooltip title="Supprimer l'accès">
+                                  <IconButton
+                                    onClick={() => {
+                                      setDeleteAccess(access)
+                                      setTerminateAccess(false)
+                                    }}
+                                    style={{ padding: '4px 12px' }}
+                                  >
+                                    <DeleteIcon />
+                                  </IconButton>
+                                </Tooltip>
+                              )}
                           </Grid>
-                        )}
-                      </Grid>
-                    </TableCell>
-                  )}
-                </TableRow>
-              )
-            })
-          ) : (
-            <TableRow>
-              <TableCell colSpan={7}>
-                <Typography className={classes.loadingSpinnerContainer}>Aucun résultat à afficher</Typography>
-              </TableCell>
-            </TableRow>
-          )
-        }
-      />
+                        </>
+                      )}
+                      {userRights.right_read_logs && (
+                        <Grid item xs={4}>
+                          <Tooltip title="Voir les logs de l'accès">
+                            <IconButton
+                              onClick={() => {
+                                history.push({
+                                  pathname: '/console-admin/logs',
+                                  search: `?access=${access.care_site_history_id}`
+                                })
+                              }}
+                              style={{ padding: '4px 12px' }}
+                            >
+                              <AssignmentIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Grid>
+                      )}
+                    </Grid>
+                  </TableCell>
+                )}
+              </TableRow>
+            )
+          })
+        ) : (
+          <TableRow>
+            <TableCell colSpan={7}>
+              <Typography className={classes.loadingSpinnerContainer}>Aucun résultat à afficher</Typography>
+            </TableCell>
+          </TableRow>
+        )}
+      </DataTable>
 
       {selectedAccess && (
         <AccessForm

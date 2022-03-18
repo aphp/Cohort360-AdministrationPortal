@@ -9,13 +9,8 @@ import {
   Grid,
   IconButton,
   Snackbar,
-  Table,
-  TableBody,
   TableCell,
-  TableContainer,
-  TableHead,
   TableRow,
-  Paper,
   Tooltip
   // Typography,
 } from '@material-ui/core'
@@ -26,13 +21,14 @@ import AddIcon from '@material-ui/icons/Add'
 import VisibilityIcon from '@material-ui/icons/Visibility'
 
 import useStyles from './styles'
-import { Role, UserRole } from 'types'
+import { Column, Order, Role, UserRole } from 'types'
 import {
   getRoles
   //  deleteRole
 } from 'services/Console-Admin/rolesService'
 import RoleDialog from '../RoleDialog/RoleDialog'
 import { userDefaultRoles } from 'utils/userRoles'
+import DataTable from 'components/DataTable/DataTable'
 
 const defaultRole: Role = {
   name: '',
@@ -46,7 +42,16 @@ type RolesTableProps = {
 const RolesTable: React.FC<RolesTableProps> = ({ userRights }) => {
   const classes = useStyles()
 
-  const columns = ['Habilitation', 'Actions']
+  const columns: Column[] = [
+    {
+      label: 'Habilitation',
+      align: 'left'
+    },
+    {
+      label: 'Actions',
+      align: 'right'
+    }
+  ]
 
   const [_roles, setRoles] = useState<Role[] | null>(null)
   const [loading, setLoading] = useState(false)
@@ -119,67 +124,50 @@ const RolesTable: React.FC<RolesTableProps> = ({ userRights }) => {
           </Button>
         </Grid>
       )}
-      <TableContainer component={Paper} style={{ marginBottom: 50 }}>
-        <Table className={classes.table}>
-          <TableHead>
-            <TableRow className={classes.tableHead}>
-              {columns.map((column, index: number) => (
-                <TableCell
-                  key={index}
-                  align={column === 'Habilitation' ? 'left' : 'right'}
-                  className={classes.tableHeadCell}
-                >
-                  {column}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={7}>
-                  <div className={classes.loadingSpinnerContainer}>
-                    <CircularProgress size={50} />
-                  </div>
-                </TableCell>
-              </TableRow>
-            ) : (
-              _roles &&
-              _roles.map((role: Role) => {
-                return (
-                  role && (
-                    <TableRow key={role.role_id} className={classes.tableBodyRows} hover>
-                      <TableCell align="left">{role.name}</TableCell>
-                      <TableCell align="right">
-                        <Tooltip title="Visualiser l'habilitation">
-                          <IconButton
-                            onClick={(event) => {
-                              event.stopPropagation()
-                              setSelectedRole(role)
-                            }}
-                            style={{ padding: '0 12px' }}
-                          >
-                            <VisibilityIcon />
-                          </IconButton>
-                        </Tooltip>
-                        {/* <Tooltip title="Supprimer l'habilitation">
-                          <IconButton
-                            onClick={() => {
-                              setDeleteRole(role)
-                            }}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </Tooltip> */}
-                      </TableCell>
-                    </TableRow>
-                  )
-                )
-              })
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <DataTable columns={columns} order={{} as Order}>
+        {loading ? (
+          <TableRow>
+            <TableCell colSpan={7}>
+              <div className={classes.loadingSpinnerContainer}>
+                <CircularProgress size={50} />
+              </div>
+            </TableCell>
+          </TableRow>
+        ) : (
+          _roles &&
+          _roles.map((role: Role) => {
+            return (
+              role && (
+                <TableRow key={role.role_id} className={classes.tableBodyRows} hover>
+                  <TableCell align="left">{role.name}</TableCell>
+                  <TableCell align="right">
+                    <Tooltip title="Visualiser l'habilitation">
+                      <IconButton
+                        onClick={(event) => {
+                          event.stopPropagation()
+                          setSelectedRole(role)
+                        }}
+                        style={{ padding: '0 12px' }}
+                      >
+                        <VisibilityIcon />
+                      </IconButton>
+                    </Tooltip>
+                    {/* <Tooltip title="Supprimer l'habilitation">
+                      <IconButton
+                        onClick={() => {
+                          setDeleteRole(role)
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip> */}
+                  </TableCell>
+                </TableRow>
+              )
+            )
+          })
+        )}
+      </DataTable>
 
       {selectedRole && (
         <RoleDialog

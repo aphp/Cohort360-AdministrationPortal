@@ -146,89 +146,88 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
         setPage={setPage}
         rowsPerPage={100}
         total={total}
-        tableRows={
-          loading ? (
-            <TableRow>
-              <TableCell colSpan={7}>
-                <div className={classes.loadingSpinnerContainer}>
-                  <CircularProgress size={50} />
-                </div>
-              </TableCell>
-            </TableRow>
-          ) : !providersList || providersList?.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={7}>
-                <Typography className={classes.loadingSpinnerContainer}>Aucun résultat à afficher</Typography>
-              </TableCell>
-            </TableRow>
-          ) : (
-            providersList.map((provider: Provider) => {
-              return (
-                provider && (
-                  <TableRow
-                    key={provider.provider_id}
-                    className={classes.tableBodyRows}
-                    hover
-                    onClick={() => {
-                      if (readAccessesUserRights) {
-                        history.push(`/console-admin/user-profile/${provider.provider_id}`)
-                      }
-                    }}
-                  >
-                    <TableCell align="center">{provider.provider_source_value}</TableCell>
-                    <TableCell align="center">{provider.lastname?.toLocaleUpperCase()}</TableCell>
-                    <TableCell align="center">{provider.firstname}</TableCell>
-                    <TableCell align="center">{provider.email ?? '-'}</TableCell>
-                    {actionsUserRights && (
-                      <TableCell align="center">
-                        {readAccessesUserRights && (
-                          <Tooltip title="Visualiser les accès de l'utilisateur" style={{ padding: '0 12px' }}>
-                            <IconButton
-                              onClick={(event) => {
-                                event.stopPropagation()
-                                history.push(`/console-admin/user-profile/${provider.provider_id}`)
-                              }}
-                            >
-                              <VisibilityIcon />
-                            </IconButton>
-                          </Tooltip>
-                        )}
-                        {userRights.right_edit_users && (
-                          <Tooltip title="Éditer l'utilisateur" style={{ padding: '0 12px' }}>
-                            <IconButton
-                              onClick={(event) => {
-                                event.stopPropagation()
-                                dispatch(setSelectedProvider(provider))
-                              }}
-                            >
-                              <EditIcon />
-                            </IconButton>
-                          </Tooltip>
-                        )}
-                        {userRights.right_read_logs && (
-                          <Tooltip title="Voir les logs de l'utilisateur" style={{ padding: '0 12px' }}>
-                            <IconButton
-                              onClick={(event) => {
-                                event.stopPropagation()
-                                history.push({
-                                  pathname: '/console-admin/logs',
-                                  search: `?user=${provider.provider_source_value}`
-                                })
-                              }}
-                            >
-                              <AssignmentIcon />
-                            </IconButton>
-                          </Tooltip>
-                        )}
-                      </TableCell>
-                    )}
-                  </TableRow>
-                )
+      >
+        {loading ? (
+          <TableRow>
+            <TableCell colSpan={7}>
+              <div className={classes.loadingSpinnerContainer}>
+                <CircularProgress size={50} />
+              </div>
+            </TableCell>
+          </TableRow>
+        ) : !providersList || providersList?.length === 0 ? (
+          <TableRow>
+            <TableCell colSpan={7}>
+              <Typography className={classes.loadingSpinnerContainer}>Aucun résultat à afficher</Typography>
+            </TableCell>
+          </TableRow>
+        ) : (
+          providersList.map((provider: Provider) => {
+            return (
+              provider && (
+                <TableRow
+                  key={provider.provider_id}
+                  className={classes.tableBodyRows}
+                  hover
+                  onClick={() => {
+                    if (readAccessesUserRights) {
+                      history.push(`/console-admin/user-profile/${provider.provider_id}`)
+                    }
+                  }}
+                >
+                  <TableCell align="center">{provider.provider_source_value}</TableCell>
+                  <TableCell align="center">{provider.lastname?.toLocaleUpperCase()}</TableCell>
+                  <TableCell align="center">{provider.firstname}</TableCell>
+                  <TableCell align="center">{provider.email ?? '-'}</TableCell>
+                  {actionsUserRights && (
+                    <TableCell align="center">
+                      {readAccessesUserRights && (
+                        <Tooltip title="Visualiser les accès de l'utilisateur" style={{ padding: '0 12px' }}>
+                          <IconButton
+                            onClick={(event) => {
+                              event.stopPropagation()
+                              history.push(`/console-admin/user-profile/${provider.provider_id}`)
+                            }}
+                          >
+                            <VisibilityIcon />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                      {userRights.right_edit_users && (
+                        <Tooltip title="Éditer l'utilisateur" style={{ padding: '0 12px' }}>
+                          <IconButton
+                            onClick={(event) => {
+                              event.stopPropagation()
+                              dispatch(setSelectedProvider(provider))
+                            }}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                      {userRights.right_read_logs && (
+                        <Tooltip title="Voir les logs de l'utilisateur" style={{ padding: '0 12px' }}>
+                          <IconButton
+                            onClick={(event) => {
+                              event.stopPropagation()
+                              history.push({
+                                pathname: '/console-admin/logs',
+                                search: `?user=${provider.provider_source_value}`
+                              })
+                            }}
+                          >
+                            <AssignmentIcon />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                    </TableCell>
+                  )}
+                </TableRow>
               )
-            })
-          )
-        }
-      />
+            )
+          })
+        )}
+      </DataTable>
 
       {selectedProvider !== null && (
         <ProviderForm

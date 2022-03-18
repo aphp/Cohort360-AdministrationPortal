@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactNode } from 'react'
 
 import {
   Grid,
@@ -19,12 +19,12 @@ import { Column, Order } from 'types'
 type DataTableProps = {
   columns: Column[]
   order: Order
-  setOrder: (order: Order) => void
-  page: number
-  setPage: (page: number) => void
-  rowsPerPage: number
-  total: number
-  tableRows: any
+  setOrder?: (order: Order) => void
+  page?: number
+  setPage?: (page: number) => void
+  rowsPerPage?: number
+  total?: number
+  children: ReactNode
 }
 
 const DataTable: React.FC<DataTableProps> = ({
@@ -35,18 +35,20 @@ const DataTable: React.FC<DataTableProps> = ({
   setPage,
   rowsPerPage,
   total,
-  tableRows
+  ...props
 }) => {
   const classes = useStyles()
 
   const createSortHandler = (property: any) => () => {
-    const isAsc: boolean = order.orderBy === property && order.orderDirection === 'asc'
-    const _orderDirection = isAsc ? 'desc' : 'asc'
+    if (setOrder) {
+      const isAsc: boolean = order.orderBy === property && order.orderDirection === 'asc'
+      const _orderDirection = isAsc ? 'desc' : 'asc'
 
-    setOrder({
-      orderBy: property,
-      orderDirection: _orderDirection
-    })
+      setOrder({
+        orderBy: property,
+        orderDirection: _orderDirection
+      })
+    }
   }
 
   return (
@@ -77,16 +79,18 @@ const DataTable: React.FC<DataTableProps> = ({
               ))}
             </TableRow>
           </TableHead>
-          <TableBody>{tableRows}</TableBody>
+          <TableBody>{props.children}</TableBody>
         </Table>
       </TableContainer>
-      <Pagination
-        className={classes.pagination}
-        count={Math.ceil(total / rowsPerPage)}
-        shape="rounded"
-        onChange={(event, page: number) => setPage(page)}
-        page={page}
-      />
+      {page !== undefined && (
+        <Pagination
+          className={classes.pagination}
+          count={Math.ceil((total ?? 0) / (rowsPerPage ?? 100))}
+          shape="rounded"
+          onChange={(event, page: number) => setPage && setPage(page)}
+          page={page}
+        />
+      )}
     </Grid>
   )
 }

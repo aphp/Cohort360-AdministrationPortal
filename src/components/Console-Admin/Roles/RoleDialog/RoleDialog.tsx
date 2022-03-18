@@ -8,13 +8,8 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
-  Paper,
   Switch,
-  Table,
-  TableBody,
-  TableContainer,
   TableCell,
-  TableHead,
   TableRow,
   TextField,
   Typography
@@ -26,7 +21,8 @@ import EditIcon from '@material-ui/icons/Edit'
 
 import useStyles from './styles'
 import { createRoles, submitEditRoles } from 'services/Console-Admin/rolesService'
-import { Role, RoleKeys, UserRole } from 'types'
+import { Column, Order, Role, RoleKeys, UserRole } from 'types'
+import DataTable from 'components/DataTable/DataTable'
 
 type RoleDialogProps = {
   open: boolean
@@ -58,7 +54,16 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
 
   const isEditable = selectedRole?.role_id ? true : false
 
-  const columns = ['Droit', 'Statut']
+  const columns: Column[] = [
+    {
+      label: 'Droit',
+      align: 'left'
+    },
+    {
+      label: 'Statut',
+      align: 'right'
+    }
+  ]
 
   const rows = [
     {
@@ -319,47 +324,29 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
         ) : (
           ''
         )}
-        <TableContainer component={Paper}>
-          <Table className={classes.table}>
-            <TableHead>
-              <TableRow className={classes.tableHead}>
-                {columns.map((column, index) => (
-                  <TableCell
-                    key={index}
-                    align={column === 'Droit' ? 'left' : 'right'}
-                    className={classes.tableHeadCell}
-                  >
-                    {column}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {rows.map((row, index) => (
-                <TableRow key={index} className={classes.tableBodyRows}>
-                  <TableCell className={classes.tableBodyCell}>{row.label}</TableCell>
-                  <TableCell align="right" className={classes.tableBodyCell}>
-                    {(isEditable && editMode) || !isEditable ? (
-                      <Switch
-                        color="primary"
-                        checked={row.status ? true : false}
-                        onChange={(event) =>
-                          // @ts-ignore
-                          _onChangeValue(row.keyName, event.target.checked)
-                        }
-                      />
-                    ) : row.status ? (
-                      <CheckCircleIcon style={{ color: '#BDEA88' }} />
-                    ) : (
-                      <CancelIcon style={{ color: '#ED6D91' }} />
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        <DataTable columns={columns} order={{} as Order}>
+          {rows.map((row, index) => (
+            <TableRow key={index} className={classes.tableBodyRows}>
+              <TableCell className={classes.tableBodyCell}>{row.label}</TableCell>
+              <TableCell align="right" className={classes.tableBodyCell}>
+                {(isEditable && editMode) || !isEditable ? (
+                  <Switch
+                    color="primary"
+                    checked={row.status ? true : false}
+                    onChange={(event) =>
+                      // @ts-ignore
+                      _onChangeValue(row.keyName, event.target.checked)
+                    }
+                  />
+                ) : row.status ? (
+                  <CheckCircleIcon style={{ color: '#BDEA88' }} />
+                ) : (
+                  <CancelIcon style={{ color: '#ED6D91' }} />
+                )}
+              </TableCell>
+            </TableRow>
+          ))}
+        </DataTable>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary">
