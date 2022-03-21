@@ -20,7 +20,7 @@ import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date'
 
 import EditIcon from '@material-ui/icons/Edit'
 
-import CareSitesDialog from '../../Rights/AccessForm/components/CareSitesDialog/CareSitesDialog'
+import CareSitesDialog from '../../Accesses/AccessForm/components/CareSitesDialog/CareSitesDialog'
 
 import useStyles from './styles'
 import { LogsFiltersObject, ScopeTreeRow, UserRole } from 'types'

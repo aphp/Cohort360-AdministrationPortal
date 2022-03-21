@@ -219,7 +219,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
           </Grid>
         ) : error ? (
           <Typography>
-            Erreur lors de l'édition du profil. Veuillez réessayer ultérieurement ou vérifier vos droits.
+            Erreur lors de l'édition de l'utilisateur. Veuillez réessayer ultérieurement ou vérifier vos droits.
           </Typography>
         ) : (
           <>

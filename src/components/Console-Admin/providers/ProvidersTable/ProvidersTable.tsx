@@ -7,20 +7,13 @@ import {
   CircularProgress,
   Grid,
   IconButton,
-  Table,
-  TableBody,
   TableCell,
-  TableContainer,
-  TableHead,
   TableRow,
-  TableSortLabel,
   Typography,
-  Paper,
   Tooltip,
   Snackbar
 } from '@material-ui/core'
 import Alert from '@material-ui/lab/Alert'
-import Pagination from '@material-ui/lab/Pagination'
 
 import AssignmentIcon from '@material-ui/icons/Assignment'
 import EditIcon from '@material-ui/icons/Edit'
@@ -31,10 +24,11 @@ import ProviderForm from '../ProviderForm/ProviderForm'
 import SearchBar from '../../../SearchBar/SearchBar'
 
 import useStyles from './styles'
-import { Order, Provider, UserRole } from 'types'
+import { Column, Order, Provider, UserRole } from 'types'
 import { useAppSelector } from 'state'
 import { fetchProviders, setSelectedProvider } from 'state/providers'
 import useDebounce from 'components/Console-Admin/CareSite/use-debounce'
+import DataTable from 'components/DataTable/DataTable'
 
 type ProvidersTableProps = {
   userRights: UserRole
@@ -49,52 +43,42 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
   const {
     providers: { loading, providersList, total, selectedProvider }
   } = useAppSelector((state) => ({ providers: state.providers }))
-  const columns =
-    !userRights.right_read_admin_accesses_same_level &&
-    !userRights.right_read_admin_accesses_inferior_levels &&
-    !userRights.right_read_data_accesses_same_level &&
-    !userRights.right_read_data_accesses_inferior_levels &&
-    !userRights.right_edit_users &&
-    !userRights.right_read_logs
-      ? [
-          {
-            label: 'Identifiant APH',
-            code: 'provider_source_value'
-          },
-          {
-            label: 'Nom',
-            code: 'lastname'
-          },
-          {
-            label: 'Prénom',
-            code: 'firstname'
-          },
-          {
-            label: 'Email',
-            code: 'email'
-          }
-        ]
-      : [
-          {
-            label: 'Identifiant APH',
-            code: 'provider_source_value'
-          },
-          {
-            label: 'Nom',
-            code: 'lastname'
-          },
-          {
-            label: 'Prénom',
-            code: 'firstname'
-          },
-          {
-            label: 'Email',
-            code: 'email'
-          },
-          {
-            label: 'Actions'
-          }
-        ]
+  const columns: Column[] = [
+    {
+      label: 'Identifiant APH',
+      code: 'provider_source_value',
+      align: 'center',
+      sortableColumn: true
+    },
+    {
+      label: 'Nom',
+      code: 'lastname',
+      align: 'center',
+      sortableColumn: true
+    },
+    {
+      label: 'Prénom',
+      code: 'firstname',
+      align: 'center',
+      sortableColumn: true
+    },
+    {
+      label: 'Email',
+      code: 'email',
+      align: 'center',
+      sortableColumn: true
+    }
+  ]
+
+  const readAccessesUserRights =
+    userRights.right_read_admin_accesses_same_level ||
+    userRights.right_read_admin_accesses_inferior_levels ||
+    userRights.right_read_data_accesses_same_level ||
+    userRights.right_read_data_accesses_inferior_levels
+
+  const actionsUserRights = readAccessesUserRights || userRights.right_edit_users || userRights.right_read_logs
+
+  const _columns = actionsUserRights ? [...columns, { label: 'Actions', align: 'center' } as Column] : [...columns]
 
   const [page, setPage] = useState(1)
   const [order, setOrder] = useState(orderDefault)
@@ -106,15 +90,13 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
   const [editProviderFail, setEditProviderFail] = useState(false)
 
   const debouncedSearchTerm = useDebounce(500, searchInput)
-  const readAccessesUserRights =
-    userRights.right_read_admin_accesses_same_level ||
-    userRights.right_read_admin_accesses_inferior_levels ||
-    userRights.right_read_data_accesses_same_level ||
-    userRights.right_read_data_accesses_inferior_levels
 
   useEffect(() => {
-    setPage(1)
-    getData()
+    if (page !== 1) {
+      setPage(1)
+    } else {
+      getData()
+    }
   }, [debouncedSearchTerm])
 
   useEffect(() => {
@@ -133,16 +115,6 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
     } catch (error) {
       console.error('Erreur lors de la récupération des providers', error)
     }
-  }
-
-  const createSortHandler = (property: any) => () => {
-    const isAsc: boolean = order.orderBy === property && order.orderDirection === 'asc'
-    const _orderDirection = isAsc ? 'desc' : 'asc'
-
-    setOrder({
-      orderBy: property,
-      orderDirection: _orderDirection
-    })
   }
 
   return (
@@ -168,123 +140,97 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
           <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
         </Grid>
       </Grid>
-      <TableContainer component={Paper}>
-        <Table className={classes.table}>
-          <TableHead>
-            <TableRow className={classes.tableHead}>
-              {columns.map((column, index: number) => (
-                <TableCell
-                  key={index}
-                  sortDirection={order.orderBy === column.code ? order.orderDirection : false}
-                  align="center"
-                  className={classes.tableHeadCell}
-                >
-                  {column.label !== 'Actions' ? (
-                    <TableSortLabel
-                      active={order.orderBy === column.code}
-                      direction={order.orderBy === column.code ? order.orderDirection : 'asc'}
-                      onClick={createSortHandler(column.code)}
-                    >
-                      {column.label}
-                    </TableSortLabel>
-                  ) : (
-                    column.label
-                  )}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={7}>
-                  <div className={classes.loadingSpinnerContainer}>
-                    <CircularProgress size={50} />
-                  </div>
-                </TableCell>
-              </TableRow>
-            ) : !providersList || providersList?.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={7}>
-                  <Typography className={classes.loadingSpinnerContainer}>Aucun résultat à afficher</Typography>
-                </TableCell>
-              </TableRow>
-            ) : (
-              providersList.map((provider: Provider) => {
-                return (
-                  provider && (
-                    <TableRow
-                      key={provider.provider_id}
-                      className={classes.tableBodyRows}
-                      hover
-                      onClick={() => {
-                        if (readAccessesUserRights) {
-                          history.push(`/console-admin/user-profile/${provider.provider_id}`)
-                        }
-                      }}
-                    >
-                      <TableCell align="center">{provider.provider_source_value}</TableCell>
-                      <TableCell align="center">{provider.lastname?.toLocaleUpperCase()}</TableCell>
-                      <TableCell align="center">{provider.firstname}</TableCell>
-                      <TableCell align="center">{provider.email ?? '-'}</TableCell>
-                      {(readAccessesUserRights || userRights.right_edit_users || userRights.right_read_logs) && (
-                        <TableCell align="center">
-                          {readAccessesUserRights && (
-                            <Tooltip title="Visualiser les accès de l'utilisateur" style={{ padding: '0 12px' }}>
-                              <IconButton
-                                onClick={(event) => {
-                                  event.stopPropagation()
-                                  history.push(`/console-admin/user-profile/${provider.provider_id}`)
-                                }}
-                              >
-                                <VisibilityIcon />
-                              </IconButton>
-                            </Tooltip>
-                          )}
-                          {userRights.right_edit_users && (
-                            <Tooltip title="Éditer l'utilisateur" style={{ padding: '0 12px' }}>
-                              <IconButton
-                                onClick={(event) => {
-                                  event.stopPropagation()
-                                  dispatch(setSelectedProvider(provider))
-                                }}
-                              >
-                                <EditIcon />
-                              </IconButton>
-                            </Tooltip>
-                          )}
-                          {userRights.right_read_logs && (
-                            <Tooltip title="Voir les logs de l'utilisateur" style={{ padding: '0 12px' }}>
-                              <IconButton
-                                onClick={(event) => {
-                                  event.stopPropagation()
-                                  history.push({
-                                    pathname: '/console-admin/logs',
-                                    search: `?user=${provider.provider_source_value}`
-                                  })
-                                }}
-                              >
-                                <AssignmentIcon />
-                              </IconButton>
-                            </Tooltip>
-                          )}
-                        </TableCell>
-                      )}
-                    </TableRow>
-                  )
-                )
-              })
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Pagination
-        className={classes.pagination}
-        count={Math.ceil(total / 100)}
-        shape="rounded"
-        onChange={(event, page: number) => setPage(page)}
+
+      <DataTable
+        columns={_columns}
+        order={order}
+        setOrder={setOrder}
         page={page}
-      />
+        setPage={setPage}
+        rowsPerPage={100}
+        total={total}
+      >
+        {loading ? (
+          <TableRow>
+            <TableCell colSpan={7}>
+              <div className={classes.loadingSpinnerContainer}>
+                <CircularProgress size={50} />
+              </div>
+            </TableCell>
+          </TableRow>
+        ) : !providersList || providersList?.length === 0 ? (
+          <TableRow>
+            <TableCell colSpan={7}>
+              <Typography className={classes.loadingSpinnerContainer}>Aucun résultat à afficher</Typography>
+            </TableCell>
+          </TableRow>
+        ) : (
+          providersList.map((provider: Provider) => {
+            return (
+              provider && (
+                <TableRow
+                  key={provider.provider_id}
+                  className={classes.tableBodyRows}
+                  hover
+                  onClick={() => {
+                    if (readAccessesUserRights) {
+                      history.push(`/console-admin/user-profile/${provider.provider_id}`)
+                    }
+                  }}
+                >
+                  <TableCell align="center">{provider.provider_source_value}</TableCell>
+                  <TableCell align="center">{provider.lastname?.toLocaleUpperCase()}</TableCell>
+                  <TableCell align="center">{provider.firstname}</TableCell>
+                  <TableCell align="center">{provider.email ?? '-'}</TableCell>
+                  {actionsUserRights && (
+                    <TableCell align="center">
+                      {readAccessesUserRights && (
+                        <Tooltip title="Visualiser les accès de l'utilisateur" style={{ padding: '0 12px' }}>
+                          <IconButton
+                            onClick={(event) => {
+                              event.stopPropagation()
+                              history.push(`/console-admin/user-profile/${provider.provider_id}`)
+                            }}
+                          >
+                            <VisibilityIcon />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                      {userRights.right_edit_users && (
+                        <Tooltip title="Éditer l'utilisateur" style={{ padding: '0 12px' }}>
+                          <IconButton
+                            onClick={(event) => {
+                              event.stopPropagation()
+                              dispatch(setSelectedProvider(provider))
+                            }}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                      {userRights.right_read_logs && (
+                        <Tooltip title="Voir les logs de l'utilisateur" style={{ padding: '0 12px' }}>
+                          <IconButton
+                            onClick={(event) => {
+                              event.stopPropagation()
+                              history.push({
+                                pathname: '/console-admin/logs',
+                                search: `?user=${provider.provider_source_value}`
+                              })
+                            }}
+                          >
+                            <AssignmentIcon />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                    </TableCell>
+                  )}
+                </TableRow>
+              )
+            )
+          })
+        )}
+      </DataTable>
 
       {selectedProvider !== null && (
         <ProviderForm

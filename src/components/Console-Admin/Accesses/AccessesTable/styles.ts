@@ -2,24 +2,26 @@ import { makeStyles, createStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() =>
   createStyles({
-    searchButton: {
-      backgroundColor: '#5BC5F2',
-      color: '#FFF',
-      borderRadius: 25,
-      height: 50
+    tableBodyRows: {
+      '&:nth-of-type(even)': {
+        backgroundColor: '#FAF9F9'
+      }
     },
     loadingSpinnerContainer: {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center'
     },
-    tableBodyRows: {
-      '&:nth-of-type(even)': {
-        backgroundColor: '#FAF9F9'
-      },
-      '&:hover': {
-        cursor: 'pointer'
-      }
+    roleColumn: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    infoIcon: {
+      margin: '0 8px'
+    },
+    tooltip: {
+      maxWidth: 500
     }
   })
 )

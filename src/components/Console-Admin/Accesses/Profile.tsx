@@ -6,21 +6,21 @@ import { Alert } from '@material-ui/lab'
 import AddIcon from '@material-ui/icons/Add'
 
 import AccessForm from './AccessForm/AccessForm'
-import RightsTable from './RightsTable/RightsTable'
+import AccessesTable from './AccessesTable/AccessesTable'
 import { getAccesses } from 'services/Console-Admin/providersHistoryService'
 import { Access, Order, Profile, Role, UserRole } from 'types'
 
 import useStyles from './styles'
 
-type RightsProps = {
-  right: Profile
+type ProfileComponentProps = {
+  profile: Profile
   userRights: UserRole
   roles?: Role[]
 }
 
 const orderDefault = { orderBy: 'is_valid', orderDirection: 'asc' } as Order
 
-const Rights: React.FC<RightsProps> = ({ right, userRights, roles }) => {
+const ProfileComponent: React.FC<ProfileComponentProps> = ({ profile, userRights, roles }) => {
   const classes = useStyles()
 
   const [open, setOpen] = useState(false)
@@ -46,10 +46,10 @@ const Rights: React.FC<RightsProps> = ({ right, userRights, roles }) => {
     try {
       setLoading(true)
 
-      const rightsResp = await getAccesses(right.provider_history_id, page, order)
+      const accessesResp = await getAccesses(profile.provider_history_id, page, order)
 
-      setAccesses(rightsResp?.accesses)
-      setTotal(rightsResp?.total)
+      setAccesses(accessesResp?.accesses)
+      setTotal(accessesResp?.total)
       setLoading(false)
     } catch (error) {
       console.error('Erreur lors de la récupération des accès', error)
@@ -70,9 +70,9 @@ const Rights: React.FC<RightsProps> = ({ right, userRights, roles }) => {
     <Grid container justify="flex-end">
       <Grid container justify="space-between" alignItems="center">
         <Typography align="left" variant="h2" className={classes.title}>
-          Type de droit : {right.cdm_source}
+          Type de profil : {profile.cdm_source}
         </Typography>
-        {right.cdm_source === 'MANUAL' && manageAccessesUserRights && (
+        {profile.cdm_source === 'MANUAL' && manageAccessesUserRights && (
           <Button
             variant="contained"
             disableElevation
@@ -85,7 +85,7 @@ const Rights: React.FC<RightsProps> = ({ right, userRights, roles }) => {
         )}
       </Grid>
 
-      <RightsTable
+      <AccessesTable
         displayName={false}
         loading={loading}
         page={page}
@@ -101,7 +101,7 @@ const Rights: React.FC<RightsProps> = ({ right, userRights, roles }) => {
       <AccessForm
         open={open}
         onClose={onClose}
-        entityId={right.provider_history_id}
+        entityId={profile.provider_history_id}
         onSuccess={setAddAccessSuccess}
         onFail={setAddAccessFail}
         userRights={userRights}
@@ -114,7 +114,7 @@ const Rights: React.FC<RightsProps> = ({ right, userRights, roles }) => {
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
           <Alert severity="success" onClose={() => setAddAccessSuccess(false)}>
-            Le droit a bien été créé.
+            L'accès a bien été créé.
           </Alert>
         </Snackbar>
       )}
@@ -126,7 +126,7 @@ const Rights: React.FC<RightsProps> = ({ right, userRights, roles }) => {
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
           <Alert severity="error" onClose={() => setAddAccessFail(false)}>
-            Erreur lors de la création du droit.
+            Erreur lors de la création de l'accès.
           </Alert>
         </Snackbar>
       )}
@@ -134,4 +134,4 @@ const Rights: React.FC<RightsProps> = ({ right, userRights, roles }) => {
   )
 }
 
-export default Rights
+export default ProfileComponent

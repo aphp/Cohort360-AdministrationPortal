@@ -13,31 +13,6 @@ const useStyles = makeStyles(() => ({
       lineHeight: 2
     }
   },
-  infoIcon: {
-    height: 20,
-    margin: '0 5px -5px 0'
-  },
-  buttons: {
-    backgroundColor: '#5BC5F2',
-    color: '#FFF',
-    borderRadius: 25,
-    height: 50,
-    margin: '4px 0'
-  },
-  table: {
-    minWidth: 650
-  },
-  tableHead: {
-    height: 42,
-    backgroundColor: '#D1E2F4',
-    textTransform: 'uppercase'
-  },
-  tableHeadCell: {
-    fontSize: 11,
-    fontWeight: 'bold',
-    color: '#0063AF',
-    padding: '0 20px'
-  },
   tableBodyRows: {
     '&:nth-of-type(even)': {
       backgroundColor: '#FAF9F9'
@@ -45,6 +20,13 @@ const useStyles = makeStyles(() => ({
   },
   tableBodyCell: {
     padding: '0 16px'
+  },
+  buttons: {
+    backgroundColor: '#5BC5F2',
+    color: '#FFF',
+    borderRadius: 25,
+    height: 50,
+    margin: '4px 0'
   }
 }))
 

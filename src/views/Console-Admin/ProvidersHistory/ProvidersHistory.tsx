@@ -4,7 +4,7 @@ import Alert from '@material-ui/lab/Alert'
 import { useParams } from 'react-router'
 
 import { getProfile } from 'services/Console-Admin/providersHistoryService'
-import Rights from 'components/Console-Admin/Rights/Rights'
+import ProfileComponent from 'components/Console-Admin/Accesses/Profile'
 import useStyles from './styles'
 import { Profile, Provider, Role } from 'types'
 import { getProvider } from 'services/Console-Admin/providersService'
@@ -86,7 +86,7 @@ const ProviderHistory: React.FC = () => {
                 rights.length > 0 ? (
                   <>
                     {rights.map((userRight: Profile, index: number) => (
-                      <Rights key={index} right={userRight} userRights={userRights} roles={roles} />
+                      <ProfileComponent key={index} profile={userRight} userRights={userRights} roles={roles} />
                     ))}
                   </>
                 ) : (

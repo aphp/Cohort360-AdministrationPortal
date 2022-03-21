@@ -6,7 +6,7 @@ import Alert from '@material-ui/lab/Alert'
 
 import useStyles from './styles'
 import { getCareSite, getCareSiteAccesses } from 'services/Console-Admin/careSiteService'
-import RightsTable from 'components/Console-Admin/Rights/RightsTable/RightsTable'
+import AccessesTable from 'components/Console-Admin/Accesses/AccessesTable/AccessesTable'
 import SearchBar from 'components/SearchBar/SearchBar'
 import { Access, Order, Role } from 'types'
 import { getUserRights, userDefaultRoles } from 'utils/userRoles'
@@ -120,7 +120,7 @@ const CareSiteHistory: React.FC = () => {
                 <Grid container item justify="flex-end" alignItems="center" className={classes.searchBar}>
                   <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
                 </Grid>
-                <RightsTable
+                <AccessesTable
                   displayName={true}
                   loading={loadingData}
                   page={page}

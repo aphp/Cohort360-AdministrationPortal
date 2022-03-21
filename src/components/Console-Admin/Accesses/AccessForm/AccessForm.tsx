@@ -23,7 +23,7 @@ import EditIcon from '@material-ui/icons/Edit'
 
 import { getAssignableRoles } from 'services/Console-Admin/rolesService'
 import { submitCreateAccess, submitEditAccess } from 'services/Console-Admin/providersHistoryService'
-import CareSitesDialog from 'components/Console-Admin/Rights/AccessForm/components/CareSitesDialog/CareSitesDialog'
+import CareSitesDialog from 'components/Console-Admin/Accesses/AccessForm/components/CareSitesDialog/CareSitesDialog'
 import { Access, AccessData, ScopeTreeRow, UserRole } from 'types'
 
 import useStyles from './styles'
