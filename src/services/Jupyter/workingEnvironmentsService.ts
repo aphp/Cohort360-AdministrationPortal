@@ -1,9 +1,11 @@
+import { Order } from 'types'
 import api from '../api'
 
-export const getWorkingEnvironments = async () => {
+export const getWorkingEnvironments = async (order: Order, page: number) => {
   try {
-    // TODO: change url to workspaces/users
-    const workingEnvironmentsResp = await api.get('/workspaces/projects/')
+    const workingEnvironmentsResp = await api.get(
+      `/workspaces/users/?page=${page}&ordering=${order.orderDirection === 'desc' ? '-' : ''}${order.orderBy}`
+    )
 
     const workingEnvironments = workingEnvironmentsResp.data.results ?? []
 

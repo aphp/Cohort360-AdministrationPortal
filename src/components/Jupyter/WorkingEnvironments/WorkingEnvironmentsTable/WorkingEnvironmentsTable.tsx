@@ -1,33 +1,21 @@
 import React, { useEffect, useState } from 'react'
 
-import {
-  Button,
-  CircularProgress,
-  Grid,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-  Paper,
-  Snackbar,
-  Chip
-} from '@material-ui/core'
+import { Button, CircularProgress, Grid, TableCell, TableRow, Typography, Snackbar, Chip } from '@material-ui/core'
 import Alert from '@material-ui/lab/Alert'
-import Pagination from '@material-ui/lab/Pagination'
 
 import AddIcon from '@material-ui/icons/Add'
 
 import useStyles from './styles'
-import { UserRole, WorkingEnvironment } from 'types'
+import { Column, Order, UserRole, WorkingEnvironment } from 'types'
 import WorkingEnvironmentsForm from 'components/Jupyter/WorkingEnvironmentsForm/WorkingEnvironmentsForm'
 import { getWorkingEnvironments } from 'services/Jupyter/workingEnvironmentsService'
+import DataTable from 'components/DataTable/DataTable'
 
 type WorkingEnvironmentsTableProps = {
   userRights: UserRole
 }
+
+const orderDefault = { orderBy: 'username', orderDirection: 'asc' } as Order
 
 const WorkingEnvironmentsTable: React.FC<WorkingEnvironmentsTableProps> = ({ userRights }) => {
   const classes = useStyles()
@@ -37,22 +25,26 @@ const WorkingEnvironmentsTable: React.FC<WorkingEnvironmentsTableProps> = ({ use
   const [selectedWorkingEnvironment, setSelectedWorkingEnvironment] = useState<any>(null)
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
+  const [order, setOrder] = useState(orderDefault)
 
-  const columns = [
+  const columns: Column[] = [
     {
-      label: 'Numéro de demande'
+      label: "Nom de l'environnement",
+      align: 'center',
+      sortableColumn: true,
+      code: 'username'
     },
     {
-      label: 'Nom du demandeur'
+      label: "Date d'envoi",
+      align: 'center'
     },
     {
-      label: "Date d'envoi"
+      label: 'Créé par',
+      align: 'center'
     },
     {
-      label: 'Créé par'
-    },
-    {
-      label: 'Statut'
+      label: 'Statut',
+      align: 'center'
     }
   ]
 
@@ -64,7 +56,7 @@ const WorkingEnvironmentsTable: React.FC<WorkingEnvironmentsTableProps> = ({ use
       try {
         setLoading(true)
 
-        const workingEnvironmentsResp = await getWorkingEnvironments()
+        const workingEnvironmentsResp = await getWorkingEnvironments(order, page)
 
         setWorkingEnvironments(workingEnvironmentsResp?.workingEnvironments)
         setTotal(workingEnvironmentsResp?.total)
@@ -79,7 +71,7 @@ const WorkingEnvironmentsTable: React.FC<WorkingEnvironmentsTableProps> = ({ use
     }
 
     _getWorkingEnvironments()
-  }, [])
+  }, [page, order])
 
   return (
     <Grid container justify="flex-end">
@@ -94,43 +86,39 @@ const WorkingEnvironmentsTable: React.FC<WorkingEnvironmentsTableProps> = ({ use
           Nouvel environnement
         </Button>
       </Grid>
-      <TableContainer component={Paper}>
-        <Table className={classes.table}>
-          <TableHead>
-            <TableRow className={classes.tableHead}>
-              {columns.map((column, index: number) => (
-                <TableCell key={index} align="center" className={classes.tableHeadCell}>
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell colSpan={7}>
-                  <div className={classes.loadingSpinnerContainer}>
-                    <CircularProgress size={50} />
-                  </div>
-                </TableCell>
-              </TableRow>
-            ) : !workingEnvironments || workingEnvironments?.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={7}>
-                  <Typography className={classes.loadingSpinnerContainer}>Aucun résultat à afficher</Typography>
-                </TableCell>
-              </TableRow>
-            ) : (
-              workingEnvironments.map((workingEnvironment) => {
-                return (
-                  workingEnvironment && (
-                    <TableRow key={workingEnvironment.uid} className={classes.tableBodyRows} hover>
-                      <TableCell align="center">{workingEnvironment.identifier}</TableCell>
-                      <TableCell align="center">{workingEnvironment.title}</TableCell>
-                      <TableCell align="center">{workingEnvironment.insert_datetime}</TableCell>
-                      <TableCell align="center">{workingEnvironment.operation_actors}</TableCell>
-                      <TableCell align="center">
-                        {workingEnvironment.status === 'validated' ? (
+      <DataTable
+        columns={columns}
+        order={order}
+        setOrder={setOrder}
+        page={page}
+        setPage={setPage}
+        rowsPerPage={100}
+        total={total}
+      >
+        {loading ? (
+          <TableRow>
+            <TableCell colSpan={7}>
+              <div className={classes.loadingSpinnerContainer}>
+                <CircularProgress size={50} />
+              </div>
+            </TableCell>
+          </TableRow>
+        ) : !workingEnvironments || workingEnvironments?.length === 0 ? (
+          <TableRow>
+            <TableCell colSpan={7}>
+              <Typography className={classes.loadingSpinnerContainer}>Aucun résultat à afficher</Typography>
+            </TableCell>
+          </TableRow>
+        ) : (
+          workingEnvironments.map((workingEnvironment) => {
+            return (
+              workingEnvironment && (
+                <TableRow key={workingEnvironment.uid} className={classes.tableBodyRows} hover>
+                  <TableCell align="center">{workingEnvironment.username}</TableCell>
+                  <TableCell align="center">{/* {workingEnvironment.insert_datetime} */}</TableCell>
+                  <TableCell align="center">{/* {workingEnvironment.operation_actors} */}</TableCell>
+                  <TableCell align="center">
+                    {/* {workingEnvironment.status === 'validated' ? (
                           <Chip label="Validé" style={{ backgroundColor: '#28a745', color: 'white' }} />
                         ) : workingEnvironment.status === 'new' || workingEnvironment.status === 'in progress' ? (
                           <Chip label="En cours" style={{ backgroundColor: '#ffc107', color: 'black' }} />
@@ -151,23 +139,14 @@ const WorkingEnvironmentsTable: React.FC<WorkingEnvironmentsTableProps> = ({ use
                           />
                         ) : (
                           '-'
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  )
-                )
-              })
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Pagination
-        className={classes.pagination}
-        count={Math.ceil(total / 100)}
-        shape="rounded"
-        onChange={(event, page: number) => setPage(page)}
-        page={page}
-      />
+                        )} */}
+                  </TableCell>
+                </TableRow>
+              )
+            )
+          })
+        )}
+      </DataTable>
 
       {selectedWorkingEnvironment !== null && (
         <WorkingEnvironmentsForm
