@@ -18,15 +18,11 @@ export const getWorkingEnvironments = async (order: Order, page: number) => {
   }
 }
 
-export const getWorkingEnvironmentFormInfos = async () => {
+export const getJupyterMachines = async () => {
   try {
     const jupyterMachinesResp = await api.get('/workspaces/jupyter-machines/')
 
-    const jupyterMachines = jupyterMachinesResp.data.results ?? []
-
-    return {
-      jupyterMachines: jupyterMachines
-    }
+    return jupyterMachinesResp.data.results ?? []
   } catch (error) {
     console.error('Erreur lors de la récupération des machines Jupyter ou des Rangerhive policies', error)
   }

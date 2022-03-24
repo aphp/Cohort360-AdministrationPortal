@@ -61,6 +61,24 @@ export type CareSite = {
   children?: CareSite[]
 }
 
+export type Perimeter = {
+  id: string
+  type: string
+  // parent_id:
+  names: {
+    name: string
+    short: string
+    source_value: string
+  }
+  // care_site_id: number
+  // care_site_name: string
+  // care_site_short_name: string
+  // care_site_source_value: string
+  // care_site_type_source_value?: string
+  // parents_ids?: number[]
+  // children?: Perimeter[]
+}
+
 export type ScopeTreeRow = {
   care_site_id: string | number
   name: string
@@ -187,6 +205,8 @@ export type Access = {
   provider_history: Provider
   provider_history_id: number
   care_site?: CareSite
+  perimeter?: Perimeter
+  perimeter_id?: string
   role: { name: string; role_id: number; help_text: string[] }
   entry_created_by: number
   created_by: string
@@ -320,4 +340,19 @@ export type Column = {
   code?: string
   align: 'inherit' | 'left' | 'center' | 'right' | 'justify'
   sortableColumn?: boolean
+}
+
+export type JupyterTransferForm = {
+  user: Provider | null
+  cohort: Cohort | null
+  jupyterMachine: JupyterMachine | null
+}
+
+export type Cohort = {
+  owner: number
+  name: string
+  description: string
+  dated_measure: number
+  created_at: string
+  request_job_status: string
 }

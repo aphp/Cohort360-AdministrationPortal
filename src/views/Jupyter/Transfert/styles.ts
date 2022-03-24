@@ -1,10 +1,10 @@
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(() => ({
-  loading: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%'
+  autocomplete: {
+    marginTop: 16,
+    marginBottom: 24,
+    backgroundColor: 'white'
   },
   title: {
     borderBottom: '1px solid #D0D7D8',
