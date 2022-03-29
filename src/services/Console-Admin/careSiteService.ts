@@ -9,7 +9,7 @@ const loadingItem: ScopeTreeRow = {
 }
 
 export const getCareSites = async () => {
-  const caresiteResp = await api.get(`/care-sites/?care_site_type_source_value=AP-HP`)
+  const caresiteResp = await api.get(`/perimeters/?care_site_type_source_value=AP-HP`)
 
   if (!caresiteResp) return undefined
 
@@ -79,7 +79,7 @@ export const getCareSitesChildren = async (
   getSubItem?: boolean
 ): Promise<ScopeTreeRow[]> => {
   if (!careSite) return []
-  const children = await api.get(`/care-sites/${careSite.care_site_id}/children/`)
+  const children = await api.get(`/perimeters/${careSite.care_site_id}/children/`)
   if (!children) return []
 
   const childrenData: any[] = children && children.data && children.status === 200 ? children.data.results : []
@@ -109,7 +109,7 @@ export const getCareSitesChildren = async (
 }
 
 export const getManageableCareSites = async (): Promise<ScopeTreeRow[]> => {
-  const manageableCareSitesResp = await api.get(`/care-sites/manageable/`)
+  const manageableCareSitesResp = await api.get(`/perimeters/manageable/`)
 
   if (manageableCareSitesResp.status !== 200) {
     return []
@@ -138,7 +138,7 @@ export const getCareSiteAccesses = async (careSiteId: string, order: Order, page
 }
 
 export const getCareSite = async (careSiteId: string): Promise<string | undefined> => {
-  const careSiteResp = await api.get(`/care-sites/${careSiteId}/`)
+  const careSiteResp = await api.get(`/perimeters/${careSiteId}/`)
 
   if (careSiteResp.status !== 200) return undefined
 
@@ -151,7 +151,7 @@ export const searchInCareSites = async (isManageable?: boolean, searchInput?: st
       return []
     }
     const careSiteSearchResp = await api.get(
-      isManageable ? `/care-sites/manageable/?search=${searchInput}` : `/care-sites/?treefy=true&search=${searchInput}`
+      isManageable ? `/perimeters/manageable/?search=${searchInput}` : `/perimeters/?treefy=true&search=${searchInput}`
     )
 
     if (careSiteSearchResp.data) {
