@@ -1,6 +1,6 @@
 {
   "name": "cohort-front",
-  "version": "0.1.0",
+  "version": "2.7",
   "private": true,
   "dependencies": {
     "@date-io/moment": "^1.3.13",
