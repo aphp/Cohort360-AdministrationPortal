@@ -16,16 +16,6 @@ const useStyles = makeStyles(() =>
       color: '#0063AF',
       padding: '0 20px'
     },
-    tableBodyRows: {
-      '&:nth-of-type(even)': {
-        backgroundColor: '#FAF9F9'
-      }
-    },
-    loadingSpinnerContainer: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center'
-    },
     pagination: {
       margin: '10px 0',
       float: 'right',
@@ -37,17 +27,6 @@ const useStyles = makeStyles(() =>
         color: '#0063AF',
         backgroundColor: '#FFF'
       }
-    },
-    roleColumn: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center'
-    },
-    infoIcon: {
-      margin: '0 8px'
-    },
-    tooltip: {
-      maxWidth: 500
     }
   })
 )

@@ -4,6 +4,7 @@ import { Order } from 'types'
 export const getProviders = async (order: Order, page?: number, searchInput?: string) => {
   const searchFilter = searchInput ? `&search=${searchInput}` : ''
 
+  // TODO: mettre reducer au lieu des &
   const providersResp = await api.get(
     `/providers/?manual_only=true&page=${page}&ordering=${order.orderDirection === 'desc' ? '-' : ''}${
       order.orderBy

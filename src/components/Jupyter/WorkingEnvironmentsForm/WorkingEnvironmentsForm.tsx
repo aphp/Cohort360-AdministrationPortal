@@ -18,7 +18,7 @@ import {
 import Autocomplete from '@material-ui/lab/Autocomplete'
 
 import ProvidersTable from './components/ProvidersTable/ProvidersTable'
-import { getWorkingEnvironmentFormInfos } from 'services/Jupyter/workingEnvironmentsService'
+import { getJupyterMachines } from 'services/Jupyter/workingEnvironmentsService'
 import { getProviders } from 'services/Console-Admin/providersService'
 import useDebounce from 'components/Console-Admin/CareSite/use-debounce'
 import { JupyterMachine, Order, Provider, UserRole } from 'types'
@@ -117,7 +117,7 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
       try {
         setLoading(true)
 
-        const formInfosResp = await getWorkingEnvironmentFormInfos()
+        const formInfosResp = await getJupyterMachines()
 
         setJupyterMachines(formInfosResp?.jupyterMachines ?? [])
         setLoading(false)

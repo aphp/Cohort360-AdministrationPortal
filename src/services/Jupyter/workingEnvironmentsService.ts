@@ -1,9 +1,11 @@
+import { Order } from 'types'
 import api from '../api'
 
-export const getWorkingEnvironments = async () => {
+export const getWorkingEnvironments = async (order: Order, page: number) => {
   try {
-    // TODO: change url to workspaces/users
-    const workingEnvironmentsResp = await api.get('/workspaces/projects/')
+    const workingEnvironmentsResp = await api.get(
+      `/workspaces/users/?page=${page}&ordering=${order.orderDirection === 'desc' ? '-' : ''}${order.orderBy}`
+    )
 
     const workingEnvironments = workingEnvironmentsResp.data.results ?? []
 
@@ -16,15 +18,11 @@ export const getWorkingEnvironments = async () => {
   }
 }
 
-export const getWorkingEnvironmentFormInfos = async () => {
+export const getJupyterMachines = async () => {
   try {
     const jupyterMachinesResp = await api.get('/workspaces/jupyter-machines/')
 
-    const jupyterMachines = jupyterMachinesResp.data.results ?? []
-
-    return {
-      jupyterMachines: jupyterMachines
-    }
+    return jupyterMachinesResp.data.results ?? []
   } catch (error) {
     console.error('Erreur lors de la récupération des machines Jupyter ou des Rangerhive policies', error)
   }
