@@ -136,8 +136,8 @@ const CareSiteHistory: React.FC = () => {
               </>
             ) : (
               <Alert severity="error" style={{ width: '100%' }}>
-                Erreur lors de la récupération des droits de ce périmètre, veuillez réessayer ultérieurement ou vérifier
-                vos droits.
+                Erreur lors de la récupération des accès de ce périmètre, veuillez réessayer ultérieurement ou vérifier
+                vos habilitations.
               </Alert>
             )}
           </Grid>
