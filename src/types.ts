@@ -163,8 +163,8 @@ export type UserRole = {
   right_export_csv_pseudo_anonymised: boolean | null
   right_read_env_unix_users: boolean | null
   right_manage_env_unix_users: boolean | null
-  right_manage_env_users_apps: boolean | null
-  right_manage_env_users_links: boolean | null
+  right_manage_env_user_apps: boolean | null
+  right_manage_env_user_links: boolean | null
 }
 
 export type Role = UserRole & {

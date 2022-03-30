@@ -215,13 +215,13 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
     },
     {
       label: 'Gérer la disponibilité des applications dans les environnements de travail',
-      status: role?.right_manage_env_users_apps,
-      keyName: 'right_manage_env_users_apps'
+      status: role?.right_manage_env_user_apps,
+      keyName: 'right_manage_env_user_apps'
     },
     {
       label: 'Gérer les accès des utilisateurs aux environnements de travail',
-      status: role?.right_manage_env_users_links,
-      keyName: 'right_manage_env_users_links'
+      status: role?.right_manage_env_user_links,
+      keyName: 'right_manage_env_user_links'
     }
   ]
 
@@ -276,8 +276,8 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
         right_export_csv_pseudo_anonymised: role?.right_export_csv_pseudo_anonymised ?? false,
         right_read_env_unix_users: role?.right_read_env_unix_users ?? false,
         right_manage_env_unix_users: role?.right_manage_env_unix_users ?? false,
-        right_manage_env_users_apps: role?.right_manage_env_users_apps ?? false,
-        right_manage_env_users_links: role?.right_manage_env_users_links ?? false
+        right_manage_env_user_apps: role?.right_manage_env_user_apps ?? false,
+        right_manage_env_user_links: role?.right_manage_env_user_links ?? false
       }
 
       if (isEditable) {
