@@ -34,7 +34,7 @@ build-job:
   stage: build
   script:
     - npm install
-    - npm run build
+    - CI=false npm run build
   artifacts:
     paths:
       - build/
