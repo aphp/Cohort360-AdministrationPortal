@@ -96,8 +96,8 @@ const Login = () => {
           !_userRights.right_manage_export_csv &&
           !_userRights.right_read_env_unix_users &&
           !_userRights.right_manage_env_unix_users &&
-          !_userRights.right_manage_env_users_apps &&
-          !_userRights.right_manage_env_users_links
+          !_userRights.right_manage_env_user_apps &&
+          !_userRights.right_manage_env_user_links
         ) {
           setNoRights(true)
         } else {
