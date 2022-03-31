@@ -10,6 +10,8 @@ import { Column, Order, UserRole, WorkingEnvironment } from 'types'
 import WorkingEnvironmentsForm from 'components/Jupyter/WorkingEnvironmentsForm/WorkingEnvironmentsForm'
 import { getWorkingEnvironments } from 'services/Jupyter/workingEnvironmentsService'
 import DataTable from 'components/DataTable/DataTable'
+import SearchBar from 'components/SearchBar/SearchBar'
+import useDebounce from 'components/Console-Admin/CareSite/use-debounce'
 
 type WorkingEnvironmentsTableProps = {
   userRights: UserRole
@@ -26,6 +28,9 @@ const WorkingEnvironmentsTable: React.FC<WorkingEnvironmentsTableProps> = ({ use
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
   const [order, setOrder] = useState(orderDefault)
+  const [searchInput, setSearchInput] = useState('')
+
+  const debouncedSearchTerm = useDebounce(500, searchInput)
 
   const columns: Column[] = [
     {
@@ -51,31 +56,44 @@ const WorkingEnvironmentsTable: React.FC<WorkingEnvironmentsTableProps> = ({ use
   const [addWorkingEnvironmentSuccess, setAddWorkingEnvironmentSuccess] = useState(false)
   const [addWorkingEnvironmentFail, setAddWorkingEnvironmentFail] = useState(false)
 
-  useEffect(() => {
-    const _getWorkingEnvironments = async () => {
-      try {
-        setLoading(true)
+  const _getWorkingEnvironments = async () => {
+    try {
+      setLoading(true)
 
-        const workingEnvironmentsResp = await getWorkingEnvironments(order, page)
+      const workingEnvironmentsResp = await getWorkingEnvironments(order, page, searchInput.trim())
 
-        setWorkingEnvironments(workingEnvironmentsResp?.workingEnvironments)
-        setTotal(workingEnvironmentsResp?.total)
+      setWorkingEnvironments(workingEnvironmentsResp?.workingEnvironments)
+      setTotal(workingEnvironmentsResp?.total)
 
-        setLoading(false)
-      } catch (error) {
-        setLoading(false)
-        setWorkingEnvironments([])
-        setTotal(0)
-        console.error('Erreur lors de la récupération des infos du formulaire', error)
-      }
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+      setWorkingEnvironments([])
+      setTotal(0)
+      console.error('Erreur lors de la récupération des infos du formulaire', error)
     }
+  }
 
+  useEffect(() => {
+    if (page !== 1) {
+      setPage(1)
+    } else {
+      _getWorkingEnvironments()
+    }
+  }, [debouncedSearchTerm])
+
+  useEffect(() => {
     _getWorkingEnvironments()
   }, [page, order])
 
   return (
     <Grid container justify="flex-end">
-      <Grid container item justify={'flex-end'} style={{ margin: '12px 0' }}>
+      <Grid
+        container
+        item
+        justify={userRights.right_add_users ? 'space-between' : 'flex-end'}
+        style={{ margin: '12px 0' }}
+      >
         <Button
           variant="contained"
           disableElevation
@@ -85,7 +103,11 @@ const WorkingEnvironmentsTable: React.FC<WorkingEnvironmentsTableProps> = ({ use
         >
           Nouvel environnement
         </Button>
+        <Grid container item xs={6} justify="flex-end" alignItems="center">
+          <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
+        </Grid>
       </Grid>
+
       <DataTable
         columns={columns}
         order={order}
