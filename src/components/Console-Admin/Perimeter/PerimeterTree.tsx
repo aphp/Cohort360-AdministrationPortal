@@ -23,7 +23,7 @@ import {
   searchInPerimeters,
   getManageablePerimeters,
   getPerimeters
-} from 'services/Console-Admin/careSiteService'
+} from 'services/Console-Admin/perimetersService'
 import { ScopeTreeRow, UserRole } from 'types'
 import { useAppSelector } from 'state'
 

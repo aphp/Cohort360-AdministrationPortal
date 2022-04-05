@@ -23,7 +23,7 @@ import EditIcon from '@material-ui/icons/Edit'
 
 import { getAssignableRoles } from 'services/Console-Admin/rolesService'
 import { submitCreateAccess, submitEditAccess } from 'services/Console-Admin/providersHistoryService'
-import CareSitesDialog from 'components/Console-Admin/Accesses/AccessForm/components/CareSitesDialog/CareSitesDialog'
+import PerimetersDialog from 'components/Console-Admin/Accesses/AccessForm/components/PerimetersDialog/PerimetersDialog'
 import { Access, AccessData, ScopeTreeRow, UserRole } from 'types'
 
 import useStyles from './styles'
@@ -316,7 +316,7 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
         </Button>
       </DialogActions>
 
-      <CareSitesDialog
+      <PerimetersDialog
         perimeter={_access.perimeter ?? null}
         onChangePerimeter={setAccessPerimeter}
         open={openPerimeters}

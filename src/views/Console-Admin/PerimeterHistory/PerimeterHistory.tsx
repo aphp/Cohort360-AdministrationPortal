@@ -5,17 +5,17 @@ import { CircularProgress, Grid, Typography } from '@material-ui/core'
 import Alert from '@material-ui/lab/Alert'
 
 import useStyles from './styles'
-import { getPerimeter, getPerimeterAccesses } from 'services/Console-Admin/careSiteService'
+import { getPerimeter, getPerimeterAccesses } from 'services/Console-Admin/perimetersService'
 import AccessesTable from 'components/Console-Admin/Accesses/AccessesTable/AccessesTable'
 import SearchBar from 'components/SearchBar/SearchBar'
 import { Access, Order, Role } from 'types'
 import { getUserRights, userDefaultRoles } from 'utils/userRoles'
-import useDebounce from 'components/Console-Admin/CareSite/use-debounce'
+import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
 import { getRoles } from 'services/Console-Admin/rolesService'
 
 const orderDefault = { orderBy: 'is_valid', orderDirection: 'asc' } as Order
 
-const CareSiteHistory: React.FC = () => {
+const PerimeterHistory: React.FC = () => {
   const classes = useStyles()
 
   const [loadingPage, setLoadingPage] = useState(false)
@@ -31,13 +31,13 @@ const CareSiteHistory: React.FC = () => {
 
   const debouncedSearchTerm = useDebounce(500, searchInput)
 
-  const { careSiteId } = useParams<{ careSiteId: string }>()
+  const { perimeterId } = useParams<{ perimeterId: string }>()
 
   const _getPerimeterAccesses = async () => {
     try {
       setLoadingData(true)
 
-      const perimeterAccessesResp = await getPerimeterAccesses(careSiteId, order, page, searchInput.trim())
+      const perimeterAccessesResp = await getPerimeterAccesses(perimeterId, order, page, searchInput.trim())
 
       setPerimeterAccesses(perimeterAccessesResp?.accesses)
       setTotal(perimeterAccessesResp?.total)
@@ -56,7 +56,7 @@ const CareSiteHistory: React.FC = () => {
     try {
       setLoadingPage(true)
 
-      const perimeterResp = await getPerimeter(careSiteId)
+      const perimeterResp = await getPerimeter(perimeterId)
       setPerimeterName(perimeterResp ?? 'Inconnu')
 
       setLoadingPage(false)
@@ -99,7 +99,7 @@ const CareSiteHistory: React.FC = () => {
 
     _getUserRights()
     _getPerimeterName()
-  }, [careSiteId]) // eslint-disable-line
+  }, [perimeterId]) // eslint-disable-line
 
   useEffect(() => {
     _getPerimeterAccesses()
@@ -147,4 +147,4 @@ const CareSiteHistory: React.FC = () => {
   )
 }
 
-export default CareSiteHistory
+export default PerimeterHistory

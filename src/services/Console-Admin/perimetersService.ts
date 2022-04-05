@@ -2,17 +2,9 @@ import api from '../api'
 import { Order, Perimeter, ScopeTreeRow } from 'types'
 
 const loadingItem: ScopeTreeRow = {
-  // care_site_id: 'loading',
-  // care_site_type_source_value: 'loading',
-  // children: []
   id: 'loading',
   name: 'loading',
   type: 'loading',
-  // names: {
-  //   name: 'loading',
-  //   short: 'loading',
-  //   source_value: 'loading'
-  // },
   children: []
 }
 

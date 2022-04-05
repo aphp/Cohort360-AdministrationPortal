@@ -20,7 +20,7 @@ import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date'
 
 import EditIcon from '@material-ui/icons/Edit'
 
-import CareSitesDialog from '../../Accesses/AccessForm/components/CareSitesDialog/CareSitesDialog'
+import PerimetersDialog from '../../Accesses/AccessForm/components/PerimetersDialog/PerimetersDialog'
 
 import useStyles from './styles'
 import { LogsFiltersObject, ScopeTreeRow, UserRole } from 'types'
@@ -242,7 +242,7 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
         </Button>
       </DialogActions>
 
-      <CareSitesDialog
+      <PerimetersDialog
         perimeter={selectedPerimeter}
         onChangePerimeter={setSelectedPerimeter}
         open={openPerimeters}

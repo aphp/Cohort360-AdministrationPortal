@@ -2,11 +2,11 @@ import React, { useState } from 'react'
 import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Grid, Paper } from '@material-ui/core'
 
 import useStyles from './styles'
-import CareSiteTree from 'components/Console-Admin/CareSite/CareSiteTree'
+import PerimeterTree from 'components/Console-Admin/Perimeter/PerimeterTree'
 import SearchBar from 'components/SearchBar/SearchBar'
 import { ScopeTreeRow, UserRole } from 'types'
 
-type CareSitesDialogProps = {
+type PerimetersDialogProps = {
   perimeter: ScopeTreeRow | null
   onChangePerimeter: (perimeter: ScopeTreeRow | null) => void
   open: boolean
@@ -15,7 +15,7 @@ type CareSitesDialogProps = {
   userRights: UserRole
 }
 
-const CareSitesDialog: React.FC<CareSitesDialogProps> = ({
+const PerimetersDialog: React.FC<PerimetersDialogProps> = ({
   perimeter,
   onChangePerimeter,
   open,
@@ -43,7 +43,7 @@ const CareSitesDialog: React.FC<CareSitesDialogProps> = ({
           <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
 
           <Paper style={{ width: '100%', marginTop: 12 }}>
-            <CareSiteTree
+            <PerimeterTree
               isManageable={isManageable}
               defaultSelectedItems={perimeter}
               onChangeSelectedItem={onChangePerimeter}
@@ -65,4 +65,4 @@ const CareSitesDialog: React.FC<CareSitesDialogProps> = ({
   )
 }
 
-export default CareSitesDialog
+export default PerimetersDialog

@@ -11,7 +11,7 @@ import WorkingEnvironmentsForm from 'components/Jupyter/WorkingEnvironmentsForm/
 import { getWorkingEnvironments } from 'services/Jupyter/workingEnvironmentsService'
 import DataTable from 'components/DataTable/DataTable'
 import SearchBar from 'components/SearchBar/SearchBar'
-import useDebounce from 'components/Console-Admin/CareSite/use-debounce'
+import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
 
 type WorkingEnvironmentsTableProps = {
   userRights: UserRole

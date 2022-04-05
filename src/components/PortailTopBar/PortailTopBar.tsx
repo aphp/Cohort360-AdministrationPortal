@@ -38,7 +38,7 @@ const PortailTopBar: React.FC = () => {
     },
     {
       name: 'Périmètres',
-      pathname: '/console-admin/caresites',
+      pathname: '/console-admin/perimeters',
       rightsToSee:
         userRights.right_read_users ||
         userRights.right_read_admin_accesses_same_level ||
@@ -92,7 +92,7 @@ const PortailTopBar: React.FC = () => {
               className={clsx(
                 classes.topBarButton,
                 (pathname.includes('users') ||
-                  pathname.includes('caresites') ||
+                  pathname.includes('perimeters') ||
                   pathname.includes('habilitations') ||
                   pathname.includes('logs')) &&
                   classes.activeButton

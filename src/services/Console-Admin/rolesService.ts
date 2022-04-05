@@ -10,10 +10,10 @@ export const getRoles = async () => {
   return rolesResp.data.results ?? undefined
 }
 
-export const getAssignableRoles = async (careSiteId?: string | number | null) => {
-  if (!careSiteId) return undefined
+export const getAssignableRoles = async (perimeterId?: string | number | null) => {
+  if (!perimeterId) return undefined
 
-  const assignableRolesResp = await api.get(`/roles/assignable/?care_site_id=${careSiteId}`)
+  const assignableRolesResp = await api.get(`/roles/assignable/?care_site_id=${perimeterId}`)
 
   if (assignableRolesResp.status !== 200) {
     return undefined
