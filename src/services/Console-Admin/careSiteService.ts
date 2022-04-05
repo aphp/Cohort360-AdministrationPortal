@@ -1,39 +1,47 @@
 import api from '../api'
-import { CareSite, Order, ScopeTreeRow } from 'types'
+import { Order, Perimeter, ScopeTreeRow } from 'types'
 
 const loadingItem: ScopeTreeRow = {
-  care_site_id: 'loading',
+  // care_site_id: 'loading',
+  // care_site_type_source_value: 'loading',
+  // children: []
+  id: 'loading',
   name: 'loading',
-  care_site_type_source_value: 'loading',
+  type: 'loading',
+  // names: {
+  //   name: 'loading',
+  //   short: 'loading',
+  //   source_value: 'loading'
+  // },
   children: []
 }
 
-export const getCareSites = async () => {
-  const caresiteResp = await api.get(`/perimeters/?care_site_type_source_value=AP-HP`)
+export const getPerimeters = async () => {
+  const perimetersResp = await api.get(`/perimeters/?care_site_type_source_value=AP-HP`)
 
-  if (!caresiteResp) return undefined
+  if (!perimetersResp) return undefined
 
-  const { data } = caresiteResp
+  const { data } = perimetersResp
   if (!data) return [{ care_site_id: 'loading' }]
 
-  const careSitesData = data.results
+  const perimetersData = data.results
   // a proteger
 
-  return careSitesData && careSitesData.length > 0 ? careSitesData : []
+  return perimetersData && perimetersData.length > 0 ? perimetersData : []
 }
 
-export const getScopeCareSites = async (getCareSites: any) => {
-  const careSitesResult = (await getCareSites()) ?? []
+export const getScopePerimeters = async (getPerimeters: any) => {
+  const perimetersResult = (await getPerimeters()) ?? []
 
   let scopeRows: ScopeTreeRow[] = []
 
-  for (const careSite of careSitesResult) {
-    const scopeRow: ScopeTreeRow = careSite as ScopeTreeRow
-    scopeRow.name = `${careSite.care_site_source_value} - ${careSite.care_site_name}`
+  for (const perimeter of perimetersResult) {
+    const scopeRow: ScopeTreeRow = perimeter as ScopeTreeRow
+    scopeRow.name = `${perimeter.names.source_value} - ${perimeter.names.name}`
     scopeRow.children =
-      careSite.children?.length > 0
-        ? parseChildren(careSite.children)
-        : await getCareSitesChildren(careSite as ScopeTreeRow)
+      perimeter.children?.length > 0
+        ? parseChildren(perimeter.children)
+        : await getPerimetersChildren(perimeter as ScopeTreeRow)
     scopeRows = [...scopeRows, scopeRow]
   }
 
@@ -50,14 +58,14 @@ export const getScopeCareSites = async (getCareSites: any) => {
   return scopeRows
 }
 
-const parseChildren = (children?: CareSite[]) => {
+const parseChildren = (children?: Perimeter[]) => {
   if (!children) return []
 
   let _childrenData = children.map<ScopeTreeRow>((child) => {
     return {
       ...child,
-      name: `${child.care_site_source_value} - ${child.care_site_name}` ?? '',
-      care_site_type_source_value: child.care_site_type_source_value ?? '',
+      name: `${child.names?.source_value} - ${child.names?.name}` ?? '',
+      type: child.type ?? '',
       children: [loadingItem]
     }
   })
@@ -74,12 +82,12 @@ const parseChildren = (children?: CareSite[]) => {
   return _childrenData
 }
 
-export const getCareSitesChildren = async (
-  careSite: ScopeTreeRow | null,
+export const getPerimetersChildren = async (
+  perimeter: ScopeTreeRow | null,
   getSubItem?: boolean
 ): Promise<ScopeTreeRow[]> => {
-  if (!careSite) return []
-  const children = await api.get(`/perimeters/${careSite.care_site_id}/children/`)
+  if (!perimeter) return []
+  const children = await api.get(`/perimeters/${perimeter.id}/children/`)
   if (!children) return []
 
   const childrenData: any[] = children && children.data && children.status === 200 ? children.data.results : []
@@ -89,12 +97,12 @@ export const getCareSitesChildren = async (
   for (const child of childrenData) {
     const scopeRow: ScopeTreeRow = child as ScopeTreeRow
 
-    scopeRow.name = `${child.care_site_source_value} - ${child.care_site_name}` ?? ''
-    scopeRow.children = getSubItem === true ? await getCareSitesChildren(child as ScopeTreeRow) : [loadingItem]
+    scopeRow.name = `${child.names.source_value} - ${child.names.name}` ?? ''
+    scopeRow.children = getSubItem === true ? await getPerimetersChildren(child as ScopeTreeRow) : [loadingItem]
     _childrenData = [..._childrenData, scopeRow]
   }
 
-  _childrenData = _childrenData.filter((child) => child.care_site_id !== careSite.care_site_id)
+  _childrenData = _childrenData.filter((child) => child.id !== perimeter.id)
 
   _childrenData = _childrenData.sort((a: ScopeTreeRow, b: ScopeTreeRow) => {
     if (a.name > b.name) {
@@ -108,54 +116,54 @@ export const getCareSitesChildren = async (
   return _childrenData
 }
 
-export const getManageableCareSites = async (): Promise<ScopeTreeRow[]> => {
-  const manageableCareSitesResp = await api.get(`/perimeters/manageable/`)
+export const getManageablePerimeters = async (): Promise<ScopeTreeRow[]> => {
+  const manageablePerimetersResp = await api.get(`/perimeters/manageable/`)
 
-  if (manageableCareSitesResp.status !== 200) {
+  if (manageablePerimetersResp.status !== 200) {
     return []
   }
 
-  return manageableCareSitesResp.data ?? []
+  return manageablePerimetersResp.data ?? []
 }
 
-export const getCareSiteAccesses = async (careSiteId: string, order: Order, page?: number, searchInput?: string) => {
+export const getPerimeterAccesses = async (perimeterId: string, order: Order, page?: number, searchInput?: string) => {
   const _orderDirection =
     order.orderBy === 'is_valid' ? (order.orderDirection === 'asc' ? 'desc' : 'asc') : order.orderDirection
 
   const searchFilter = searchInput ? `&search=${searchInput}` : ''
-  const careSiteAccessesResp = await api.get(
-    `/accesses/?care_site_id=${careSiteId}&page=${page}&ordering=${_orderDirection === 'desc' ? '-' : ''}${
+  const perimeterAccessesResp = await api.get(
+    `/accesses/?care_site_id=${perimeterId}&page=${page}&ordering=${_orderDirection === 'desc' ? '-' : ''}${
       order.orderBy
     }${searchFilter}`
   )
 
-  if (careSiteAccessesResp.status !== 200) return undefined
+  if (perimeterAccessesResp.status !== 200) return undefined
 
   return {
-    accesses: careSiteAccessesResp.data.results ?? undefined,
-    total: careSiteAccessesResp.data.count ?? 0
+    accesses: perimeterAccessesResp.data.results ?? undefined,
+    total: perimeterAccessesResp.data.count ?? 0
   }
 }
 
-export const getCareSite = async (careSiteId: string): Promise<string | undefined> => {
-  const careSiteResp = await api.get(`/perimeters/${careSiteId}/`)
+export const getPerimeter = async (perimeterId: string): Promise<string | undefined> => {
+  const perimeterResp = await api.get(`/perimeters/${perimeterId}/`)
 
-  if (careSiteResp.status !== 200) return undefined
+  if (perimeterResp.status !== 200) return undefined
 
-  return `${careSiteResp.data.care_site_source_value} - ${careSiteResp.data.care_site_name}` ?? undefined
+  return `${perimeterResp.data.care_site_source_value} - ${perimeterResp.data.care_site_name}` ?? undefined
 }
 
-export const searchInCareSites = async (isManageable?: boolean, searchInput?: string) => {
+export const searchInPerimeters = async (isManageable?: boolean, searchInput?: string) => {
   try {
     if (!searchInput) {
       return []
     }
-    const careSiteSearchResp = await api.get(
+    const perimeterSearchResp = await api.get(
       isManageable ? `/perimeters/manageable/?search=${searchInput}` : `/perimeters/?treefy=true&search=${searchInput}`
     )
 
-    if (careSiteSearchResp.data) {
-      return parseCareSiteSearchResults(careSiteSearchResp.data[0].children, searchInput.trim())
+    if (perimeterSearchResp.data) {
+      return parsePerimeterSearchResults(perimeterSearchResp.data[0].children, searchInput.trim())
     } else {
       return []
     }
@@ -165,20 +173,20 @@ export const searchInCareSites = async (isManageable?: boolean, searchInput?: st
   }
 }
 
-const parseCareSiteSearchResults = (response: any[], searchInput: string) => {
+const parsePerimeterSearchResults = (response: any[], searchInput: string) => {
   let scope: any[] = []
 
-  const recursive = (table: CareSite[], existingTitle?: string) => {
+  const recursive = (table: Perimeter[], existingTitle?: string) => {
     for (const item of table) {
       const name = existingTitle
-        ? `${existingTitle} > ${item.care_site_source_value} - ${item.care_site_name}`
-        : `${item.care_site_source_value} - ${item.care_site_name}`
+        ? `${existingTitle} > ${item.names?.source_value} - ${item.names?.name}`
+        : `${item.names?.source_value} - ${item.names?.name}`
 
       const regexp = new RegExp(searchInput.toLowerCase())
 
       if (
-        item.care_site_name.toLowerCase().search(regexp) !== -1 ||
-        item.care_site_source_value.toLowerCase().search(regexp) !== -1
+        item.names?.name.toLowerCase().search(regexp) !== -1 ||
+        item.names?.source_value.toLowerCase().search(regexp) !== -1
       ) {
         scope = [
           ...scope,
@@ -190,7 +198,7 @@ const parseCareSiteSearchResults = (response: any[], searchInput: string) => {
       }
 
       if (item.children && item.children.length > 0) {
-        if (item.care_site_type_source_value === 'Groupe hospitalier (GH)') {
+        if (item.type === 'Groupe hospitalier (GH)') {
           recursive(item.children)
         } else {
           recursive(item.children, name)

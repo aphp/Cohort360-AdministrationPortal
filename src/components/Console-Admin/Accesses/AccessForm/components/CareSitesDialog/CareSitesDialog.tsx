@@ -7,8 +7,8 @@ import SearchBar from 'components/SearchBar/SearchBar'
 import { ScopeTreeRow, UserRole } from 'types'
 
 type CareSitesDialogProps = {
-  careSite: ScopeTreeRow | null
-  onChangeCareSite: (careSite: ScopeTreeRow | null) => void
+  perimeter: ScopeTreeRow | null
+  onChangePerimeter: (perimeter: ScopeTreeRow | null) => void
   open: boolean
   onClose: () => void
   isManageable: boolean
@@ -16,8 +16,8 @@ type CareSitesDialogProps = {
 }
 
 const CareSitesDialog: React.FC<CareSitesDialogProps> = ({
-  careSite,
-  onChangeCareSite,
+  perimeter,
+  onChangePerimeter,
   open,
   onClose,
   isManageable,
@@ -27,7 +27,7 @@ const CareSitesDialog: React.FC<CareSitesDialogProps> = ({
   const [searchInput, setSearchInput] = useState('')
 
   const onCancel = () => {
-    onChangeCareSite(null)
+    onChangePerimeter(null)
     onClose()
   }
 
@@ -45,8 +45,8 @@ const CareSitesDialog: React.FC<CareSitesDialogProps> = ({
           <Paper style={{ width: '100%', marginTop: 12 }}>
             <CareSiteTree
               isManageable={isManageable}
-              defaultSelectedItems={careSite}
-              onChangeSelectedItem={onChangeCareSite}
+              defaultSelectedItems={perimeter}
+              onChangeSelectedItem={onChangePerimeter}
               searchInput={searchInput}
               userRights={userRights}
             />
@@ -57,7 +57,7 @@ const CareSitesDialog: React.FC<CareSitesDialogProps> = ({
         <Button onClick={onCancel} color="secondary">
           Annuler
         </Button>
-        <Button disabled={!careSite} onClick={onSubmit} color="primary">
+        <Button disabled={!perimeter} onClick={onSubmit} color="primary">
           Valider
         </Button>
       </DialogActions>

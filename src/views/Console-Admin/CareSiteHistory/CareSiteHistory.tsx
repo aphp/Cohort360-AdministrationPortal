@@ -5,7 +5,7 @@ import { CircularProgress, Grid, Typography } from '@material-ui/core'
 import Alert from '@material-ui/lab/Alert'
 
 import useStyles from './styles'
-import { getCareSite, getCareSiteAccesses } from 'services/Console-Admin/careSiteService'
+import { getPerimeter, getPerimeterAccesses } from 'services/Console-Admin/careSiteService'
 import AccessesTable from 'components/Console-Admin/Accesses/AccessesTable/AccessesTable'
 import SearchBar from 'components/SearchBar/SearchBar'
 import { Access, Order, Role } from 'types'
@@ -20,8 +20,8 @@ const CareSiteHistory: React.FC = () => {
 
   const [loadingPage, setLoadingPage] = useState(false)
   const [loadingData, setLoadingData] = useState(true)
-  const [careSiteName, setCareSiteName] = useState<string | undefined>()
-  const [careSiteAccesses, setCareSiteAccesses] = useState<Access[] | undefined>([])
+  const [perimeterName, setPerimeterName] = useState<string | undefined>()
+  const [perimeterAccesses, setPerimeterAccesses] = useState<Access[] | undefined>([])
   const [userRights, setUserRights] = useState(userDefaultRoles)
   const [searchInput, setSearchInput] = useState('')
   const [page, setPage] = useState(1)
@@ -33,36 +33,36 @@ const CareSiteHistory: React.FC = () => {
 
   const { careSiteId } = useParams<{ careSiteId: string }>()
 
-  const _getCareSiteAccesses = async () => {
+  const _getPerimeterAccesses = async () => {
     try {
       setLoadingData(true)
 
-      const careSiteAccessesResp = await getCareSiteAccesses(careSiteId, order, page, searchInput.trim())
+      const perimeterAccessesResp = await getPerimeterAccesses(careSiteId, order, page, searchInput.trim())
 
-      setCareSiteAccesses(careSiteAccessesResp?.accesses)
-      setTotal(careSiteAccessesResp?.total)
+      setPerimeterAccesses(perimeterAccessesResp?.accesses)
+      setTotal(perimeterAccessesResp?.total)
 
       setLoadingData(false)
     } catch (error) {
       console.error('Erreur lors de la récupération des accès liés à un périmètre.', error)
-      setCareSiteAccesses(undefined)
+      setPerimeterAccesses(undefined)
       setTotal(0)
 
       setLoadingData(false)
     }
   }
 
-  const _getCareSiteName = async () => {
+  const _getPerimeterName = async () => {
     try {
       setLoadingPage(true)
 
-      const careSiteResp = await getCareSite(careSiteId)
-      setCareSiteName(careSiteResp ?? 'Inconnu')
+      const perimeterResp = await getPerimeter(careSiteId)
+      setPerimeterName(perimeterResp ?? 'Inconnu')
 
       setLoadingPage(false)
     } catch (error) {
       console.error('Erreur lors de la récupération des accès', error)
-      setCareSiteAccesses(undefined)
+      setPerimeterAccesses(undefined)
       setTotal(0)
       setLoadingPage(false)
     }
@@ -98,11 +98,11 @@ const CareSiteHistory: React.FC = () => {
     }
 
     _getUserRights()
-    _getCareSiteName()
+    _getPerimeterName()
   }, [careSiteId]) // eslint-disable-line
 
   useEffect(() => {
-    _getCareSiteAccesses()
+    _getPerimeterAccesses()
   }, [debouncedSearchTerm, page, order]) // eslint-disable-line
 
   return (
@@ -113,9 +113,9 @@ const CareSiteHistory: React.FC = () => {
         ) : (
           <Grid container item xs={12} sm={9}>
             <Typography variant="h1" align="center" className={classes.title}>
-              Périmètre {careSiteName}
+              Périmètre {perimeterName}
             </Typography>
-            {careSiteAccesses ? (
+            {perimeterAccesses ? (
               <>
                 <Grid container item justify="flex-end" alignItems="center" className={classes.searchBar}>
                   <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
@@ -126,8 +126,8 @@ const CareSiteHistory: React.FC = () => {
                   page={page}
                   setPage={setPage}
                   total={total}
-                  accesses={careSiteAccesses}
-                  getAccesses={_getCareSiteAccesses}
+                  accesses={perimeterAccesses}
+                  getAccesses={_getPerimeterAccesses}
                   order={order}
                   setOrder={setOrder}
                   userRights={userRights}

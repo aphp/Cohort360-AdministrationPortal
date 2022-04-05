@@ -64,25 +64,18 @@ export type CareSite = {
 export type Perimeter = {
   id: string
   type: string
-  // parent_id:
-  names: {
+  names?: {
     name: string
     short: string
     source_value: string
   }
-  // care_site_id: number
-  // care_site_name: string
-  // care_site_short_name: string
-  // care_site_source_value: string
-  // care_site_type_source_value?: string
-  // parents_ids?: number[]
-  // children?: Perimeter[]
+  children?: Perimeter[]
 }
 
 export type ScopeTreeRow = {
-  care_site_id: string | number
+  id: string
   name: string
-  care_site_type_source_value: string
+  type: string
   children: ScopeTreeRow[]
 }
 
@@ -279,9 +272,9 @@ export type LogsFiltersObject = {
   statusCode: string[]
   httpMethod: string[]
   access: null | string
-  careSite: {
-    careSiteId: null | string | number
-    careSiteName: null | string
+  perimeter: {
+    perimeterId: null | string
+    perimeterName: null | string
   }
 }
 
@@ -345,7 +338,7 @@ export type Column = {
 export type JupyterTransferForm = {
   user: Provider | null
   cohort: Cohort | null
-  jupyterMachine: JupyterMachine | null
+  workingEnvironment: WorkingEnvironment | null
 }
 
 export type Cohort = {

@@ -23,7 +23,7 @@ const filtersDefault = {
   afterDate: null,
   beforeDate: null,
   access: null,
-  careSite: { careSiteId: null, careSiteName: null }
+  perimeter: { perimeterId: null, perimeterName: null }
 }
 
 const Logs: React.FC = () => {
@@ -32,8 +32,8 @@ const Logs: React.FC = () => {
   const search = window.location.search
   const user = new URLSearchParams(search).get('user')
   const access = new URLSearchParams(search).get('access')
-  const careSiteId = new URLSearchParams(search).get('careSiteId')
-  const careSiteName = new URLSearchParams(search).get('careSiteName')
+  const perimeterId = new URLSearchParams(search).get('perimeterId')
+  const perimeterName = new URLSearchParams(search).get('perimeterName')
 
   const [loading, setLoading] = useState(false)
   const [loadingRights, setLoadingRights] = useState(true)
@@ -43,7 +43,7 @@ const Logs: React.FC = () => {
     ...filtersDefault,
     user: user,
     access: access,
-    careSite: { careSiteId: careSiteId, careSiteName: careSiteName }
+    perimeter: { perimeterId: perimeterId, perimeterName: perimeterName }
   })
   const [logs, setLogs] = useState<Log[] | undefined>(undefined)
   const [page, setPage] = useState(1)
@@ -99,8 +99,8 @@ const Logs: React.FC = () => {
       case 'url':
         _filters['url'] = undefined
         break
-      case 'careSite':
-        _filters['careSite'] = { careSiteId: null, careSiteName: null }
+      case 'perimeter':
+        _filters['perimeter'] = { perimeterId: null, perimeterName: null }
         break
       case 'httpMethod':
       case 'statusCode':
@@ -207,11 +207,11 @@ const Logs: React.FC = () => {
                       variant="outlined"
                     />
                   )}
-                  {filters.careSite.careSiteId && (
+                  {filters.perimeter.perimeterId && (
                     <Chip
                       className={classes.filterChip}
-                      label={`Périmètre : ${filters.careSite.careSiteName?.split('.').join(' ')}`}
-                      onDelete={() => handleDeleteChip('careSite')}
+                      label={`Périmètre : ${filters.perimeter.perimeterName?.split('.').join(' ')}`}
+                      onDelete={() => handleDeleteChip('perimeter')}
                       color="primary"
                       variant="outlined"
                     />

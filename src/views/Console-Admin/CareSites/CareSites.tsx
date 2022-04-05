@@ -71,7 +71,7 @@ const CareSites: React.FC = () => {
               disableElevation
               disabled={!selectedItem}
               className={classes.button}
-              onClick={() => history.push(`/console-admin/caresite/${selectedItem?.care_site_id}`)}
+              onClick={() => history.push(`/console-admin/caresite/${selectedItem?.id}`)}
             >
               Valider
             </Button>

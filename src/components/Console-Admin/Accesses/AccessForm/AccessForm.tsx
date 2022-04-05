@@ -36,12 +36,12 @@ type AccessFormProps = {
   onFail: (fail: boolean) => void
   userRights: UserRole
   access?: Access & {
-    careSite?: null | ScopeTreeRow
+    perimeter?: null | ScopeTreeRow
   }
 }
 
 const defaultAccess = {
-  careSite: null,
+  perimeter: null,
   role: null,
   actual_start_datetime: moment(),
   actual_end_datetime: null
@@ -59,7 +59,7 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
         }
       : defaultAccess
   )
-  const [accessCareSite, setAccessCareSite] = useState<ScopeTreeRow | null>(null)
+  const [accessPerimeter, setAccessPerimeter] = useState<ScopeTreeRow | null>(null)
   const [dateError, setDateError] = useState(false)
   const [openPerimeters, setOpenPerimeters] = useState(false)
   const [roles, setRoles] = useState([])
@@ -75,7 +75,7 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
       try {
         setLoadingAssignableRoles(true)
 
-        const assignableRolesResp = await getAssignableRoles(_access.careSite?.care_site_id)
+        const assignableRolesResp = await getAssignableRoles(_access.perimeter?.id)
 
         setRoles(assignableRolesResp)
 
@@ -89,13 +89,13 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
     if (!isEdition) {
       _getAssignableRoles()
     }
-  }, [_access.careSite]) // eslint-disable-line
+  }, [_access.perimeter]) // eslint-disable-line
 
   useEffect(() => {
     const _accessCopy = { ..._access }
-    _accessCopy['careSite'] = accessCareSite
+    _accessCopy['perimeter'] = accessPerimeter
     setAccess(_accessCopy)
-  }, [accessCareSite])
+  }, [accessPerimeter])
 
   useEffect(() => {
     if (moment(_access.actual_start_datetime).isAfter(_access.actual_end_datetime)) {
@@ -105,7 +105,7 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
     }
   }, [_access.actual_start_datetime, _access.actual_end_datetime])
 
-  const _onChangeValue = (key: 'careSite' | 'role' | 'actual_start_datetime' | 'actual_end_datetime', value: any) => {
+  const _onChangeValue = (key: 'perimeter' | 'role' | 'actual_start_datetime' | 'actual_end_datetime', value: any) => {
     const _accessCopy = _access ? { ..._access } : defaultAccess
     _accessCopy[key] = value
     setAccess(_accessCopy)
@@ -135,7 +135,7 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
       if (!isEdition) {
         accessData = {
           provider_history_id: entityId,
-          care_site_id: _access.careSite?.care_site_id,
+          care_site_id: _access.perimeter?.id,
           role_id: _access.role?.role_id
         }
       }
@@ -185,9 +185,9 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
           <>
             <Grid container justify="space-between" alignItems="center" className={classes.filter}>
               <Typography variant="h6">Périmètre :</Typography>
-              {_access && _access.careSite ? (
+              {_access && _access.perimeter ? (
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <Typography>{_access.careSite.name}</Typography>
+                  <Typography>{_access.perimeter.name}</Typography>
                   <IconButton onClick={() => setOpenPerimeters(true)} style={{ padding: '0 8px' }}>
                     <EditIcon />
                   </IconButton>
@@ -306,7 +306,7 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
             loadingValidate ||
             dateError ||
             (isStartDatePast && isEndDatePast) ||
-            (!isEdition && !_access.careSite) ||
+            (!isEdition && !_access.perimeter) ||
             !_access.role
           }
           onClick={onSubmit}
@@ -317,8 +317,8 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
       </DialogActions>
 
       <CareSitesDialog
-        careSite={_access.careSite ?? null}
-        onChangeCareSite={setAccessCareSite}
+        perimeter={_access.perimeter ?? null}
+        onChangePerimeter={setAccessPerimeter}
         open={openPerimeters}
         onClose={() => setOpenPerimeters(false)}
         isManageable={true}
