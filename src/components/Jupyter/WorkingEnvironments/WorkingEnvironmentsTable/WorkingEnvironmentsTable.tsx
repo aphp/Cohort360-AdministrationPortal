@@ -88,12 +88,7 @@ const WorkingEnvironmentsTable: React.FC<WorkingEnvironmentsTableProps> = ({ use
 
   return (
     <Grid container justify="flex-end">
-      <Grid
-        container
-        item
-        justify={userRights.right_add_users ? 'space-between' : 'flex-end'}
-        style={{ margin: '12px 0' }}
-      >
+      <Grid container item justify="space-between" style={{ margin: '12px 0' }}>
         <Button
           variant="contained"
           disableElevation
