@@ -174,7 +174,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                   hover
                   onClick={() => {
                     if (readAccessesUserRights) {
-                      history.push(`/console-admin/user-profile/${provider.provider_id}`)
+                      history.push(`/console-admin/user-profile/${provider.provider_source_value}`)
                     }
                   }}
                 >
@@ -189,7 +189,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                           <IconButton
                             onClick={(event) => {
                               event.stopPropagation()
-                              history.push(`/console-admin/user-profile/${provider.provider_id}`)
+                              history.push(`/console-admin/user-profile/${provider.provider_source_value}`)
                             }}
                           >
                             <VisibilityIcon />
