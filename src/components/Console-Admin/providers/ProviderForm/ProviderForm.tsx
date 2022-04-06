@@ -23,7 +23,7 @@ import {
   submitCreateProfile
 } from 'services/Console-Admin/providersHistoryService'
 import { CheckProfile, Profile, Provider } from 'types'
-import useDebounce from 'components/Console-Admin/CareSite/use-debounce'
+import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
 
 type ProviderFormProps = {
   open: boolean

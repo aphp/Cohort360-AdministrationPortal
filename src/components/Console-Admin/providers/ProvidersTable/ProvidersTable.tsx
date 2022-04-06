@@ -27,7 +27,7 @@ import useStyles from './styles'
 import { Column, Order, Provider, UserRole } from 'types'
 import { useAppSelector } from 'state'
 import { fetchProviders, setSelectedProvider } from 'state/providers'
-import useDebounce from 'components/Console-Admin/CareSite/use-debounce'
+import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
 import DataTable from 'components/DataTable/DataTable'
 
 type ProvidersTableProps = {
