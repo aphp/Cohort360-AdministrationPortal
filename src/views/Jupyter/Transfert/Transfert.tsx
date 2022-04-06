@@ -147,7 +147,7 @@ const Transfert: React.FC = () => {
       try {
         setLoadingOnWorkingEnvironments(true)
 
-        const workingEnvironmentsResp = await getWorkingEnvironments(orderDefault, 1, environmentSearchInput)
+        const workingEnvironmentsResp = await getWorkingEnvironments(orderDefault, 1, true, environmentSearchInput)
 
         setWorkingEnvironments(workingEnvironmentsResp?.workingEnvironments)
         setLoadingOnWorkingEnvironments(false)
@@ -172,7 +172,7 @@ const Transfert: React.FC = () => {
       const transferData = {
         output_format: 'hive',
         cohort_id: transferRequest.cohort?.fhir_group_id,
-        provider_id: transferRequest.user?.provider_id,
+        provider_source_value: transferRequest.user?.provider_source_value,
         target_unix_account: transferRequest.workingEnvironment?.uid,
         tables: transferRequest.tables.map((table: string) => ({
           omop_table_name: table
