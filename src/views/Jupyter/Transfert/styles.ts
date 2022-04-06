@@ -2,8 +2,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles((theme) => ({
   autocomplete: {
-    marginTop: 16,
-    marginBottom: 24,
+    margin: '1em',
     backgroundColor: 'white'
   },
   title: {
@@ -21,7 +20,8 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       backgroundColor: '#499cbf'
     },
-    alignSelf: 'end'
+    alignSelf: 'end',
+    marginBottom: 16
   },
   list: {
     border: `1px solid ${theme.palette.grey[400]}`,
@@ -29,6 +29,10 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: 300,
     minHeight: 200,
     overflow: 'auto'
+  },
+  infoIcon: {
+    height: 20,
+    margin: '0 5px -5px 0'
   }
 }))
 
