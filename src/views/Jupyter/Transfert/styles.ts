@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   autocomplete: {
     marginTop: 16,
     marginBottom: 24,
@@ -21,8 +21,14 @@ const useStyles = makeStyles(() => ({
     '&:hover': {
       backgroundColor: '#499cbf'
     },
-    alignSelf: 'end',
-    marginTop: 16
+    alignSelf: 'end'
+  },
+  list: {
+    border: `1px solid ${theme.palette.grey[400]}`,
+    borderRadius: 4,
+    maxHeight: 300,
+    minHeight: 200,
+    overflow: 'auto'
   }
 }))
 

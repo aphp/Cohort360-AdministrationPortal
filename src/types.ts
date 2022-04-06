@@ -338,7 +338,9 @@ export type Column = {
 export type JupyterTransferForm = {
   user: Provider | null
   cohort: Cohort | null
+  confidentiality: 'nomi' | 'pseudo'
   workingEnvironment: WorkingEnvironment | null
+  tables: []
 }
 
 export type Cohort = {
@@ -348,4 +350,11 @@ export type Cohort = {
   dated_measure: number
   created_at: string
   request_job_status: string
+  fhir_group_id: string
+}
+
+export type ExportTableType = {
+  id: string
+  table_name: string
+  table_id: string
 }

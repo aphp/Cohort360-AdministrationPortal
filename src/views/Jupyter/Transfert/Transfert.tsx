@@ -1,19 +1,38 @@
 import React, { Fragment, useEffect, useState } from 'react'
+import clsx from 'clsx'
 
-import { Button, CircularProgress, CssBaseline, Grid, TextField, Typography } from '@material-ui/core'
+import {
+  Button,
+  Checkbox,
+  CircularProgress,
+  CssBaseline,
+  FormControlLabel,
+  Grid,
+  List,
+  ListItem,
+  ListItemSecondaryAction,
+  ListItemText,
+  Radio,
+  RadioGroup,
+  TextField,
+  Typography
+} from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 
 import useStyles from './styles'
-import { Cohort, JupyterMachine, JupyterTransferForm, Order, Provider } from 'types'
-import useDebounce from 'components/Console-Admin/CareSite/use-debounce'
+import { Cohort, ExportTableType, JupyterTransferForm, Order, Provider, WorkingEnvironment } from 'types'
+import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
 import { getProviders } from 'services/Console-Admin/providersService'
 import { getProviderCohorts } from 'services/Console-Admin/cohortsService'
-import { getJupyterMachines } from 'services/Jupyter/workingEnvironmentsService'
+import { getWorkingEnvironments } from 'services/Jupyter/workingEnvironmentsService'
+import export_table from './export_tables'
 
 const defaultTransfer: JupyterTransferForm = {
   user: null,
   cohort: null,
-  jupyterMachine: null
+  workingEnvironment: null,
+  confidentiality: 'pseudo',
+  tables: []
 }
 
 const ERROR_ENVIRONMENT = 'error_environment'
@@ -27,22 +46,53 @@ const Transfert: React.FC = () => {
 
   const [loadingOnSearchProvider, setLoadingOnSearchProvider] = useState(false)
   const [loadingOnGetCohorts, setLoadingOnGetCohorts] = useState(false)
-  const [loadingOnGetJupyterMachines, setLoadingOnGetJupyterMachines] = useState(false)
+  const [loadingOnWorkingEnvironments, setLoadingOnWorkingEnvironments] = useState(false)
+  const [loadingOnValidate, setLoadingOnValidate] = useState(false)
   const [transferRequest, setTransferRequest] = useState(defaultTransfer)
   const [error /* setError */] = useState<typeof ERROR_ENVIRONMENT | typeof ERROR_USER | typeof ERROR_COHORT | null>(
     null
   )
   const [providersSearchResults, setProvidersSearchResults] = useState<Provider[]>([])
-  const [searchInput, setSearchInput] = useState('')
+  const [providerSearchInput, setProviderSearchInput] = useState('')
+  const [environmentSearchInput, setEnvironmentSearchInput] = useState('')
   const [cohortsOptions, setCohortsOptions] = useState<Cohort[]>([])
-  const [jupyterMachines, setJupyterMachines] = useState<JupyterMachine[]>([])
+  const [workingEnvironments, setWorkingEnvironments] = useState<WorkingEnvironment[]>([])
 
-  const debouncedSearchTerm = useDebounce(700, searchInput)
+  const debouncedProviderSearchTerm = useDebounce(700, providerSearchInput)
+  const debouncedEnvironmentSearchTerm = useDebounce(700, environmentSearchInput)
 
-  const _onChangeValue = (key: 'user' | 'cohort' | 'jupyterMachine', value: any) => {
+  const _onChangeValue = (key: 'user' | 'cohort' | 'workingEnvironment' | 'confidentiality' | 'tables', value: any) => {
     const _transferRequest = { ...transferRequest }
     _transferRequest[key] = value
     setTransferRequest(_transferRequest)
+  }
+
+  console.log('transferRequest', transferRequest)
+
+  const handleChangeTables = (tableId: string) => {
+    let existingTableIds: string[] = transferRequest.tables
+    const foundItem = existingTableIds.find((existingTableId) => existingTableId === tableId)
+    if (foundItem) {
+      const index = existingTableIds.indexOf(foundItem)
+      existingTableIds.splice(index, 1)
+    } else {
+      // Attention règle particulière
+      if (tableId === 'fact_relationship') {
+        const careSiteItem = existingTableIds.find((existingTableId) => existingTableId === 'care_site')
+        if (!careSiteItem) {
+          existingTableIds = [...existingTableIds, 'care_site']
+        }
+      }
+      if (tableId === 'concept_relationship') {
+        const careSiteItem = existingTableIds.find((existingTableId) => existingTableId === 'concept')
+        if (!careSiteItem) {
+          existingTableIds = [...existingTableIds, 'concept']
+        }
+      }
+
+      existingTableIds = [...existingTableIds, tableId]
+    }
+    _onChangeValue('tables', existingTableIds)
   }
 
   useEffect(() => {
@@ -50,7 +100,7 @@ const Transfert: React.FC = () => {
       try {
         setLoadingOnSearchProvider(true)
 
-        const providersResp = await getProviders(orderDefault, 1, debouncedSearchTerm)
+        const providersResp = await getProviders(orderDefault, 1, debouncedProviderSearchTerm)
 
         setProvidersSearchResults(providersResp.providers)
 
@@ -62,12 +112,12 @@ const Transfert: React.FC = () => {
       }
     }
 
-    if (debouncedSearchTerm && debouncedSearchTerm?.length > 0) {
+    if (debouncedProviderSearchTerm && debouncedProviderSearchTerm?.length > 0) {
       _searchProviders()
     } else {
       setProvidersSearchResults([])
     }
-  }, [debouncedSearchTerm])
+  }, [debouncedProviderSearchTerm])
 
   useEffect(() => {
     const _getProviderCohorts = async () => {
@@ -93,23 +143,50 @@ const Transfert: React.FC = () => {
   }, [transferRequest.user])
 
   useEffect(() => {
-    const _getJupyterMachines = async () => {
+    const _getWorkingEnvironments = async () => {
       try {
-        setLoadingOnGetJupyterMachines(true)
+        setLoadingOnWorkingEnvironments(true)
 
-        const jupyterMachinesResp = await getJupyterMachines()
+        const workingEnvironmentsResp = await getWorkingEnvironments(orderDefault, 1, environmentSearchInput)
 
-        setJupyterMachines(jupyterMachinesResp)
-        setLoadingOnGetJupyterMachines(false)
+        setWorkingEnvironments(workingEnvironmentsResp?.workingEnvironments)
+        setLoadingOnWorkingEnvironments(false)
       } catch (error) {
         console.error('Erreur lors de la récupération des machines Jupyter', error)
-        setJupyterMachines([])
-        setLoadingOnGetJupyterMachines(false)
+        setWorkingEnvironments([])
+        setLoadingOnWorkingEnvironments(false)
       }
     }
 
-    _getJupyterMachines()
-  }, [])
+    if (debouncedEnvironmentSearchTerm && debouncedEnvironmentSearchTerm?.length > 0) {
+      _getWorkingEnvironments()
+    } else {
+      setWorkingEnvironments([])
+    }
+  }, [debouncedEnvironmentSearchTerm])
+
+  const onSubmit = async () => {
+    try {
+      setLoadingOnValidate(true)
+
+      const transferData = {
+        output_format: 'hive',
+        cohort_id: transferRequest.cohort?.fhir_group_id,
+        provider_id: transferRequest.user?.provider_id,
+        target_unix_account: transferRequest.workingEnvironment?.uid,
+        tables: transferRequest.tables.map((table: string) => ({
+          omop_table_name: table
+        }))
+      }
+
+      console.log('transferData', transferData)
+
+      setLoadingOnValidate(false)
+    } catch (error) {
+      console.error("Erreur lors de l'envoi du formulaire", error)
+      setLoadingOnValidate(false)
+    }
+  }
 
   return (
     <Grid container direction="column">
@@ -138,10 +215,10 @@ const Transfert: React.FC = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Rechercher un utilisateur"
+                label="Recherchez un utilisateur"
                 variant="outlined"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
+                value={providerSearchInput}
+                onChange={(e) => setProviderSearchInput(e.target.value)}
                 InputProps={{
                   ...params.InputProps,
                   endAdornment: (
@@ -177,27 +254,80 @@ const Transfert: React.FC = () => {
           )}
 
           <Typography align="left" variant="h3">
-            Choix de l'environnement Jupyter
+            Choix de l'environnement de travail Jupyter
           </Typography>
-          {loadingOnGetJupyterMachines ? (
-            <CircularProgress style={{ margin: '16px auto 24px' }} />
-          ) : (
-            <Autocomplete
-              noOptionsText="Aucune machine disponible"
-              getOptionLabel={(option) => option.name}
-              options={jupyterMachines}
-              onChange={(event, value) => _onChangeValue('jupyterMachine', value)}
-              value={transferRequest.jupyterMachine}
-              renderOption={(option) => <React.Fragment>{option.name}</React.Fragment>}
-              renderInput={(params) => (
-                <TextField {...params} label="Sélectionnez une machine Jupyter" variant="outlined" />
-              )}
-              className={classes.autocomplete}
-            />
-          )}
 
-          <Button variant="contained" disableElevation className={classes.validateButton}>
-            Envoyer
+          <List className={clsx(classes.list, classes.autocomplete)}>
+            {export_table.map(({ table_name, table_id }: ExportTableType) => (
+              <ListItem key={table_id}>
+                <ListItemText
+                  disableTypography
+                  primary={
+                    <Grid container direction="row" alignItems="center">
+                      <Typography variant="body1">{table_name} - </Typography>
+                      <Typography variant="body1" style={{ fontStyle: 'italic', paddingLeft: 4 }}>
+                        {table_id}
+                      </Typography>
+                    </Grid>
+                  }
+                />
+
+                <ListItemSecondaryAction>
+                  <Checkbox
+                    checked={!!transferRequest.tables.find((tableId: string) => tableId === table_id)}
+                    onChange={() => handleChangeTables(table_id)}
+                  />
+                </ListItemSecondaryAction>
+              </ListItem>
+            ))}
+          </List>
+
+          <Typography align="left" variant="h3">
+            Choix de l'environnement de travail Jupyter
+          </Typography>
+          <Autocomplete
+            noOptionsText="Recherchez un environnement de travail Jupyter"
+            options={workingEnvironments ?? []}
+            loading={loadingOnWorkingEnvironments}
+            onChange={(e, value) => _onChangeValue('workingEnvironment', value)}
+            getOptionLabel={(option) => `${option.username}` ?? ''}
+            value={transferRequest.workingEnvironment}
+            getOptionSelected={(option, value) => option.uid === value.uid}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Recherchez un environnement de travail Jupyter"
+                variant="outlined"
+                value={environmentSearchInput}
+                onChange={(e) => setEnvironmentSearchInput(e.target.value)}
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <Fragment>
+                      {loadingOnWorkingEnvironments ? <CircularProgress color="inherit" size={20} /> : null}
+                      {params.InputProps.endAdornment}
+                    </Fragment>
+                  )
+                }}
+                className={classes.autocomplete}
+              />
+            )}
+          />
+
+          <Typography align="left" variant="h3">
+            Choix des accès
+          </Typography>
+          <RadioGroup
+            style={{ flexDirection: 'row', marginBottom: 24, marginTop: 16 }}
+            value={transferRequest.confidentiality}
+            onChange={(event) => _onChangeValue('confidentiality', event.target.value)}
+          >
+            <FormControlLabel value="pseudo" control={<Radio color="primary" />} label="Pseudonymisé" />
+            <FormControlLabel value="nomi" control={<Radio color="primary" />} label="Nominatif" />
+          </RadioGroup>
+
+          <Button variant="contained" disableElevation className={classes.validateButton} onClick={onSubmit}>
+            {loadingOnValidate ? <CircularProgress /> : 'Envoyer'}
           </Button>
         </Grid>
       </Grid>
