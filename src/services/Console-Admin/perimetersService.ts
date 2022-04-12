@@ -124,7 +124,7 @@ export const getPerimeterAccesses = async (perimeterId: string, order: Order, pa
 
   const searchFilter = searchInput ? `&search=${searchInput}` : ''
   const perimeterAccessesResp = await api.get(
-    `/accesses/?care_site_id=${perimeterId}&page=${page}&ordering=${_orderDirection === 'desc' ? '-' : ''}${
+    `/accesses/?target_perimeter_id=${perimeterId}&page=${page}&ordering=${_orderDirection === 'desc' ? '-' : ''}${
       order.orderBy
     }${searchFilter}`
   )
