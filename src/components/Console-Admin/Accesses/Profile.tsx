@@ -72,7 +72,7 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profile, userRights
         <Typography align="left" variant="h2" className={classes.title}>
           Type de profil : {profile.cdm_source}
         </Typography>
-        {profile.cdm_source === 'MANUAL' && manageAccessesUserRights && (
+        {profile.cdm_source?.toLocaleLowerCase() === 'manual' && manageAccessesUserRights && (
           <Button
             variant="contained"
             disableElevation

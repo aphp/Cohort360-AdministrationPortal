@@ -60,7 +60,7 @@ const Config = [
   {
     exact: true,
     displayPortailTopBar: true,
-    path: '/console-admin/user-profile/:providerId',
+    path: '/console-admin/user-profile/:providerSourceValue',
     isPrivate: true,
     component: ProvidersHistory
   },

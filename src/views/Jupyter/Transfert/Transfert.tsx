@@ -147,7 +147,7 @@ const Transfert: React.FC = () => {
       try {
         setLoadingOnWorkingEnvironments(true)
 
-        const workingEnvironmentsResp = await getWorkingEnvironments(orderDefault, 1, environmentSearchInput)
+        const workingEnvironmentsResp = await getWorkingEnvironments(orderDefault, 1, true, environmentSearchInput)
 
         setWorkingEnvironments(workingEnvironmentsResp?.workingEnvironments)
         setLoadingOnWorkingEnvironments(false)
@@ -172,7 +172,7 @@ const Transfert: React.FC = () => {
       const transferData = {
         output_format: 'hive',
         cohort_id: transferRequest.cohort?.fhir_group_id,
-        provider_id: transferRequest.user?.provider_id,
+        provider_source_value: transferRequest.user?.provider_source_value,
         target_unix_account: transferRequest.workingEnvironment?.uid,
         tables: transferRequest.tables.map((table: string) => ({
           omop_table_name: table
@@ -180,11 +180,9 @@ const Transfert: React.FC = () => {
         nominative: transferRequest.confidentiality === 'nomi'
       }
 
-      // const transferRequestResp = await jupyterTransfer(transferData)
+      const transferRequestResp = await jupyterTransfer(transferData)
 
-      console.log('transferData', transferData)
-
-      // true ? setTransferRequestSuccess(true) : setTransferRequestSuccess(false)
+      transferRequestResp ? setTransferRequestSuccess(true) : setTransferRequestFail(true)
 
       setTransferRequest(defaultTransfer)
       setLoadingOnValidate(false)
@@ -345,23 +343,23 @@ const Transfert: React.FC = () => {
                 <InfoIcon color="action" className={classes.infoIcon} />
                 <Typography component="span">Tous les champs sont obligatoires.</Typography>
               </div>
+
+              <Button
+                variant="contained"
+                disableElevation
+                className={classes.validateButton}
+                disabled={
+                  transferRequest.user === null ||
+                  transferRequest.cohort === null ||
+                  transferRequest.tables.length === 0 ||
+                  transferRequest.workingEnvironment === null
+                }
+                onClick={onSubmit}
+              >
+                Envoyer
+              </Button>
             </>
           )}
-
-          <Button
-            variant="contained"
-            disableElevation
-            className={classes.validateButton}
-            disabled={
-              transferRequest.user === null ||
-              transferRequest.cohort === null ||
-              transferRequest.tables.length === 0 ||
-              transferRequest.workingEnvironment === null
-            }
-            onClick={onSubmit}
-          >
-            {loadingOnValidate ? <CircularProgress /> : 'Envoyer'}
-          </Button>
         </Grid>
       </Grid>
 
@@ -369,7 +367,7 @@ const Transfert: React.FC = () => {
         <Snackbar
           open
           onClose={() => setTransferRequestSuccess(false)}
-          autoHideDuration={6000}
+          autoHideDuration={5000}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
           <Alert severity="success" onClose={() => setTransferRequestSuccess(false)}>
@@ -381,7 +379,7 @@ const Transfert: React.FC = () => {
         <Snackbar
           open
           onClose={() => setTransferRequestFail(false)}
-          autoHideDuration={6000}
+          autoHideDuration={5000}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
           <Alert severity="error" onClose={() => setTransferRequestFail(false)}>

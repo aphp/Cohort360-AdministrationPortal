@@ -60,7 +60,7 @@ const WorkingEnvironmentsTable: React.FC<WorkingEnvironmentsTableProps> = ({ use
     try {
       setLoading(true)
 
-      const workingEnvironmentsResp = await getWorkingEnvironments(order, page, searchInput.trim())
+      const workingEnvironmentsResp = await getWorkingEnvironments(order, page, false, searchInput.trim())
 
       setWorkingEnvironments(workingEnvironmentsResp?.workingEnvironments)
       setTotal(workingEnvironmentsResp?.total)

@@ -64,7 +64,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
   const [lastNameError, setLastNameError] = useState(false)
   const [emailError, setEmailError] = useState(false)
 
-  const isEdition = selectedProvider?.provider_id
+  const isEdition = selectedProvider?.provider_source_value
 
   const _onChangeValue = (key: 'provider_source_value' | 'firstname' | 'lastname' | 'email', value: any) => {
     const _provider = provider ? { ...provider } : {}
@@ -75,10 +75,10 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
   useEffect(() => {
     const _getProfile = async () => {
       try {
-        const providerId = provider?.provider_id?.toString()
+        const providerSourceValue = provider?.provider_source_value?.toString()
         setLoadingProviderData(true)
 
-        const profilesResp = await getProfile(providerId)
+        const profilesResp = await getProfile(providerSourceValue)
 
         if (profilesResp) {
           const manualProfile = profilesResp.find((profile: Profile) => profile.cdm_source === 'MANUAL')
