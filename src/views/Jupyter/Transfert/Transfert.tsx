@@ -180,11 +180,9 @@ const Transfert: React.FC = () => {
         nominative: transferRequest.confidentiality === 'nomi'
       }
 
-      // const transferRequestResp = await jupyterTransfer(transferData)
+      const transferRequestResp = await jupyterTransfer(transferData)
 
-      console.log('transferData', transferData)
-
-      // true ? setTransferRequestSuccess(true) : setTransferRequestSuccess(false)
+      transferRequestResp ? setTransferRequestSuccess(true) : setTransferRequestFail(true)
 
       setTransferRequest(defaultTransfer)
       setLoadingOnValidate(false)
@@ -345,23 +343,23 @@ const Transfert: React.FC = () => {
                 <InfoIcon color="action" className={classes.infoIcon} />
                 <Typography component="span">Tous les champs sont obligatoires.</Typography>
               </div>
+
+              <Button
+                variant="contained"
+                disableElevation
+                className={classes.validateButton}
+                disabled={
+                  transferRequest.user === null ||
+                  transferRequest.cohort === null ||
+                  transferRequest.tables.length === 0 ||
+                  transferRequest.workingEnvironment === null
+                }
+                onClick={onSubmit}
+              >
+                Envoyer
+              </Button>
             </>
           )}
-
-          <Button
-            variant="contained"
-            disableElevation
-            className={classes.validateButton}
-            disabled={
-              transferRequest.user === null ||
-              transferRequest.cohort === null ||
-              transferRequest.tables.length === 0 ||
-              transferRequest.workingEnvironment === null
-            }
-            onClick={onSubmit}
-          >
-            {loadingOnValidate ? <CircularProgress /> : 'Envoyer'}
-          </Button>
         </Grid>
       </Grid>
 
@@ -369,7 +367,7 @@ const Transfert: React.FC = () => {
         <Snackbar
           open
           onClose={() => setTransferRequestSuccess(false)}
-          autoHideDuration={6000}
+          autoHideDuration={5000}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
           <Alert severity="success" onClose={() => setTransferRequestSuccess(false)}>
@@ -381,7 +379,7 @@ const Transfert: React.FC = () => {
         <Snackbar
           open
           onClose={() => setTransferRequestFail(false)}
-          autoHideDuration={6000}
+          autoHideDuration={5000}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         >
           <Alert severity="error" onClose={() => setTransferRequestFail(false)}>
