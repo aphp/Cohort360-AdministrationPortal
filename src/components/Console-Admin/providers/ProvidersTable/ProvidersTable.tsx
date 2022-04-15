@@ -178,7 +178,11 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                     }
                   }}
                 >
-                  <TableCell align="center">{provider.provider_source_value}</TableCell>
+                  <TableCell align="center">
+                    <Typography onClick={(event) => event.stopPropagation()}>
+                      {provider.provider_source_value}
+                    </Typography>
+                  </TableCell>
                   <TableCell align="center">{provider.lastname?.toLocaleUpperCase()}</TableCell>
                   <TableCell align="center">{provider.firstname}</TableCell>
                   <TableCell align="center">{provider.email ?? '-'}</TableCell>
