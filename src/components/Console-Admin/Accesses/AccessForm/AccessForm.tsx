@@ -140,12 +140,13 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
         }
       }
 
-      if (stringStartDate) {
-        // @ts-ignore
+      if (
+        (stringStartDate && isEdition && _access.actual_start_datetime?.isAfter()) ||
+        (stringStartDate && !isEdition)
+      ) {
         accessData = { ...accessData, start_datetime: stringStartDate }
       }
       if (stringEndDate) {
-        // @ts-ignore
         accessData = { ...accessData, end_datetime: stringEndDate }
       }
 
