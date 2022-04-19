@@ -30,7 +30,7 @@ const theme = createMuiTheme({
     fontFamily: "'Open Sans', sans-serif",
     h1: {
       fontFamily: "'Montserrat', sans-serif",
-      fontSize: '32px',
+      fontSize: '28px',
       fontWeight: 'bold'
     },
     h2: {

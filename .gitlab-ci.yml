@@ -5,9 +5,9 @@ stages: # List of stages for jobs in their order of execution
   - build
   - deploy
 
-include: # Variables needed for Selenium tests
-  project: dev/test_newci_front
-  file: '/.gitlab/selenium_variables.yml'
+# include: # Variables needed for Selenium tests
+#   project: dev/console-admin/omop-admin-wui
+#   file: '/.gitlab/selenium_variables.yml'
 
 # test-e2e-chrome-job:
 #   stage: test
@@ -34,7 +34,7 @@ build-job:
   stage: build
   script:
     - npm install
-    - npm run build
+    - CI=false npm run build
   artifacts:
     paths:
       - build/

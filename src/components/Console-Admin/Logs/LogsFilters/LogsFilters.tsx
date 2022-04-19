@@ -20,7 +20,7 @@ import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date'
 
 import EditIcon from '@material-ui/icons/Edit'
 
-import CareSitesDialog from '../../Accesses/AccessForm/components/CareSitesDialog/CareSitesDialog'
+import PerimetersDialog from '../../Accesses/AccessForm/components/PerimetersDialog/PerimetersDialog'
 
 import useStyles from './styles'
 import { LogsFiltersObject, ScopeTreeRow, UserRole } from 'types'
@@ -56,11 +56,11 @@ const statusCodes = ['200', '201', '204', '400', '401', '403', '404', '500']
 const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onClose, userRights }) => {
   const classes = useStyles()
 
-  const formattedCareSite = filters.careSite.careSiteId
+  const formattedPerimeter = filters.perimeter.perimeterId
     ? {
-        care_site_id: filters.careSite.careSiteId ?? '',
-        name: filters.careSite.careSiteName ?? '',
-        care_site_type_source_value: '',
+        id: filters.perimeter.perimeterId ?? '',
+        name: filters.perimeter.perimeterName ?? '',
+        type: '',
         children: []
       }
     : null
@@ -69,7 +69,7 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
   const [dateError, setDateError] = useState(false)
   const [userError, setUserError] = useState(false)
   const [openPerimeters, setOpenPerimeters] = useState(false)
-  const [selectedCareSite, setSelectedCareSite] = useState<ScopeTreeRow | null>(formattedCareSite)
+  const [selectedPerimeter, setSelectedPerimeter] = useState<ScopeTreeRow | null>(formattedPerimeter)
   const [loadingOnValidate, setLoadingOnValidate] = useState(false)
 
   useEffect(() => {
@@ -104,9 +104,9 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
     setLoadingOnValidate(true)
     const _filtersCopy = {
       ..._filters,
-      careSite: {
-        careSiteId: selectedCareSite?.care_site_id.toString() ?? null,
-        careSiteName: selectedCareSite?.name ?? null
+      perimeter: {
+        perimeterId: selectedPerimeter?.id ?? null,
+        perimeterName: selectedPerimeter?.name ?? null
       }
     }
     onChangeFilters(_filtersCopy)
@@ -214,9 +214,9 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
         </Grid>
         <Grid container justify="space-between" alignItems="center">
           <Typography variant="h6">Périmètre :</Typography>
-          {selectedCareSite ? (
+          {selectedPerimeter ? (
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <Typography>{selectedCareSite.name.split('.').join(' ')}</Typography>
+              <Typography>{selectedPerimeter.name.split('.').join(' ')}</Typography>
               <IconButton onClick={() => setOpenPerimeters(true)} style={{ padding: '0 8px' }}>
                 <EditIcon />
               </IconButton>
@@ -242,9 +242,9 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
         </Button>
       </DialogActions>
 
-      <CareSitesDialog
-        careSite={selectedCareSite}
-        onChangeCareSite={setSelectedCareSite}
+      <PerimetersDialog
+        perimeter={selectedPerimeter}
+        onChangePerimeter={setSelectedPerimeter}
         open={openPerimeters}
         onClose={() => setOpenPerimeters(false)}
         isManageable={false}

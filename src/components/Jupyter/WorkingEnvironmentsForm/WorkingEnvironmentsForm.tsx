@@ -20,7 +20,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import ProvidersTable from './components/ProvidersTable/ProvidersTable'
 import { getJupyterMachines } from 'services/Jupyter/workingEnvironmentsService'
 import { getProviders } from 'services/Console-Admin/providersService'
-import useDebounce from 'components/Console-Admin/CareSite/use-debounce'
+import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
 import { JupyterMachine, Order, Provider, UserRole } from 'types'
 
 import useStyles from './styles'

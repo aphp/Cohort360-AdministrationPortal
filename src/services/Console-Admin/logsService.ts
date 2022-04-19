@@ -15,19 +15,19 @@ export const getLogs = async (filters: LogsFiltersObject, page: number) => {
       ? `&requested_at_before=${moment(filters.beforeDate).format('YYYY-MM-DD')}`
       : ''
     const accessFilters = filters.access ? `&path_contains=/accesses/${filters.access}/` : ''
-    const careSiteFilters = filters.careSite.careSiteId
-      ? `&response="care_site_id":${filters.careSite.careSiteId},`
+    const perimeterFilters = filters.perimeter.perimeterId
+      ? `&response="care_site_id":${filters.perimeter.perimeterId},`
       : ''
 
     const getLogsResp = await api.get(
-      `/logs/?page=${page}${urlsFilter}${userFilter}${statusCodeFilter}${httpMethodFilter}${afterDateFilter}${beforeDateFilter}${accessFilters}${careSiteFilters}`
+      `/logs/?page=${page}${urlsFilter}${userFilter}${statusCodeFilter}${httpMethodFilter}${afterDateFilter}${beforeDateFilter}${accessFilters}${perimeterFilters}`
     )
 
     const logsResp = getLogsResp?.data.results ?? []
 
     if (filters.access && page === 1) {
       const getCreateAccessLogsResp = await api.get(
-        `/logs/?page=${page}&path=/accesses/&response="care_site_history_id":${filters.access}${userFilter}${statusCodeFilter}${httpMethodFilter}${afterDateFilter}${beforeDateFilter}${careSiteFilters}`
+        `/logs/?page=${page}&path=/accesses/&response="care_site_history_id":${filters.access}${userFilter}${statusCodeFilter}${httpMethodFilter}${afterDateFilter}${beforeDateFilter}${perimeterFilters}`
       )
 
       const createAccessLogs: Log[] = getCreateAccessLogsResp?.data?.results ?? []

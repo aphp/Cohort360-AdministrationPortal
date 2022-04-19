@@ -27,7 +27,7 @@ import useStyles from './styles'
 import { Column, Order, Provider, UserRole } from 'types'
 import { useAppSelector } from 'state'
 import { fetchProviders, setSelectedProvider } from 'state/providers'
-import useDebounce from 'components/Console-Admin/CareSite/use-debounce'
+import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
 import DataTable from 'components/DataTable/DataTable'
 
 type ProvidersTableProps = {
@@ -174,11 +174,15 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                   hover
                   onClick={() => {
                     if (readAccessesUserRights) {
-                      history.push(`/console-admin/user-profile/${provider.provider_id}`)
+                      history.push(`/console-admin/user-profile/${provider.provider_source_value}`)
                     }
                   }}
                 >
-                  <TableCell align="center">{provider.provider_source_value}</TableCell>
+                  <TableCell align="center">
+                    <Typography onClick={(event) => event.stopPropagation()}>
+                      {provider.provider_source_value}
+                    </Typography>
+                  </TableCell>
                   <TableCell align="center">{provider.lastname?.toLocaleUpperCase()}</TableCell>
                   <TableCell align="center">{provider.firstname}</TableCell>
                   <TableCell align="center">{provider.email ?? '-'}</TableCell>
@@ -189,7 +193,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                           <IconButton
                             onClick={(event) => {
                               event.stopPropagation()
-                              history.push(`/console-admin/user-profile/${provider.provider_id}`)
+                              history.push(`/console-admin/user-profile/${provider.provider_source_value}`)
                             }}
                           >
                             <VisibilityIcon />

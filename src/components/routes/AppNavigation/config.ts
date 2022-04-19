@@ -3,8 +3,8 @@ import HomePage from 'views/HomePage/HomePage'
 
 import Providers from 'views/Console-Admin/Providers/Providers'
 import ProvidersHistory from 'views/Console-Admin/ProvidersHistory/ProvidersHistory'
-import CareSites from 'views/Console-Admin/CareSites/CareSites'
-import CareSiteHistory from 'views/Console-Admin/CareSiteHistory/CareSiteHistory'
+import Perimeters from 'views/Console-Admin/Perimeters/Perimeters'
+import PerimeterHistory from 'views/Console-Admin/PerimeterHistory/PerimeterHistory'
 import Habilitations from 'views/Console-Admin/Habilitations/Habilitations'
 import Logs from 'views/Console-Admin/Logs/Logs'
 
@@ -46,7 +46,6 @@ const Config = [
 
   {
     exact: true,
-    // displayTopBar: true,
     displayPortailTopBar: true,
     path: '/console-admin/users',
     name: 'Users',
@@ -60,39 +59,36 @@ const Config = [
 
   {
     exact: true,
-    // displayTopBar: true,
     displayPortailTopBar: true,
-    path: '/console-admin/user-profile/:providerId',
+    path: '/console-admin/user-profile/:providerSourceValue',
     isPrivate: true,
     component: ProvidersHistory
   },
 
   /**
-   * Console-Admin CareSites View
+   * Console-Admin Perimeters View
    */
 
   {
     exact: true,
-    // displayTopBar: true,
     displayPortailTopBar: true,
-    path: '/console-admin/caresites',
-    name: 'CareSites',
+    path: '/console-admin/perimeters',
+    name: 'Perimeters',
     isPrivate: true,
-    component: CareSites
+    component: Perimeters
   },
 
   /**
-   * Console-Admin CareSite View
+   * Console-Admin Perimeter View
    */
 
   {
     exact: true,
-    // displayTopBar: true,
     displayPortailTopBar: true,
-    path: '/console-admin/caresite/:careSiteId',
-    name: 'CareSite',
+    path: '/console-admin/perimeter/:perimeterId',
+    name: 'Perimeter',
     isPrivate: true,
-    component: CareSiteHistory
+    component: PerimeterHistory
   },
 
   /**
@@ -101,7 +97,6 @@ const Config = [
 
   {
     exact: true,
-    // displayTopBar: true,
     displayPortailTopBar: true,
     path: '/console-admin/habilitations',
     name: 'Habilitations',
@@ -115,7 +110,6 @@ const Config = [
 
   {
     exact: true,
-    // displayTopBar: true,
     displayPortailTopBar: true,
     path: '/console-admin/logs',
     name: 'Logs',
@@ -131,7 +125,6 @@ const Config = [
 
   {
     exact: true,
-    // displayTopBar: true,
     displayPortailTopBar: true,
     path: '/espace-jupyter/transfert',
     name: 'Transfert Jupyter',

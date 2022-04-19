@@ -1,10 +1,10 @@
 import { AccessData, Order, Profile, Provider } from 'types'
 import api from '../api'
 
-export const getProfile = async (providerId?: string) => {
-  if (!providerId) return undefined
+export const getProfile = async (providerSourceValue?: string) => {
+  if (!providerSourceValue) return undefined
 
-  const profileResp = await api.get(`/profiles/?provider_id=${providerId}`)
+  const profileResp = await api.get(`/profiles/?provider_source_value=${providerSourceValue}`)
 
   if (profileResp.status !== 200) {
     return undefined

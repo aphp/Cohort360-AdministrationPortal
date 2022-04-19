@@ -24,9 +24,9 @@ export const getProviders = async (order: Order, page?: number, searchInput?: st
   }
 }
 
-export const getProvider = async (providerId: string) => {
+export const getProvider = async (providerSourceValue: string) => {
   try {
-    const providerResp = await api.get(`/providers/${providerId}/`)
+    const providerResp = await api.get(`/providers/${providerSourceValue}/`)
 
     return providerResp.data ?? undefined
   } catch (error) {

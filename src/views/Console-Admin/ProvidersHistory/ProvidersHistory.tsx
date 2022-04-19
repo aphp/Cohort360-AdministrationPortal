@@ -20,7 +20,7 @@ const ProviderHistory: React.FC = () => {
   const [rights, setRights] = useState<Profile[] | undefined>()
   const [roles, setRoles] = useState<Role[] | undefined>()
 
-  const { providerId } = useParams<{ providerId: string }>()
+  const { providerSourceValue } = useParams<{ providerSourceValue: string }>()
 
   useEffect(() => {
     const _getRoles = async () => {
@@ -49,11 +49,11 @@ const ProviderHistory: React.FC = () => {
       try {
         setLoading(true)
 
-        const providerResp = await getProvider(providerId)
+        const providerResp = await getProvider(providerSourceValue)
 
         setProvider(providerResp)
 
-        const rightsResp = await getProfile(providerId)
+        const rightsResp = await getProfile(providerSourceValue)
 
         setRights(rightsResp)
 
@@ -68,7 +68,7 @@ const ProviderHistory: React.FC = () => {
     _getUserRights()
     _getProviderHistory()
     _getRoles()
-  }, [providerId]) // eslint-disable-line
+  }, [providerSourceValue]) // eslint-disable-line
 
   return (
     <Grid container direction="column">

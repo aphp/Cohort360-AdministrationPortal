@@ -1,10 +1,13 @@
 import { Order } from 'types'
 import api from '../api'
 
-export const getWorkingEnvironments = async (order: Order, page: number) => {
+export const getWorkingEnvironments = async (order: Order, page: number, exports: boolean, searchInput?: string) => {
   try {
+    const searchFilter = searchInput ? `&search=${searchInput}` : ''
     const workingEnvironmentsResp = await api.get(
-      `/workspaces/users/?page=${page}&ordering=${order.orderDirection === 'desc' ? '-' : ''}${order.orderBy}`
+      `/${exports ? 'exports/unix-accounts' : 'workspaces/users'}/?page=${page}&ordering=${
+        order.orderDirection === 'desc' ? '-' : ''
+      }${order.orderBy}${searchFilter}`
     )
 
     const workingEnvironments = workingEnvironmentsResp.data.results ?? []

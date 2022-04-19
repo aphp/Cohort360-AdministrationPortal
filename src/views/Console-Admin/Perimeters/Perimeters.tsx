@@ -3,14 +3,14 @@ import { useHistory } from 'react-router-dom'
 
 import { Button, CircularProgress, Grid, Paper, Typography } from '@material-ui/core'
 
-import CareSiteTree from 'components/Console-Admin/CareSite/CareSiteTree'
+import PerimeterTree from 'components/Console-Admin/Perimeter/PerimeterTree'
 import SearchBar from 'components/SearchBar/SearchBar'
 
 import useStyles from './styles'
 import { ScopeTreeRow } from 'types'
 import { getUserRights, userDefaultRoles } from 'utils/userRoles'
 
-const CareSites: React.FC = () => {
+const Perimeters: React.FC = () => {
   const classes = useStyles()
   const history = useHistory()
   const [userRights, setUserRights] = useState(userDefaultRoles)
@@ -53,7 +53,7 @@ const CareSites: React.FC = () => {
             <>
               <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
               <Paper style={{ width: '100%', marginTop: 12, marginBottom: 100 }}>
-                <CareSiteTree
+                <PerimeterTree
                   defaultSelectedItems={selectedItem}
                   onChangeSelectedItem={onChangeSelectedItem}
                   searchInput={searchInput}
@@ -71,7 +71,7 @@ const CareSites: React.FC = () => {
               disableElevation
               disabled={!selectedItem}
               className={classes.button}
-              onClick={() => history.push(`/console-admin/caresite/${selectedItem?.care_site_id}`)}
+              onClick={() => history.push(`/console-admin/perimeter/${selectedItem?.id}`)}
             >
               Valider
             </Button>
@@ -82,4 +82,4 @@ const CareSites: React.FC = () => {
   )
 }
 
-export default CareSites
+export default Perimeters

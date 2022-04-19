@@ -24,7 +24,7 @@ const HomePage = () => {
     },
     {
       name: 'Périmètres',
-      pathname: '/console-admin/caresites',
+      pathname: '/console-admin/perimeters',
       rightsToSee:
         userRights.right_read_users ||
         userRights.right_read_admin_accesses_same_level ||
