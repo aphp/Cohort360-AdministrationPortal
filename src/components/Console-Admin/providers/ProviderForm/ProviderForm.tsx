@@ -81,7 +81,9 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
         const profilesResp = await getProfile(providerSourceValue)
 
         if (profilesResp) {
-          const manualProfile = profilesResp.find((profile: Profile) => profile.cdm_source === 'MANUAL')
+          const manualProfile = profilesResp.find(
+            (profile: Profile) => profile.cdm_source?.toLocaleLowerCase() === 'manual'
+          )
 
           setProviderHistoryId(manualProfile.provider_history_id)
         }

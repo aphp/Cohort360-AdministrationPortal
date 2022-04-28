@@ -208,7 +208,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
                         classes={{ tooltip: classes.tooltip }}
                         // @ts-ignore
                         title={roles
-                          .find((role: Role) => role.role_id === access.role_id)
+                          .find((role: Role) => role.role_id === access.role?.id)
                           ?.help_text.map((text, index: number) => (
                             <Typography key={index}>- {text}</Typography>
                           ))}
