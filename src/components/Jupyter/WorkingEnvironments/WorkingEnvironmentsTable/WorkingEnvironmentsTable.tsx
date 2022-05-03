@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { Button, CircularProgress, Grid, TableCell, TableRow, Typography, Snackbar, Chip } from '@material-ui/core'
+import { Button, CircularProgress, Grid, TableCell, TableRow, Typography, Snackbar } from '@material-ui/core'
 import Alert from '@material-ui/lab/Alert'
 
 import AddIcon from '@material-ui/icons/Add'

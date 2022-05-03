@@ -27,7 +27,7 @@ import TimerOffIcon from '@material-ui/icons/TimerOff'
 
 import useStyles from './styles'
 import AccessForm from '../AccessForm/AccessForm'
-import { Access, Column, Order, Role, UserRole } from 'types'
+import { Access, Column, Order, Role, ScopeTreeRow, UserRole } from 'types'
 import { Alert } from '@material-ui/lab'
 import moment from 'moment'
 import { onDeleteOrTerminateAccess } from 'services/Console-Admin/providersHistoryService'
@@ -63,7 +63,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
   const classes = useStyles()
   const history = useHistory()
 
-  const [selectedAccess, setSelectedAccess] = useState<Access | null>(null)
+  const [selectedAccess, setSelectedAccess] = useState<(Access & { perimeter?: null | ScopeTreeRow }) | null>(null)
   const [deleteAccess, setDeleteAccess] = useState<Access | null>(null)
   const [editAccessSuccess, setEditAccessSuccess] = useState(false)
   const [editAccessFail, setEditAccessFail] = useState(false)
@@ -243,7 +243,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
                               <Tooltip title="Éditer l'accès">
                                 <IconButton
                                   onClick={() => {
-                                    setSelectedAccess(access)
+                                    setSelectedAccess(access as Access & { perimeter?: null | ScopeTreeRow })
                                   }}
                                   style={{ padding: '4px 12px' }}
                                 >
