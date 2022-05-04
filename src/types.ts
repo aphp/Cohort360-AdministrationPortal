@@ -161,6 +161,7 @@ export type UserRole = {
 }
 
 export type Role = UserRole & {
+  id?: number
   role_id?: number
   insert_datetime?: string | null
   update_datetime?: string | null
@@ -200,7 +201,7 @@ export type Access = {
   care_site?: CareSite
   perimeter?: Perimeter
   perimeter_id?: string
-  role: { name: string; role_id: number; help_text: string[] }
+  role: Role
   entry_created_by: number
   created_by: string
   start_datetime: string
