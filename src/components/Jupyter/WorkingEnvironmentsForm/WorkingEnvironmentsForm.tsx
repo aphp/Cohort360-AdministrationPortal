@@ -119,7 +119,7 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
 
         const formInfosResp = await getJupyterMachines()
 
-        setJupyterMachines(formInfosResp?.jupyterMachines ?? [])
+        setJupyterMachines(formInfosResp ?? [])
         setLoading(false)
       } catch (error) {
         setLoading(false)
