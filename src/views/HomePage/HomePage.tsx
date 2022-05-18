@@ -53,7 +53,7 @@ const HomePage = () => {
     {
       name: 'Environnements de travail',
       pathname: `/espace-jupyter/working-environments`,
-      rightsToSee: true
+      rightsToSee: userRights.right_read_env_unix_users
     }
   ]
 
@@ -85,7 +85,7 @@ const HomePage = () => {
                 )
             )}
           </Grid>
-          {userRights.right_review_transfer_jupyter && (
+          {(userRights.right_review_transfer_jupyter || userRights.right_read_env_unix_users) && (
             <Grid container item className={classes.box} xs={12} sm={4} direction="column" alignItems="center">
               <FlipCameraAndroidIcon style={{ fontSize: 100, marginBottom: 12 }} />
               <Typography variant="h6" style={{ fontSize: 16, marginBottom: 28, lineHeight: 'inherit' }}>
