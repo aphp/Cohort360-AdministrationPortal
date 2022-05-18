@@ -56,6 +56,9 @@ const WorkingEnvironmentsTable: React.FC<WorkingEnvironmentsTableProps> = ({ use
   const [addWorkingEnvironmentSuccess, setAddWorkingEnvironmentSuccess] = useState(false)
   const [addWorkingEnvironmentFail, setAddWorkingEnvironmentFail] = useState(false)
 
+  const createWorkingEnvironmentUserRights =
+    userRights.right_manage_env_unix_users && userRights.right_manage_env_user_links
+
   const _getWorkingEnvironments = async () => {
     try {
       setLoading(true)
@@ -88,16 +91,23 @@ const WorkingEnvironmentsTable: React.FC<WorkingEnvironmentsTableProps> = ({ use
 
   return (
     <Grid container justify="flex-end">
-      <Grid container item justify="space-between" style={{ margin: '12px 0' }}>
-        <Button
-          variant="contained"
-          disableElevation
-          startIcon={<AddIcon height="15px" fill="#FFF" />}
-          className={classes.searchButton}
-          onClick={() => setSelectedWorkingEnvironment({})}
-        >
-          Nouvel environnement
-        </Button>
+      <Grid
+        container
+        item
+        justify={createWorkingEnvironmentUserRights ? 'space-between' : 'flex-end'}
+        style={{ margin: '12px 0' }}
+      >
+        {createWorkingEnvironmentUserRights && (
+          <Button
+            variant="contained"
+            disableElevation
+            startIcon={<AddIcon height="15px" fill="#FFF" />}
+            className={classes.searchButton}
+            onClick={() => setSelectedWorkingEnvironment({})}
+          >
+            Nouvel environnement
+          </Button>
+        )}
         <Grid container item xs={6} justify="flex-end" alignItems="center">
           <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
         </Grid>

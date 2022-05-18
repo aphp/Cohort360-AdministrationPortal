@@ -67,7 +67,7 @@ const PortailTopBar: React.FC = () => {
     {
       name: 'Environnements',
       pathname: `/espace-jupyter/working-environments`,
-      rightsToSee: true
+      rightsToSee: userRights.right_read_env_unix_users
     }
   ]
 
@@ -130,7 +130,7 @@ const PortailTopBar: React.FC = () => {
                   )
               )}
             </Menu>
-            {userRights.right_review_transfer_jupyter && (
+            {(userRights.right_review_transfer_jupyter || userRights.right_read_env_unix_users) && (
               <Button
                 onClick={handleClickEspaceJupyter}
                 className={clsx(
