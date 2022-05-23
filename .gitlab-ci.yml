@@ -63,6 +63,7 @@ deploy-job:
       --context ${CI_PROJECT_DIR}
       --dockerfile ${CI_PROJECT_DIR}/Dockerfile
       --destination harbor.eds.aphp.fr/cohort360/portail:${VERSION}
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "develop" || $CI_COMMIT_BRANCH == "main"'
-      when: on_success
+  only :
+    - tags
+    - develop
+    - ^feat_deploy_(\w*|\d*)
