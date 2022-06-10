@@ -38,6 +38,7 @@ const defaultTransfer: JupyterTransferForm = {
   cohort: null,
   workingEnvironment: null,
   confidentiality: 'pseudo',
+  shiftDates: 'no',
   tables: []
 }
 
@@ -63,8 +64,12 @@ const Transfert: React.FC = () => {
   const debouncedProviderSearchTerm = useDebounce(700, providerSearchInput)
   const debouncedEnvironmentSearchTerm = useDebounce(700, environmentSearchInput)
 
-  const _onChangeValue = (key: 'user' | 'cohort' | 'workingEnvironment' | 'confidentiality' | 'tables', value: any) => {
+  const _onChangeValue = (
+    key: 'user' | 'cohort' | 'workingEnvironment' | 'confidentiality' | 'shiftDates' | 'tables',
+    value: any
+  ) => {
     const _transferRequest = { ...transferRequest }
+    // @ts-ignore
     _transferRequest[key] = value
     setTransferRequest(_transferRequest)
   }
@@ -177,6 +182,7 @@ const Transfert: React.FC = () => {
         tables: transferRequest.tables.map((table: string) => ({
           omop_table_name: table
         })),
+        shift_dates: transferRequest.shiftDates === 'yes',
         nominative: transferRequest.confidentiality === 'nomi'
       }
 
@@ -296,6 +302,18 @@ const Transfert: React.FC = () => {
               </List>
 
               <Typography align="left" variant="h6">
+                Décaler les dates des évènements
+              </Typography>
+              <RadioGroup
+                className={classes.radioGroup}
+                value={transferRequest.shiftDates}
+                onChange={(event) => _onChangeValue('shiftDates', event.target.value)}
+              >
+                <FormControlLabel value="yes" control={<Radio color="primary" />} label="Oui" />
+                <FormControlLabel value="no" control={<Radio color="primary" />} label="Non" />
+              </RadioGroup>
+
+              <Typography align="left" variant="h6">
                 Choix de l'environnement de travail Jupyter
               </Typography>
               <Autocomplete
@@ -331,7 +349,7 @@ const Transfert: React.FC = () => {
                 Choix des accès
               </Typography>
               <RadioGroup
-                style={{ flexDirection: 'row', margin: '8px 1em 0 1em' }}
+                className={classes.radioGroup}
                 value={transferRequest.confidentiality}
                 onChange={(event) => _onChangeValue('confidentiality', event.target.value)}
               >

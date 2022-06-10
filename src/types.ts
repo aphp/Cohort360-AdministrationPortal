@@ -341,6 +341,7 @@ export type JupyterTransferForm = {
   cohort: Cohort | null
   confidentiality: 'nomi' | 'pseudo'
   workingEnvironment: WorkingEnvironment | null
+  shiftDates: 'yes' | 'no'
   tables: []
 }
 
