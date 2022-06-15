@@ -48,7 +48,7 @@ const HomePage = () => {
     {
       name: 'Transfert Jupyter',
       pathname: `/espace-jupyter/transfert`,
-      rightsToSee: userRights.right_review_transfer_jupyter
+      rightsToSee: userRights.right_transfer_jupyter_nominative || userRights.right_transfer_jupyter_pseudo_anonymised
     },
     {
       name: 'Environnements de travail',
@@ -85,7 +85,9 @@ const HomePage = () => {
                 )
             )}
           </Grid>
-          {(userRights.right_review_transfer_jupyter || userRights.right_read_env_unix_users) && (
+          {(userRights.right_transfer_jupyter_nominative ||
+            userRights.right_transfer_jupyter_pseudo_anonymised ||
+            userRights.right_read_env_unix_users) && (
             <Grid container item className={classes.box} xs={12} sm={4} direction="column" alignItems="center">
               <FlipCameraAndroidIcon style={{ fontSize: 100, marginBottom: 12 }} />
               <Typography variant="h6" style={{ fontSize: 16, marginBottom: 28, lineHeight: 'inherit' }}>

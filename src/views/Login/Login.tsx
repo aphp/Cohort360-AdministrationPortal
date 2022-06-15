@@ -91,6 +91,8 @@ const Login = () => {
           !_userRights.right_manage_review_transfer_jupyter &&
           !_userRights.right_review_transfer_jupyter &&
           !_userRights.right_manage_transfer_jupyter &&
+          !_userRights.right_transfer_jupyter_nominative &&
+          !_userRights.right_transfer_jupyter_pseudo_anonymised &&
           !_userRights.right_manage_review_export_csv &&
           !_userRights.right_review_export_csv &&
           !_userRights.right_manage_export_csv &&
