@@ -62,7 +62,8 @@ const PortailTopBar: React.FC = () => {
     {
       name: 'Transfert Jupyter',
       pathname: `/espace-jupyter/transfert`,
-      rightsToSee: userRights.right_review_transfer_jupyter
+      rightsToSee:
+        userRights.right_transfer_jupyter_nominative || userRights.right_export_jupyter_patient_pseudo_anonymised
     },
     {
       name: 'Environnements',
@@ -130,7 +131,9 @@ const PortailTopBar: React.FC = () => {
                   )
               )}
             </Menu>
-            {(userRights.right_review_transfer_jupyter || userRights.right_read_env_unix_users) && (
+            {(userRights.right_transfer_jupyter_nominative ||
+              userRights.right_export_jupyter_patient_pseudo_anonymised ||
+              userRights.right_read_env_unix_users) && (
               <Button
                 onClick={handleClickEspaceJupyter}
                 className={clsx(
