@@ -39,10 +39,10 @@ build-job:
     paths:
       - build/
     expire_in: 1 day
-  rules:
+  only:
     - tags
     - develop
-    - ^feat_deploy_(\w*|\d*)
+    - /^feat_deploy_(\w*|\d*|-*)+$/
   cache:
     key: cohort360_nodemodules_cache
     paths:
@@ -67,4 +67,4 @@ deploy-job:
   only :
     - tags
     - develop
-    - ^feat_deploy_(\w*|\d*)
+    - /^feat_deploy_(\w*|\d*|-*)+$/
