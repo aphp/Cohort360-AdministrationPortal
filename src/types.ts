@@ -142,8 +142,6 @@ export type UserRole = {
   right_read_data_accesses_inferior_levels: boolean | null
   right_read_patient_nominative: boolean | null
   right_read_patient_pseudo_anonymised: boolean | null
-  right_export_jupyter_patient_nominative: boolean | null
-  right_export_jupyter_patient_pseudo_anonymised: boolean | null
   right_manage_review_transfer_jupyter: boolean | null
   right_review_transfer_jupyter: boolean | null
   right_manage_transfer_jupyter: boolean | null
@@ -156,7 +154,6 @@ export type UserRole = {
   right_export_csv_pseudo_anonymised: boolean | null
   right_read_env_unix_users: boolean | null
   right_manage_env_unix_users: boolean | null
-  right_manage_env_user_apps: boolean | null
   right_manage_env_user_links: boolean | null
 }
 
@@ -187,8 +184,19 @@ export type RoleKeys =
   | 'right_read_data_accesses_inferior_levels'
   | 'right_read_patient_nominative'
   | 'right_read_patient_pseudo_anonymised'
-  | 'right_export_jupyter_patient_nominative'
-  | 'right_export_jupyter_patient_pseudo_anonymised'
+  | 'right_manage_review_transfer_jupyter'
+  | 'right_review_transfer_jupyter'
+  | 'right_manage_transfer_jupyter'
+  | 'right_transfer_jupyter_nominative'
+  | 'right_transfer_jupyter_pseudo_anonymised'
+  | 'right_manage_review_export_csv'
+  | 'right_review_export_csv'
+  | 'right_manage_export_csv'
+  | 'right_export_csv_nominative'
+  | 'right_export_csv_pseudo_anonymised'
+  | 'right_read_env_unix_users'
+  | 'right_manage_env_unix_users'
+  | 'right_manage_env_user_links'
 
 // Access
 
