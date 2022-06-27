@@ -39,7 +39,7 @@ const workingEnvironmentDefault = {
   publicKey: '',
   machines: [],
   jupyter: 'no',
-  tensorbroad: 'no',
+  tensorboard: 'no',
   brat: 'no',
   rangerhivePolicy: null
 }
@@ -73,7 +73,7 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
       | 'publicKey'
       | 'machines'
       | 'jupyter'
-      | 'tensorbroad'
+      | 'tensorboard'
       | 'brat'
       | 'rangerhivePolicy',
     value: any
@@ -291,12 +291,12 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
                   </RadioGroup>
 
                   <FormLabel style={{ padding: '0 1em 8px' }} component="legend">
-                    Tensorbroad
+                    Tensorboard
                   </FormLabel>
                   <RadioGroup
                     style={{ flexDirection: 'row' }}
-                    value={workingEnvironment.tensorbroad}
-                    onChange={(event) => _onChangeValue('tensorbroad', event.target.value)}
+                    value={workingEnvironment.tensorboard}
+                    onChange={(event) => _onChangeValue('tensorboard', event.target.value)}
                   >
                     <FormControlLabel value="yes" control={<Radio color="primary" />} label="Oui" />
                     <FormControlLabel value="no" control={<Radio color="primary" />} label="Non" />

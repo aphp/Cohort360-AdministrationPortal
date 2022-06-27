@@ -83,22 +83,25 @@ const Login = () => {
         if (
           !_userRights.right_edit_roles &&
           !_userRights.right_read_logs &&
+          !_userRights.right_add_users &&
+          !_userRights.right_edit_users &&
           !_userRights.right_read_users &&
+          !_userRights.right_manage_admin_accesses_same_level &&
           !_userRights.right_read_admin_accesses_same_level &&
+          !_userRights.right_manage_admin_accesses_inferior_levels &&
           !_userRights.right_read_admin_accesses_inferior_levels &&
+          !_userRights.right_manage_data_accesses_same_level &&
           !_userRights.right_read_data_accesses_same_level &&
+          !_userRights.right_manage_data_accesses_inferior_levels &&
           !_userRights.right_read_data_accesses_inferior_levels &&
           !_userRights.right_manage_review_transfer_jupyter &&
           !_userRights.right_review_transfer_jupyter &&
           !_userRights.right_manage_transfer_jupyter &&
-          !_userRights.right_transfer_jupyter_nominative &&
-          !_userRights.right_transfer_jupyter_pseudo_anonymised &&
           !_userRights.right_manage_review_export_csv &&
           !_userRights.right_review_export_csv &&
           !_userRights.right_manage_export_csv &&
           !_userRights.right_read_env_unix_users &&
           !_userRights.right_manage_env_unix_users &&
-          !_userRights.right_manage_env_user_apps &&
           !_userRights.right_manage_env_user_links
         ) {
           setNoRights(true)

@@ -17,8 +17,6 @@ export const userDefaultRoles: UserRole = {
   right_read_data_accesses_inferior_levels: false,
   right_read_patient_nominative: false,
   right_read_patient_pseudo_anonymised: false,
-  right_export_jupyter_patient_nominative: false,
-  right_export_jupyter_patient_pseudo_anonymised: false,
   right_manage_review_transfer_jupyter: false,
   right_review_transfer_jupyter: false,
   right_manage_transfer_jupyter: false,
@@ -31,7 +29,6 @@ export const userDefaultRoles: UserRole = {
   right_export_csv_pseudo_anonymised: false,
   right_read_env_unix_users: false,
   right_manage_env_unix_users: false,
-  right_manage_env_user_apps: false,
   right_manage_env_user_links: false
 }
 
@@ -109,15 +106,6 @@ export const getUserRights = async (data?: Access[]) => {
           if (access.role.right_read_patient_pseudo_anonymised) {
             _userRights.right_read_patient_pseudo_anonymised = true
           }
-          if (access.role.right_export_jupyter_patient_nominative) {
-            _userRights.right_export_jupyter_patient_nominative = true
-          }
-          if (access.role.right_export_jupyter_patient_pseudo_anonymised) {
-            _userRights.right_export_jupyter_patient_pseudo_anonymised = true
-          }
-          if (access.role.right_export_jupyter_patient_pseudo_anonymised) {
-            _userRights.right_export_jupyter_patient_pseudo_anonymised = true
-          }
           if (access.role.right_manage_review_transfer_jupyter) {
             _userRights.right_manage_review_transfer_jupyter = true
           }
@@ -153,9 +141,6 @@ export const getUserRights = async (data?: Access[]) => {
           }
           if (access.role.right_manage_env_unix_users) {
             _userRights.right_manage_env_unix_users = true
-          }
-          if (access.role.right_manage_env_user_apps) {
-            _userRights.right_manage_env_user_apps = true
           }
           if (access.role.right_manage_env_user_links) {
             _userRights.right_manage_env_user_links = true
