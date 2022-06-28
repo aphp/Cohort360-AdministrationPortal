@@ -92,44 +92,44 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
       keyName: 'right_read_users'
     },
     {
-      label: "Éditer les accès administrateurs d'un périmètre",
-      status: role?.right_manage_admin_accesses_same_level,
-      keyName: 'right_manage_admin_accesses_same_level'
-    },
-    {
-      label: "Consulter la liste des accès administrateur d'un périmètre",
+      label: "Consulter la liste des accès administrateur d'un périmètre exclusivement",
       status: role?.right_read_admin_accesses_same_level,
       keyName: 'right_read_admin_accesses_same_level'
     },
     {
-      label: 'Éditer les accès administrateurs des sous-périmètres',
-      status: role?.right_manage_admin_accesses_inferior_levels,
-      keyName: 'right_manage_admin_accesses_inferior_levels'
+      label: "Gérer les accès administrateurs d'un périmètre exclusivement",
+      status: role?.right_manage_admin_accesses_same_level,
+      keyName: 'right_manage_admin_accesses_same_level'
     },
     {
-      label: 'Consulter la liste des accès administrateur des sous-périmètres',
+      label: 'Consulter la liste des accès administrateur des sous-périmètres exclusivement',
       status: role?.right_read_admin_accesses_inferior_levels,
       keyName: 'right_read_admin_accesses_inferior_levels'
     },
     {
-      label: "Éditer les accès aux données patients d'un périmètre",
-      status: role?.right_manage_data_accesses_same_level,
-      keyName: 'right_manage_data_accesses_same_level'
+      label: 'Gérer les accès administrateurs des sous-périmètres exclusivement',
+      status: role?.right_manage_admin_accesses_inferior_levels,
+      keyName: 'right_manage_admin_accesses_inferior_levels'
     },
     {
-      label: "Consulter la liste des accès aux données patients d'un périmètre",
+      label: "Consulter la liste des accès aux données patients d'un périmètre exclusivement",
       status: role?.right_read_data_accesses_same_level,
       keyName: 'right_read_data_accesses_same_level'
     },
     {
-      label: 'Éditer les accès aux données patients des sous-périmètres',
-      status: role?.right_manage_data_accesses_inferior_levels,
-      keyName: 'right_manage_data_accesses_inferior_levels'
+      label: "Gérer les accès aux données patients d'un périmètre exclusivement",
+      status: role?.right_manage_data_accesses_same_level,
+      keyName: 'right_manage_data_accesses_same_level'
     },
     {
-      label: 'Consulter la liste des accès aux données patients des sous-périmètres',
+      label: 'Consulter la liste des accès aux données patients des sous-périmètres exclusivement',
       status: role?.right_read_data_accesses_inferior_levels,
       keyName: 'right_read_data_accesses_inferior_levels'
+    },
+    {
+      label: 'Gérer les accès aux données patients des sous-périmètres exclusivement',
+      status: role?.right_manage_data_accesses_inferior_levels,
+      keyName: 'right_manage_data_accesses_inferior_levels'
     },
     {
       label: 'Lecture des données patients nominatives',
@@ -142,23 +142,12 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
       keyName: 'right_read_patient_pseudo_anonymised'
     },
     {
-      label: 'Export des données patients nominatives',
-      status: role?.right_export_jupyter_patient_nominative,
-      keyName: 'right_export_jupyter_patient_nominative'
-    },
-    {
-      label: 'Export des données patients pseudonymisées',
-      status: role?.right_export_jupyter_patient_pseudo_anonymised,
-      keyName: 'right_export_jupyter_patient_pseudo_anonymised'
-    },
-    {
-      label:
-        'Gérer les accès permettant de valider ou non les demandes de transfert de données vers des environnements Jupyter',
+      label: 'Gérer les accès permettant de gérer les transferts de données vers des environnements Jupyter',
       status: role?.right_manage_review_transfer_jupyter,
       keyName: 'right_manage_review_transfer_jupyter'
     },
     {
-      label: 'Valider ou non les demandes de transfert de données vers des environnements Jupyter',
+      label: 'Gestion des transferts de données vers des environnements Jupyter',
       status: role?.right_review_transfer_jupyter,
       keyName: 'right_review_transfer_jupyter'
     },
@@ -204,7 +193,7 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
       keyName: 'right_export_csv_pseudo_anonymised'
     },
     {
-      label: 'Lire les informations liées aux environnements de travail',
+      label: 'Consulter les informations liées aux environnements de travail',
       status: role?.right_read_env_unix_users,
       keyName: 'right_read_env_unix_users'
     },
@@ -212,11 +201,6 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
       label: 'Gérer les environnements de travail',
       status: role?.right_manage_env_unix_users,
       keyName: 'right_manage_env_unix_users'
-    },
-    {
-      label: 'Gérer la disponibilité des applications dans les environnements de travail',
-      status: role?.right_manage_env_user_apps,
-      keyName: 'right_manage_env_user_apps'
     },
     {
       label: 'Gérer les accès des utilisateurs aux environnements de travail',
@@ -252,18 +236,16 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
         right_add_users: role?.right_add_users ?? false,
         right_edit_users: role?.right_edit_users ?? false,
         right_read_users: role?.right_read_users ?? false,
-        right_manage_admin_accesses_same_level: role?.right_manage_admin_accesses_same_level ?? false,
         right_read_admin_accesses_same_level: role?.right_read_admin_accesses_same_level ?? false,
-        right_manage_admin_accesses_inferior_levels: role?.right_manage_admin_accesses_inferior_levels ?? false,
+        right_manage_admin_accesses_same_level: role?.right_manage_admin_accesses_same_level ?? false,
         right_read_admin_accesses_inferior_levels: role?.right_read_admin_accesses_inferior_levels ?? false,
-        right_manage_data_accesses_same_level: role?.right_manage_data_accesses_same_level ?? false,
+        right_manage_admin_accesses_inferior_levels: role?.right_manage_admin_accesses_inferior_levels ?? false,
         right_read_data_accesses_same_level: role?.right_read_data_accesses_same_level ?? false,
-        right_manage_data_accesses_inferior_levels: role?.right_manage_data_accesses_inferior_levels ?? false,
+        right_manage_data_accesses_same_level: role?.right_manage_data_accesses_same_level ?? false,
         right_read_data_accesses_inferior_levels: role?.right_read_data_accesses_inferior_levels ?? false,
+        right_manage_data_accesses_inferior_levels: role?.right_manage_data_accesses_inferior_levels ?? false,
         right_read_patient_nominative: role?.right_read_patient_nominative ?? false,
         right_read_patient_pseudo_anonymised: role?.right_read_patient_pseudo_anonymised ?? false,
-        right_export_jupyter_patient_nominative: role?.right_export_jupyter_patient_nominative ?? false,
-        right_export_jupyter_patient_pseudo_anonymised: role?.right_export_jupyter_patient_pseudo_anonymised ?? false,
         right_manage_review_transfer_jupyter: role?.right_manage_review_transfer_jupyter ?? false,
         right_review_transfer_jupyter: role?.right_review_transfer_jupyter ?? false,
         right_manage_transfer_jupyter: role?.right_manage_transfer_jupyter ?? false,
@@ -276,7 +258,6 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
         right_export_csv_pseudo_anonymised: role?.right_export_csv_pseudo_anonymised ?? false,
         right_read_env_unix_users: role?.right_read_env_unix_users ?? false,
         right_manage_env_unix_users: role?.right_manage_env_unix_users ?? false,
-        right_manage_env_user_apps: role?.right_manage_env_user_apps ?? false,
         right_manage_env_user_links: role?.right_manage_env_user_links ?? false
       }
 

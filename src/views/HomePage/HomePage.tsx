@@ -26,7 +26,6 @@ const HomePage = () => {
       name: 'Périmètres',
       pathname: '/console-admin/perimeters',
       rightsToSee:
-        userRights.right_read_users ||
         userRights.right_read_admin_accesses_same_level ||
         userRights.right_read_admin_accesses_inferior_levels ||
         userRights.right_read_data_accesses_same_level ||
@@ -48,7 +47,7 @@ const HomePage = () => {
     {
       name: 'Transfert Jupyter',
       pathname: `/espace-jupyter/transfert`,
-      rightsToSee: userRights.right_transfer_jupyter_nominative || userRights.right_transfer_jupyter_pseudo_anonymised
+      rightsToSee: userRights.right_review_transfer_jupyter
     },
     {
       name: 'Environnements de travail',
@@ -85,9 +84,7 @@ const HomePage = () => {
                 )
             )}
           </Grid>
-          {(userRights.right_transfer_jupyter_nominative ||
-            userRights.right_transfer_jupyter_pseudo_anonymised ||
-            userRights.right_read_env_unix_users) && (
+          {(userRights.right_review_transfer_jupyter || userRights.right_read_env_unix_users) && (
             <Grid container item className={classes.box} xs={12} sm={4} direction="column" alignItems="center">
               <FlipCameraAndroidIcon style={{ fontSize: 100, marginBottom: 12 }} />
               <Typography variant="h6" style={{ fontSize: 16, marginBottom: 28, lineHeight: 'inherit' }}>

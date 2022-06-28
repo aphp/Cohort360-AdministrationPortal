@@ -40,7 +40,6 @@ const PortailTopBar: React.FC = () => {
       name: 'Périmètres',
       pathname: '/console-admin/perimeters',
       rightsToSee:
-        userRights.right_read_users ||
         userRights.right_read_admin_accesses_same_level ||
         userRights.right_read_admin_accesses_inferior_levels ||
         userRights.right_read_data_accesses_same_level ||
@@ -62,8 +61,7 @@ const PortailTopBar: React.FC = () => {
     {
       name: 'Transfert Jupyter',
       pathname: `/espace-jupyter/transfert`,
-      rightsToSee:
-        userRights.right_transfer_jupyter_nominative || userRights.right_export_jupyter_patient_pseudo_anonymised
+      rightsToSee: userRights.right_review_transfer_jupyter
     },
     {
       name: 'Environnements',
@@ -131,9 +129,7 @@ const PortailTopBar: React.FC = () => {
                   )
               )}
             </Menu>
-            {(userRights.right_transfer_jupyter_nominative ||
-              userRights.right_export_jupyter_patient_pseudo_anonymised ||
-              userRights.right_read_env_unix_users) && (
+            {(userRights.right_review_transfer_jupyter || userRights.right_read_env_unix_users) && (
               <Button
                 onClick={handleClickEspaceJupyter}
                 className={clsx(
