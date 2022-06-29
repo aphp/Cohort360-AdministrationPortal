@@ -33,6 +33,10 @@ const useStyles = makeStyles((theme) => ({
   infoIcon: {
     height: 20,
     margin: '0 5px -5px 0'
+  },
+  radioGroup: {
+    flexDirection: 'row',
+    margin: '8px 1em 1em'
   }
 }))
 
