@@ -27,6 +27,16 @@ export const getJupyterMachines = async () => {
 
     return jupyterMachinesResp.data.results ?? []
   } catch (error) {
-    console.error('Erreur lors de la récupération des machines Jupyter ou des Rangerhive policies', error)
+    console.error('Erreur lors de la récupération des machines Jupyter', error)
+  }
+}
+
+export const getRangerHivePolicies = async () => {
+  try {
+    const rangerhivePoliciesResp = await api.get('/workspaces/ranger-hive-policies/types/')
+
+    return rangerhivePoliciesResp.data ?? []
+  } catch (error) {
+    console.error('Erreur lors de la récupération des Rangerhive Policies', error)
   }
 }

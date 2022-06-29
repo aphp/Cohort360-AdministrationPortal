@@ -18,7 +18,7 @@ import {
 import Autocomplete from '@material-ui/lab/Autocomplete'
 
 import ProvidersTable from './components/ProvidersTable/ProvidersTable'
-import { getJupyterMachines } from 'services/Jupyter/workingEnvironmentsService'
+import { getJupyterMachines, getRangerHivePolicies } from 'services/Jupyter/workingEnvironmentsService'
 import { getProviders } from 'services/Console-Admin/providersService'
 import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
 import { JupyterMachine, Order, Provider, UserRole } from 'types'
@@ -44,8 +44,6 @@ const workingEnvironmentDefault = {
   rangerhivePolicy: null
 }
 
-const rangerhivePolicies = ['default_user', 'default_cse', 'default_dsip', 'default_bdr']
-
 const orderDefault = { orderBy: 'lastname', orderDirection: 'asc' } as Order
 
 const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
@@ -60,6 +58,7 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
   const [loadingOnValidate, setLoadingOnValidate] = useState(false)
   const [workingEnvironment, setWorkingEnvironment] = useState(workingEnvironmentDefault)
   const [jupyterMachines, setJupyterMachines] = useState<JupyterMachine[]>([])
+  const [rangerhivePolicies, setRangerhivePolicies] = useState([])
   const [providersSearchResults, setProvidersSearchResults] = useState<Provider[]>([])
   const [searchInput, setSearchInput] = useState('')
 
@@ -117,9 +116,11 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
       try {
         setLoading(true)
 
-        const formInfosResp = await getJupyterMachines()
+        const jupyterMachinesResp = await getJupyterMachines()
+        const rangerhivePoliciesResp = await getRangerHivePolicies()
 
-        setJupyterMachines(formInfosResp ?? [])
+        setJupyterMachines(jupyterMachinesResp ?? [])
+        setRangerhivePolicies(rangerhivePoliciesResp ?? [])
         setLoading(false)
       } catch (error) {
         setLoading(false)
