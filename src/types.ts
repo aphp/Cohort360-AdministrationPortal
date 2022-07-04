@@ -142,6 +142,7 @@ export type UserRole = {
   right_read_data_accesses_inferior_levels: boolean | null
   right_read_patient_nominative: boolean | null
   right_read_patient_pseudo_anonymised: boolean | null
+  right_search_patient_with_ipp: boolean | null
   right_manage_review_transfer_jupyter: boolean | null
   right_review_transfer_jupyter: boolean | null
   right_manage_transfer_jupyter: boolean | null
@@ -184,6 +185,7 @@ export type RoleKeys =
   | 'right_read_data_accesses_inferior_levels'
   | 'right_read_patient_nominative'
   | 'right_read_patient_pseudo_anonymised'
+  | 'right_search_patient_with_ipp'
   | 'right_manage_review_transfer_jupyter'
   | 'right_review_transfer_jupyter'
   | 'right_manage_transfer_jupyter'
