@@ -10,6 +10,7 @@ import Logs from 'views/Console-Admin/Logs/Logs'
 
 import Transfert from 'views/Jupyter/Transfert/Transfert'
 import WorkingEnvironments from 'views/Jupyter/WorkingEnvironments/WorkingEnvironments'
+import { HealthCheck } from '../../../views/HealthCheck/HealthCheck'
 
 const Config = [
   /************************************************************** Portail View ************************************************************************ */
@@ -36,6 +37,13 @@ const Config = [
     name: 'HomePage',
     isPrivate: true,
     component: HomePage
+  },
+
+  {
+    exact: true,
+    path: '/health-check',
+    name: 'health-check',
+    component: HealthCheck
   },
 
   /*************************************************************** Console-admin View ***************************************************************** */
