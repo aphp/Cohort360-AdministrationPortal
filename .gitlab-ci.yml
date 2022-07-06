@@ -1,33 +1,6 @@
-# image: harbor.eds.aphp.fr/cohort360/selenium-chrome:dev
-
 stages: # List of stages for jobs in their order of execution
-  # - test
   - build
   - deploy
-
-# include: # Variables needed for Selenium tests
-#   project: dev/console-admin/omop-admin-wui
-#   file: '/.gitlab/selenium_variables.yml'
-
-# test-e2e-chrome-job:
-#   stage: test
-#   artifacts:
-#     when: always
-#     paths:
-#       - reports
-#     expire_in: 1 week
-#   allow_failure: true
-#   script:
-#     - npm install
-#     - cp .gitlab/nginx-test.conf /etc/nginx/conf.d/nginx.conf
-#     - service nginx restart
-#     - npm run start > file.log 2>&1 &
-#     - sleep 30 # Wait until application is started
-#     - npm run test
-#   cache:
-#     key: cohort360_nodemodules_cache
-#     paths:
-#       - node_modules/
 
 build-job:
   image: node:16.13.2
@@ -58,12 +31,21 @@ deploy-job:
   script:
     - export VERSION=$(cat package.json | grep version | head -1 | awk -F= "{ print $2 }" | sed 's/[version:,\",]//g' | tr -d '[[:space:]]')
     - mkdir -p /kaniko/.docker
-    - echo "{\"auths\":{\"harbor.eds.aphp.fr\":{\"username\":\"${BOT_NAME}\",\"password\":\"${BOT_TOKEN}\"}}}" > /kaniko/.docker/config.json
+    - |-
+      KANIKOPROXYARGS=""
+      KANIKOCFG="\"auths\":{\"${CI_REGISTRY}\":{\"username\":\"${BOT_NAME}\",\"password\":\"${BOT_TOKEN}\"}}"
+      if [ "x${http_proxy}" != "x" -o "x${https_proxy}" != "x" ]; then
+        KANIKOCFG="${KANIKOCFG}, \"proxies\" : { \"default\" : { \"httpProxy\" : \"${http_proxy}\", \"httpsProxy\" : \"${https_proxy}\", \"noProxy\" : \"${no_proxy}\" } }"
+        KANIKOPROXYARGS="--build-arg http_proxy=${http_proxy} --build-arg https_proxy=${https_proxy} --build-arg no_proxy=${no_proxy}"
+      fi
+      KANIKOCFG="{ ${KANIKOCFG} }"
+      echo "${KANIKOCFG}" > /kaniko/.docker/config.json
     - >-
       /kaniko/executor
-      --context ${CI_PROJECT_DIR}
-      --dockerfile ${CI_PROJECT_DIR}/Dockerfile
-      --destination harbor.eds.aphp.fr/cohort360/portail:${VERSION}
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+      $KANIKOPROXYARGS
+      --destination "${CI_REGISTRY_IMAGE}:${VERSION}"
   only:
     - tags
     - develop
