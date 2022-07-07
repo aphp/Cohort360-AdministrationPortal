@@ -142,6 +142,11 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
       keyName: 'right_read_patient_pseudo_anonymised'
     },
     {
+      label: "Possibilité d'utiliser une liste d'IPP comme critère",
+      status: role?.right_search_patient_with_ipp,
+      keyName: 'right_search_patient_with_ipp'
+    },
+    {
       label: 'Gérer les accès permettant de gérer les transferts de données vers des environnements Jupyter',
       status: role?.right_manage_review_transfer_jupyter,
       keyName: 'right_manage_review_transfer_jupyter'
@@ -246,6 +251,7 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
         right_manage_data_accesses_inferior_levels: role?.right_manage_data_accesses_inferior_levels ?? false,
         right_read_patient_nominative: role?.right_read_patient_nominative ?? false,
         right_read_patient_pseudo_anonymised: role?.right_read_patient_pseudo_anonymised ?? false,
+        right_search_patient_with_ipp: role?.right_search_patient_with_ipp ?? false,
         right_manage_review_transfer_jupyter: role?.right_manage_review_transfer_jupyter ?? false,
         right_review_transfer_jupyter: role?.right_review_transfer_jupyter ?? false,
         right_manage_transfer_jupyter: role?.right_manage_transfer_jupyter ?? false,
