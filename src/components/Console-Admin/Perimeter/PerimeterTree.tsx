@@ -230,7 +230,8 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                       )}
 
                       <TableCell align="center" padding="checkbox">
-                        {_row.type !== '' &&
+                        {_row.type &&
+                          _row.type !== '' &&
                           (!isManageable ||
                             !(_row.type.includes('UH') || _row.type.includes('UC') || _row.type.includes('UPMT'))) && (
                             <Radio
