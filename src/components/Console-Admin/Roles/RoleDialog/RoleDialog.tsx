@@ -77,6 +77,11 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
       keyName: 'right_read_logs'
     },
     {
+      label: 'Consulter la liste des utilisateurs / profils',
+      status: role?.right_read_users,
+      keyName: 'right_read_users'
+    },
+    {
       label: 'Ajouter un utilisateur / profil',
       status: role?.right_add_users,
       keyName: 'right_add_users'
@@ -85,11 +90,6 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
       label: 'Modifier un utilisateur / profil',
       status: role?.right_edit_users,
       keyName: 'right_edit_users'
-    },
-    {
-      label: 'Consulter la liste des utilisateurs / profils',
-      status: role?.right_read_users,
-      keyName: 'right_read_users'
     },
     {
       label: "Consulter la liste des accès administrateur d'un périmètre exclusivement",
@@ -152,7 +152,7 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
       keyName: 'right_manage_review_transfer_jupyter'
     },
     {
-      label: 'Gestion des transferts de données vers des environnements Jupyter',
+      label: 'Gérer les transferts de données vers des environnements Jupyter',
       status: role?.right_review_transfer_jupyter,
       keyName: 'right_review_transfer_jupyter'
     },
