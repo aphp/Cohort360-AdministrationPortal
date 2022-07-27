@@ -1,5 +1,5 @@
 {
-  "name": "cohort-front",
+  "name": "portail-front",
   "version": "2.11.0-SNAPSHOT",
   "private": true,
   "dependencies": {
@@ -55,14 +55,14 @@
     "eslint-plugin-standard": "^5.0.0"
   },
   "scripts": {
-    "fix-packages" : "npx npm-force-resolutions",
+    "fix-packages": "npx npm-force-resolutions",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "lint": "eslint --fix --ext .jsx,.js,.ts,.tsx src/",
     "fixlint": "eslint --fix --ext .jsx,.js,.ts,.tsx src/"
   },
-  "resolutions" : {
+  "resolutions": {
     "ansi-html": "https://registry.npmjs.org/ansi-html-community/-/ansi-html-community-0.0.8.tgz",
     "ansi-regex": "^5.0.0",
     "browserslist": "^4.17.4",
@@ -73,7 +73,6 @@
     "set-value": "^4.1.0",
     "node-forge": "^0.10.0",
     "jspdf": "^2.5.1"
-
   },
   "eslintConfig": {
     "extends": "react-app"
