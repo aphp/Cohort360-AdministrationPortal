@@ -20,14 +20,14 @@ export const getLogs = async (filters: LogsFiltersObject, page: number) => {
       : ''
 
     const getLogsResp = await api.get(
-      `/logs/?page=${page}${urlsFilter}${userFilter}${statusCodeFilter}${httpMethodFilter}${afterDateFilter}${beforeDateFilter}${accessFilters}${perimeterFilters}`
+      `/logs/?page=${page}&ordering=-requested_at${urlsFilter}${userFilter}${statusCodeFilter}${httpMethodFilter}${afterDateFilter}${beforeDateFilter}${accessFilters}${perimeterFilters}`
     )
 
     const logsResp = getLogsResp?.data.results ?? []
 
     if (filters.access && page === 1) {
       const getCreateAccessLogsResp = await api.get(
-        `/logs/?page=${page}&path=/accesses/&response="care_site_history_id":${filters.access}${userFilter}${statusCodeFilter}${httpMethodFilter}${afterDateFilter}${beforeDateFilter}${perimeterFilters}`
+        `/logs/?page=${page}&ordering=-requested_at&path=/accesses/&response="care_site_history_id":${filters.access}${userFilter}${statusCodeFilter}${httpMethodFilter}${afterDateFilter}${beforeDateFilter}${perimeterFilters}`
       )
 
       const createAccessLogs: Log[] = getCreateAccessLogsResp?.data?.results ?? []
