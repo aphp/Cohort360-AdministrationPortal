@@ -4,7 +4,7 @@ import api from '../api'
 export const getProfile = async (providerSourceValue?: string) => {
   if (!providerSourceValue) return undefined
 
-  const profileResp = await api.get(`/profiles/?provider_source_value=${providerSourceValue}`)
+  const profileResp = await api.get(`/accesses/profiles/?provider_source_value=${providerSourceValue}`)
 
   if (profileResp.status !== 200) {
     return undefined
@@ -17,7 +17,7 @@ export const checkProfile = async (providerSourceValue?: string) => {
   try {
     if (!providerSourceValue) return null
 
-    const resCheckProfiles = await api.post(`/profiles/check/`, {
+    const resCheckProfiles = await api.post(`/accesses/profiles/check/`, {
       provider_source_value: providerSourceValue
     })
 
@@ -30,7 +30,7 @@ export const checkProfile = async (providerSourceValue?: string) => {
 
 export const submitCreateProfile = async (providerData: Provider) => {
   try {
-    const createProfile = await api.post(`/profiles/`, providerData)
+    const createProfile = await api.post(`/accesses/profiles/`, providerData)
     return createProfile.status === 201
   } catch (error) {
     console.error('Erreur lors de la création de profil', error)
@@ -40,7 +40,7 @@ export const submitCreateProfile = async (providerData: Provider) => {
 
 export const editProfile = async (providerHistoryId: string, profileData: {}) => {
   try {
-    const editProfileResp = await api.patch(`/profiles/${providerHistoryId}/`, profileData)
+    const editProfileResp = await api.patch(`/accesses/profiles/${providerHistoryId}/`, profileData)
 
     return editProfileResp.status === 200
   } catch (error) {
@@ -54,7 +54,7 @@ export const getAccesses = async (providerHistoryId: number, page: number, order
     order.orderBy === 'is_valid' ? (order.orderDirection === 'asc' ? 'desc' : 'asc') : order.orderDirection
 
   const accessesResp = await api.get(
-    `/accesses/?page=${page}&provider_history_id=${providerHistoryId}&ordering=${
+    `/accesses/accesses/?page=${page}&provider_history_id=${providerHistoryId}&ordering=${
       _orderDirection === 'desc' ? '-' : ''
     }${order.orderBy}`
   )
@@ -71,7 +71,7 @@ export const getAccesses = async (providerHistoryId: number, page: number, order
 
 export const getUserAccesses = async (providerSourceValue?: string) => {
   try {
-    const getUserAccessesResp = await api.get(`/accesses/?provider_source_value=${providerSourceValue}`)
+    const getUserAccessesResp = await api.get(`/accesses/accesses/?provider_source_value=${providerSourceValue}`)
 
     if (getUserAccessesResp.status !== 200) {
       return []
@@ -86,7 +86,7 @@ export const getUserAccesses = async (providerSourceValue?: string) => {
 
 export const submitCreateAccess = async (accessData: AccessData) => {
   try {
-    const createAccessResp = await api.post(`/accesses/`, accessData)
+    const createAccessResp = await api.post(`/accesses/accesses/`, accessData)
 
     return createAccessResp.status === 201
   } catch (error) {
@@ -97,7 +97,7 @@ export const submitCreateAccess = async (accessData: AccessData) => {
 
 export const submitEditAccess = async (editData: AccessData, careSiteHistoryId?: number) => {
   try {
-    const editAccessResp = await api.patch(`/accesses/${careSiteHistoryId}/`, editData)
+    const editAccessResp = await api.patch(`/accesses/accesses/${careSiteHistoryId}/`, editData)
 
     return editAccessResp.status === 200
   } catch (error) {
@@ -109,11 +109,11 @@ export const submitEditAccess = async (editData: AccessData, careSiteHistoryId?:
 export const onDeleteOrTerminateAccess = async (terminateAccess: boolean, careSiteHistoryId?: number) => {
   try {
     if (terminateAccess) {
-      const terminateAccessResp = await api.patch(`/accesses/${careSiteHistoryId}/close/`)
+      const terminateAccessResp = await api.patch(`/accesses/accesses/${careSiteHistoryId}/close/`)
 
       return terminateAccessResp.status === 200
     } else {
-      const deleteAccessResp = await api.delete(`/accesses/${careSiteHistoryId}/`)
+      const deleteAccessResp = await api.delete(`/accesses/accesses/${careSiteHistoryId}/`)
 
       return deleteAccessResp.status === 204
     }
