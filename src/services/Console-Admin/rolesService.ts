@@ -2,7 +2,7 @@ import api from '../api'
 import { Role } from '../../types'
 
 export const getRoles = async () => {
-  const rolesResp = await api.get(`/roles/?ordering=name`)
+  const rolesResp = await api.get(`/accesses/roles/?ordering=name`)
 
   if (rolesResp.status !== 200) {
     return undefined
@@ -13,7 +13,7 @@ export const getRoles = async () => {
 export const getAssignableRoles = async (perimeterId?: string | number | null) => {
   if (!perimeterId) return undefined
 
-  const assignableRolesResp = await api.get(`/roles/assignable/?care_site_id=${perimeterId}`)
+  const assignableRolesResp = await api.get(`/accesses/roles/assignable/?care_site_id=${perimeterId}`)
 
   if (assignableRolesResp.status !== 200) {
     return undefined
@@ -37,7 +37,7 @@ export const getAssignableRoles = async (perimeterId?: string | number | null) =
 //have to finish the function of editing Role
 export const submitEditRoles = async (editData: Role, role_id?: number) => {
   try {
-    const editRoleResp = await api.patch(`/roles/${role_id}/`, editData)
+    const editRoleResp = await api.patch(`/accesses/roles/${role_id}/`, editData)
 
     return editRoleResp.status === 200
   } catch (error) {
@@ -48,7 +48,7 @@ export const submitEditRoles = async (editData: Role, role_id?: number) => {
 
 export const createRoles = async (createData: Role) => {
   try {
-    const createRoleResp = await api.post(`/roles/`, createData)
+    const createRoleResp = await api.post(`/accesses/roles/`, createData)
 
     return createRoleResp.status === 201
   } catch (error) {
@@ -59,7 +59,7 @@ export const createRoles = async (createData: Role) => {
 
 export const deleteRole = async (role_id?: number) => {
   try {
-    const deleteRoleResp = await api.delete(`/roles/${role_id}/`)
+    const deleteRoleResp = await api.delete(`/accesses/roles/${role_id}/`)
 
     return deleteRoleResp.status === 204
   } catch (error) {
