@@ -29,7 +29,7 @@ export const getScopePerimeters = async (getPerimeters: any) => {
 
   for (const perimeter of perimetersResult) {
     const scopeRow: ScopeTreeRow = perimeter as ScopeTreeRow
-    scopeRow.name = `${perimeter.names.source_value} - ${perimeter.names.name}`
+    scopeRow.name = `${perimeter.source_value} - ${perimeter.name}`
     scopeRow.children =
       perimeter.children?.length > 0
         ? parseChildren(perimeter.children)
