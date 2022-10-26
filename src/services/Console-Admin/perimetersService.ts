@@ -9,7 +9,7 @@ const loadingItem: ScopeTreeRow = {
 }
 
 export const getPerimeters = async () => {
-  const perimetersResp = await api.get(`/accesses/perimeters/?care_site_type_source_value=AP-HP`)
+  const perimetersResp = await api.get(`/accesses/perimeters/?type_source_value=AP-HP`)
 
   if (!perimetersResp) return undefined
 
