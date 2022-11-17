@@ -9,7 +9,7 @@ const loadingItem: ScopeTreeRow = {
 }
 
 export const getPerimeters = async () => {
-  const perimetersResp = await api.get(`/perimeters/?care_site_type_source_value=AP-HP`)
+  const perimetersResp = await api.get(`/accesses/perimeters/?type_source_value=AP-HP`)
 
   if (!perimetersResp) return undefined
 
@@ -29,7 +29,7 @@ export const getScopePerimeters = async (getPerimeters: any) => {
 
   for (const perimeter of perimetersResult) {
     const scopeRow: ScopeTreeRow = perimeter as ScopeTreeRow
-    scopeRow.name = `${perimeter.names.source_value} - ${perimeter.names.name}`
+    scopeRow.name = `${perimeter.source_value} - ${perimeter.name}`
     scopeRow.children =
       perimeter.children?.length > 0
         ? parseChildren(perimeter.children)
@@ -79,7 +79,7 @@ export const getPerimetersChildren = async (
   getSubItem?: boolean
 ): Promise<ScopeTreeRow[]> => {
   if (!perimeter) return []
-  const children = await api.get(`/perimeters/${perimeter.id}/children/`)
+  const children = await api.get(`/accesses/perimeters/${perimeter.id}/children/`)
   if (!children) return []
 
   const childrenData: any[] = children && children.data && children.status === 200 ? children.data.results : []
@@ -109,7 +109,7 @@ export const getPerimetersChildren = async (
 }
 
 export const getManageablePerimeters = async (): Promise<ScopeTreeRow[]> => {
-  const manageablePerimetersResp = await api.get(`/perimeters/manageable/`)
+  const manageablePerimetersResp = await api.get(`/accesses/perimeters/manageable/`)
 
   if (manageablePerimetersResp.status !== 200) {
     return []
@@ -124,9 +124,9 @@ export const getPerimeterAccesses = async (perimeterId: string, order: Order, pa
 
   const searchFilter = searchInput ? `&search=${searchInput}` : ''
   const perimeterAccessesResp = await api.get(
-    `/accesses/?target_perimeter_id=${perimeterId}&page=${page}&ordering=${_orderDirection === 'desc' ? '-' : ''}${
-      order.orderBy
-    }${searchFilter}`
+    `/accesses/accesses/?target_perimeter_id=${perimeterId}&page=${page}&ordering=${
+      _orderDirection === 'desc' ? '-' : ''
+    }${order.orderBy}${searchFilter}`
   )
 
   if (perimeterAccessesResp.status !== 200) return undefined
@@ -138,7 +138,7 @@ export const getPerimeterAccesses = async (perimeterId: string, order: Order, pa
 }
 
 export const getPerimeter = async (perimeterId: string): Promise<string | undefined> => {
-  const perimeterResp = await api.get(`/perimeters/${perimeterId}/`)
+  const perimeterResp = await api.get(`/accesses/perimeters/${perimeterId}/`)
 
   if (perimeterResp.status !== 200) return undefined
 
@@ -151,7 +151,9 @@ export const searchInPerimeters = async (isManageable?: boolean, searchInput?: s
       return []
     }
     const perimeterSearchResp = await api.get(
-      isManageable ? `/perimeters/manageable/?search=${searchInput}` : `/perimeters/?treefy=true&search=${searchInput}`
+      isManageable
+        ? `/accesses/perimeters/manageable/?search=${searchInput}`
+        : `/accesses/perimeters/?treefy=true&search=${searchInput}`
     )
 
     if (perimeterSearchResp.data) {
