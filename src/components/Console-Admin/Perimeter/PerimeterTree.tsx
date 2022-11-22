@@ -244,7 +244,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                         {searchInput && _row.full_path ? (
                           <Breadcrumbs maxItems={2}>
                             {_row.full_path
-                              .substring(31)
+                              .replace('APHP-ASSISTANCE PUBLIQUE AP-HP/', '')
                               .split('/')
                               .map((full_path: string, index: number) => (
                                 <Typography key={index} style={{ color: '#153D8A' }}>
