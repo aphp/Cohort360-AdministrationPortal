@@ -25,7 +25,6 @@ const AutoLogoutContainer = () => {
   const logout = () => {
     setDialogIsOpen(false)
     history.push('/')
-    // console.log('User a été déconnecté')
     localStorage.removeItem('providers')
     localStorage.clear()
     dispatch(logoutAction())
@@ -34,7 +33,6 @@ const AutoLogoutContainer = () => {
 
   const onIdle = () => {
     setDialogIsOpen(true)
-    // console.log('User inactif depuis 10 secondes')
     sessionInactifTimerRef.current = setTimeout(logout, 60 * 1000)
   }
 
@@ -50,12 +48,10 @@ const AutoLogoutContainer = () => {
         }
       })
     setDialogIsOpen(false)
-    // console.log('User est resté connecté')
     clearTimeout(sessionInactifTimerRef.current)
   }
 
   const refreshToken = async () => {
-    // console.log('refresh still actif')
     await axios
       .post(`${BACK_API_URL}/accounts/refresh/`, {
         refresh: localStorage.getItem(REFRESH_TOKEN)
@@ -76,9 +72,6 @@ const AutoLogoutContainer = () => {
     }, 13 * 60 * 1000)
   }, [])
 
-  // if (!me)
-  //   return <></>
-
   return (
     <div>
       <Dialog open={dialogIsOpen}>
@@ -94,12 +87,7 @@ const AutoLogoutContainer = () => {
           <Button onClick={logout}>Déconnexion</Button>
         </DialogActions>
       </Dialog>
-      <IdleTimer
-        ref={inactifTimerRef}
-        timeout={14 * 60 * 1000}
-        // timeout={10 * 1000}
-        onIdle={onIdle}
-      ></IdleTimer>
+      <IdleTimer ref={inactifTimerRef} timeout={14 * 60 * 1000} onIdle={onIdle}></IdleTimer>
     </div>
   )
 }

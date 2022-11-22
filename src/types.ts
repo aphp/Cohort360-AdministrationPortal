@@ -77,6 +77,7 @@ export type ScopeTreeRow = {
   name: string
   type: string
   children: ScopeTreeRow[]
+  full_path?: string
 }
 
 // Profile
