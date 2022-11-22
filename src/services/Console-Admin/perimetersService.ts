@@ -153,11 +153,13 @@ export const searchInPerimeters = async (isManageable?: boolean, searchInput?: s
     const perimeterSearchResp = await api.get(
       isManageable
         ? `/accesses/perimeters/manageable/?search=${searchInput}`
-        : `/accesses/perimeters/?treefy=true&search=${searchInput}`
+        : `/accesses/perimeters/?search=${searchInput}`
     )
 
-    if (perimeterSearchResp.data) {
-      return parsePerimeterSearchResults(perimeterSearchResp.data[0].children, searchInput.trim())
+    if (isManageable && perimeterSearchResp.data) {
+      return perimeterSearchResp.data
+    } else if (perimeterSearchResp.data) {
+      return perimeterSearchResp.data.results
     } else {
       return []
     }
@@ -165,42 +167,4 @@ export const searchInPerimeters = async (isManageable?: boolean, searchInput?: s
     console.error(error)
     return []
   }
-}
-
-const parsePerimeterSearchResults = (response: any[], searchInput: string) => {
-  let scope: any[] = []
-
-  const recursive = (table: Perimeter[], existingTitle?: string) => {
-    for (const item of table) {
-      const name = existingTitle
-        ? `${existingTitle} > ${item.names?.source_value} - ${item.names?.name}`
-        : `${item.names?.source_value} - ${item.names?.name}`
-
-      const regexp = new RegExp(searchInput.toLowerCase())
-
-      if (
-        item.names?.name.toLowerCase().search(regexp) !== -1 ||
-        item.names?.source_value.toLowerCase().search(regexp) !== -1
-      ) {
-        scope = [
-          ...scope,
-          {
-            ...item,
-            name
-          }
-        ]
-      }
-
-      if (item.children && item.children.length > 0) {
-        if (item.type === 'Groupe hospitalier (GH)') {
-          recursive(item.children)
-        } else {
-          recursive(item.children, name)
-        }
-      }
-    }
-  }
-
-  recursive(response, response[0].name)
-  return scope
 }

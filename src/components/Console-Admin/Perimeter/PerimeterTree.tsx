@@ -200,7 +200,9 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                     </TableCell>
                   </TableRow>
                 ) : (
-                  _row.name && (
+                  _row.name &&
+                  (!isManageable ||
+                    !(_row.type.includes('UH') || _row.type.includes('UC') || _row.type.includes('UPMT'))) && (
                     <TableRow
                       hover
                       key={_row.id}
@@ -230,27 +232,25 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                       )}
 
                       <TableCell align="center" padding="checkbox">
-                        {_row.type &&
-                          _row.type !== '' &&
-                          (!isManageable ||
-                            !(_row.type.includes('UH') || _row.type.includes('UC') || _row.type.includes('UPMT'))) && (
-                            <Radio
-                              color="secondary"
-                              checked={selectedItems?.id === _row.id}
-                              onChange={() => _clickToSelect(_row)}
-                              inputProps={{ 'aria-labelledby': labelId }}
-                            />
-                          )}
+                        <Radio
+                          color="secondary"
+                          checked={selectedItems?.id === _row.id}
+                          onChange={() => _clickToSelect(_row)}
+                          inputProps={{ 'aria-labelledby': labelId }}
+                        />
                       </TableCell>
 
                       <TableCell>
-                        {searchInput && _row.name ? (
+                        {searchInput && _row.full_path ? (
                           <Breadcrumbs maxItems={2}>
-                            {_row.name.split('>').map((name: any, index: number) => (
-                              <Typography key={index} style={{ color: '#153D8A' }}>
-                                {name}
-                              </Typography>
-                            ))}
+                            {_row.full_path
+                              .substring(31)
+                              .split('/')
+                              .map((full_path: string, index: number) => (
+                                <Typography key={index} style={{ color: '#153D8A' }}>
+                                  {full_path}
+                                </Typography>
+                              ))}
                           </Breadcrumbs>
                         ) : (
                           <Typography>{_row.name}</Typography>
