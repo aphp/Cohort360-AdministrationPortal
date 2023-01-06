@@ -64,6 +64,7 @@ export type CareSite = {
 export type Perimeter = {
   id: string
   type: string
+  cohort_size: string
   names?: {
     name: string
     short: string
@@ -76,6 +77,7 @@ export type ScopeTreeRow = {
   id: string
   name: string
   type: string
+  cohort_size: string
   children: ScopeTreeRow[]
   full_path?: string
 }
