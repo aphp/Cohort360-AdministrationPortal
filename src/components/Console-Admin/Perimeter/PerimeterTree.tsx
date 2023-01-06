@@ -155,6 +155,13 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
       label: 'Type'
     },
     {
+      id: 'cohort_size',
+      align: 'center',
+      disablePadding: true,
+      disableOrderBy: true,
+      label: 'Nombre de patient'
+    },
+    {
       id: '',
       align: 'center',
       disablePadding: true,
@@ -259,6 +266,10 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
 
                       <TableCell align="center">
                         <Typography>{_row.type}</Typography>
+                      </TableCell>
+
+                      <TableCell align="center">
+                        <Typography>{_row.cohort_size}</Typography>
                       </TableCell>
 
                       <TableCell align="right">
