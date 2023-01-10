@@ -273,32 +273,50 @@ const Transfert: React.FC = () => {
               )}
 
               <Typography align="left" variant="h6">
+                Choix des accès
+              </Typography>
+              <RadioGroup
+                className={classes.radioGroup}
+                value={transferRequest.confidentiality}
+                onChange={(event) => _onChangeValue('confidentiality', event.target.value)}
+              >
+                <FormControlLabel value="pseudo" control={<Radio color="primary" />} label="Pseudonymisé" />
+                <FormControlLabel value="nomi" control={<Radio color="primary" />} label="Nominatif" />
+              </RadioGroup>
+
+              <Typography align="left" variant="h6">
                 Choix des tables à exporter
               </Typography>
 
               <List className={clsx(classes.list, classes.autocomplete)}>
-                {export_table.map(({ table_name, table_id }: ExportTableType) => (
-                  <ListItem key={table_id}>
-                    <ListItemText
-                      disableTypography
-                      primary={
-                        <Grid container direction="row" alignItems="center">
-                          <Typography variant="body1">{table_name} - </Typography>
-                          <Typography variant="body1" style={{ fontStyle: 'italic', paddingLeft: 4 }}>
-                            {table_id}
-                          </Typography>
-                        </Grid>
-                      }
-                    />
-
-                    <ListItemSecondaryAction>
-                      <Checkbox
-                        checked={!!transferRequest.tables.find((tableId: string) => tableId === table_id)}
-                        onChange={() => handleChangeTables(table_id)}
+                {export_table
+                  .filter((table) =>
+                    transferRequest.confidentiality === 'pseudo'
+                      ? table.nominative !== true
+                      : table.nominative === true || table.nominative === false
+                  )
+                  .map(({ table_name, table_id }: ExportTableType) => (
+                    <ListItem key={table_id}>
+                      <ListItemText
+                        disableTypography
+                        primary={
+                          <Grid container direction="row" alignItems="center">
+                            <Typography variant="body1">{table_name} - </Typography>
+                            <Typography variant="body1" style={{ fontStyle: 'italic', paddingLeft: 4 }}>
+                              {table_id}
+                            </Typography>
+                          </Grid>
+                        }
                       />
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                ))}
+
+                      <ListItemSecondaryAction>
+                        <Checkbox
+                          checked={!!transferRequest.tables.find((tableId: string) => tableId === table_id)}
+                          onChange={() => handleChangeTables(table_id)}
+                        />
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                  ))}
               </List>
 
               <Typography align="left" variant="h6">
@@ -344,18 +362,6 @@ const Transfert: React.FC = () => {
                   />
                 )}
               />
-
-              <Typography align="left" variant="h6">
-                Choix des accès
-              </Typography>
-              <RadioGroup
-                className={classes.radioGroup}
-                value={transferRequest.confidentiality}
-                onChange={(event) => _onChangeValue('confidentiality', event.target.value)}
-              >
-                <FormControlLabel value="pseudo" control={<Radio color="primary" />} label="Pseudonymisé" />
-                <FormControlLabel value="nomi" control={<Radio color="primary" />} label="Nominatif" />
-              </RadioGroup>
 
               <div style={{ alignSelf: 'flex-end', marginBottom: 16 }}>
                 <InfoIcon color="action" className={classes.infoIcon} />
