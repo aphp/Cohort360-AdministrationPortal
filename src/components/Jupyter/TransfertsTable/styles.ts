@@ -5,8 +5,7 @@ const useStyles = makeStyles(() =>
     searchButton: {
       backgroundColor: '#5BC5F2',
       color: '#FFF',
-      borderRadius: 25,
-      height: 50
+      borderRadius: 25
     },
     loadingSpinnerContainer: {
       display: 'flex',
@@ -19,6 +18,20 @@ const useStyles = makeStyles(() =>
       },
       '&:hover': {
         cursor: 'pointer'
+      }
+    },
+    filterButton: {
+      backgroundColor: '#5BC5F2',
+      color: '#FFF',
+      borderRadius: 25,
+      height: 40,
+      fontSize: 14,
+      marginLeft: 8
+    },
+    filterChip: {
+      margin: '0 6px 6px 6px',
+      '&:last-child': {
+        marginRight: 0
       }
     }
   })

@@ -81,7 +81,7 @@ const PortailTopBar: React.FC = () => {
   return (
     <AppBar position="static" className={classes.appbar}>
       <Toolbar style={{ height: 64 }}>
-        <Grid container alignItems="center" justify="space-between" style={{ height: '100%' }}>
+        <Grid container alignItems="center" justifyContent="space-between" style={{ height: '100%' }}>
           <Grid container item alignItems="center" xs={9} style={{ height: '100%' }}>
             <a href="/homepage">
               <img src={PortailLogo} alt="Portail logo" className={classes.logoIcon} />
@@ -172,7 +172,7 @@ const PortailTopBar: React.FC = () => {
             </Menu>
           </Grid>
 
-          <Grid container item alignItems="center" justify="flex-end" xs={3}>
+          <Grid container item alignItems="center" justifyContent="flex-end" xs={3}>
             <ListItemIcon className={classes.listIcon}>
               <div className={classes.avatar}>{me && `${(me.firstName || '?')[0]}${(me.lastName || '?')[0]}`}</div>
             </ListItemIcon>

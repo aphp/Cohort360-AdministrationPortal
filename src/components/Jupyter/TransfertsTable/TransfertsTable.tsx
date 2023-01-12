@@ -1,44 +1,56 @@
 import React, { useEffect, useState } from 'react'
 
-import { Button, Chip, CircularProgress, Grid, TableCell, TableRow, Typography, Snackbar } from '@material-ui/core'
+import {
+  Button,
+  Chip,
+  CircularProgress,
+  Grid,
+  TableCell,
+  TableRow,
+  Typography,
+  Snackbar,
+  Tooltip
+} from '@material-ui/core'
 import Alert from '@material-ui/lab/Alert'
 
 import AddIcon from '@material-ui/icons/Add'
 
 import useStyles from './styles'
-import { Column, Export, Order, UserRole } from 'types'
+import { Column, Export, ExportFilters, Order, UserRole } from 'types'
 import TransfertForm from 'components/Jupyter/TransfertForm/TransfertForm'
 import DataTable from 'components/DataTable/DataTable'
 import SearchBar from 'components/SearchBar/SearchBar'
 import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
 import { getExportsList } from 'services/Jupyter/jupyterExportService'
 import moment from 'moment'
+import { ReactComponent as FilterIcon } from 'assets/icones/filter.svg'
+import TransfertsFilters from '../TransfertsFilters/TransfertsFilters'
 
 type TransfertsTableProps = {
   userRights: UserRole
 }
 
-const orderDefault = { orderBy: 'username', orderDirection: 'asc' } as Order
+const orderDefault = { orderBy: 'insert_datetime', orderDirection: 'desc' } as Order
 
-// const defaultTransferRequest = {
-//   output_format: '',
-//   cohort_id: 0,
-//   provider_source_value: '',
-//   target_unix_account: 0,
-//   shift_dates: false,
-//   nominative: false
-// }
+const defaultFilters: ExportFilters = {
+  exportType: [],
+  request_job_status: [],
+  insert_datetime_gte: null,
+  insert_datetime_lte: null
+}
 
 const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
   const classes = useStyles()
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [exportsList, setExportsList] = useState<Export[]>([])
   const [selectedTransferRequest, setSelectedTransferRequest] = useState<any>(null)
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
   const [order, setOrder] = useState(orderDefault)
   const [searchInput, setSearchInput] = useState('')
+  const [filters, setFilters] = useState(defaultFilters)
+  const [openFilters, setOpenFilters] = useState(false)
 
   const debouncedSearchTerm = useDebounce(500, searchInput)
 
@@ -46,37 +58,48 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
     {
       label: 'N° de cohorte',
       align: 'center'
-      //   sortableColumn: true,
-      //   code: 'username'
     },
     {
-      label: 'Propriétaire de la cohorte',
+      label: 'Nom',
       align: 'center'
+    },
+    {
+      label: 'Nombre de patients',
+      align: 'center'
+    },
+    {
+      label: 'Propriétaire',
+      align: 'center',
+      sortableColumn: true,
+      code: 'owner'
     },
     {
       label: "Type d'export",
-      align: 'center'
+      align: 'center',
+      sortableColumn: true,
+      code: 'output_format'
     },
     {
       label: 'Environnement de travail',
       align: 'center'
     },
+    { label: 'Nom Jupyter/CSV', align: 'center' },
     {
-      label: 'Création de la demande',
-      align: 'center'
+      label: 'Date de la demande',
+      align: 'center',
+      sortableColumn: true,
+      code: 'insert_datetime'
     },
     {
       label: 'Statut',
-      align: 'center'
-    },
-    {
-      label: 'Actions',
       align: 'center'
     }
   ]
 
   const [addTransfertRequestSuccess, setAddTransfertRequestSuccess] = useState(false)
   const [addTransfertRequestFail, setAddTransfertRequestFail] = useState(false)
+
+  const rowsPerPage = 100
 
   const createWorkingEnvironmentUserRights =
     userRights.right_manage_env_unix_users && userRights.right_manage_env_user_links
@@ -85,7 +108,7 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
     try {
       setLoading(true)
 
-      const exportsList = await getExportsList(page, searchInput)
+      const exportsList = await getExportsList(page, rowsPerPage, order, filters, debouncedSearchTerm)
 
       setExportsList(exportsList.list)
       setTotal(exportsList?.total)
@@ -99,7 +122,38 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
     }
   }
 
-  console.log('exportsList', exportsList)
+  const getLabel = (status: Export['request_job_status']) => {
+    switch (status) {
+      case 'denied':
+        return 'Refusé'
+      case 'cancelled':
+        return 'Annulé'
+      case 'failed':
+        return 'Erreur'
+      default:
+        break
+    }
+  }
+
+  const handleDeleteChip = (
+    filter: 'exportType' | 'request_job_status' | 'insert_datetime_gte' | 'insert_datetime_lte',
+    value?: any
+  ) => {
+    switch (filter) {
+      case 'exportType':
+        setFilters({ ...filters, [filter]: filters[filter].filter((elem) => elem !== value) })
+        break
+      case 'request_job_status':
+        setFilters({ ...filters, [filter]: filters[filter].filter((elem) => elem !== value) })
+        break
+      case 'insert_datetime_gte':
+      case 'insert_datetime_lte':
+        setFilters({ ...filters, [filter]: null })
+        break
+      default:
+        break
+    }
+  }
 
   useEffect(() => {
     if (page !== 1) {
@@ -111,18 +165,18 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
 
   useEffect(() => {
     _getExportsList()
-  }, [page, order])
+  }, [page, order, filters])
 
   useEffect(() => {
     if (addTransfertRequestSuccess) _getExportsList()
   }, [addTransfertRequestSuccess])
 
   return (
-    <Grid container justify="flex-end">
+    <Grid container justifyContent="flex-end">
       <Grid
         container
         item
-        justify={createWorkingEnvironmentUserRights ? 'space-between' : 'flex-end'}
+        justifyContent={createWorkingEnvironmentUserRights ? 'space-between' : 'flex-end'}
         style={{ margin: '12px 0' }}
       >
         {createWorkingEnvironmentUserRights && (
@@ -136,8 +190,59 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
             Nouveau transfert
           </Button>
         )}
-        <Grid container item xs={6} justify="flex-end" alignItems="center">
+        <Grid container item xs={6} justifyContent="flex-end" alignItems="center">
           <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
+          <Button
+            variant="contained"
+            disableElevation
+            startIcon={<FilterIcon height="15px" fill="#FFF" />}
+            className={classes.filterButton}
+            onClick={() => setOpenFilters(true)}
+          >
+            Filtrer
+          </Button>
+        </Grid>
+        <Grid container item justifyContent="flex-end">
+          {filters.exportType.length > 0 &&
+            filters.exportType.map((exportType) => (
+              <Chip
+                key={exportType.code}
+                className={classes.filterChip}
+                label={`Export ${exportType.display}`}
+                onDelete={() => handleDeleteChip('exportType', exportType)}
+                color="primary"
+                variant="outlined"
+              />
+            ))}
+          {filters.request_job_status.length > 0 &&
+            filters.request_job_status.map((status) => (
+              <Chip
+                key={status.code}
+                className={classes.filterChip}
+                label={`Statut "${status.display}"`}
+                onDelete={() => handleDeleteChip('request_job_status', status)}
+                color="primary"
+                variant="outlined"
+              />
+            ))}
+          {filters.insert_datetime_gte && (
+            <Chip
+              className={classes.filterChip}
+              label={`Après le : ${moment(filters.insert_datetime_gte).format('DD/MM/YYYY')}`}
+              onDelete={() => handleDeleteChip('insert_datetime_gte')}
+              color="primary"
+              variant="outlined"
+            />
+          )}
+          {filters.insert_datetime_lte && (
+            <Chip
+              className={classes.filterChip}
+              label={`Avant le : ${moment(filters.insert_datetime_lte).format('DD/MM/YYYY')}`}
+              onDelete={() => handleDeleteChip('insert_datetime_lte')}
+              color="primary"
+              variant="outlined"
+            />
+          )}
         </Grid>
       </Grid>
 
@@ -147,12 +252,12 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
         setOrder={setOrder}
         page={page}
         setPage={setPage}
-        rowsPerPage={100}
+        rowsPerPage={rowsPerPage}
         total={total}
       >
         {loading ? (
           <TableRow>
-            <TableCell colSpan={7}>
+            <TableCell colSpan={9}>
               <div className={classes.loadingSpinnerContainer}>
                 <CircularProgress size={50} />
               </div>
@@ -160,17 +265,23 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
           </TableRow>
         ) : !exportsList || exportsList?.length === 0 ? (
           <TableRow>
-            <TableCell colSpan={7}>
+            <TableCell colSpan={9}>
               <Typography className={classes.loadingSpinnerContainer}>Aucun résultat à afficher</Typography>
             </TableCell>
           </TableRow>
         ) : (
-          exportsList.map((exportRequest) => {
+          exportsList.map((exportRequest, index) => {
             return (
               exportRequest && (
-                <TableRow key={exportRequest.id} className={classes.tableBodyRows} hover>
-                  <TableCell align="center">{exportRequest.cohort_id}</TableCell>
-                  <TableCell align="center">{exportRequest.owner}</TableCell>
+                <TableRow key={index} className={classes.tableBodyRows} hover>
+                  <TableCell align="center">{exportRequest.cohort_id ?? '-'}</TableCell>
+                  <TableCell align="center">
+                    {exportRequest.cohort_name !== '' ? exportRequest.cohort_name : '-'}
+                  </TableCell>
+                  <TableCell align="center">
+                    {exportRequest.patients_count !== '' ? exportRequest.patients_count : '-'}
+                  </TableCell>
+                  <TableCell align="center">{exportRequest.owner !== '' ? exportRequest.owner : '-'}</TableCell>
                   <TableCell align="center">
                     {exportRequest.output_format === 'csv'
                       ? 'CSV'
@@ -178,40 +289,34 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
                       ? 'Jupyter'
                       : 'psql'}
                   </TableCell>
-                  <TableCell align="center">{exportRequest.target_unix_account ?? '-'}</TableCell>
                   <TableCell align="center">
-                    {exportRequest.insert_datetime ? moment(exportRequest.insert_datetime).format('DD/MM/YYYY') : ''}
+                    {exportRequest.target_env !== '' ? exportRequest.target_env : '-'}
                   </TableCell>
                   <TableCell align="center">
-                    {exportRequest.status === 'validated' ? (
-                      <Chip label="Validé" style={{ backgroundColor: '#28a745', color: 'white' }} />
-                    ) : exportRequest.status === 'new' || exportRequest.status === 'running' ? (
-                      <Chip label="En cours" style={{ backgroundColor: '#ffc107', color: 'black' }} />
-                    ) : exportRequest.status === 'denied' ||
-                      exportRequest.status === 'canceled' ||
-                      exportRequest.status === 'to delete' ||
-                      exportRequest.status === 'deleted' ||
-                      exportRequest.status === 'failed' ? (
+                    <Tooltip title={exportRequest.target_name ?? '-'}>
+                      <Typography style={{ maxWidth: 200 }} noWrap>
+                        {exportRequest.target_name ?? '-'}
+                      </Typography>
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell align="center">
+                    {exportRequest.insert_datetime ? moment(exportRequest.insert_datetime).format('DD/MM/YYYY') : '-'}
+                  </TableCell>
+                  <TableCell align="center">
+                    {exportRequest.request_job_status === 'validated' ||
+                    exportRequest.request_job_status === 'finished' ? (
+                      <Chip label="Validé" size="small" style={{ backgroundColor: '#28a745', color: 'white' }} />
+                    ) : exportRequest.request_job_status === 'new' ||
+                      exportRequest.request_job_status === 'pending' ||
+                      exportRequest.request_job_status === 'started' ? (
+                      <Chip label="En cours" size="small" style={{ backgroundColor: '#ffc107' }} />
+                    ) : exportRequest.request_job_status === 'denied' ||
+                      exportRequest.request_job_status === 'cancelled' ||
+                      exportRequest.request_job_status === 'failed' ? (
                       <Chip
-                        label={() => {
-                          switch (exportRequest.status) {
-                            case 'denied':
-                              'Non validé'
-                              break
-                            case 'canceled':
-                              'Annulé'
-                              break
-                            case 'to delete':
-                              'À supprimer'
-                              break
-                            case 'deleted':
-                              'Supprimé'
-                              break
-                            default:
-                              break
-                          }
-                        }}
-                        style={{ backgroundColor: '#dc3545', color: 'black' }}
+                        label={getLabel(exportRequest.request_job_status)}
+                        size="small"
+                        style={{ backgroundColor: '#dc3545', color: 'white' }}
                       />
                     ) : (
                       '-'
@@ -235,6 +340,17 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
         />
       )}
 
+      {openFilters && (
+        <TransfertsFilters
+          filters={filters}
+          onChangeFilters={(newFilters) => {
+            setFilters(newFilters)
+            setPage(1)
+          }}
+          onClose={() => setOpenFilters(false)}
+        />
+      )}
+
       {addTransfertRequestSuccess && (
         <Snackbar
           open
@@ -250,7 +366,7 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
               if (addTransfertRequestSuccess) setAddTransfertRequestSuccess(false)
             }}
           >
-            {addTransfertRequestSuccess && "L'utilisateur a bien été créé."}
+            {addTransfertRequestSuccess && 'La demande de transfert a bien été créée.'}
           </Alert>
         </Snackbar>
       )}

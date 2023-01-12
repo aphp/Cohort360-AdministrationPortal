@@ -12,7 +12,7 @@ const Transfert: React.FC = () => {
   const classes = useStyles()
 
   const [userRights, setUserRights] = useState(userDefaultRoles)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const _getUserRights = async () => {
@@ -38,10 +38,10 @@ const Transfert: React.FC = () => {
         <CssBaseline />
         <Grid container item xs={12} sm={9} direction="column">
           <Typography variant="h1" className={classes.title} align="center">
-            Liste des demandes de transfert vers un environnement de travail
+            Liste des demandes de transfert
           </Typography>
           {loading ? (
-            <Grid container item justify="center">
+            <Grid container item justifyContent="center">
               <CircularProgress />
             </Grid>
           ) : (

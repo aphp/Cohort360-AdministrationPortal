@@ -359,48 +359,37 @@ export type JupyterTransferForm = {
 }
 
 export type Export = {
-  id: number
-  tables?: [
-    { export_request_table_id: number; omop_table_name: string; source_table_name: string; export_request: number }
-  ]
-  cohort?: string
-  reviewer_fk?: string
+  owner?: string
+  output_format?: 'csv' | 'hive' | 'psql'
   cohort_id?: number
+  cohort_name?: string
+  patients_count?: string
   insert_datetime?: string
-  update_datetime?: string
-  delete_datetime?: string
-  request_job_id?: string
-  request_job_status?: 'killed' | 'finished' | 'running' | 'started' | 'error' | 'unknown' | 'pending'
-  new_request_job_status?:
+  request_job_status?:
     | 'new'
     | 'denied'
     | 'validated'
     | 'pending'
-    | 'started'
     | 'failed'
     | 'cancelled'
     | 'finished'
     | 'cleaned'
-    | 'unknown'
-  request_job_fail_msg?: string
-  request_job_duration?: string
-  review_request_datetime?: string
-  motivation?: string
-  output_format?: 'csv' | 'hive' | 'psql'
-  nominative?: boolean
-  shift_dates?: boolean
-  is_user_notified?: boolean
-  target_location?: string
+    | 'started'
+  target_env?: string
   target_name?: string
-  cleaned_at?: string
-  execution_request_datetime?: string
-  provider_id?: number
-  status?: 'new' | 'validated' | 'denied' | 'running' | 'canceled' | 'done' | 'failed' | 'to delete' | 'deleted'
-  status_info?: string
-  owner?: string
-  cohort_fk?: string
-  target_unix_account?: number
-  creator_fk?: string
+}
+
+export type ExportFilters = {
+  exportType: {
+    display: string
+    code: 'csv' | 'hive' | 'psql'
+  }[]
+  request_job_status: {
+    display: string
+    code: string
+  }[]
+  insert_datetime_gte: string | null
+  insert_datetime_lte: string | null
 }
 
 export type Cohort = {

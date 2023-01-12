@@ -1,4 +1,5 @@
 import api from 'services/api'
+import { ExportFilters, Order } from 'types'
 
 export const jupyterTransfer = async (transferRequestData: {}) => {
   try {
@@ -10,10 +11,30 @@ export const jupyterTransfer = async (transferRequestData: {}) => {
   }
 }
 
-export const getExportsList = async (page: number, searchInput?: string) => {
+export const getExportsList = async (
+  page: number,
+  limit: number,
+  order: Order,
+  filters: ExportFilters,
+  searchInput?: string
+) => {
   try {
-    const searchFilter = searchInput ? `&search=${searchInput}` : ''
-    const exportsResp = await api.get(`/exports/?page=${page}${searchFilter}`)
+    const { exportType, insert_datetime_gte, insert_datetime_lte, request_job_status } = filters
+    let _filters: string[] = [
+      `limit=${limit}`,
+      `offset=${(page - 1) * limit}`,
+      `order=${order.orderDirection === 'desc' ? '-' : ''}${order.orderBy}`
+    ]
+
+    if (exportType && exportType.length > 0)
+      _filters = [..._filters, `output_format=${exportType.map((output_format) => output_format.code).join()}`]
+    if (request_job_status && request_job_status.length > 0)
+      _filters = [..._filters, `request_job_status=${request_job_status.map((status) => status.code).join()}`]
+    if (insert_datetime_gte) _filters = [..._filters, `insert_datetime_gte=${insert_datetime_gte}`]
+    if (insert_datetime_lte) _filters = [..._filters, `insert_datetime_lte=${insert_datetime_lte}`]
+    if (searchInput) _filters = [..._filters, `search=${searchInput.trim()}`]
+
+    const exportsResp = await api.get(`/exports/?${_filters.join('&')}`)
 
     return {
       list: exportsResp.data.results ?? [],
