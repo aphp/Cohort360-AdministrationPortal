@@ -5,7 +5,7 @@ export const getWorkingEnvironments = async (order: Order, page: number, exports
   try {
     const searchFilter = searchInput ? `&search=${searchInput}` : ''
     const workingEnvironmentsResp = await api.get(
-      `/${exports ? 'exports/unix-accounts' : 'workspaces/users'}/?page=${page}&ordering=${
+      `/${exports ? 'exports/unix-accounts' : 'workspaces/accounts'}/?page=${page}&ordering=${
         order.orderDirection === 'desc' ? '-' : ''
       }${order.orderBy}${searchFilter}`
     )

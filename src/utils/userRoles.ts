@@ -17,6 +17,7 @@ export const userDefaultRoles: UserRole = {
   right_read_data_accesses_inferior_levels: false,
   right_read_patient_nominative: false,
   right_read_patient_pseudo_anonymised: false,
+  right_search_patient_with_ipp: false,
   right_manage_review_transfer_jupyter: false,
   right_review_transfer_jupyter: false,
   right_manage_transfer_jupyter: false,
@@ -34,7 +35,7 @@ export const userDefaultRoles: UserRole = {
 
 export const getMyAccesses = async () => {
   try {
-    const getUserAccessesResp = await api.get(`/accesses/my-accesses/`)
+    const getUserAccessesResp = await api.get(`/accesses/accesses/my-accesses/`)
 
     if (getUserAccessesResp.status !== 200) {
       return []

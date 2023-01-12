@@ -6,7 +6,7 @@ export const getProviders = async (order: Order, page?: number, searchInput?: st
 
   // TODO: mettre reducer au lieu des &
   const providersResp = await api.get(
-    `/providers/?manual_only=true&page=${page}&ordering=${order.orderDirection === 'desc' ? '-' : ''}${
+    `/users/?manual_only=true&page=${page}&ordering=${order.orderDirection === 'desc' ? '-' : ''}${
       order.orderBy
     }${searchFilter}`
   )
@@ -26,7 +26,7 @@ export const getProviders = async (order: Order, page?: number, searchInput?: st
 
 export const getProvider = async (providerSourceValue: string) => {
   try {
-    const providerResp = await api.get(`/providers/${providerSourceValue}/`)
+    const providerResp = await api.get(`/users/${providerSourceValue}/`)
 
     return providerResp.data ?? undefined
   } catch (error) {
