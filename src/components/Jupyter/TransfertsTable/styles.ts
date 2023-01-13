@@ -29,7 +29,7 @@ const useStyles = makeStyles(() =>
       marginLeft: 8
     },
     filterChip: {
-      margin: '0 6px 6px 6px',
+      margin: '12px 6px 0px 6px',
       '&:last-child': {
         marginRight: 0
       }
