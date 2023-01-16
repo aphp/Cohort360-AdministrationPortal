@@ -23,7 +23,7 @@ export const getExportsList = async (
     let _filters: string[] = [
       `limit=${limit}`,
       `offset=${(page - 1) * limit}`,
-      `order=${order.orderDirection === 'desc' ? '-' : ''}${order.orderBy}`
+      `ordering=${order.orderDirection === 'desc' ? '-' : ''}${order.orderBy}`
     ]
 
     if (exportType && exportType.length > 0)
