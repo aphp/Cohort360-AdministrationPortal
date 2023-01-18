@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { Button, Grid, Snackbar, Typography } from '@material-ui/core'
-import { Alert } from '@material-ui/lab'
+import { Button, Grid, Typography } from '@material-ui/core'
 
 import AddIcon from '@material-ui/icons/Add'
 
@@ -11,6 +10,7 @@ import { getAccesses } from 'services/Console-Admin/providersHistoryService'
 import { Access, Order, Profile, Role, UserRole } from 'types'
 
 import useStyles from './styles'
+import CommonSnackbar from 'components/Snackbar/Snackbar'
 
 type ProfileComponentProps = {
   profile: Profile
@@ -106,29 +106,20 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profile, userRights
         onFail={setAddAccessFail}
         userRights={userRights}
       />
+
       {addAccessSuccess && (
-        <Snackbar
-          open
+        <CommonSnackbar
           onClose={() => setAddAccessSuccess(false)}
-          autoHideDuration={3000}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        >
-          <Alert severity="success" onClose={() => setAddAccessSuccess(false)}>
-            L'accès a bien été créé.
-          </Alert>
-        </Snackbar>
+          severity="success"
+          message="L'accès a bien été créé."
+        />
       )}
       {addAccessFail && (
-        <Snackbar
-          open
+        <CommonSnackbar
           onClose={() => setAddAccessFail(false)}
-          autoHideDuration={3000}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        >
-          <Alert severity="error" onClose={() => setAddAccessFail(false)}>
-            Erreur lors de la création de l'accès.
-          </Alert>
-        </Snackbar>
+          severity="error"
+          message="Erreur lors de la création de l'accès"
+        />
       )}
     </Grid>
   )

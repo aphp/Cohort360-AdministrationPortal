@@ -9,7 +9,6 @@ import {
   DialogContent,
   Grid,
   IconButton,
-  Snackbar,
   TableCell,
   TableRow,
   Tooltip,
@@ -28,10 +27,10 @@ import TimerOffIcon from '@material-ui/icons/TimerOff'
 import useStyles from './styles'
 import AccessForm from '../AccessForm/AccessForm'
 import { Access, Column, Order, Role, ScopeTreeRow, UserRole } from 'types'
-import { Alert } from '@material-ui/lab'
 import moment from 'moment'
 import { onDeleteOrTerminateAccess } from 'services/Console-Admin/providersHistoryService'
 import DataTable from 'components/DataTable/DataTable'
+import CommonSnackbar from 'components/Snackbar/Snackbar'
 
 type AccessesTableProps = {
   displayName: boolean
@@ -346,48 +345,36 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
       </Dialog>
 
       {(editAccessSuccess || deleteAccessSuccess) && (
-        <Snackbar
-          open
+        <CommonSnackbar
           onClose={() => {
             if (editAccessSuccess) setEditAccessSuccess(false)
             if (deleteAccessSuccess) setDeleteAccessSuccess(false)
           }}
-          autoHideDuration={3000}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        >
-          <Alert
-            severity="success"
-            onClose={() => {
-              if (editAccessSuccess) setEditAccessSuccess(false)
-              if (deleteAccessSuccess) setDeleteAccessSuccess(false)
-            }}
-          >
-            {editAccessSuccess && "Les dates d'accès ont bien été éditées."}
-            {deleteAccessSuccess && `L'accès a bien été ${terminateAccess ? 'clôturé' : 'supprimé'}.`}
-          </Alert>
-        </Snackbar>
+          severity="success"
+          message={
+            editAccessSuccess
+              ? "Les dates d'accès ont bien été éditées."
+              : deleteAccessSuccess
+              ? `L'accès a bien été ${terminateAccess ? 'clôturé' : 'supprimé'}.`
+              : ''
+          }
+        />
       )}
       {(editAccessFail || deleteAccessFail) && (
-        <Snackbar
-          open
+        <CommonSnackbar
           onClose={() => {
             if (editAccessFail) setEditAccessFail(false)
             if (deleteAccessFail) setDeleteAccessFail(false)
           }}
-          autoHideDuration={3000}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        >
-          <Alert
-            severity="error"
-            onClose={() => {
-              if (editAccessFail) setEditAccessFail(false)
-              if (deleteAccessFail) setDeleteAccessFail(false)
-            }}
-          >
-            {editAccessFail && "Erreur lors de l'édition de l'accès."}
-            {deleteAccessFail && `Erreur lors de la ${terminateAccess ? 'clôture' : 'suppression'} de l'accès.`}
-          </Alert>
-        </Snackbar>
+          severity="error"
+          message={
+            editAccessFail
+              ? "Erreur lors de l'édition de l'accès"
+              : deleteAccessFail
+              ? `Erreur lors de la ${terminateAccess ? 'clôture' : 'suppression'} de l'accès.`
+              : ''
+          }
+        />
       )}
     </Grid>
   )
