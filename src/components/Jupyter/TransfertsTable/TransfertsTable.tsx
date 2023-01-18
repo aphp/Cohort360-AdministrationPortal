@@ -1,30 +1,21 @@
 import React, { useEffect, useState } from 'react'
+import moment from 'moment'
+import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
 
-import {
-  Button,
-  Chip,
-  CircularProgress,
-  Grid,
-  TableCell,
-  TableRow,
-  Typography,
-  Snackbar,
-  Tooltip
-} from '@material-ui/core'
-import Alert from '@material-ui/lab/Alert'
+import { Button, Chip, CircularProgress, Grid, TableCell, TableRow, Typography, Tooltip } from '@material-ui/core'
+import { ReactComponent as FilterIcon } from 'assets/icones/filter.svg'
 
 import AddIcon from '@material-ui/icons/Add'
 
-import useStyles from './styles'
-import { Column, Export, ExportFilters, Order, UserRole } from 'types'
-import TransfertForm from 'components/Jupyter/TransfertForm/TransfertForm'
 import DataTable from 'components/DataTable/DataTable'
+import TransfertForm from 'components/Jupyter/TransfertForm/TransfertForm'
 import SearchBar from 'components/SearchBar/SearchBar'
-import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
+import CommonSnackbar from 'components/Snackbar/Snackbar'
 import { getExportsList } from 'services/Jupyter/jupyterExportService'
-import moment from 'moment'
-import { ReactComponent as FilterIcon } from 'assets/icones/filter.svg'
 import TransfertsFilters from '../TransfertsFilters/TransfertsFilters'
+
+import { Column, Export, ExportFilters, JupyterTransferForm, Order, UserRole } from 'types'
+import useStyles from './styles'
 
 type TransfertsTableProps = {
   userRights: UserRole
@@ -44,7 +35,7 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
 
   const [loading, setLoading] = useState(true)
   const [exportsList, setExportsList] = useState<Export[]>([])
-  const [selectedTransferRequest, setSelectedTransferRequest] = useState<any>(null)
+  const [selectedTransferRequest, setSelectedTransferRequest] = useState<JupyterTransferForm | null>(null)
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
   const [order, setOrder] = useState(orderDefault)
@@ -137,7 +128,7 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
 
   const handleDeleteChip = (
     filter: 'exportType' | 'request_job_status' | 'insert_datetime_gte' | 'insert_datetime_lte',
-    value?: any
+    value?: {} | string | null
   ) => {
     switch (filter) {
       case 'exportType':
@@ -185,7 +176,7 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
             disableElevation
             startIcon={<AddIcon height="15px" fill="#FFF" />}
             className={classes.searchButton}
-            onClick={() => setSelectedTransferRequest({})}
+            onClick={() => setSelectedTransferRequest({} as JupyterTransferForm)}
           >
             Nouveau transfert
           </Button>
@@ -245,7 +236,6 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
           )}
         </Grid>
       </Grid>
-
       <DataTable
         columns={columns}
         order={order}
@@ -255,7 +245,7 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
         rowsPerPage={rowsPerPage}
         total={total}
       >
-        {loading ? (
+        {loading && (
           <TableRow>
             <TableCell colSpan={9}>
               <div className={classes.loadingSpinnerContainer}>
@@ -263,7 +253,8 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
               </div>
             </TableCell>
           </TableRow>
-        ) : !exportsList || exportsList?.length === 0 ? (
+        )}
+        {!loading && (!exportsList || exportsList?.length === 0) ? (
           <TableRow>
             <TableCell colSpan={9}>
               <Typography className={classes.loadingSpinnerContainer}>Aucun résultat à afficher</Typography>
@@ -328,7 +319,6 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
           })
         )}
       </DataTable>
-
       {selectedTransferRequest !== null && (
         <TransfertForm
           userRights={userRights}
@@ -339,7 +329,6 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
           onAddTransfertRequestFail={setAddTransfertRequestFail}
         />
       )}
-
       {openFilters && (
         <TransfertsFilters
           filters={filters}
@@ -352,42 +341,23 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
       )}
 
       {addTransfertRequestSuccess && (
-        <Snackbar
-          open
+        <CommonSnackbar
           onClose={() => {
             if (addTransfertRequestSuccess) setAddTransfertRequestSuccess(false)
           }}
-          autoHideDuration={3000}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        >
-          <Alert
-            severity="success"
-            onClose={() => {
-              if (addTransfertRequestSuccess) setAddTransfertRequestSuccess(false)
-            }}
-          >
-            {addTransfertRequestSuccess && 'La demande de transfert a bien été créée.'}
-          </Alert>
-        </Snackbar>
+          severity="success"
+          message={'La demande de transfert a bien été créée.'}
+        />
       )}
+
       {addTransfertRequestFail && (
-        <Snackbar
-          open
+        <CommonSnackbar
           onClose={() => {
             if (addTransfertRequestFail) setAddTransfertRequestFail(false)
           }}
-          autoHideDuration={3000}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        >
-          <Alert
-            severity="error"
-            onClose={() => {
-              if (addTransfertRequestFail) setAddTransfertRequestFail(false)
-            }}
-          >
-            {addTransfertRequestFail && 'Erreur lors de la création la demande de transfert.'}
-          </Alert>
-        </Snackbar>
+          severity="error"
+          message={'Erreur lors de la création la demande de transfert.'}
+        />
       )}
     </Grid>
   )

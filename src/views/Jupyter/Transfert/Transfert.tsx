@@ -30,7 +30,7 @@ const Transfert: React.FC = () => {
     }
 
     _getUserRights()
-  }, []) // eslint-disable-line
+  }, [setUserRights])
 
   return (
     <Grid container direction="column">
