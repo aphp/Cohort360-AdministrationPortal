@@ -67,11 +67,18 @@ const exportTable: ExportTableType[] = [
     table_id: 'cost',
     nominative: false
   },
-  // {
-  //   id: 'note',
-  //   table_name: 'Fait - Documents médicaux',
-  //   table_id: 'note'
-  // },
+  {
+    id: 'note',
+    table_name: 'Fait - Documents médicaux',
+    table_id: 'note',
+    nominative: true
+  },
+  {
+    id: 'note_deid',
+    table_name: 'Fait - Documents médicaux',
+    table_id: 'note_deid',
+    nominative: false
+  },
   {
     id: 'care_site',
     table_name: 'Référentiel - Structure hospitalière',

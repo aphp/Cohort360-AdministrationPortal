@@ -64,6 +64,11 @@ const Transfert: React.FC = () => {
   const debouncedProviderSearchTerm = useDebounce(700, providerSearchInput)
   const debouncedEnvironmentSearchTerm = useDebounce(700, environmentSearchInput)
 
+  const nominativeTables = export_table.filter((table) => table.nominative === true).map((table) => table.id)
+  const tablesList = export_table.filter((table) =>
+    transferRequest.confidentiality === 'pseudo' ? !nominativeTables.includes(table.id) : table
+  )
+
   const _onChangeValue = (
     key: 'user' | 'cohort' | 'workingEnvironment' | 'confidentiality' | 'shiftDates' | 'tables',
     value: any
@@ -71,6 +76,12 @@ const Transfert: React.FC = () => {
     const _transferRequest = { ...transferRequest }
     // @ts-ignore
     _transferRequest[key] = value
+    if (key === 'confidentiality') {
+      _transferRequest['tables'] = transferRequest.tables.filter((table) =>
+        _transferRequest.confidentiality === 'pseudo' ? !nominativeTables.includes(table) : table
+      )
+    }
+
     setTransferRequest(_transferRequest)
   }
 
@@ -200,6 +211,19 @@ const Transfert: React.FC = () => {
     }
   }
 
+  const handleSelectAllTables = () => {
+    const selectedTables = transferRequest.tables
+
+    if (tablesList.length === selectedTables.length) {
+      _onChangeValue('tables', [])
+    } else {
+      _onChangeValue(
+        'tables',
+        tablesList.map((table) => table.table_id)
+      )
+    }
+  }
+
   return (
     <Grid container direction="column">
       <Grid container direction="column" alignItems="center">
@@ -209,7 +233,7 @@ const Transfert: React.FC = () => {
             Transfert vers un environnement de travail
           </Typography>
           {loadingOnValidate ? (
-            <Grid container justify="center" style={{ padding: 16 }}>
+            <Grid container justifyContent="center" style={{ padding: 16 }}>
               <CircularProgress size={40} />
             </Grid>
           ) : (
@@ -288,35 +312,47 @@ const Transfert: React.FC = () => {
                 Choix des tables à exporter
               </Typography>
 
-              <List className={clsx(classes.list, classes.autocomplete)}>
-                {export_table
-                  .filter((table) =>
-                    transferRequest.confidentiality === 'pseudo'
-                      ? table.nominative !== true
-                      : table.nominative === true || table.nominative === false
-                  )
-                  .map(({ table_name, table_id }: ExportTableType) => (
-                    <ListItem key={table_id}>
-                      <ListItemText
-                        disableTypography
-                        primary={
-                          <Grid container direction="row" alignItems="center">
-                            <Typography variant="body1">{table_name} - </Typography>
-                            <Typography variant="body1" style={{ fontStyle: 'italic', paddingLeft: 4 }}>
-                              {table_id}
-                            </Typography>
-                          </Grid>
-                        }
-                      />
+              <FormControlLabel
+                className={classes.selectAll}
+                control={
+                  <Checkbox
+                    style={{ padding: '4px 12px' }}
+                    color="primary"
+                    indeterminate={
+                      transferRequest.tables.length !== tablesList.length && transferRequest.tables.length > 0
+                    }
+                    checked={transferRequest.tables.length === tablesList.length}
+                    onChange={handleSelectAllTables}
+                  />
+                }
+                label="Tout sélectionner"
+                labelPlacement="start"
+              />
 
-                      <ListItemSecondaryAction>
-                        <Checkbox
-                          checked={!!transferRequest.tables.find((tableId: string) => tableId === table_id)}
-                          onChange={() => handleChangeTables(table_id)}
-                        />
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                  ))}
+              <List className={clsx(classes.list, classes.autocomplete)} style={{ marginTop: 0 }}>
+                {tablesList.map(({ table_name, table_id }: ExportTableType) => (
+                  <ListItem key={table_id}>
+                    <ListItemText
+                      disableTypography
+                      primary={
+                        <Grid container direction="row" alignItems="center">
+                          <Typography variant="body1">{table_name} - </Typography>
+                          <Typography variant="body1" style={{ fontStyle: 'italic', paddingLeft: 4 }}>
+                            {table_id}
+                          </Typography>
+                        </Grid>
+                      }
+                    />
+
+                    <ListItemSecondaryAction>
+                      <Checkbox
+                        color="primary"
+                        checked={!!transferRequest.tables.find((tableId: string) => tableId === table_id)}
+                        onChange={() => handleChangeTables(table_id)}
+                      />
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                ))}
               </List>
 
               <Typography align="left" variant="h6">
