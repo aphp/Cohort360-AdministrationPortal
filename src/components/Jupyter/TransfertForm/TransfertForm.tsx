@@ -47,7 +47,7 @@ const defaultTransfer: JupyterTransferForm = {
   user: null,
   cohort: null,
   workingEnvironment: null,
-  confidentiality: 'nomi',
+  confidentiality: 'pseudo',
   shiftDates: 'no',
   tables: []
 }
@@ -80,6 +80,11 @@ const TransfertForm: React.FC<TransferFormProps> = ({
   const debouncedProviderSearchTerm = useDebounce(700, providerSearchInput)
   const debouncedEnvironmentSearchTerm = useDebounce(700, environmentSearchInput)
 
+  const nominativeTables = export_table.filter((table) => table.nominative === true).map((table) => table.id)
+  const tablesList = export_table.filter((table) =>
+    transferRequest.confidentiality === 'pseudo' ? !nominativeTables.includes(table.id) : table
+  )
+
   const _onChangeValue = (
     key: 'user' | 'cohort' | 'workingEnvironment' | 'confidentiality' | 'shiftDates' | 'tables',
     value: any
@@ -87,6 +92,12 @@ const TransfertForm: React.FC<TransferFormProps> = ({
     const _transferRequest = { ...transferRequest }
     // @ts-ignore
     _transferRequest[key] = value
+    if (key === 'confidentiality') {
+      _transferRequest['tables'] = transferRequest.tables.filter((table) =>
+        _transferRequest.confidentiality === 'pseudo' ? !nominativeTables.includes(table) : table
+      )
+    }
+
     setTransferRequest(_transferRequest)
   }
 
@@ -218,18 +229,31 @@ const TransfertForm: React.FC<TransferFormProps> = ({
     }
   }
 
+  const handleSelectAllTables = () => {
+    const selectedTables = transferRequest.tables
+
+    if (tablesList.length === selectedTables.length) {
+      _onChangeValue('tables', [])
+    } else {
+      _onChangeValue(
+        'tables',
+        tablesList.map((table) => table.table_id)
+      )
+    }
+  }
+
   return (
     <Dialog open onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle className={classes.title}>Transfert vers un environnement de travail</DialogTitle>
       <DialogContent>
         {loadingOnValidate ? (
-          <Grid container justify="center" style={{ padding: 16 }}>
+          <Grid container justifyContent="center" style={{ padding: 16 }}>
             <CircularProgress size={40} />
           </Grid>
         ) : (
           <>
             <Typography align="left" variant="h6">
-              Choix du propriétaire de la cohorte
+              Choix de l'utilisateur
             </Typography>
             <Autocomplete
               className={classes.autocomplete}
@@ -285,11 +309,40 @@ const TransfertForm: React.FC<TransferFormProps> = ({
             )}
 
             <Typography align="left" variant="h6">
+              Choix des accès
+            </Typography>
+            <RadioGroup
+              className={classes.radioGroup}
+              value={transferRequest.confidentiality}
+              onChange={(event) => _onChangeValue('confidentiality', event.target.value)}
+            >
+              <FormControlLabel value="pseudo" control={<Radio color="primary" />} label="Pseudonymisé" />
+              <FormControlLabel value="nomi" control={<Radio color="primary" />} label="Nominatif" />
+            </RadioGroup>
+
+            <Typography align="left" variant="h6">
               Choix des tables à exporter
             </Typography>
 
-            <List className={clsx(classes.list, classes.autocomplete)}>
-              {export_table.map(({ table_name, table_id }: ExportTableType) => (
+            <FormControlLabel
+              className={classes.selectAll}
+              control={
+                <Checkbox
+                  style={{ padding: '4px 12px' }}
+                  color="primary"
+                  indeterminate={
+                    transferRequest.tables.length !== tablesList.length && transferRequest.tables.length > 0
+                  }
+                  checked={transferRequest.tables.length === tablesList.length}
+                  onChange={handleSelectAllTables}
+                />
+              }
+              label="Tout sélectionner"
+              labelPlacement="start"
+            />
+
+            <List className={clsx(classes.list, classes.autocomplete)} style={{ marginTop: 0 }}>
+              {tablesList.map(({ table_name, table_id }: ExportTableType) => (
                 <ListItem key={table_id}>
                   <ListItemText
                     disableTypography
@@ -305,6 +358,7 @@ const TransfertForm: React.FC<TransferFormProps> = ({
 
                   <ListItemSecondaryAction>
                     <Checkbox
+                      color="primary"
                       checked={!!transferRequest.tables.find((tableId: string) => tableId === table_id)}
                       onChange={() => handleChangeTables(table_id)}
                     />
@@ -312,6 +366,18 @@ const TransfertForm: React.FC<TransferFormProps> = ({
                 </ListItem>
               ))}
             </List>
+
+            <Typography align="left" variant="h6">
+              Décaler les dates des évènements
+            </Typography>
+            <RadioGroup
+              className={classes.radioGroup}
+              value={transferRequest.shiftDates}
+              onChange={(event) => _onChangeValue('shiftDates', event.target.value)}
+            >
+              <FormControlLabel value="yes" control={<Radio color="primary" />} label="Oui" />
+              <FormControlLabel value="no" control={<Radio color="primary" />} label="Non" />
+            </RadioGroup>
 
             <Typography align="left" variant="h6">
               Choix de l'environnement de travail Jupyter
@@ -344,34 +410,6 @@ const TransfertForm: React.FC<TransferFormProps> = ({
                 />
               )}
             />
-
-            <Typography align="left" variant="h6">
-              Choix des accès
-            </Typography>
-            <RadioGroup
-              className={classes.radioGroup}
-              value={transferRequest.confidentiality}
-              onChange={(event) => _onChangeValue('confidentiality', event.target.value)}
-            >
-              <FormControlLabel value="nomi" control={<Radio color="primary" />} label="Nominatif" />
-              <FormControlLabel value="pseudo" control={<Radio color="primary" />} label="Pseudonymisé" />
-            </RadioGroup>
-
-            {transferRequest.confidentiality === 'pseudo' && (
-              <>
-                <Typography align="left" variant="h6">
-                  Décaler les dates des évènements
-                </Typography>
-                <RadioGroup
-                  className={classes.radioGroup}
-                  value={transferRequest.shiftDates}
-                  onChange={(event) => _onChangeValue('shiftDates', event.target.value)}
-                >
-                  <FormControlLabel value="yes" control={<Radio color="primary" />} label="Oui" />
-                  <FormControlLabel value="no" control={<Radio color="primary" />} label="Non" />
-                </RadioGroup>
-              </>
-            )}
 
             <div style={{ alignSelf: 'flex-end', marginBottom: 16 }}>
               <InfoIcon color="action" className={classes.infoIcon} />

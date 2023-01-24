@@ -37,6 +37,13 @@ const useStyles = makeStyles((theme) => ({
   radioGroup: {
     flexDirection: 'row',
     margin: '8px 1em 1em'
+  },
+  selectAll: {
+    display: 'flex',
+    marginRight: '2em',
+    '& span': {
+      fontWeight: 800
+    }
   }
 }))
 
