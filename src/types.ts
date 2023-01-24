@@ -355,7 +355,7 @@ export type JupyterTransferForm = {
   confidentiality: 'nomi' | 'pseudo'
   workingEnvironment: WorkingEnvironment | null
   shiftDates: 'yes' | 'no'
-  tables: []
+  tables: string[]
 }
 
 export type Export = {
@@ -406,4 +406,5 @@ export type ExportTableType = {
   id: string
   table_name: string
   table_id: string
+  nominative: boolean
 }
