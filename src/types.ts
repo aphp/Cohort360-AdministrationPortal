@@ -358,6 +358,40 @@ export type JupyterTransferForm = {
   tables: string[]
 }
 
+export type Export = {
+  owner?: string
+  output_format?: 'csv' | 'hive' | 'psql'
+  cohort_id?: number
+  cohort_name?: string
+  patients_count?: string
+  insert_datetime?: string
+  request_job_status?:
+    | 'new'
+    | 'denied'
+    | 'validated'
+    | 'pending'
+    | 'failed'
+    | 'cancelled'
+    | 'finished'
+    | 'cleaned'
+    | 'started'
+  target_env?: string
+  target_name?: string
+}
+
+export type ExportFilters = {
+  exportType: {
+    display: string
+    code: 'csv' | 'hive' | 'psql'
+  }[]
+  request_job_status: {
+    display: string
+    code: string
+  }[]
+  insert_datetime_gte: string | null
+  insert_datetime_lte: string | null
+}
+
 export type Cohort = {
   owner: number
   name: string
