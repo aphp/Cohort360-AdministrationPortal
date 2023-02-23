@@ -367,17 +367,21 @@ const TransfertForm: React.FC<TransferFormProps> = ({
               ))}
             </List>
 
-            <Typography align="left" variant="h6">
-              Décaler les dates des évènements
-            </Typography>
-            <RadioGroup
-              className={classes.radioGroup}
-              value={transferRequest.shiftDates}
-              onChange={(event) => _onChangeValue('shiftDates', event.target.value)}
-            >
-              <FormControlLabel value="yes" control={<Radio color="primary" />} label="Oui" />
-              <FormControlLabel value="no" control={<Radio color="primary" />} label="Non" />
-            </RadioGroup>
+            {transferRequest.confidentiality === 'pseudo' && (
+              <>
+                <Typography align="left" variant="h6">
+                  Décaler les dates des évènements
+                </Typography>
+                <RadioGroup
+                  className={classes.radioGroup}
+                  value={transferRequest.shiftDates}
+                  onChange={(event) => _onChangeValue('shiftDates', event.target.value)}
+                >
+                  <FormControlLabel value="no" control={<Radio color="primary" />} label="Non" />
+                  <FormControlLabel value="yes" control={<Radio color="primary" />} label="Oui" />
+                </RadioGroup>
+              </>
+            )}
 
             <Typography align="left" variant="h6">
               Choix de l'environnement de travail Jupyter
