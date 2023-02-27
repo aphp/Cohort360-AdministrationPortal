@@ -6,22 +6,22 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'white'
   },
   title: {
-    borderBottom: '1px solid #D0D7D8',
-    width: '100%',
-    paddingTop: '80px',
-    paddingBottom: '20px',
-    marginBottom: '20px'
+    ' & h2': {
+      fontSize: 18,
+      fontFamily: "'Montserrat', sans-serif",
+      color: '#0063AF',
+      textTransform: 'none',
+      lineHeight: 2
+    }
   },
   validateButton: {
-    width: '125px',
     backgroundColor: '#5BC5F2',
     color: '#FFF',
-    borderRadius: '25px',
+    borderRadius: 25,
     '&:hover': {
       backgroundColor: '#499cbf'
     },
-    alignSelf: 'end',
-    marginBottom: 16
+    marginBottom: '4px 0'
   },
   list: {
     border: `1px solid ${theme.palette.grey[400]}`,
@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
     margin: '8px 1em 1em'
   },
   selectAll: {
+    display: 'flex',
     marginRight: '2em',
     '& span': {
       fontWeight: 800

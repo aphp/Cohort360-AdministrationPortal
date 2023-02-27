@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { Button, CircularProgress, Grid, TableCell, TableRow, Typography, Snackbar } from '@material-ui/core'
-import Alert from '@material-ui/lab/Alert'
+import { Button, CircularProgress, Grid, TableCell, TableRow, Typography } from '@material-ui/core'
 
 import AddIcon from '@material-ui/icons/Add'
 
@@ -12,6 +11,7 @@ import { getWorkingEnvironments } from 'services/Jupyter/workingEnvironmentsServ
 import DataTable from 'components/DataTable/DataTable'
 import SearchBar from 'components/SearchBar/SearchBar'
 import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
+import CommonSnackbar from 'components/Snackbar/Snackbar'
 
 type WorkingEnvironmentsTableProps = {
   userRights: UserRole
@@ -185,42 +185,18 @@ const WorkingEnvironmentsTable: React.FC<WorkingEnvironmentsTableProps> = ({ use
       )}
 
       {addWorkingEnvironmentSuccess && (
-        <Snackbar
-          open
-          onClose={() => {
-            if (addWorkingEnvironmentSuccess) setAddWorkingEnvironmentSuccess(false)
-          }}
-          autoHideDuration={3000}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        >
-          <Alert
-            severity="success"
-            onClose={() => {
-              if (addWorkingEnvironmentSuccess) setAddWorkingEnvironmentSuccess(false)
-            }}
-          >
-            {addWorkingEnvironmentSuccess && "L'utilisateur a bien été créé."}
-          </Alert>
-        </Snackbar>
+        <CommonSnackbar
+          onClose={() => setAddWorkingEnvironmentSuccess(false)}
+          severity="success"
+          message="L'utilisateur a bien été créé."
+        />
       )}
       {addWorkingEnvironmentFail && (
-        <Snackbar
-          open
-          onClose={() => {
-            if (addWorkingEnvironmentFail) setAddWorkingEnvironmentFail(false)
-          }}
-          autoHideDuration={3000}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        >
-          <Alert
-            severity="error"
-            onClose={() => {
-              if (addWorkingEnvironmentFail) setAddWorkingEnvironmentFail(false)
-            }}
-          >
-            {addWorkingEnvironmentFail && "Erreur lors de la création de l'utilisateur."}
-          </Alert>
-        </Snackbar>
+        <CommonSnackbar
+          onClose={() => setAddWorkingEnvironmentFail(false)}
+          severity="error"
+          message="Erreur lors de la création de l'utilisateur."
+        />
       )}
     </Grid>
   )

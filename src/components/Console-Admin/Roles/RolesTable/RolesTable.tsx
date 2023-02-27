@@ -8,13 +8,11 @@ import {
   // DialogContent,
   Grid,
   IconButton,
-  Snackbar,
   TableCell,
   TableRow,
   Tooltip
   // Typography,
 } from '@material-ui/core'
-import Alert from '@material-ui/lab/Alert'
 
 import AddIcon from '@material-ui/icons/Add'
 // import DeleteIcon from "@material-ui/icons/Delete"
@@ -29,6 +27,7 @@ import {
 import RoleDialog from '../RoleDialog/RoleDialog'
 import { userDefaultRoles } from 'utils/userRoles'
 import DataTable from 'components/DataTable/DataTable'
+import CommonSnackbar from 'components/Snackbar/Snackbar'
 
 const defaultRole: Role = {
   name: '',
@@ -200,54 +199,28 @@ const RolesTable: React.FC<RolesTableProps> = ({ userRights }) => {
       </Dialog> */}
 
       {(addRoleSuccess || editRoleSuccess) && (
-        <Snackbar
-          open
+        <CommonSnackbar
           onClose={() => {
             if (addRoleSuccess) setAddRoleSuccess(false)
             if (editRoleSuccess) setEditRoleSuccess(false)
             // if (deleteRoleSuccess) setDeleteRoleSuccess(false)
           }}
-          autoHideDuration={3000}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        >
-          <Alert
-            severity="success"
-            onClose={() => {
-              if (addRoleSuccess) setAddRoleSuccess(false)
-              if (editRoleSuccess) setEditRoleSuccess(false)
-              // if (deleteRoleSuccess) setDeleteRoleSuccess(false)
-            }}
-          >
-            {addRoleSuccess && "L'habilitation a bien été créée."}
-            {editRoleSuccess && "L'habilitation a bien été éditée."}
-            {/* {deleteRoleSuccess && "L'habilitation a bien été supprimé."} */}
-          </Alert>
-        </Snackbar>
+          severity="success"
+          message={`L'habilitation a bien été ${addRoleSuccess && 'créée'}${editRoleSuccess && 'éditée'}.`}
+          // {/* {deleteRoleSuccess && "L'habilitation a bien été supprimé."} */}
+        />
       )}
       {(addRoleFail || editRoleFail) && (
-        <Snackbar
-          open
+        <CommonSnackbar
           onClose={() => {
             if (addRoleFail) setAddRoleFail(false)
             if (editRoleFail) setEditRoleFail(false)
             // if (deleteRoleFail) setDeleteRoleFail(false)
           }}
-          autoHideDuration={3000}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        >
-          <Alert
-            severity="error"
-            onClose={() => {
-              if (addRoleFail) setAddRoleFail(false)
-              if (editRoleFail) setEditRoleFail(false)
-              // if (deleteRoleFail) setDeleteRoleFail(false)
-            }}
-          >
-            {addRoleFail && "Erreur lors de la création de l'habilitation."}
-            {editRoleFail && "Erreur lors de l'édition de l'habilitation."}
-            {/* {deleteRoleFail && "Erreur lors de la suppression de l'habilitation."} */}
-          </Alert>
-        </Snackbar>
+          severity="error"
+          message={`Erreur lors de ${addRoleFail && 'la création'}${editRoleFail && "l'édition"} de l'habilitation.`}
+          // {/* {deleteRoleFail && "Erreur lors de la suppression de l'habilitation."} */}
+        />
       )}
     </Grid>
   )

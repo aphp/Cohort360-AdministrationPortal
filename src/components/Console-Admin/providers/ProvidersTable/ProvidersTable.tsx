@@ -2,18 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
-import {
-  Button,
-  CircularProgress,
-  Grid,
-  IconButton,
-  TableCell,
-  TableRow,
-  Typography,
-  Tooltip,
-  Snackbar
-} from '@material-ui/core'
-import Alert from '@material-ui/lab/Alert'
+import { Button, CircularProgress, Grid, IconButton, TableCell, TableRow, Typography, Tooltip } from '@material-ui/core'
 
 import AssignmentIcon from '@material-ui/icons/Assignment'
 import EditIcon from '@material-ui/icons/Edit'
@@ -29,6 +18,7 @@ import { useAppSelector } from 'state'
 import { fetchProviders, setSelectedProvider } from 'state/providers'
 import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
 import DataTable from 'components/DataTable/DataTable'
+import CommonSnackbar from 'components/Snackbar/Snackbar'
 
 type ProvidersTableProps = {
   userRights: UserRole
@@ -249,48 +239,26 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
       )}
 
       {(addProviderSuccess || editProviderSuccess) && (
-        <Snackbar
-          open
+        <CommonSnackbar
+          severity="success"
           onClose={() => {
             if (addProviderSuccess) setAddProviderSuccess(false)
             if (editProviderSuccess) setEditProviderSuccess(false)
           }}
-          autoHideDuration={3000}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        >
-          <Alert
-            severity="success"
-            onClose={() => {
-              if (addProviderSuccess) setAddProviderSuccess(false)
-              if (editProviderSuccess) setEditProviderSuccess(false)
-            }}
-          >
-            {addProviderSuccess && "L'utilisateur a bien été créé."}
-            {editProviderSuccess && "L'utilisateur a bien été édité."}
-          </Alert>
-        </Snackbar>
+          message={`L'utilisateur a bien été ${addProviderSuccess && 'créé'}${editProviderSuccess && 'édité'}.`}
+        />
       )}
       {(addProviderFail || editProviderFail) && (
-        <Snackbar
-          open
+        <CommonSnackbar
+          severity="error"
           onClose={() => {
             if (addProviderFail) setAddProviderFail(false)
             if (editProviderFail) setEditProviderFail(false)
           }}
-          autoHideDuration={3000}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        >
-          <Alert
-            severity="error"
-            onClose={() => {
-              if (addProviderFail) setAddProviderFail(false)
-              if (editProviderFail) setEditProviderFail(false)
-            }}
-          >
-            {addProviderFail && "Erreur lors de la création de l'utilisateur."}
-            {editProviderFail && "Erreur lors de l'édition de l'utilisateur."}
-          </Alert>
-        </Snackbar>
+          message={`Erreur lors de ${addProviderFail && 'la création'}${
+            editProviderFail && "l'édition"
+          } de l'utilisateur.`}
+        />
       )}
     </Grid>
   )
