@@ -375,6 +375,7 @@ export type Export = {
     | 'finished'
     | 'cleaned'
     | 'started'
+    | 'unknown'
   target_env?: string
   target_name?: string
 }
