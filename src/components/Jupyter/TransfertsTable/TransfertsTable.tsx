@@ -121,6 +121,8 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
         return 'Annulé'
       case 'failed':
         return 'Erreur'
+      case 'unknown':
+        return 'Inconnu'
       default:
         break
     }
@@ -303,7 +305,8 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
                       <Chip label="En cours" size="small" style={{ backgroundColor: '#ffc107' }} />
                     ) : exportRequest.request_job_status === 'denied' ||
                       exportRequest.request_job_status === 'cancelled' ||
-                      exportRequest.request_job_status === 'failed' ? (
+                      exportRequest.request_job_status === 'failed' ||
+                      exportRequest.request_job_status === 'unknown' ? (
                       <Chip
                         label={getLabel(exportRequest.request_job_status)}
                         size="small"
