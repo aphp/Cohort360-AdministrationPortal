@@ -69,13 +69,13 @@ const exportTable: ExportTableType[] = [
   },
   {
     id: 'note',
-    table_name: 'Fait - Documents médicaux',
+    table_name: 'Fait - Documents cliniques',
     table_id: 'note',
     nominative: true
   },
   {
     id: 'note_deid',
-    table_name: 'Fait - Documents médicaux',
+    table_name: 'Fait - Documents cliniques (pseudo-anonymisés)',
     table_id: 'note_deid',
     nominative: false
   },
