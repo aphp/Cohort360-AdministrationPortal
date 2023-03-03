@@ -256,13 +256,16 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
             </TableCell>
           </TableRow>
         )}
-        {!loading && (!exportsList || exportsList?.length === 0) ? (
+        {!loading && (!exportsList || exportsList?.length === 0) && (
           <TableRow>
             <TableCell colSpan={9}>
               <Typography className={classes.loadingSpinnerContainer}>Aucun résultat à afficher</Typography>
             </TableCell>
           </TableRow>
-        ) : (
+        )}
+        {!loading &&
+          exportsList &&
+          exportsList?.length > 0 &&
           exportsList.map((exportRequest, index) => {
             return (
               exportRequest && (
@@ -319,8 +322,7 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
                 </TableRow>
               )
             )
-          })
-        )}
+          })}
       </DataTable>
       {selectedTransferRequest !== null && (
         <TransfertForm
