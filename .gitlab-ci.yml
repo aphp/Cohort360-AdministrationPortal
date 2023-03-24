@@ -1,5 +1,6 @@
 stages: # List of stages for jobs in their order of execution
   - lint
+  - dependency-check
   - build
   - deploy
 
@@ -21,6 +22,22 @@ lint-job:
     # only run for the merge request pipeline
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
 
+dependency-check-job:
+  stage: dependency-check
+  image:
+    name: harbor.eds.aphp.fr/cohort360/dependency-check
+    entrypoint: [ "" ]
+  script:
+    # See https://jeremylong.github.io/DependencyCheck/dependency-check-cli/arguments.html
+    - /usr/share/dependency-check/bin/dependency-check.sh --project Portail --proxyserver $HOST_PROXY --proxyport $PORT_PROXY  --disableOssIndex --out . --scan . --failOnCVSS 7 --noupdate
+  artifacts:
+    paths:
+      - dependency-check-report.html
+  allow_failure: true
+  rules:
+    # only run for the merge request and main pipelines
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' || $CI_COMMIT_BRANCH == "main"
+
 build-job:
   image: node:16.13.2
   stage: build
@@ -36,10 +53,6 @@ build-job:
     paths:
       - node_modules/
     policy: pull
-  rules:
-    # this only builds when not a merge request event
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-      when: never
 
 deploy-job:
   image: gcr.io/kaniko-project/executor:debug
@@ -60,3 +73,4 @@ deploy-job:
     # this only builds when not a merge request event
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       when: never
+    - when: always
