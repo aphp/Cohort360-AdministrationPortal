@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 
-import { Button, Grid, Typography } from '@material-ui/core'
-
-import AddIcon from '@material-ui/icons/Add'
+import { Button, Grid, Typography } from '@mui/material'
+import AddIcon from '@mui/icons-material/Add'
 
 import AccessForm from './AccessForm/AccessForm'
 import AccessesTable from './AccessesTable/AccessesTable'
@@ -67,8 +66,8 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profile, userRights
   }
 
   return (
-    <Grid container justify="flex-end">
-      <Grid container justify="space-between" alignItems="center">
+    <Grid container justifyContent="flex-end">
+      <Grid container justifyContent="space-between" alignItems="center">
         <Typography align="left" variant="h2" className={classes.title}>
           Type de profil : {profile.cdm_source}
         </Typography>

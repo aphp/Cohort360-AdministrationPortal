@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import {
   Button,
@@ -11,7 +11,7 @@ import {
   Grid,
   TextField,
   Typography
-} from '@material-ui/core'
+} from '@mui/material'
 
 import { buildPartialUser } from 'services/Console-Admin/userService'
 import { authenticate } from 'services/authentication'
@@ -43,7 +43,7 @@ const ErrorDialog: React.FC<ErrorDialogProps> = ({ open, setErrorLogin }) => {
 }
 
 const Login = () => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const classes = useStyles()
   const dispatch = useDispatch()
   const [username, setUsername] = useState<string>('')
@@ -106,7 +106,7 @@ const Login = () => {
         ) {
           setNoRights(true)
         } else {
-          history.push('/homepage')
+          navigate('/homepage')
         }
       } else {
         setLoading(false)
@@ -142,7 +142,7 @@ const Login = () => {
           sm={6}
           md={6}
           direction="column"
-          justify="center"
+          justifyContent="center"
           alignItems="center"
           className={classes.rightPanel}
         >
@@ -154,7 +154,6 @@ const Login = () => {
             <form className={classes.form} noValidate onSubmit={_onSubmit}>
               <Grid container item direction="column" alignItems="center">
                 <TextField
-                  variant="outlined"
                   margin="normal"
                   required
                   fullWidth
@@ -167,7 +166,6 @@ const Login = () => {
                 />
 
                 <TextField
-                  variant="outlined"
                   margin="normal"
                   required
                   fullWidth

@@ -1,12 +1,12 @@
-import { makeStyles } from '@material-ui/core/styles'
+import makeStyles from '@mui/styles/makeStyles'
 
 const useStyles = makeStyles(() => ({
   title: {
     borderBottom: '1px solid #D0D7D8',
     width: '100%',
-    paddingTop: '80px',
-    paddingBottom: '20px',
-    marginBottom: '20px'
+    paddingTop: 80,
+    paddingBottom: 20,
+    marginBottom: 20
   }
 }))
 

@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles'
+import makeStyles from '@mui/styles/makeStyles'
 
 const useStyles = makeStyles((theme) => ({
   autocomplete: {
@@ -8,15 +8,15 @@ const useStyles = makeStyles((theme) => ({
   title: {
     borderBottom: '1px solid #D0D7D8',
     width: '100%',
-    paddingTop: '80px',
-    paddingBottom: '20px',
-    marginBottom: '20px'
+    paddingTop: 80,
+    paddingBottom: 20,
+    marginBottom: 20
   },
   validateButton: {
-    width: '125px',
+    width: 125,
     backgroundColor: '#5BC5F2',
     color: '#FFF',
-    borderRadius: '25px',
+    borderRadius: 25,
     '&:hover': {
       backgroundColor: '#499cbf'
     },

@@ -1,9 +1,9 @@
-import { makeStyles } from '@material-ui/core/styles'
+import makeStyles from '@mui/styles/makeStyles'
 
 const useStyles = makeStyles(() => ({
   dialogTitle: {
     ' & h2': {
-      fontSize: '18px',
+      fontSize: 18,
       fontFamily: "'Montserrat', sans-serif",
       color: '#0063AF',
       textTransform: 'none',

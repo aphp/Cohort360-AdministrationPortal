@@ -1,17 +1,17 @@
 import React from 'react'
-import { Grid, Typography, Button } from '@material-ui/core'
-import ComputerIcon from '@material-ui/icons/Computer'
-import FlipCameraAndroidIcon from '@material-ui/icons/FlipCameraAndroid'
+import { Button, Grid, Typography } from '@mui/material'
+import ComputerIcon from '@mui/icons-material/Computer'
+import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid'
 import logo from 'assets/images/portail-black.png'
 
 import useStyles from './styles'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useAppSelector } from 'state'
 import { userDefaultRoles } from 'utils/userRoles'
 
 const HomePage = () => {
   const classes = useStyles()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const { me } = useAppSelector((state) => ({ me: state.me }))
   const userRights = me?.userRights ?? userDefaultRoles
@@ -63,7 +63,7 @@ const HomePage = () => {
         <Typography variant="h1" align="center" className={classes.title}>
           Bienvenue sur le portail de l'EDS
         </Typography>
-        <Grid container item justify="space-around">
+        <Grid container item justifyContent="space-around">
           <Grid container item className={classes.box} xs={12} sm={4} direction="column" alignItems="center">
             <ComputerIcon style={{ fontSize: 100, marginBottom: 12 }} />
             <Typography variant="h6" style={{ fontSize: 16, marginBottom: 28, lineHeight: 'inherit' }}>
@@ -76,7 +76,7 @@ const HomePage = () => {
                     key={index}
                     variant="contained"
                     disableElevation
-                    onClick={() => history.push(page.pathname)}
+                    onClick={() => navigate(page.pathname)}
                     className={classes.linkButton}
                   >
                     {page.name}
@@ -97,7 +97,7 @@ const HomePage = () => {
                       key={index}
                       variant="contained"
                       disableElevation
-                      onClick={() => history.push(page.pathname)}
+                      onClick={() => navigate(page.pathname)}
                       className={classes.linkButton}
                     >
                       {page.name}

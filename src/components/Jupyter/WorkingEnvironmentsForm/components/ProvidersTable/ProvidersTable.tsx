@@ -12,9 +12,8 @@ import {
   Paper,
   Tooltip,
   CircularProgress
-} from '@material-ui/core'
-
-import DeleteIcon from '@material-ui/icons/Delete'
+} from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete'
 
 import useStyles from './styles'
 import { Provider } from 'types'
@@ -110,6 +109,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({
                             event.stopPropagation()
                             deleteItem(provider)
                           }}
+                          size="large"
                         >
                           <DeleteIcon />
                         </IconButton>

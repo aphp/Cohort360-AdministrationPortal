@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react'
 
 import {
   Grid,
+  Pagination,
   Paper,
   Table,
   TableBody,
@@ -10,8 +11,7 @@ import {
   TableHead,
   TableRow,
   TableSortLabel
-} from '@material-ui/core'
-import Pagination from '@material-ui/lab/Pagination'
+} from '@mui/material'
 
 import useStyles from './styles'
 import { Column, Order } from 'types'
@@ -52,7 +52,7 @@ const DataTable: React.FC<DataTableProps> = ({
   }
 
   return (
-    <Grid container justify="flex-end">
+    <Grid container justifyContent="flex-end">
       <TableContainer component={Paper}>
         <Table className={classes.table}>
           <TableHead>
@@ -86,7 +86,7 @@ const DataTable: React.FC<DataTableProps> = ({
         <Pagination
           className={classes.pagination}
           count={Math.ceil((total ?? 0) / (rowsPerPage ?? 100))}
-          shape="rounded"
+          shape="circular"
           onChange={(event, page: number) => setPage && setPage(page)}
           page={page}
         />

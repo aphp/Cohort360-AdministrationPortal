@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { CircularProgress, Grid, Typography } from '@material-ui/core'
-import Alert from '@material-ui/lab/Alert'
+import { Alert, CircularProgress, Grid, Typography } from '@mui/material'
 
 import useStyles from './styles'
 import { getPerimeter, getPerimeterAccesses } from 'services/Console-Admin/perimetersService'
 import AccessesTable from 'components/Console-Admin/Accesses/AccessesTable/AccessesTable'
 import SearchBar from 'components/SearchBar/SearchBar'
-import { Access, Order, Role } from 'types'
 import { getUserRights, userDefaultRoles } from 'utils/userRoles'
 import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
 import { getRoles } from 'services/Console-Admin/rolesService'
+import { Access, Order, Role } from 'types'
 
 const orderDefault = { orderBy: 'is_valid', orderDirection: 'asc' } as Order
 
@@ -27,17 +26,19 @@ const PerimeterHistory: React.FC = () => {
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [order, setOrder] = useState(orderDefault)
-  const [roles, setRoles] = useState<Role[] | undefined>()
+  const [roles, setRoles] = useState<Role[]>([])
 
   const debouncedSearchTerm = useDebounce(500, searchInput)
 
   const { perimeterId } = useParams<{ perimeterId: string }>()
 
+  const _perimeterId = perimeterId ? perimeterId : ''
+
   const _getPerimeterAccesses = async () => {
     try {
       setLoadingData(true)
 
-      const perimeterAccessesResp = await getPerimeterAccesses(perimeterId, order, page, searchInput.trim())
+      const perimeterAccessesResp = await getPerimeterAccesses(_perimeterId, order, page, searchInput.trim())
 
       setPerimeterAccesses(perimeterAccessesResp?.accesses)
       setTotal(perimeterAccessesResp?.total)
@@ -56,7 +57,7 @@ const PerimeterHistory: React.FC = () => {
     try {
       setLoadingPage(true)
 
-      const perimeterResp = await getPerimeter(perimeterId)
+      const perimeterResp = await getPerimeter(_perimeterId)
       setPerimeterName(perimeterResp ?? 'Inconnu')
 
       setLoadingPage(false)
@@ -107,7 +108,7 @@ const PerimeterHistory: React.FC = () => {
 
   return (
     <Grid container direction="column">
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         {loadingPage ? (
           <CircularProgress className={classes.loading} />
         ) : (
@@ -117,7 +118,7 @@ const PerimeterHistory: React.FC = () => {
             </Typography>
             {perimeterAccesses ? (
               <>
-                <Grid container item justify="flex-end" alignItems="center" className={classes.searchBar}>
+                <Grid container item justifyContent="flex-end" alignItems="center" className={classes.searchBar}>
                   <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
                 </Grid>
                 <AccessesTable

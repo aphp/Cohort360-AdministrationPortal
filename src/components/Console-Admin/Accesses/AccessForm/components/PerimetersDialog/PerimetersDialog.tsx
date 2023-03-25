@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Grid, Paper } from '@material-ui/core'
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Grid, Paper } from '@mui/material'
 
 import useStyles from './styles'
 import PerimeterTree from 'components/Console-Admin/Perimeter/PerimeterTree'

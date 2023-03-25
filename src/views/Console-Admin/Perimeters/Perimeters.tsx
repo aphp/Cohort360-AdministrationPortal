@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
-import { Button, CircularProgress, Grid, Paper, Typography } from '@material-ui/core'
+import { Button, CircularProgress, Grid, Paper, Typography } from '@mui/material'
 
 import PerimeterTree from 'components/Console-Admin/Perimeter/PerimeterTree'
 import SearchBar from 'components/SearchBar/SearchBar'
@@ -12,7 +12,7 @@ import { getUserRights, userDefaultRoles } from 'utils/userRoles'
 
 const Perimeters: React.FC = () => {
   const classes = useStyles()
-  const history = useHistory()
+  const navigate = useNavigate()
   const [userRights, setUserRights] = useState(userDefaultRoles)
 
   const [selectedItem, onChangeSelectedItem] = useState<ScopeTreeRow | null>(null)
@@ -39,14 +39,14 @@ const Perimeters: React.FC = () => {
 
   return (
     <Grid container direction="column">
-      <Grid container justify="center" alignItems="center">
+      <Grid container justifyContent="center" alignItems="center">
         <Grid container item xs={12} sm={9} direction="column" alignItems="flex-end">
           <Typography variant="h1" align="center" className={classes.title}>
             Liste des périmètres
           </Typography>
 
           {loading ? (
-            <Grid container item justify="center">
+            <Grid container item justifyContent="center">
               <CircularProgress />
             </Grid>
           ) : (
@@ -64,14 +64,14 @@ const Perimeters: React.FC = () => {
           )}
         </Grid>
 
-        <Grid container item className={classes.bottomBar} justify="center">
-          <Grid container item justify="flex-end" xs={9}>
+        <Grid container item className={classes.bottomBar} justifyContent="center">
+          <Grid container item justifyContent="flex-end" xs={9}>
             <Button
               variant="contained"
               disableElevation
               disabled={!selectedItem}
               className={classes.button}
-              onClick={() => history.push(`/console-admin/perimeter/${selectedItem?.id}`)}
+              onClick={() => navigate(`/console-admin/perimeter/${selectedItem?.id}`)}
             >
               Valider
             </Button>

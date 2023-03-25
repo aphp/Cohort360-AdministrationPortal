@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import moment from 'moment'
 import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
 
-import { Button, Chip, CircularProgress, Grid, TableCell, TableRow, Typography, Tooltip } from '@material-ui/core'
+import { Button, Chip, CircularProgress, Grid, TableCell, TableRow, Typography, Tooltip } from '@mui/material'
 import { ReactComponent as FilterIcon } from 'assets/icones/filter.svg'
 
-import AddIcon from '@material-ui/icons/Add'
+import AddIcon from '@mui/icons-material/Add'
 
 import DataTable from 'components/DataTable/DataTable'
 import TransfertForm from 'components/Jupyter/TransfertForm/TransfertForm'

@@ -1,10 +1,11 @@
 import React from 'react'
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
-import AutoLogoutContainer from '../AutoLogoutContainer'
 import { useAppSelector } from 'state/index'
+
+import configRoutes from './config'
 import PrivateRoute from '../PrivateRoute'
-import Config from './config'
+import AutoLogoutContainer from '../AutoLogoutContainer'
 import PortailTopBar from 'components/PortailTopBar/PortailTopBar'
 
 const Layout = (props) => {
@@ -23,42 +24,26 @@ const Layout = (props) => {
 
 const AppNavigation = () => (
   <Router>
-    <Switch>
-      {Config.map((route, index) => {
-        const MyComponent = route.component
+    <Routes>
+      {configRoutes.map((route, index) => {
         return route.isPrivate ? (
-          <PrivateRoute
-            key={index}
-            exact={route.exact}
-            path={route.path}
-            render={(props) => {
-              return (
-                <Layout {...route}>
-                  <MyComponent {...props} />
-                </Layout>
-              )
-            }}
-          />
+          <Route element={<PrivateRoute />}>
+            <Route
+              index={index}
+              path={route.path}
+              element={<Layout displayPortailTopBar={route.displayPortailTopBar}>{route.element}</Layout>}
+            />
+          </Route>
         ) : (
           <Route
-            key={index}
-            exact={route.exact}
+            index={index}
             path={route.path}
-            render={(props) => {
-              return (
-                <Layout {...route}>
-                  <MyComponent {...props} />
-                </Layout>
-              )
-            }}
+            element={<Layout displayPortailTopBar={route.displayPortailTopBar}>{route.element}</Layout>}
           />
         )
       })}
-      {/* 404 not found */}
-      <Route>
-        <Redirect to="/" />
-      </Route>
-    </Switch>
+      <Route path="*" element={<Layout displayPortailTopBar={true}>404 not found</Layout>} />
+    </Routes>
   </Router>
 )
 

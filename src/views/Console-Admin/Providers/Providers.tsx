@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { CircularProgress, Grid, Typography } from '@material-ui/core'
+import { CircularProgress, Grid, Typography } from '@mui/material'
 
 import ProvidersTable from 'components/Console-Admin/providers/ProvidersTable/ProvidersTable'
 
@@ -32,13 +32,13 @@ const ProfilesView: React.FC = () => {
 
   return (
     <Grid id="main-grid-providers" container direction="column">
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Grid container item xs={12} sm={9}>
           <Typography variant="h1" align="center" className={classes.title}>
             Liste des utilisateurs
           </Typography>
           {loading ? (
-            <Grid container item justify="center">
+            <Grid container item justifyContent="center">
               <CircularProgress />
             </Grid>
           ) : (

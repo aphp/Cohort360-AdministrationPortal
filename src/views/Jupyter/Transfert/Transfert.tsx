@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { CircularProgress, CssBaseline, Grid, Typography } from '@material-ui/core'
+import { CircularProgress, CssBaseline, Grid, Typography } from '@mui/material'
 
 import TransfertsTable from 'components/Jupyter/TransfertsTable/TransfertsTable'
 

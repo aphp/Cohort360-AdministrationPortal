@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 
-import { Button, CircularProgress, Grid, IconButton, TableCell, TableRow, Typography, Tooltip } from '@material-ui/core'
+import { Button, CircularProgress, Grid, IconButton, TableCell, TableRow, Typography, Tooltip } from '@mui/material'
 
-import AssignmentIcon from '@material-ui/icons/Assignment'
-import EditIcon from '@material-ui/icons/Edit'
-import PersonAddIcon from '@material-ui/icons/PersonAdd'
-import VisibilityIcon from '@material-ui/icons/Visibility'
+import AssignmentIcon from '@mui/icons-material/Assignment'
+import EditIcon from '@mui/icons-material/Edit'
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
+import VisibilityIcon from '@mui/icons-material/Visibility'
 
 import ProviderForm from '../ProviderForm/ProviderForm'
 import SearchBar from '../../../SearchBar/SearchBar'
@@ -28,7 +28,7 @@ const orderDefault = { orderBy: 'lastname', orderDirection: 'asc' } as Order
 
 const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
   const classes = useStyles()
-  const history = useHistory()
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const {
     providers: { loading, providersList, total, selectedProvider }
@@ -101,18 +101,18 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
     try {
       if (loading) return
 
-      dispatch(fetchProviders({ page, searchInput, order }))
+      dispatch<any>(fetchProviders({ page, searchInput, order }))
     } catch (error) {
       console.error('Erreur lors de la récupération des providers', error)
     }
   }
 
   return (
-    <Grid container justify="flex-end">
+    <Grid container justifyContent="flex-end">
       <Grid
         container
         item
-        justify={userRights.right_add_users ? 'space-between' : 'flex-end'}
+        justifyContent={userRights.right_add_users ? 'space-between' : 'flex-end'}
         style={{ margin: '12px 0' }}
       >
         {userRights.right_add_users && (
@@ -126,7 +126,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
             Nouvel utilisateur
           </Button>
         )}
-        <Grid container item xs={6} justify="flex-end" alignItems="center">
+        <Grid container item xs={6} justifyContent="flex-end" alignItems="center">
           <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
         </Grid>
       </Grid>
@@ -164,7 +164,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                   hover
                   onClick={() => {
                     if (readAccessesUserRights) {
-                      history.push(`/console-admin/user-profile/${provider.provider_source_value}`)
+                      navigate(`/console-admin/user-profile/${provider.provider_source_value}`)
                     }
                   }}
                 >
@@ -183,8 +183,9 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                           <IconButton
                             onClick={(event) => {
                               event.stopPropagation()
-                              history.push(`/console-admin/user-profile/${provider.provider_source_value}`)
+                              navigate(`/console-admin/user-profile/${provider.provider_source_value}`)
                             }}
+                            size="large"
                           >
                             <VisibilityIcon />
                           </IconButton>
@@ -197,6 +198,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                               event.stopPropagation()
                               dispatch(setSelectedProvider(provider))
                             }}
+                            size="large"
                           >
                             <EditIcon />
                           </IconButton>
@@ -207,11 +209,12 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                           <IconButton
                             onClick={(event) => {
                               event.stopPropagation()
-                              history.push({
+                              navigate({
                                 pathname: '/console-admin/logs',
                                 search: `?user=${provider.provider_source_value}`
                               })
                             }}
+                            size="large"
                           >
                             <AssignmentIcon />
                           </IconButton>
