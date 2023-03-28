@@ -58,12 +58,12 @@ const HomePage = () => {
 
   return (
     <Grid container direction="column" alignItems="center">
-      <Grid container item xs={12} sm={8} direction="column" alignItems="center">
+      <Grid container xs={12} direction="column" alignItems="center">
         <img src={logo} alt="Logo Portail" style={{ width: 300, paddingTop: 60 }} />
         <Typography variant="h1" align="center" className={classes.title}>
           Bienvenue sur le portail de l'EDS
         </Typography>
-        <Grid container item justifyContent="space-around">
+        <Grid container xs={12} lg={8} justifyContent="space-around">
           <Grid container item className={classes.box} xs={12} sm={4} direction="column" alignItems="center">
             <ComputerIcon style={{ fontSize: 100, marginBottom: 12 }} />
             <Typography variant="h6" style={{ fontSize: 16, marginBottom: 28, lineHeight: 'inherit' }}>

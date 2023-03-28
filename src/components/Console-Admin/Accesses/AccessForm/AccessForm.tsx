@@ -179,8 +179,8 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle className={classes.title}>
-        {isEdition ? `Éditer l'accès à ${access?.care_site?.care_site_name}` : 'Créer un nouvel accès'}
+      <DialogTitle classes={{ root: classes.dialogTitle }}>
+        {isEdition ? `Éditer l'accès à ${access?.perimeter?.name}` : 'Créer un nouvel accès'}
       </DialogTitle>
       <DialogContent className={classes.dialog}>
         {!isEdition && (

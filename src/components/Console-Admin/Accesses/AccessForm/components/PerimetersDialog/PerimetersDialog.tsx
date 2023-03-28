@@ -37,7 +37,7 @@ const PerimetersDialog: React.FC<PerimetersDialogProps> = ({
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth={true} maxWidth="md" className={classes.dialog}>
-      <DialogTitle className={classes.title}>Sélectionner un périmètre :</DialogTitle>
+      <DialogTitle classes={{ root: classes.dialogTitle }}>Sélectionner un périmètre :</DialogTitle>
       <DialogContent className={classes.content}>
         <Grid container item xs={12} direction="column" alignItems="flex-end">
           <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />

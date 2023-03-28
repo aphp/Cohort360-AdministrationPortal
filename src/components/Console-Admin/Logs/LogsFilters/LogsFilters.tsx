@@ -117,7 +117,7 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
 
   return (
     <Dialog open>
-      <DialogTitle className={classes.dialogTitle}>Filtrer par :</DialogTitle>
+      <DialogTitle classes={{ root: classes.dialogTitle }}>Filtrer par :</DialogTitle>
       <DialogContent className={classes.dialog}>
         <Grid container direction="column">
           <Typography variant="h6">URL :</Typography>

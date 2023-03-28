@@ -5,13 +5,11 @@ const useStyles = makeStyles(() => ({
     width: 800
   },
   title: {
-    ' & h2': {
-      fontSize: 18,
-      fontFamily: "'Montserrat', sans-serif",
-      color: '#0063AF',
-      textTransform: 'none',
-      lineHeight: 2
-    }
+    fontSize: 18,
+    fontFamily: "'Montserrat', sans-serif",
+    color: '#0063AF',
+    textTransform: 'none',
+    lineHeight: 2
   },
   tableBodyRows: {
     '&:nth-of-type(even)': {

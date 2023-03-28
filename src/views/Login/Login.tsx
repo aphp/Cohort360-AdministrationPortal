@@ -146,13 +146,13 @@ const Login = () => {
           alignItems="center"
           className={classes.rightPanel}
         >
-          <Grid container item xs={8} lg={6} direction="column" alignItems="center">
+          <Grid container xs={8} lg={6} direction="column" alignItems="center" justifyContent="center">
             <img className={classes.logo} src={logo} alt="Logo Portail" />
 
             <Typography className={classes.bienvenue}>Bienvenue ! Connectez-vous.</Typography>
 
             <form className={classes.form} noValidate onSubmit={_onSubmit}>
-              <Grid container item direction="column" alignItems="center">
+              <Grid container direction="column" alignItems="center" justifyContent="center">
                 <TextField
                   margin="normal"
                   required

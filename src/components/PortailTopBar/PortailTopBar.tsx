@@ -101,16 +101,7 @@ const PortailTopBar: React.FC = () => {
             </Button>
             <Menu
               anchorEl={anchorElConsole}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'center'
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'center'
-              }}
               elevation={0}
-              keepMounted
               open={Boolean(anchorElConsole)}
               onClose={() => setAnchorElConsole(null)}
               classes={{ paper: classes.paper }}
@@ -120,7 +111,10 @@ const PortailTopBar: React.FC = () => {
                   page.rightsToSee && (
                     <MenuItem
                       key={index}
-                      onClick={() => navigate(page.pathname)}
+                      onClick={() => {
+                        navigate(page.pathname)
+                        setAnchorElConsole(null)
+                      }}
                       className={clsx(classes.menuItem, pathname.includes(page.pathname) && classes.activeMenuItem)}
                     >
                       {page.name}
@@ -141,16 +135,7 @@ const PortailTopBar: React.FC = () => {
             )}
             <Menu
               anchorEl={anchorElJupyter}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'center'
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'center'
-              }}
               elevation={0}
-              keepMounted
               open={Boolean(anchorElJupyter)}
               onClose={() => setAnchorElJupyter(null)}
               classes={{ paper: classes.paper }}
@@ -160,7 +145,10 @@ const PortailTopBar: React.FC = () => {
                   page.rightsToSee && (
                     <MenuItem
                       key={index}
-                      onClick={() => navigate(page.pathname)}
+                      onClick={() => {
+                        navigate(page.pathname)
+                        setAnchorElJupyter(null)
+                      }}
                       className={clsx(classes.menuItem, pathname.includes(page.pathname) && classes.activeMenuItem)}
                     >
                       {page.name}

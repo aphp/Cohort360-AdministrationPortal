@@ -6,13 +6,11 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'white'
   },
   title: {
-    ' & h2': {
-      fontSize: 18,
-      fontFamily: "'Montserrat', sans-serif",
-      color: '#0063AF',
-      textTransform: 'none',
-      lineHeight: 2
-    }
+    fontSize: 18,
+    fontFamily: "'Montserrat', sans-serif",
+    color: '#0063AF',
+    textTransform: 'none',
+    lineHeight: 2
   },
   validateButton: {
     backgroundColor: '#5BC5F2',

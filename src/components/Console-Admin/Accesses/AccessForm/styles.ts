@@ -4,14 +4,12 @@ const useStyles = makeStyles(() => ({
   dialog: {
     width: 500
   },
-  title: {
-    ' & h2': {
-      fontSize: 18,
-      fontFamily: "'Montserrat', sans-serif",
-      color: '#0063AF',
-      textTransform: 'none',
-      lineHeight: 2
-    }
+  dialogTitle: {
+    fontSize: 18,
+    fontFamily: "'Montserrat', sans-serif",
+    color: '#0063AF',
+    textTransform: 'none',
+    lineHeight: 2
   },
   button: {
     backgroundColor: '#5BC5F2',

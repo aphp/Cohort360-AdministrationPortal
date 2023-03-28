@@ -243,7 +243,7 @@ const TransfertForm: React.FC<TransferFormProps> = ({
 
   return (
     <Dialog open onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle className={classes.title}>Transfert vers un environnement de travail</DialogTitle>
+      <DialogTitle classes={{ root: classes.title }}>Transfert vers un environnement de travail</DialogTitle>
       <DialogContent>
         {loadingOnValidate ? (
           <Grid container justifyContent="center" style={{ padding: 16 }}>

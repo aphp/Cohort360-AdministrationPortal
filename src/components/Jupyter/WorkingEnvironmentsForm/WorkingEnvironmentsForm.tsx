@@ -158,7 +158,7 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
   return (
     <>
       <Dialog open maxWidth="md" fullWidth onClose={onClose}>
-        <DialogTitle className={classes.dialogTitle}>Création d'un environnement de travail :</DialogTitle>
+        <DialogTitle classes={{ root: classes.dialogTitle }}>Création d'un environnement de travail :</DialogTitle>
         <DialogContent>
           {loading ? (
             <Grid container justifyContent="center" style={{ padding: 16 }}>
