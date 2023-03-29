@@ -98,7 +98,7 @@ const TransfertsFilters: React.FC<TransfertsFiltersProps> = ({ filters, onChange
 
   return (
     <Dialog open>
-      <DialogTitle classes={{ root: classes.dialogTitle }}>Filtrer par :</DialogTitle>
+      <DialogTitle>Filtrer par :</DialogTitle>
       <DialogContent className={classes.dialog}>
         <Grid container direction="column">
           <Typography variant="h6">Type de transfert :</Typography>

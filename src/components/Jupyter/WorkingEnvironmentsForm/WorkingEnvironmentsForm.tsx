@@ -23,8 +23,6 @@ import { getProviders } from 'services/Console-Admin/providersService'
 import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
 import { JupyterMachine, Order, Provider, UserRole } from 'types'
 
-import useStyles from './styles'
-
 type WorkingEnvironmentsFormProps = {
   userRights: UserRole
   onClose: () => void
@@ -51,8 +49,6 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
   // onAddWorkingEnvironmentSuccess,
   // onAddWorkingEnvironmentFail
 }) => {
-  const classes = useStyles()
-
   const [loading, setLoading] = useState(true)
   const [loadingOnSearch, setLoadingOnSearch] = useState(false)
   const [loadingOnValidate, setLoadingOnValidate] = useState(false)
@@ -158,7 +154,7 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
   return (
     <>
       <Dialog open maxWidth="md" fullWidth onClose={onClose}>
-        <DialogTitle classes={{ root: classes.dialogTitle }}>Création d'un environnement de travail :</DialogTitle>
+        <DialogTitle>Création d'un environnement de travail :</DialogTitle>
         <DialogContent>
           {loading ? (
             <Grid container justifyContent="center" style={{ padding: 16 }}>

@@ -4,13 +4,6 @@ const useStyles = makeStyles(() => ({
   dialog: {
     width: 800
   },
-  title: {
-    fontSize: 18,
-    fontFamily: "'Montserrat', sans-serif",
-    color: '#0063AF',
-    textTransform: 'none',
-    lineHeight: 2
-  },
   tableBodyRows: {
     '&:nth-of-type(even)': {
       backgroundColor: '#FAF9F9'

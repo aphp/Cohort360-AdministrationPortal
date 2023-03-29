@@ -289,9 +289,7 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md">
-      <DialogTitle classes={{ root: classes.title }}>
-        {isEditable ? role?.name : 'Créer une nouvelle habilitation :'}
-      </DialogTitle>
+      <DialogTitle>{isEditable ? role?.name : 'Créer une nouvelle habilitation :'}</DialogTitle>
       <DialogContent className={classes.dialog}>
         {(isEditable && editMode) || !isEditable ? (
           <Grid container direction="column">

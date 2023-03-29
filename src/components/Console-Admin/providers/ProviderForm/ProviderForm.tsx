@@ -211,9 +211,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle classes={{ root: classes.title }}>
-        {isEdition ? 'Éditer un utilisateur :' : 'Créer un nouvel utilisateur :'}
-      </DialogTitle>
+      <DialogTitle>{isEdition ? 'Éditer un utilisateur :' : 'Créer un nouvel utilisateur :'}</DialogTitle>
       <DialogContent className={classes.dialog}>
         {isEdition && loadingProviderData ? (
           <Grid container justifyContent="center" style={{ padding: 16 }}>

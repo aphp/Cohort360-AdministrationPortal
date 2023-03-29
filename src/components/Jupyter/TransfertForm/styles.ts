@@ -5,13 +5,6 @@ const useStyles = makeStyles((theme) => ({
     margin: '1em',
     backgroundColor: 'white'
   },
-  title: {
-    fontSize: 18,
-    fontFamily: "'Montserrat', sans-serif",
-    color: '#0063AF',
-    textTransform: 'none',
-    lineHeight: 2
-  },
   validateButton: {
     backgroundColor: '#5BC5F2',
     color: '#FFF',
