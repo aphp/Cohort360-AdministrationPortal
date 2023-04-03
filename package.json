@@ -1,6 +1,6 @@
 {
   "name": "portail-front",
-  "version": "2.15.0-SNAPSHOT",
+  "version": "2.16.0-SNAPSHOT",
   "private": true,
   "dependencies": {
     "@date-io/moment": "^2.16.1",
