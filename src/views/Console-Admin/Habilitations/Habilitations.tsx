@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { CircularProgress, Grid, Typography } from '@material-ui/core'
+import { CircularProgress, Grid, Typography } from '@mui/material'
 
 import RolesTable from 'components/Console-Admin/Roles/RolesTable/RolesTable'
 
@@ -33,13 +33,13 @@ const Habilitations: React.FC = () => {
 
   return (
     <Grid container direction="column">
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         <Grid container item xs={12} sm={9}>
           <Typography variant="h1" align="center" className={classes.title}>
             Liste des habilitations
           </Typography>
           {loading ? (
-            <Grid container item justify="center">
+            <Grid container item justifyContent="center">
               <CircularProgress />
             </Grid>
           ) : (

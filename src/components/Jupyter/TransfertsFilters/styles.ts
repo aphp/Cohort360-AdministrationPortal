@@ -1,17 +1,8 @@
-import { makeStyles } from '@material-ui/core/styles'
+import makeStyles from '@mui/styles/makeStyles'
 
 const useStyles = makeStyles(() => ({
   dialog: {
     width: 500
-  },
-  dialogTitle: {
-    ' & h2': {
-      fontSize: 18,
-      fontFamily: "'Montserrat', sans-serif",
-      color: '#0063AF',
-      textTransform: 'none',
-      lineHeight: 2
-    }
   },
   datePickers: {
     margin: '1em 0 1em 1em'

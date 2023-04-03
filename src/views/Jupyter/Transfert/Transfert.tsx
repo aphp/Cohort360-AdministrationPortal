@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { CircularProgress, CssBaseline, Grid, Typography } from '@material-ui/core'
+import { CircularProgress, Grid, Typography } from '@mui/material'
 
 import TransfertsTable from 'components/Jupyter/TransfertsTable/TransfertsTable'
 
@@ -34,9 +34,8 @@ const Transfert: React.FC = () => {
 
   return (
     <Grid container direction="column">
-      <Grid container direction="column" alignItems="center">
-        <CssBaseline />
-        <Grid container item xs={12} sm={9} direction="column">
+      <Grid container justifyContent="center">
+        <Grid container item xs={12} md={9}>
           <Typography variant="h1" className={classes.title} align="center">
             Liste des demandes de transfert
           </Typography>

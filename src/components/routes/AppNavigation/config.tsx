@@ -1,3 +1,5 @@
+import React from 'react'
+import { RouteObject } from 'react-router'
 import Login from 'views/Login/Login'
 import HomePage from 'views/HomePage/HomePage'
 
@@ -10,9 +12,16 @@ import Logs from 'views/Console-Admin/Logs/Logs'
 
 import Transfert from 'views/Jupyter/Transfert/Transfert'
 import WorkingEnvironments from 'views/Jupyter/WorkingEnvironments/WorkingEnvironments'
-import { HealthCheck } from '../../../views/HealthCheck/HealthCheck'
+import HealthCheck from 'views/HealthCheck/HealthCheck'
 
-const Config = [
+type configRoute = RouteObject & {
+  exact?: boolean
+  displayPortailTopBar?: boolean
+  isPrivate?: boolean
+  name?: string
+}
+
+const configRoutes: configRoute[] = [
   /************************************************************** Portail View ************************************************************************ */
 
   /**
@@ -23,7 +32,7 @@ const Config = [
     exact: true,
     path: '/',
     name: 'Login',
-    component: Login
+    element: <Login />
   },
 
   /**
@@ -36,14 +45,14 @@ const Config = [
     path: '/homepage',
     name: 'HomePage',
     isPrivate: true,
-    component: HomePage
+    element: <HomePage />
   },
 
   {
     exact: true,
     path: '/health-check',
     name: 'health-check',
-    component: HealthCheck
+    element: <HealthCheck />
   },
 
   /*************************************************************** Console-admin View ***************************************************************** */
@@ -58,7 +67,7 @@ const Config = [
     path: '/console-admin/users',
     name: 'Users',
     isPrivate: true,
-    component: Providers
+    element: <Providers />
   },
 
   /**
@@ -70,7 +79,7 @@ const Config = [
     displayPortailTopBar: true,
     path: '/console-admin/user-profile/:providerSourceValue',
     isPrivate: true,
-    component: ProvidersHistory
+    element: <ProvidersHistory />
   },
 
   /**
@@ -83,7 +92,7 @@ const Config = [
     path: '/console-admin/perimeters',
     name: 'Perimeters',
     isPrivate: true,
-    component: Perimeters
+    element: <Perimeters />
   },
 
   /**
@@ -96,7 +105,7 @@ const Config = [
     path: '/console-admin/perimeter/:perimeterId',
     name: 'Perimeter',
     isPrivate: true,
-    component: PerimeterHistory
+    element: <PerimeterHistory />
   },
 
   /**
@@ -109,7 +118,7 @@ const Config = [
     path: '/console-admin/habilitations',
     name: 'Habilitations',
     isPrivate: true,
-    component: Habilitations
+    element: <Habilitations />
   },
 
   /**
@@ -122,7 +131,7 @@ const Config = [
     path: '/console-admin/logs',
     name: 'Logs',
     isPrivate: true,
-    component: Logs
+    element: <Logs />
   },
 
   /*************************************************************** Jupyter View ********************************************************************** */
@@ -137,7 +146,7 @@ const Config = [
     path: '/espace-jupyter/transfert',
     name: 'Transfert Jupyter',
     isPrivate: true,
-    component: Transfert
+    element: <Transfert />
   },
 
   /**
@@ -150,8 +159,8 @@ const Config = [
     path: '/espace-jupyter/working-environments',
     name: 'Environnements de travail',
     isPrivate: true,
-    component: WorkingEnvironments
+    element: <WorkingEnvironments />
   }
 ]
 
-export default Config
+export default configRoutes

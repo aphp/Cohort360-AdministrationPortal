@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 
-import { Button, CircularProgress, Grid, TableCell, TableRow, Typography } from '@material-ui/core'
+import { Button, CircularProgress, Grid, TableCell, TableRow, Typography } from '@mui/material'
 
-import AddIcon from '@material-ui/icons/Add'
+import AddIcon from '@mui/icons-material/Add'
 
 import useStyles from './styles'
 import { Column, Order, UserRole, WorkingEnvironment } from 'types'
@@ -90,11 +90,11 @@ const WorkingEnvironmentsTable: React.FC<WorkingEnvironmentsTableProps> = ({ use
   }, [page, order])
 
   return (
-    <Grid container justify="flex-end">
+    <Grid container justifyContent="flex-end">
       <Grid
         container
         item
-        justify={createWorkingEnvironmentUserRights ? 'space-between' : 'flex-end'}
+        justifyContent={createWorkingEnvironmentUserRights ? 'space-between' : 'flex-end'}
         style={{ margin: '12px 0' }}
       >
         {createWorkingEnvironmentUserRights && (
@@ -108,7 +108,7 @@ const WorkingEnvironmentsTable: React.FC<WorkingEnvironmentsTableProps> = ({ use
             Nouvel environnement
           </Button>
         )}
-        <Grid container item xs={6} justify="flex-end" alignItems="center">
+        <Grid container item xs={6} justifyContent="flex-end" alignItems="center">
           <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
         </Grid>
       </Grid>

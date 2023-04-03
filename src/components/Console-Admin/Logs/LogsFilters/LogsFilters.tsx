@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import moment from 'moment'
 
 import {
+  Autocomplete,
   Button,
   CircularProgress,
   Dialog,
@@ -13,12 +14,11 @@ import {
   IconButton,
   TextField,
   Typography
-} from '@material-ui/core'
-import Autocomplete from '@material-ui/lab/Autocomplete'
-import { KeyboardDatePicker } from '@material-ui/pickers'
-import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date'
+} from '@mui/material'
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 
-import EditIcon from '@material-ui/icons/Edit'
+import EditIcon from '@mui/icons-material/Edit'
 
 import PerimetersDialog from '../../Accesses/AccessForm/components/PerimetersDialog/PerimetersDialog'
 
@@ -61,7 +61,8 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
         id: filters.perimeter.perimeterId ?? '',
         name: filters.perimeter.perimeterName ?? '',
         type: '',
-        children: []
+        children: [],
+        cohort_size: ''
       }
     : null
 
@@ -116,7 +117,7 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
 
   return (
     <Dialog open>
-      <DialogTitle className={classes.dialogTitle}>Filtrer par :</DialogTitle>
+      <DialogTitle>Filtrer par :</DialogTitle>
       <DialogContent className={classes.dialog}>
         <Grid container direction="column">
           <Typography variant="h6">URL :</Typography>
@@ -124,8 +125,8 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
             options={urls}
             getOptionLabel={(option) => option.label}
             onChange={(event, value) => _onChangeValue('url', value)}
-            renderOption={(option) => <React.Fragment>{option.label}</React.Fragment>}
-            renderInput={(params) => <TextField {...params} label="Sélectionner l'URL" variant="outlined" />}
+            renderOption={(props, option) => <li {...props}>{option.label}</li>}
+            renderInput={(params) => <TextField {...params} label="Sélectionner l'URL" />}
             value={_filters.url}
             style={{ margin: '1em' }}
           />
@@ -133,7 +134,6 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
         <Grid container direction="column">
           <Typography variant="h6">Utilisateur :</Typography>
           <TextField
-            variant="outlined"
             margin="normal"
             autoFocus
             placeholder="Identifiant APH"
@@ -151,10 +151,8 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
             multiple
             options={statusCodes}
             onChange={(event, value) => _onChangeValue('statusCode', value)}
-            renderOption={(option) => <React.Fragment>{option}</React.Fragment>}
-            renderInput={(params) => (
-              <TextField {...params} label="Sélectionner les codes de statut" variant="outlined" />
-            )}
+            renderOption={(props, option) => <li {...props}>{option}</li>}
+            renderInput={(params) => <TextField {...params} label="Sélectionner les codes de statut" />}
             value={_filters.statusCode}
             style={{ margin: '1em' }}
           />
@@ -165,10 +163,8 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
             multiple
             options={httpMethods}
             onChange={(event, value) => _onChangeValue('httpMethod', value)}
-            renderOption={(option) => <React.Fragment>{option}</React.Fragment>}
-            renderInput={(params) => (
-              <TextField {...params} label="Sélectionner les méthodes HTTP" variant="outlined" />
-            )}
+            renderOption={(props, option) => <li {...props}>{option}</li>}
+            renderInput={(params) => <TextField {...params} label="Sélectionner les méthodes HTTP" />}
             value={_filters.httpMethod}
             style={{ margin: '1em' }}
           />
@@ -180,30 +176,42 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
               <FormLabel component="legend" className={classes.dateLabel}>
                 Après le :
               </FormLabel>
-              <KeyboardDatePicker
-                clearable
-                error={dateError}
-                invalidDateMessage='La date doit être au format "JJ/MM/AAAA"'
-                format="DD/MM/YYYY"
-                onChange={(date: MaterialUiPickersDate) => _onChangeValue('afterDate', date ?? null)}
-                value={_filters.afterDate}
-                style={{ width: 'calc(100% - 120px)' }}
-              />
+              <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={'fr'}>
+                <DatePicker
+                  onChange={(date) => _onChangeValue('afterDate', date ?? null)}
+                  value={_filters.afterDate}
+                  renderInput={(params: any) => (
+                    <TextField
+                      {...params}
+                      variant="standard"
+                      error={dateError}
+                      helperText={dateError && 'La date doit être au format "JJ/MM/AAAA"'}
+                      style={{ width: 'calc(100% - 120px)' }}
+                    />
+                  )}
+                />
+              </LocalizationProvider>
             </Grid>
 
             <Grid container alignItems="baseline" className={classes.datePickers}>
               <FormLabel component="legend" className={classes.dateLabel}>
                 Avant le :
               </FormLabel>
-              <KeyboardDatePicker
-                clearable
-                error={dateError}
-                invalidDateMessage='La date doit être au format "JJ/MM/AAAA"'
-                format="DD/MM/YYYY"
-                onChange={(date: MaterialUiPickersDate) => _onChangeValue('beforeDate', date ?? null)}
-                value={_filters.beforeDate}
-                style={{ width: 'calc(100% - 120px)' }}
-              />
+              <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={'fr'}>
+                <DatePicker
+                  onChange={(date) => _onChangeValue('beforeDate', date ?? null)}
+                  value={_filters.beforeDate}
+                  renderInput={(params: any) => (
+                    <TextField
+                      {...params}
+                      variant="standard"
+                      error={dateError}
+                      helperText={dateError && 'La date doit être au format "JJ/MM/AAAA"'}
+                      style={{ width: 'calc(100% - 120px)' }}
+                    />
+                  )}
+                />
+              </LocalizationProvider>
             </Grid>
             {dateError && (
               <Typography className={classes.dateError}>
@@ -212,12 +220,12 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
             )}
           </div>
         </Grid>
-        <Grid container justify="space-between" alignItems="center">
+        <Grid container justifyContent="space-between" alignItems="center">
           <Typography variant="h6">Périmètre :</Typography>
           {selectedPerimeter ? (
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <Typography>{selectedPerimeter.name.split('.').join(' ')}</Typography>
-              <IconButton onClick={() => setOpenPerimeters(true)} style={{ padding: '0 8px' }}>
+              <IconButton onClick={() => setOpenPerimeters(true)} style={{ padding: '0 8px' }} size="large">
                 <EditIcon />
               </IconButton>
             </div>

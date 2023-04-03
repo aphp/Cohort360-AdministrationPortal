@@ -5,6 +5,7 @@ const loadingItem: ScopeTreeRow = {
   id: 'loading',
   name: 'loading',
   type: 'loading',
+  cohort_size: 'loading',
   children: []
 }
 

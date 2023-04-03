@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react'
 import clsx from 'clsx'
 
 import {
+  Autocomplete,
   Button,
   Checkbox,
   CircularProgress,
@@ -19,10 +20,8 @@ import {
   RadioGroup,
   TextField,
   Typography
-} from '@material-ui/core'
-import Autocomplete from '@material-ui/lab/Autocomplete'
-
-import InfoIcon from '@material-ui/icons/Info'
+} from '@mui/material'
+import InfoIcon from '@mui/icons-material/Info'
 
 import { Cohort, ExportTableType, JupyterTransferForm, Order, Provider, UserRole, WorkingEnvironment } from 'types'
 import { getProviders } from 'services/Console-Admin/providersService'
@@ -244,7 +243,7 @@ const TransfertForm: React.FC<TransferFormProps> = ({
 
   return (
     <Dialog open onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle className={classes.title}>Transfert vers un environnement de travail</DialogTitle>
+      <DialogTitle>Transfert vers un environnement de travail</DialogTitle>
       <DialogContent>
         {loadingOnValidate ? (
           <Grid container justifyContent="center" style={{ padding: 16 }}>
@@ -267,12 +266,11 @@ const TransfertForm: React.FC<TransferFormProps> = ({
                 }` ?? ''
               }
               value={transferRequest.user}
-              getOptionSelected={(option, value) => option.provider_id === value.provider_id}
+              isOptionEqualToValue={(option, value) => option.provider_id === value.provider_id}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   label="Recherchez un utilisateur"
-                  variant="outlined"
                   value={providerSearchInput}
                   onChange={(e) => setProviderSearchInput(e.target.value)}
                   InputProps={{
@@ -302,8 +300,8 @@ const TransfertForm: React.FC<TransferFormProps> = ({
                 options={cohortsOptions}
                 onChange={(event, value) => _onChangeValue('cohort', value)}
                 value={transferRequest.cohort}
-                renderOption={(option) => <React.Fragment>{option.name}</React.Fragment>}
-                renderInput={(params) => <TextField {...params} label="Sélectionnez une cohorte" variant="outlined" />}
+                renderOption={(props, option) => <li {...props}>{option.name}</li>}
+                renderInput={(params) => <TextField {...params} label="Sélectionnez une cohorte" />}
                 className={classes.autocomplete}
               />
             )}
@@ -316,8 +314,8 @@ const TransfertForm: React.FC<TransferFormProps> = ({
               value={transferRequest.confidentiality}
               onChange={(event) => _onChangeValue('confidentiality', event.target.value)}
             >
-              <FormControlLabel value="pseudo" control={<Radio color="primary" />} label="Pseudonymisé" />
-              <FormControlLabel value="nomi" control={<Radio color="primary" />} label="Nominatif" />
+              <FormControlLabel value="pseudo" control={<Radio />} label="Pseudonymisé" />
+              <FormControlLabel value="nomi" control={<Radio />} label="Nominatif" />
             </RadioGroup>
 
             <Typography align="left" variant="h6">
@@ -329,7 +327,6 @@ const TransfertForm: React.FC<TransferFormProps> = ({
               control={
                 <Checkbox
                   style={{ padding: '4px 12px' }}
-                  color="primary"
                   indeterminate={
                     transferRequest.tables.length !== tablesList.length && transferRequest.tables.length > 0
                   }
@@ -358,7 +355,6 @@ const TransfertForm: React.FC<TransferFormProps> = ({
 
                   <ListItemSecondaryAction>
                     <Checkbox
-                      color="primary"
                       checked={!!transferRequest.tables.find((tableId: string) => tableId === table_id)}
                       onChange={() => handleChangeTables(table_id)}
                     />
@@ -377,8 +373,8 @@ const TransfertForm: React.FC<TransferFormProps> = ({
                   value={transferRequest.shiftDates}
                   onChange={(event) => _onChangeValue('shiftDates', event.target.value)}
                 >
-                  <FormControlLabel value="no" control={<Radio color="primary" />} label="Non" />
-                  <FormControlLabel value="yes" control={<Radio color="primary" />} label="Oui" />
+                  <FormControlLabel value="no" control={<Radio />} label="Non" />
+                  <FormControlLabel value="yes" control={<Radio />} label="Oui" />
                 </RadioGroup>
               </>
             )}
@@ -394,12 +390,11 @@ const TransfertForm: React.FC<TransferFormProps> = ({
               onChange={(e, value) => _onChangeValue('workingEnvironment', value)}
               getOptionLabel={(option) => `${option.username}` ?? ''}
               value={transferRequest.workingEnvironment}
-              getOptionSelected={(option, value) => option.uid === value.uid}
+              isOptionEqualToValue={(option, value) => option.uid === value.uid}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   label="Recherchez un environnement de travail Jupyter"
-                  variant="outlined"
                   value={environmentSearchInput}
                   onChange={(e) => setEnvironmentSearchInput(e.target.value)}
                   InputProps={{

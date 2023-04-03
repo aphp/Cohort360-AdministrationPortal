@@ -12,11 +12,11 @@ import {
   TableRow,
   Tooltip
   // Typography,
-} from '@material-ui/core'
+} from '@mui/material'
 
-import AddIcon from '@material-ui/icons/Add'
-// import DeleteIcon from "@material-ui/icons/Delete"
-import VisibilityIcon from '@material-ui/icons/Visibility'
+import AddIcon from '@mui/icons-material/Add'
+// import DeleteIcon from "@mui/icons-material/Delete"
+import VisibilityIcon from '@mui/icons-material/Visibility'
 
 import useStyles from './styles'
 import { Column, Order, Role, UserRole } from 'types'
@@ -109,9 +109,9 @@ const RolesTable: React.FC<RolesTableProps> = ({ userRights }) => {
   // }
 
   return (
-    <Grid container justify="flex-end">
+    <Grid container justifyContent="flex-end">
       {userRights.right_edit_roles && (
-        <Grid container justify="flex-end" alignItems="center">
+        <Grid container justifyContent="flex-end" alignItems="center">
           <Button
             variant="contained"
             disableElevation
@@ -147,19 +147,21 @@ const RolesTable: React.FC<RolesTableProps> = ({ userRights }) => {
                           setSelectedRole(role)
                         }}
                         style={{ padding: '0 12px' }}
+                        size="large"
                       >
                         <VisibilityIcon />
                       </IconButton>
                     </Tooltip>
                     {/* <Tooltip title="Supprimer l'habilitation">
-                      <IconButton
-                        onClick={() => {
-                          setDeleteRole(role)
-                        }}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip> */}
+                    <IconButton
+                      onClick={() => {
+                        setDeleteRole(role)
+                      }}
+                      size="large"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip> */}
                   </TableCell>
                 </TableRow>
               )

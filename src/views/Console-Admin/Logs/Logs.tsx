@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import { Button, Chip, CircularProgress, Grid, Typography } from '@material-ui/core'
-import Pagination from '@material-ui/lab/Pagination'
+import { Button, Chip, CircularProgress, Grid, Pagination, Typography } from '@mui/material'
 
 import LogsFilters from 'components/Console-Admin/Logs/LogsFilters/LogsFilters'
 import LogsTable from 'components/Console-Admin/Logs/LogsTable/LogsTable'
@@ -115,14 +114,14 @@ const Logs: React.FC = () => {
   return (
     <>
       <Grid container direction="column">
-        <Grid container justify="center">
-          <Grid container item xs={12} sm={9} justify="flex-end">
+        <Grid container justifyContent="center">
+          <Grid container item xs={12} sm={9} justifyContent="flex-end">
             <Typography variant="h1" align="center" className={classes.title}>
               Liste des logs
             </Typography>
 
             {loadingRights ? (
-              <Grid container item justify="center">
+              <Grid container item justifyContent="center">
                 <CircularProgress />
               </Grid>
             ) : (
@@ -139,7 +138,7 @@ const Logs: React.FC = () => {
                   </Button>
                 )}
 
-                <Grid container item justify="flex-end">
+                <Grid container item justifyContent="flex-end">
                   {filters.url && (
                     <Chip
                       className={classes.filterChip}
@@ -222,7 +221,7 @@ const Logs: React.FC = () => {
                 <Pagination
                   className={classes.pagination}
                   count={Math.ceil(total / 100)}
-                  shape="rounded"
+                  shape="circular"
                   onChange={(event, page: number) => setPage(page)}
                   page={page}
                 />

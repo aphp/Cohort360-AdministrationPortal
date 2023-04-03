@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react'
 
 import {
+  Autocomplete,
   Button,
   CircularProgress,
   Dialog,
@@ -14,16 +15,13 @@ import {
   RadioGroup,
   TextField,
   Typography
-} from '@material-ui/core'
-import Autocomplete from '@material-ui/lab/Autocomplete'
+} from '@mui/material'
 
 import ProvidersTable from './components/ProvidersTable/ProvidersTable'
 import { getJupyterMachines, getRangerHivePolicies } from 'services/Jupyter/workingEnvironmentsService'
 import { getProviders } from 'services/Console-Admin/providersService'
 import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
 import { JupyterMachine, Order, Provider, UserRole } from 'types'
-
-import useStyles from './styles'
 
 type WorkingEnvironmentsFormProps = {
   userRights: UserRole
@@ -51,8 +49,6 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
   // onAddWorkingEnvironmentSuccess,
   // onAddWorkingEnvironmentFail
 }) => {
-  const classes = useStyles()
-
   const [loading, setLoading] = useState(true)
   const [loadingOnSearch, setLoadingOnSearch] = useState(false)
   const [loadingOnValidate, setLoadingOnValidate] = useState(false)
@@ -158,10 +154,10 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
   return (
     <>
       <Dialog open maxWidth="md" fullWidth onClose={onClose}>
-        <DialogTitle className={classes.dialogTitle}>Création d'un environnement de travail :</DialogTitle>
+        <DialogTitle>Création d'un environnement de travail :</DialogTitle>
         <DialogContent>
           {loading ? (
-            <Grid container justify="center" style={{ padding: 16 }}>
+            <Grid container justifyContent="center" style={{ padding: 16 }}>
               <CircularProgress size={40} />
             </Grid>
           ) : (
@@ -169,7 +165,6 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
               <Grid container direction="column">
                 <Typography variant="h6">Informations :</Typography>
                 <TextField
-                  variant="outlined"
                   margin="normal"
                   autoFocus
                   placeholder="Nom unique de l'environnement de travail"
@@ -207,7 +202,6 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
                       <TextField
                         {...params}
                         label="Rechercher un utilisateur"
-                        variant="outlined"
                         value={searchInput}
                         onChange={(e) => setSearchInput(e.target.value)}
                         InputProps={{
@@ -239,8 +233,8 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
                   value={workingEnvironment.sshAccess}
                   onChange={(event) => _onChangeValue('sshAccess', event.target.value)}
                 >
-                  <FormControlLabel value="yes" control={<Radio color="primary" />} label="Oui" />
-                  <FormControlLabel value="no" control={<Radio color="primary" />} label="Non" />
+                  <FormControlLabel value="yes" control={<Radio />} label="Oui" />
+                  <FormControlLabel value="no" control={<Radio />} label="Non" />
                 </RadioGroup>
               </Grid>
 
@@ -248,7 +242,6 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
                 <Grid container direction="column">
                   <Typography variant="h6">Saisissez votre clé publique :</Typography>
                   <TextField
-                    variant="outlined"
                     margin="normal"
                     autoFocus
                     placeholder="Clé publique"
@@ -266,10 +259,8 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
                   options={jupyterMachines}
                   getOptionLabel={(option) => option.name}
                   onChange={(event, value) => _onChangeValue('machines', value)}
-                  renderOption={(option) => <React.Fragment>{option.name}</React.Fragment>}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Sélectionnez une à plusieurs machines" variant="outlined" />
-                  )}
+                  renderOption={(props, option) => <li {...props}>{option.name}</li>}
+                  renderInput={(params) => <TextField {...params} label="Sélectionnez une à plusieurs machines" />}
                   value={workingEnvironment.machines}
                   style={{ margin: '1em' }}
                 />
@@ -287,8 +278,8 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
                     value={workingEnvironment.jupyter}
                     onChange={(event) => _onChangeValue('jupyter', event.target.value)}
                   >
-                    <FormControlLabel value="yes" control={<Radio color="primary" />} label="Oui" />
-                    <FormControlLabel value="no" control={<Radio color="primary" />} label="Non" />
+                    <FormControlLabel value="yes" control={<Radio />} label="Oui" />
+                    <FormControlLabel value="no" control={<Radio />} label="Non" />
                   </RadioGroup>
 
                   <FormLabel style={{ padding: '0 1em 8px' }} component="legend">
@@ -299,8 +290,8 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
                     value={workingEnvironment.tensorboard}
                     onChange={(event) => _onChangeValue('tensorboard', event.target.value)}
                   >
-                    <FormControlLabel value="yes" control={<Radio color="primary" />} label="Oui" />
-                    <FormControlLabel value="no" control={<Radio color="primary" />} label="Non" />
+                    <FormControlLabel value="yes" control={<Radio />} label="Oui" />
+                    <FormControlLabel value="no" control={<Radio />} label="Non" />
                   </RadioGroup>
 
                   <FormLabel style={{ padding: '0 1em 8px' }} component="legend">
@@ -311,8 +302,8 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
                     value={workingEnvironment.brat}
                     onChange={(event) => _onChangeValue('brat', event.target.value)}
                   >
-                    <FormControlLabel value="yes" control={<Radio color="primary" />} label="Oui" />
-                    <FormControlLabel value="no" control={<Radio color="primary" />} label="Non" />
+                    <FormControlLabel value="yes" control={<Radio />} label="Oui" />
+                    <FormControlLabel value="no" control={<Radio />} label="Non" />
                   </RadioGroup>
                 </div>
               </Grid>
@@ -322,10 +313,8 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
                 <Autocomplete
                   options={rangerhivePolicies}
                   onChange={(event, value) => _onChangeValue('rangerhivePolicy', value)}
-                  renderOption={(option) => <React.Fragment>{option}</React.Fragment>}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Sélectionnez la configuration" variant="outlined" />
-                  )}
+                  renderOption={(props, option) => <li {...props}>{option}</li>}
+                  renderInput={(params) => <TextField {...params} label="Sélectionnez la configuration" />}
                   value={workingEnvironment.rangerhivePolicy}
                   style={{ margin: '1em' }}
                 />

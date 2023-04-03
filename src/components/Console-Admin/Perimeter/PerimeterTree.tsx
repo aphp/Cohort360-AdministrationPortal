@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
-import CircularProgress from '@material-ui/core/CircularProgress'
-import Grid from '@material-ui/core/Grid'
-import IconButton from '@material-ui/core/IconButton'
-import Radio from '@material-ui/core/Radio'
-import TableRow from '@material-ui/core/TableRow'
-import TableCell from '@material-ui/core/TableCell'
-import Tooltip from '@material-ui/core/Tooltip'
-import Typography from '@material-ui/core/Typography'
-import Skeleton from '@material-ui/lab/Skeleton'
+import {
+  Breadcrumbs,
+  CircularProgress,
+  Grid,
+  IconButton,
+  Radio,
+  Skeleton,
+  TableCell,
+  TableRow,
+  Tooltip,
+  Typography
+} from '@mui/material'
 
-import AssignmentIcon from '@material-ui/icons/Assignment'
-import KeyboardArrowRightIcon from '@material-ui/icons/ChevronRight'
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
+import AssignmentIcon from '@mui/icons-material/Assignment'
+import KeyboardArrowRightIcon from '@mui/icons-material/ChevronRight'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 
 import EnhancedTable from '../EnhancedTable'
 
@@ -28,7 +31,6 @@ import { ScopeTreeRow, UserRole } from 'types'
 import { useAppSelector } from 'state'
 
 import useStyles from './styles'
-import { Breadcrumbs } from '@material-ui/core'
 import useDebounce from './use-debounce'
 
 type ScopeTreeProps = {
@@ -47,7 +49,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
   userRights
 }) => {
   const classes = useStyles()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const [openPopulation, onChangeOpenPopulations] = useState<string[]>([])
   const [rootRows, setRootRows] = useState<ScopeTreeRow[]>([])
@@ -184,7 +186,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
   return (
     <div className={classes.container}>
       {loading ? (
-        <Grid container justify="center" style={{ padding: 16 }}>
+        <Grid container justifyContent="center" style={{ padding: 16 }}>
           <CircularProgress size={40} />
         </Grid>
       ) : (
@@ -227,6 +229,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                                 padding: 0,
                                 marginRight: -30
                               }}
+                              size="large"
                             >
                               {openPopulation.find((perimeter_id) => _row.id === perimeter_id) ? (
                                 <KeyboardArrowDownIcon />
@@ -277,12 +280,13 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                           <Tooltip title="Voir les logs du périmètre">
                             <IconButton
                               onClick={() => {
-                                history.push({
+                                navigate({
                                   pathname: '/console-admin/logs',
                                   search: `?perimeterId=${_row.id}&perimeterName=${_row.name.split(' ').join('.')}`
                                 })
                               }}
                               style={{ padding: '4px 12px' }}
+                              size="large"
                             >
                               <AssignmentIcon />
                             </IconButton>

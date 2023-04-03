@@ -1,25 +1,25 @@
 import React from 'react'
 import moment from 'moment'
-import { CssBaseline } from '@material-ui/core'
+import { CssBaseline } from '@mui/material'
 import { Provider } from 'react-redux'
 
 import AppNavigation from './components/routes/AppNavigation/AppNavigation'
 import { store } from './state/store'
 import MomentUtils from '@date-io/moment'
-import { MuiPickersUtilsProvider } from '@material-ui/pickers'
 
 import 'moment/locale/fr'
+import { LocalizationProvider } from '@mui/x-date-pickers'
 
 moment.locale('fr')
 
 const App = () => {
   return (
-    <MuiPickersUtilsProvider utils={MomentUtils}>
+    <LocalizationProvider dateAdapter={MomentUtils}>
       <Provider store={store}>
         <CssBaseline />
         <AppNavigation />
       </Provider>
-    </MuiPickersUtilsProvider>
+    </LocalizationProvider>
   )
 }
 

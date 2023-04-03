@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Grid, Paper } from '@material-ui/core'
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, Grid, Paper } from '@mui/material'
 
 import useStyles from './styles'
 import PerimeterTree from 'components/Console-Admin/Perimeter/PerimeterTree'
@@ -37,7 +37,7 @@ const PerimetersDialog: React.FC<PerimetersDialogProps> = ({
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth={true} maxWidth="md" className={classes.dialog}>
-      <DialogTitle className={classes.title}>Sélectionner un périmètre :</DialogTitle>
+      <DialogTitle>Sélectionner un périmètre :</DialogTitle>
       <DialogContent className={classes.content}>
         <Grid container item xs={12} direction="column" alignItems="flex-end">
           <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />

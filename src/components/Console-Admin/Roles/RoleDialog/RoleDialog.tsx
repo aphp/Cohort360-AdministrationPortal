@@ -13,11 +13,11 @@ import {
   TableRow,
   TextField,
   Typography
-} from '@material-ui/core'
+} from '@mui/material'
 
-import CancelIcon from '@material-ui/icons/Cancel'
-import CheckCircleIcon from '@material-ui/icons/CheckCircle'
-import EditIcon from '@material-ui/icons/Edit'
+import CancelIcon from '@mui/icons-material/Cancel'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import EditIcon from '@mui/icons-material/Edit'
 
 import useStyles from './styles'
 import { createRoles, submitEditRoles } from 'services/Console-Admin/rolesService'
@@ -289,15 +289,12 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md">
-      <DialogTitle className={classes.title}>
-        {isEditable ? role?.name : 'Créer une nouvelle habilitation :'}
-      </DialogTitle>
+      <DialogTitle>{isEditable ? role?.name : 'Créer une nouvelle habilitation :'}</DialogTitle>
       <DialogContent className={classes.dialog}>
         {(isEditable && editMode) || !isEditable ? (
           <Grid container direction="column">
             <Typography variant="h6">Nom de l'habilitation :</Typography>
             <TextField
-              variant="outlined"
               margin="normal"
               autoFocus
               placeholder="Nom de l'habilitation"
@@ -318,7 +315,6 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
               <TableCell align="right" className={classes.tableBodyCell}>
                 {(isEditable && editMode) || !isEditable ? (
                   <Switch
-                    color="primary"
                     checked={row.status ? true : false}
                     onChange={(event) =>
                       // @ts-ignore

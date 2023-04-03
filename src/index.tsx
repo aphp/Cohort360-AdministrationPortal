@@ -1,10 +1,15 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import { createMuiTheme, ThemeProvider } from '@material-ui/core'
+import ReactDOM from 'react-dom/client'
+import { createTheme, ThemeProvider, Theme, StyledEngineProvider } from '@mui/material'
 
 import App from './App'
 
-const theme = createMuiTheme({
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
+
+const theme = createTheme({
   palette: {
     common: {
       black: '#153D8A'
@@ -68,12 +73,28 @@ const theme = createMuiTheme({
       fontSize: '15px',
       textTransform: 'none'
     }
+  },
+  components: {
+    MuiDialogTitle: {
+      styleOverrides: {
+        root: {
+          fontSize: '18px',
+          fontFamily: "'Montserrat', sans-serif",
+          color: '#0063AF',
+          textTransform: 'none',
+          lineHeight: 2
+        }
+      }
+    }
   }
 })
 
-ReactDOM.render(
-  <ThemeProvider theme={theme}>
-    <App />
-  </ThemeProvider>,
-  document.getElementById('root')
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
+
+root.render(
+  <StyledEngineProvider injectFirst>
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
+  </StyledEngineProvider>
 )

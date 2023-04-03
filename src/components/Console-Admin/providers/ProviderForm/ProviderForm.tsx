@@ -10,10 +10,10 @@ import {
   Grid,
   TextField,
   Typography
-} from '@material-ui/core'
+} from '@mui/material'
 
-import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline'
-import InfoIcon from '@material-ui/icons/Info'
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
+import InfoIcon from '@mui/icons-material/Info'
 
 import useStyles from './styles'
 import {
@@ -211,12 +211,10 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle className={classes.title}>
-        {isEdition ? 'Éditer un utilisateur :' : 'Créer un nouvel utilisateur :'}
-      </DialogTitle>
+      <DialogTitle>{isEdition ? 'Éditer un utilisateur :' : 'Créer un nouvel utilisateur :'}</DialogTitle>
       <DialogContent className={classes.dialog}>
         {isEdition && loadingProviderData ? (
-          <Grid container justify="center" style={{ padding: 16 }}>
+          <Grid container justifyContent="center" style={{ padding: 16 }}>
             <CircularProgress />
           </Grid>
         ) : error ? (
@@ -229,7 +227,6 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
               <Grid container direction="column">
                 <Typography variant="h6">Identifiant APH :</Typography>
                 <TextField
-                  variant="outlined"
                   margin="normal"
                   autoFocus
                   placeholder="Exemple: 4010101"
@@ -246,7 +243,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
               </Grid>
             )}
             {loadingProviderData ? (
-              <Grid container justify="center" style={{ padding: 16 }}>
+              <Grid container justifyContent="center" style={{ padding: 16 }}>
                 <CircularProgress />
               </Grid>
             ) : provider?.firstname ? (
@@ -262,7 +259,6 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
                   <Grid container direction="column">
                     <Typography variant="h6">Nom :</Typography>
                     <TextField
-                      variant="outlined"
                       margin="normal"
                       autoFocus
                       placeholder="Exemple: Dupont"
@@ -279,7 +275,6 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
                   <Grid container direction="column">
                     <Typography variant="h6">Prénom :</Typography>
                     <TextField
-                      variant="outlined"
                       margin="normal"
                       autoFocus
                       placeholder="Exemple: Jean"
@@ -296,7 +291,6 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
                   <Grid container direction="column">
                     <Typography variant="h6">Adresse e-mail :</Typography>
                     <TextField
-                      variant="outlined"
                       margin="normal"
                       autoFocus
                       placeholder="Exemple: jean.dupont@aphp.fr"

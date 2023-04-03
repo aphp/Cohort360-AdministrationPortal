@@ -14,6 +14,12 @@ const exportTable: ExportTableType[] = [
     nominative: true
   },
   {
+    id: 'iris',
+    table_name: 'Patient - Données géographiques',
+    table_id: 'iris',
+    nominative: false
+  },
+  {
     id: 'drug_exposure_prescription',
     table_name: 'Patient - Médicaments - Prescription',
     table_id: 'drug_exposure_prescription',
@@ -77,6 +83,18 @@ const exportTable: ExportTableType[] = [
     id: 'note_deid',
     table_name: 'Fait - Documents cliniques (pseudo-anonymisés)',
     table_id: 'note_deid',
+    nominative: false
+  },
+  {
+    id: 'imaging_study',
+    table_name: 'Imagerie - Étude',
+    table_id: 'imaging_study',
+    nominative: false
+  },
+  {
+    id: 'imaging_series',
+    table_name: 'Imagerie - Série',
+    table_id: 'imaging_series',
     nominative: false
   },
   {

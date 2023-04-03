@@ -1,7 +1,6 @@
 import React from 'react'
 
-import { Snackbar } from '@material-ui/core'
-import { Alert } from '@material-ui/lab'
+import { Alert, Snackbar } from '@mui/material'
 
 type SnackbarTypeOfMessage = 'success' | 'error' | 'warning' | 'info' | undefined
 

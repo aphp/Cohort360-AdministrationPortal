@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles'
+import makeStyles from '@mui/styles/makeStyles'
 
 const useStyles = makeStyles(() => ({
   appbar: {
@@ -7,10 +7,10 @@ const useStyles = makeStyles(() => ({
   avatar: {
     color: 'white',
     backgroundColor: '#5BC5F2',
-    height: '30px',
-    width: '30px',
+    height: 30,
+    width: 30,
     fontSize: '1rem',
-    marginLeft: '-5px',
+    marginLeft: -5,
     display: 'flex',
     overflow: 'hidden',
     position: 'relative',
@@ -21,11 +21,11 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center'
   },
   logoutIcon: {
-    width: '15px',
+    width: 15,
     fill: '#5BC5F2'
   },
   listIcon: {
-    minWidth: '35px'
+    minWidth: 35
   },
   logoIcon: {
     width: 150

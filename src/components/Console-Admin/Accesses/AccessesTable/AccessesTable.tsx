@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import {
   Button,
@@ -13,16 +13,16 @@ import {
   TableRow,
   Tooltip,
   Typography
-} from '@material-ui/core'
+} from '@mui/material'
 
-import AssignmentIcon from '@material-ui/icons/Assignment'
-import CancelIcon from '@material-ui/icons/Cancel'
-import CheckCircleIcon from '@material-ui/icons/CheckCircle'
-import DeleteIcon from '@material-ui/icons/Delete'
-import EditIcon from '@material-ui/icons/Edit'
-import InfoIcon from '@material-ui/icons/Info'
-import LaunchIcon from '@material-ui/icons/Launch'
-import TimerOffIcon from '@material-ui/icons/TimerOff'
+import AssignmentIcon from '@mui/icons-material/Assignment'
+import CancelIcon from '@mui/icons-material/Cancel'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
+import InfoIcon from '@mui/icons-material/Info'
+import LaunchIcon from '@mui/icons-material/Launch'
+import TimerOffIcon from '@mui/icons-material/TimerOff'
 
 import useStyles from './styles'
 import AccessForm from '../AccessForm/AccessForm'
@@ -60,7 +60,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
   roles
 }) => {
   const classes = useStyles()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const [selectedAccess, setSelectedAccess] = useState<(Access & { perimeter?: null | ScopeTreeRow }) | null>(null)
   const [deleteAccess, setDeleteAccess] = useState<Access | null>(null)
@@ -162,7 +162,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
   }
 
   return (
-    <Grid container justify="flex-end">
+    <Grid container justifyContent="flex-end">
       <DataTable
         columns={_columns}
         order={order}
@@ -189,8 +189,9 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
                     {access.provider_history.lastname?.toLocaleUpperCase()} {access.provider_history.firstname}
                     <IconButton
                       onClick={() =>
-                        history.push(`/console-admin/user-profile/${access.provider_history.provider_source_value}`)
+                        navigate(`/console-admin/user-profile/${access.provider_history.provider_source_value}`)
                       }
+                      size="large"
                     >
                       <LaunchIcon fontSize="small" />
                     </IconButton>
@@ -234,7 +235,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
                 </TableCell>
                 {(manageAccessesUserRights || userRights.right_read_logs) && (
                   <TableCell align="center">
-                    <Grid container item alignContent="center" justify="space-between" wrap="nowrap">
+                    <Grid container item alignContent="center" justifyContent="space-between" wrap="nowrap">
                       {manageAccessesUserRights && (
                         <>
                           <Grid item xs={userRights.right_read_logs ? 4 : 6}>
@@ -245,6 +246,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
                                     setSelectedAccess(access as Access & { perimeter?: null | ScopeTreeRow })
                                   }}
                                   style={{ padding: '4px 12px' }}
+                                  size="large"
                                 >
                                   <EditIcon />
                                 </IconButton>
@@ -262,6 +264,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
                                       setTerminateAccess(true)
                                     }}
                                     style={{ padding: '4px 12px' }}
+                                    size="large"
                                   >
                                     <TimerOffIcon />
                                   </IconButton>
@@ -276,6 +279,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
                                       setTerminateAccess(false)
                                     }}
                                     style={{ padding: '4px 12px' }}
+                                    size="large"
                                   >
                                     <DeleteIcon />
                                   </IconButton>
@@ -289,12 +293,13 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
                           <Tooltip title="Voir les logs de l'accès">
                             <IconButton
                               onClick={() => {
-                                history.push({
+                                navigate({
                                   pathname: '/console-admin/logs',
                                   search: `?access=${access.care_site_history_id}`
                                 })
                               }}
                               style={{ padding: '4px 12px' }}
+                              size="large"
                             >
                               <AssignmentIcon />
                             </IconButton>

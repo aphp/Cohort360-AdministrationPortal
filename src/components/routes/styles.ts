@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles'
+import makeStyles from '@mui/styles/makeStyles'
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme) => ({
   validateButton: {
     backgroundColor: '#5BC5F2',
     color: '#FFF',
-    borderRadius: '25px',
+    borderRadius: 25,
     marginLeft: theme.spacing(2),
     '&:hover': {
       backgroundColor: '#499cbf'

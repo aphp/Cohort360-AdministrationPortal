@@ -1,21 +1,26 @@
 import React from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
-import Button from '@material-ui/core/Button'
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
-import WarningIcon from '@material-ui/icons/Report'
+import { Button, Grid, Typography } from '@mui/material'
+import WarningIcon from '@mui/icons-material/Report'
 
 import useStyles from './styles'
 
 const PortailNoRights = () => {
   const classes = useStyles()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   return (
-    <Grid container direction="column" justify="center" alignItems="center" spacing={2} style={{ height: '100vh' }}>
+    <Grid
+      container
+      direction="column"
+      justifyContent="center"
+      alignItems="center"
+      spacing={2}
+      style={{ height: '100vh' }}
+    >
       <Grid item className={classes.item}>
-        <Grid container direction="column" justify="center" alignItems="center">
+        <Grid container direction="column" justifyContent="center" alignItems="center">
           <Grid item style={{ padding: 16 }}>
             <WarningIcon style={{ fontSize: 60 }} />
           </Grid>
@@ -32,7 +37,7 @@ const PortailNoRights = () => {
       </Grid>
 
       <Grid item>
-        <Button variant="outlined" style={{ borderColor: 'currentColor' }} onClick={() => history.go(0)}>
+        <Button variant="outlined" style={{ borderColor: 'currentColor' }} onClick={() => navigate(0)}>
           Retour à la connexion
         </Button>
       </Grid>

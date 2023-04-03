@@ -1,7 +1,7 @@
 import React from 'react'
 import moment from 'moment'
 
-import { CircularProgress, Grid, Paper, Typography } from '@material-ui/core'
+import { CircularProgress, Grid, Paper, Typography } from '@mui/material'
 
 import { Log } from 'types'
 
@@ -31,14 +31,14 @@ const LogsTable: React.FC<LogsTableProps> = ({ loading, logs }) => {
   }
 
   return (
-    <Grid container justify="center">
+    <Grid container justifyContent="center">
       {loading ? (
         <CircularProgress size={30} />
       ) : logs && logs.length > 0 ? (
         logs.map((log: Log, index: number) => {
           return (
             <Grid container key={index} component={Paper} style={{ padding: 12, marginBottom: 8 }}>
-              <Grid container item justify="flex-start" xs={6} direction="column">
+              <Grid container item justifyContent="flex-start" xs={6} direction="column">
                 <div className={classes.divCentered}>
                   <Typography variant="h3" style={{ lineHeight: 2 }}>
                     ID :
@@ -140,7 +140,7 @@ const LogsTable: React.FC<LogsTableProps> = ({ loading, logs }) => {
           )
         })
       ) : (
-        <Grid container component={Paper} style={{ padding: 12, marginBottom: 8 }} justify="center">
+        <Grid container component={Paper} style={{ padding: 12, marginBottom: 8 }} justifyContent="center">
           <Typography align="center">Aucun résultat à afficher.</Typography>
         </Grid>
       )}

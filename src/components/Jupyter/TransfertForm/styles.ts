@@ -1,18 +1,9 @@
-import { makeStyles } from '@material-ui/core/styles'
+import makeStyles from '@mui/styles/makeStyles'
 
 const useStyles = makeStyles((theme) => ({
   autocomplete: {
     margin: '1em',
     backgroundColor: 'white'
-  },
-  title: {
-    ' & h2': {
-      fontSize: 18,
-      fontFamily: "'Montserrat', sans-serif",
-      color: '#0063AF',
-      textTransform: 'none',
-      lineHeight: 2
-    }
   },
   validateButton: {
     backgroundColor: '#5BC5F2',

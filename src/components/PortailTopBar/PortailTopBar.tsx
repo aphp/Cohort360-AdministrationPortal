@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import clsx from 'clsx'
 
-import { useHistory } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { AppBar, Button, Grid, IconButton, ListItemIcon, Menu, MenuItem, Toolbar } from '@material-ui/core'
+import { AppBar, Button, Grid, IconButton, ListItemIcon, Menu, MenuItem, Toolbar } from '@mui/material'
 
 import { ReactComponent as LogoutIcon } from 'assets/icones/power-off.svg'
 import PortailLogo from 'assets/images/portail-white.png'
@@ -17,7 +17,7 @@ import useStyles from './styles'
 
 const PortailTopBar: React.FC = () => {
   const classes = useStyles()
-  const history = useHistory()
+  const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const { me } = useAppSelector((state) => ({
@@ -101,17 +101,7 @@ const PortailTopBar: React.FC = () => {
             </Button>
             <Menu
               anchorEl={anchorElConsole}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'center'
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'center'
-              }}
               elevation={0}
-              getContentAnchorEl={null}
-              keepMounted
               open={Boolean(anchorElConsole)}
               onClose={() => setAnchorElConsole(null)}
               classes={{ paper: classes.paper }}
@@ -121,7 +111,10 @@ const PortailTopBar: React.FC = () => {
                   page.rightsToSee && (
                     <MenuItem
                       key={index}
-                      onClick={() => history.push(page.pathname)}
+                      onClick={() => {
+                        navigate(page.pathname)
+                        setAnchorElConsole(null)
+                      }}
                       className={clsx(classes.menuItem, pathname.includes(page.pathname) && classes.activeMenuItem)}
                     >
                       {page.name}
@@ -142,17 +135,7 @@ const PortailTopBar: React.FC = () => {
             )}
             <Menu
               anchorEl={anchorElJupyter}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'center'
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'center'
-              }}
               elevation={0}
-              getContentAnchorEl={null}
-              keepMounted
               open={Boolean(anchorElJupyter)}
               onClose={() => setAnchorElJupyter(null)}
               classes={{ paper: classes.paper }}
@@ -162,7 +145,10 @@ const PortailTopBar: React.FC = () => {
                   page.rightsToSee && (
                     <MenuItem
                       key={index}
-                      onClick={() => history.push(page.pathname)}
+                      onClick={() => {
+                        navigate(page.pathname)
+                        setAnchorElJupyter(null)
+                      }}
                       className={clsx(classes.menuItem, pathname.includes(page.pathname) && classes.activeMenuItem)}
                     >
                       {page.name}
@@ -182,8 +168,9 @@ const PortailTopBar: React.FC = () => {
                 localStorage.clear()
                 logoutRoute()
                 dispatch<any>(logoutAction())
-                history.push('/')
+                navigate('/')
               }}
+              size="large"
             >
               <LogoutIcon className={classes.logoutIcon} />
             </IconButton>

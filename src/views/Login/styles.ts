@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles'
+import makeStyles from '@mui/styles/makeStyles'
 
 import BackgroundLogin from '../../assets/images/connect-croped-light.jpg'
 
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2)
   },
   bienvenue: {
-    fontSize: '15px'
+    fontSize: 15
   },
   image: {
     backgroundImage: `url(${BackgroundLogin})`,
@@ -40,12 +40,12 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
     backgroundColor: '#5BC5F2',
     color: 'white',
-    height: '50px',
-    width: '185px',
-    borderRadius: '25px'
+    height: 50,
+    width: 185,
+    borderRadius: 25
   },
   mention: {
-    marginTop: '8px'
+    marginTop: 8
   }
 }))
 

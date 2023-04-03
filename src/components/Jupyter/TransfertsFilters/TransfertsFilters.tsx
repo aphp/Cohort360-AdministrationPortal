@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import moment from 'moment'
 
 import {
+  Autocomplete,
   Button,
   CircularProgress,
   Dialog,
@@ -12,10 +13,9 @@ import {
   Grid,
   TextField,
   Typography
-} from '@material-ui/core'
-import Autocomplete from '@material-ui/lab/Autocomplete'
-import { KeyboardDatePicker } from '@material-ui/pickers'
-import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date'
+} from '@mui/material'
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 
 import useStyles from './styles'
 import { ExportFilters } from 'types'
@@ -98,7 +98,7 @@ const TransfertsFilters: React.FC<TransfertsFiltersProps> = ({ filters, onChange
 
   return (
     <Dialog open>
-      <DialogTitle className={classes.dialogTitle}>Filtrer par :</DialogTitle>
+      <DialogTitle>Filtrer par :</DialogTitle>
       <DialogContent className={classes.dialog}>
         <Grid container direction="column">
           <Typography variant="h6">Type de transfert :</Typography>
@@ -107,10 +107,8 @@ const TransfertsFilters: React.FC<TransfertsFiltersProps> = ({ filters, onChange
             getOptionLabel={(option) => option.display}
             options={transfertTypes}
             onChange={(event, value) => _onChangeValue('exportType', value)}
-            renderOption={(option) => <React.Fragment>{option.display}</React.Fragment>}
-            renderInput={(params) => (
-              <TextField {...params} label="Sélectionner un ou plusieurs type de transfert" variant="outlined" />
-            )}
+            renderOption={(props, option) => <li {...props}>{option.display}</li>}
+            renderInput={(params) => <TextField {...params} label="Sélectionner un ou plusieurs type de transfert" />}
             value={_filters.exportType}
             style={{ margin: '1em' }}
           />
@@ -123,10 +121,8 @@ const TransfertsFilters: React.FC<TransfertsFiltersProps> = ({ filters, onChange
             getOptionLabel={(option) => option.display}
             options={statusOptions}
             onChange={(event, value) => _onChangeValue('request_job_status', value)}
-            renderOption={(option) => <React.Fragment>{option?.display}</React.Fragment>}
-            renderInput={(params) => (
-              <TextField {...params} label="Sélectionner un ou plusieurs statut" variant="outlined" />
-            )}
+            renderOption={(props, option) => <li {...props}>{option.display}</li>}
+            renderInput={(params) => <TextField {...params} label="Sélectionner un ou plusieurs statut" />}
             value={_filters.request_job_status}
             style={{ margin: '1em' }}
           />
@@ -139,30 +135,42 @@ const TransfertsFilters: React.FC<TransfertsFiltersProps> = ({ filters, onChange
               <FormLabel component="legend" className={classes.dateLabel}>
                 Après le :
               </FormLabel>
-              <KeyboardDatePicker
-                clearable
-                error={dateError}
-                invalidDateMessage='La date doit être au format "JJ/MM/AAAA"'
-                format="DD/MM/YYYY"
-                onChange={(date: MaterialUiPickersDate) => _onChangeValue('insert_datetime_gte', date ?? null)}
-                value={_filters.insert_datetime_gte}
-                style={{ width: 'calc(100% - 120px)' }}
-              />
+              <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={'fr'}>
+                <DatePicker
+                  onChange={(date) => _onChangeValue('insert_datetime_gte', date ?? null)}
+                  value={_filters.insert_datetime_gte}
+                  renderInput={(params: any) => (
+                    <TextField
+                      {...params}
+                      variant="standard"
+                      error={dateError}
+                      helperText={dateError && 'La date doit être au format "JJ/MM/AAAA"'}
+                      style={{ width: 'calc(100% - 120px)' }}
+                    />
+                  )}
+                />
+              </LocalizationProvider>
             </Grid>
 
             <Grid container alignItems="baseline" className={classes.datePickers}>
               <FormLabel component="legend" className={classes.dateLabel}>
                 Avant le :
               </FormLabel>
-              <KeyboardDatePicker
-                clearable
-                error={dateError}
-                invalidDateMessage='La date doit être au format "JJ/MM/AAAA"'
-                format="DD/MM/YYYY"
-                onChange={(date: MaterialUiPickersDate) => _onChangeValue('insert_datetime_lte', date ?? null)}
-                value={_filters.insert_datetime_lte}
-                style={{ width: 'calc(100% - 120px)' }}
-              />
+              <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={'fr'}>
+                <DatePicker
+                  onChange={(date) => _onChangeValue('insert_datetime_lte', date ?? null)}
+                  value={_filters.insert_datetime_lte}
+                  renderInput={(params: any) => (
+                    <TextField
+                      {...params}
+                      variant="standard"
+                      error={dateError}
+                      helperText={dateError && 'La date doit être au format "JJ/MM/AAAA"'}
+                      style={{ width: 'calc(100% - 120px)' }}
+                    />
+                  )}
+                />
+              </LocalizationProvider>
             </Grid>
             {dateError && (
               <Typography className={classes.dateError}>

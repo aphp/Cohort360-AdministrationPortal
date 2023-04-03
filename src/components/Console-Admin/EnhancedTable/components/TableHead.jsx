@@ -1,11 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import TableCell from '@material-ui/core/TableCell'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
-import TableSortLabel from '@material-ui/core/TableSortLabel'
-import Checkbox from '@material-ui/core/Checkbox'
-import IndeterminateCheckBoxIcon from '@material-ui/icons/IndeterminateCheckBox'
+
+import { Checkbox, TableCell, TableHead, TableRow, TableSortLabel } from '@mui/material'
+import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox'
 // Example:
 // const headCells = [
 //   { id: 'name',     numeric: false, disablePadding: true,  label: 'Dessert (100g serving)' },
@@ -29,7 +26,6 @@ function EnhancedTableHead(props) {
         {!props.noCheckbox && (
           <TableCell align="center" padding="checkbox">
             <Checkbox
-              color="primary"
               indeterminate={numSelected > 0 && numSelected < rowCount}
               indeterminateIcon={<IndeterminateCheckBoxIcon color="primary" />}
               checked={rowCount > 0 && numSelected === rowCount}
@@ -42,7 +38,7 @@ function EnhancedTableHead(props) {
           <TableCell
             key={headCell.id || Math.random()}
             align={headCell.align}
-            padding={headCell.disablePadding ? 'none' : 'default'}
+            padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel

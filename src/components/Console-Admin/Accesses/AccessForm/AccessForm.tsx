@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import moment from 'moment'
 
 import {
+  Autocomplete,
   Button,
   CircularProgress,
   Dialog,
@@ -13,13 +14,13 @@ import {
   TextField,
   Tooltip,
   Typography
-} from '@material-ui/core'
-import Autocomplete from '@material-ui/lab/Autocomplete'
-import { KeyboardDatePicker } from '@material-ui/pickers'
-import { MaterialUiPickersDate } from '@material-ui/pickers/typings/date'
+} from '@mui/material'
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
+import 'moment/locale/fr'
 
-import InfoIcon from '@material-ui/icons/Info'
-import EditIcon from '@material-ui/icons/Edit'
+import InfoIcon from '@mui/icons-material/Info'
+import EditIcon from '@mui/icons-material/Edit'
 
 import { getAssignableRoles } from 'services/Console-Admin/rolesService'
 import { submitCreateAccess, submitEditAccess } from 'services/Console-Admin/providersHistoryService'
@@ -178,18 +179,16 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle className={classes.title}>
-        {isEdition ? `Éditer l'accès à ${access?.care_site?.care_site_name}` : 'Créer un nouvel accès'}
-      </DialogTitle>
+      <DialogTitle>{isEdition ? `Éditer l'accès à ${access?.perimeter?.name}` : 'Créer un nouvel accès'}</DialogTitle>
       <DialogContent className={classes.dialog}>
         {!isEdition && (
           <>
-            <Grid container justify="space-between" alignItems="center" className={classes.filter}>
+            <Grid container justifyContent="space-between" alignItems="center" className={classes.filter}>
               <Typography variant="h6">Périmètre :</Typography>
               {_access && _access.perimeter ? (
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <Typography>{_access.perimeter.name}</Typography>
-                  <IconButton onClick={() => setOpenPerimeters(true)} style={{ padding: '0 8px' }}>
+                  <IconButton onClick={() => setOpenPerimeters(true)} style={{ padding: '0 8px' }} size="large">
                     <EditIcon />
                   </IconButton>
                 </div>
@@ -204,7 +203,7 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
                 </Button>
               )}
             </Grid>
-            <Grid container justify="space-between" alignItems="center" className={classes.filter}>
+            <Grid container justifyContent="space-between" alignItems="center" className={classes.filter}>
               <Typography variant="h6">Habilitation :</Typography>
               {loadingAssignableRoles ? (
                 <CircularProgress size={20} />
@@ -212,25 +211,29 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
                 <Autocomplete
                   disabled={!roles}
                   options={roles ?? []}
-                  getOptionLabel={(option) => option.name}
+                  getOptionLabel={(option) => option.name ?? 'pas de nom de role'}
                   onChange={(event, value) => {
                     if (value) _onChangeValue('role', value)
                   }}
-                  renderOption={(option) => (
-                    <Grid container justify="space-between" alignItems="center">
-                      <Typography>{option.name}</Typography>
-                      <Tooltip
-                        title={option.help_text.map((text: string, index: number) => (
-                          <Typography key={index}>{text}</Typography>
-                        ))}
-                      >
-                        <InfoIcon color="action" fontSize="small" className={classes.infoIcon} />
-                      </Tooltip>
-                    </Grid>
+                  renderOption={(props, option) => (
+                    <li {...props}>
+                      <Grid container justifyContent="space-between" alignItems="center">
+                        <Typography>{option.name}</Typography>
+                        <Tooltip
+                          title={
+                            option &&
+                            option.help_text &&
+                            option?.help_text.map((text: string, index: number) => (
+                              <Typography key={index}>{text}</Typography>
+                            ))
+                          }
+                        >
+                          <InfoIcon color="action" fontSize="small" className={classes.infoIcon} />
+                        </Tooltip>
+                      </Grid>
+                    </li>
                   )}
-                  renderInput={(params) => (
-                    <TextField {...params} label="Sélectionner une habilitation..." variant="outlined" />
-                  )}
+                  renderInput={(params) => <TextField {...params} label="Sélectionner une habilitation..." />}
                   value={_access.role}
                   style={{ width: '310px' }}
                 />
@@ -245,33 +248,45 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
           </>
         )}
         {(!isEdition || (isEdition && !_access.actual_start_datetime?.isBefore())) && (
-          <Grid container justify="space-between" alignItems="center" className={classes.filter}>
+          <Grid container justifyContent="space-between" alignItems="center" className={classes.filter}>
             <Typography variant="h6">Date de début :</Typography>
-            <KeyboardDatePicker
-              clearable
-              minDate={moment()}
-              error={dateError}
-              style={{ width: 310 }}
-              invalidDateMessage='La date doit être au format "JJ/MM/AAAA"'
-              format="DD/MM/YYYY"
-              onChange={(date: MaterialUiPickersDate) => _onChangeValue('actual_start_datetime', date)}
-              value={_access.actual_start_datetime}
-            />
+            <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={'fr'}>
+              <DatePicker
+                onChange={(date) => _onChangeValue('actual_start_datetime', date)}
+                value={_access.actual_start_datetime}
+                renderInput={(params: any) => (
+                  <TextField
+                    {...params}
+                    variant="standard"
+                    error={dateError}
+                    helperText={dateError && 'La date doit être au format "JJ/MM/AAAA"'}
+                    style={{ width: 'calc(100% - 120px)' }}
+                    minDate={moment()}
+                  />
+                )}
+              />
+            </LocalizationProvider>
           </Grid>
         )}
         {(!isEdition || (isEdition && !_access.actual_end_datetime?.isBefore())) && (
-          <Grid container justify="space-between" alignItems="center" className={classes.filter}>
+          <Grid container justifyContent="space-between" alignItems="center" className={classes.filter}>
             <Typography variant="h6">Date de fin :</Typography>
-            <KeyboardDatePicker
-              clearable
-              minDate={moment().add(1, 'days')}
-              error={dateError}
-              style={{ width: 310 }}
-              invalidDateMessage='La date doit être au format "JJ/MM/AAAA"'
-              format="DD/MM/YYYY"
-              onChange={(date: MaterialUiPickersDate) => _onChangeValue('actual_end_datetime', date)}
-              value={_access.actual_end_datetime}
-            />
+            <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={'fr'}>
+              <DatePicker
+                onChange={(date) => _onChangeValue('actual_end_datetime', date)}
+                value={_access.actual_end_datetime}
+                renderInput={(params: any) => (
+                  <TextField
+                    {...params}
+                    variant="standard"
+                    error={dateError}
+                    helperText={dateError && 'La date doit être au format "JJ/MM/AAAA"'}
+                    style={{ width: 'calc(100% - 120px)' }}
+                    minDate={moment().add(1, 'days')}
+                  />
+                )}
+              />
+            </LocalizationProvider>
 
             {dateError && (
               <Typography className={classes.error}>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { CircularProgress, Grid, Typography } from '@material-ui/core'
-import Alert from '@material-ui/lab/Alert'
+import { Alert, CircularProgress, Grid, Typography } from '@mui/material'
 import { useParams } from 'react-router'
 
 import { getProfile } from 'services/Console-Admin/providersHistoryService'
@@ -21,6 +20,8 @@ const ProviderHistory: React.FC = () => {
   const [roles, setRoles] = useState<Role[] | undefined>()
 
   const { providerSourceValue } = useParams<{ providerSourceValue: string }>()
+
+  const _providerSourceValue = providerSourceValue ? providerSourceValue : ''
 
   useEffect(() => {
     const _getRoles = async () => {
@@ -49,7 +50,7 @@ const ProviderHistory: React.FC = () => {
       try {
         setLoading(true)
 
-        const providerResp = await getProvider(providerSourceValue)
+        const providerResp = await getProvider(_providerSourceValue)
 
         setProvider(providerResp)
 
@@ -72,7 +73,7 @@ const ProviderHistory: React.FC = () => {
 
   return (
     <Grid container direction="column">
-      <Grid container justify="center">
+      <Grid container justifyContent="center">
         {loading ? (
           <CircularProgress className={classes.loading} />
         ) : (
