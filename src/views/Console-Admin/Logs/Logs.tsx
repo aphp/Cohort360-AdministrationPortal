@@ -48,6 +48,8 @@ const Logs: React.FC = () => {
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
 
+  const rowsPerPage = 20
+
   const _getLogs = async () => {
     try {
       setLoading(true)
@@ -220,7 +222,7 @@ const Logs: React.FC = () => {
                 <LogsTable loading={loading} logs={logs} />
                 <Pagination
                   className={classes.pagination}
-                  count={Math.ceil(total / 100)}
+                  count={Math.ceil(total / rowsPerPage)}
                   shape="circular"
                   onChange={(event, page: number) => setPage(page)}
                   page={page}
