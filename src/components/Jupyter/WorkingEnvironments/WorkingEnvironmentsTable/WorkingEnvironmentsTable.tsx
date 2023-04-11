@@ -31,6 +31,7 @@ const WorkingEnvironmentsTable: React.FC<WorkingEnvironmentsTableProps> = ({ use
   const [searchInput, setSearchInput] = useState('')
 
   const debouncedSearchTerm = useDebounce(500, searchInput)
+  const rowsPerPage = 20
 
   const columns: Column[] = [
     {
@@ -119,7 +120,7 @@ const WorkingEnvironmentsTable: React.FC<WorkingEnvironmentsTableProps> = ({ use
         setOrder={setOrder}
         page={page}
         setPage={setPage}
-        rowsPerPage={100}
+        rowsPerPage={rowsPerPage}
         total={total}
       >
         {loading ? (

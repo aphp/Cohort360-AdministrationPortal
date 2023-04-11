@@ -90,7 +90,7 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
   const [addTransfertRequestSuccess, setAddTransfertRequestSuccess] = useState(false)
   const [addTransfertRequestFail, setAddTransfertRequestFail] = useState(false)
 
-  const rowsPerPage = 100
+  const rowsPerPage = 20
 
   const createWorkingEnvironmentUserRights =
     userRights.right_manage_env_unix_users && userRights.right_manage_env_user_links
