@@ -71,6 +71,8 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
   const [terminateAccess, setTerminateAccess] = useState(false)
   const [loadingOnConfirm, setLoadingOnConfirm] = useState(false)
 
+  const rowsPerPage = 20
+
   const columns: Column[] = [
     ...(displayName
       ? ([
@@ -169,7 +171,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
         setOrder={setOrder}
         page={page}
         setPage={setPage}
-        rowsPerPage={100}
+        rowsPerPage={rowsPerPage}
         total={total}
       >
         {loading ? (
