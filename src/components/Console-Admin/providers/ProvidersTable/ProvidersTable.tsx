@@ -80,6 +80,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
   const [editProviderFail, setEditProviderFail] = useState(false)
 
   const debouncedSearchTerm = useDebounce(500, searchInput)
+  const rowsPerPage = 20
 
   useEffect(() => {
     if (page !== 1) {
@@ -137,7 +138,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
         setOrder={setOrder}
         page={page}
         setPage={setPage}
-        rowsPerPage={100}
+        rowsPerPage={rowsPerPage}
         total={total}
       >
         {loading ? (
