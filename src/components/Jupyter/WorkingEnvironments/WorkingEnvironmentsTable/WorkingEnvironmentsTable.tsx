@@ -60,11 +60,11 @@ const WorkingEnvironmentsTable: React.FC<WorkingEnvironmentsTableProps> = ({ use
   const createWorkingEnvironmentUserRights =
     userRights.right_manage_env_unix_users && userRights.right_manage_env_user_links
 
-  const _getWorkingEnvironments = async () => {
+  const _getWorkingEnvironments = async (_page: number) => {
     try {
       setLoading(true)
 
-      const workingEnvironmentsResp = await getWorkingEnvironments(order, page, false, searchInput.trim())
+      const workingEnvironmentsResp = await getWorkingEnvironments(order, _page, false, searchInput.trim())
 
       setWorkingEnvironments(workingEnvironmentsResp?.workingEnvironments)
       setTotal(workingEnvironmentsResp?.total)
@@ -79,16 +79,14 @@ const WorkingEnvironmentsTable: React.FC<WorkingEnvironmentsTableProps> = ({ use
   }
 
   useEffect(() => {
-    if (page !== 1) {
-      setPage(1)
-    } else {
-      _getWorkingEnvironments()
-    }
-  }, [debouncedSearchTerm])
+    setPage(1)
+    _getWorkingEnvironments(1)
+  }, [debouncedSearchTerm, order])
 
-  useEffect(() => {
-    _getWorkingEnvironments()
-  }, [page, order])
+  const onChangePage = (value: number) => {
+    setPage(value)
+    _getWorkingEnvironments(value)
+  }
 
   return (
     <Grid container justifyContent="flex-end">
@@ -119,7 +117,7 @@ const WorkingEnvironmentsTable: React.FC<WorkingEnvironmentsTableProps> = ({ use
         order={order}
         setOrder={setOrder}
         page={page}
-        setPage={setPage}
+        onChangePage={onChangePage}
         rowsPerPage={rowsPerPage}
         total={total}
       >
