@@ -31,7 +31,7 @@ export const logout = () => {
   const baseURL = BACK_API_URL
 
   return axios({
-    method: 'GET',
+    method: 'POST',
     url: `${baseURL}/accounts/logout/`
   })
 }
