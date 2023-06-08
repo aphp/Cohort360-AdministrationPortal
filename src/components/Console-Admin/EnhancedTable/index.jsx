@@ -1,5 +1,5 @@
 import React from 'react'
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from 'tss-react/mui'
 import moment from 'moment'
 
 import { Table, TableBody, TableCell, TableContainer, TablePagination, TableRow } from '@mui/material'
@@ -38,7 +38,7 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0])
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   root: {
     width: '100%'
   },
@@ -69,7 +69,7 @@ export default function EnhancedTable(props) {
   const onClickRow = props.onClickRow ? props.onClickRow : () => null
   const noPagination = props.noPagination ? props.noPagination : false
 
-  const classes = useStyles()
+  const { classes } = useStyles()
   const [order, setOrder] = React.useState('desc')
   const [orderBy, setOrderBy] = React.useState(props.defaultSort || '_id')
   const [page, setPage] = React.useState(0)

@@ -51,7 +51,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
   onAddProviderFail,
   onEditProviderFail
 }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const [provider, setProvider] = useState<CheckProfile | null>(selectedProvider || defaultProvider)
   const [providerHistoryId, setProviderHistoryId] = useState('')

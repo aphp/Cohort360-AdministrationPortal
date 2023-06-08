@@ -49,7 +49,7 @@ const defaultAccess = {
 }
 
 const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRights, onSuccess, onFail, access }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const [_access, setAccess] = useState(
     access

@@ -54,7 +54,7 @@ const statusOptions = [
 ]
 
 const TransfertsFilters: React.FC<TransfertsFiltersProps> = ({ filters, onChangeFilters, onClose }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const [_filters, setFilters] = useState(filters)
   const [dateError, setDateError] = useState(false)

@@ -7,7 +7,7 @@ import WarningIcon from '@mui/icons-material/Report'
 import useStyles from './styles'
 
 const PortailNoRights = () => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const navigate = useNavigate()
 
   return (

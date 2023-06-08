@@ -26,7 +26,7 @@ const filtersDefault = {
 }
 
 const Logs: React.FC = () => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const search = window.location.search
   const user = new URLSearchParams(search).get('user')

@@ -20,7 +20,7 @@ type ProfileComponentProps = {
 const orderDefault = { orderBy: 'is_valid', orderDirection: 'asc' } as Order
 
 const ProfileComponent: React.FC<ProfileComponentProps> = ({ profile, userRights, roles }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const [open, setOpen] = useState(false)
   const [accesses, setAccesses] = useState<Access[] | undefined>()
