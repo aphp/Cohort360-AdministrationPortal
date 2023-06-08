@@ -23,7 +23,7 @@ const PerimetersDialog: React.FC<PerimetersDialogProps> = ({
   isManageable,
   userRights
 }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const [searchInput, setSearchInput] = useState('')
 
   const onCancel = () => {

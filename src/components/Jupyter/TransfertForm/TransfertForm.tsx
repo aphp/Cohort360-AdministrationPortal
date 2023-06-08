@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useState } from 'react'
-import clsx from 'clsx'
 
 import {
   Autocomplete,
@@ -62,7 +61,7 @@ const TransfertForm: React.FC<TransferFormProps> = ({
   onAddTransfertRequestSuccess,
   onAddTransfertRequestFail
 }) => {
-  const classes = useStyles()
+  const { classes, cx } = useStyles()
 
   const [loadingOnSearchProvider, setLoadingOnSearchProvider] = useState(false)
   const [loadingOnGetCohorts, setLoadingOnGetCohorts] = useState(false)
@@ -338,7 +337,7 @@ const TransfertForm: React.FC<TransferFormProps> = ({
               labelPlacement="start"
             />
 
-            <List className={clsx(classes.list, classes.autocomplete)} style={{ marginTop: 0 }}>
+            <List className={cx(classes.list, classes.autocomplete)} style={{ marginTop: 0 }}>
               {tablesList.map(({ table_name, table_id }: ExportTableType) => (
                 <ListItem key={table_id}>
                   <ListItemText

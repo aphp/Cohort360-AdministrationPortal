@@ -45,7 +45,7 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
   onAddRoleFail,
   onEditRoleFail
 }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const [role, setRole] = useState<Role>(selectedRole)
   const [errorName, setErrorName] = useState(false)

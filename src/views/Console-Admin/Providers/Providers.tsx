@@ -8,7 +8,7 @@ import { getUserRights, userDefaultRoles } from 'utils/userRoles'
 import useStyles from './styles'
 
 const ProfilesView: React.FC = () => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const [userRights, setUserRights] = useState(userDefaultRoles)
   const [loading, setLoading] = useState(true)
 

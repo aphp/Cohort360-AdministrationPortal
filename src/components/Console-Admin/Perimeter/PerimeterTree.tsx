@@ -48,7 +48,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
   searchInput,
   userRights
 }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const navigate = useNavigate()
 
   const [openPopulation, onChangeOpenPopulations] = useState<string[]>([])

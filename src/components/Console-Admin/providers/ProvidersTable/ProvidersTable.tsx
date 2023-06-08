@@ -27,7 +27,7 @@ type ProvidersTableProps = {
 const orderDefault = { orderBy: 'lastname', orderDirection: 'asc' } as Order
 
 const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const {

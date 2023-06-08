@@ -13,7 +13,7 @@ type SearchBarProps = {
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ searchInput, onChangeInput }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const handleChangeInput = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     onChangeInput(event.target.value)

@@ -39,7 +39,7 @@ type RolesTableProps = {
 }
 
 const RolesTable: React.FC<RolesTableProps> = ({ userRights }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const columns: Column[] = [
     {

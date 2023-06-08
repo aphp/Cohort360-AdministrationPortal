@@ -20,7 +20,7 @@ type WorkingEnvironmentsTableProps = {
 const orderDefault = { orderBy: 'username', orderDirection: 'asc' } as Order
 
 const WorkingEnvironmentsTable: React.FC<WorkingEnvironmentsTableProps> = ({ userRights }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const [loading, setLoading] = useState(false)
   const [workingEnvironments, setWorkingEnvironments] = useState<WorkingEnvironment[]>([])

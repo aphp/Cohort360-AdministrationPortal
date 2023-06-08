@@ -1,6 +1,6 @@
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from 'tss-react/mui'
 
-export default makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   container: {
     background: 'white'
   },
@@ -9,3 +9,5 @@ export default makeStyles(() => ({
     background: '#f3f5f9'
   }
 }))
+
+export default useStyles

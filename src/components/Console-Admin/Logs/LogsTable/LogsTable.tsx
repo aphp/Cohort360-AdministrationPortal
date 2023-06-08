@@ -13,7 +13,7 @@ type LogsTableProps = {
 }
 
 const LogsTable: React.FC<LogsTableProps> = ({ loading, logs }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const setSwaggerMethodColor = (method?: string) => {
     switch (method) {

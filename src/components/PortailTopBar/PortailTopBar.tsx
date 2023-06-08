@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import clsx from 'clsx'
 
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
@@ -16,7 +15,7 @@ import { logout as logoutRoute } from 'services/authentication'
 import useStyles from './styles'
 
 const PortailTopBar: React.FC = () => {
-  const classes = useStyles()
+  const { classes, cx } = useStyles()
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -88,7 +87,7 @@ const PortailTopBar: React.FC = () => {
             </a>
             <Button
               onClick={handleClickConsoleAdmin}
-              className={clsx(
+              className={cx(
                 classes.topBarButton,
                 (pathname.includes('users') ||
                   pathname.includes('perimeters') ||
@@ -115,7 +114,7 @@ const PortailTopBar: React.FC = () => {
                         navigate(page.pathname)
                         setAnchorElConsole(null)
                       }}
-                      className={clsx(classes.menuItem, pathname.includes(page.pathname) && classes.activeMenuItem)}
+                      className={cx(classes.menuItem, pathname.includes(page.pathname) && classes.activeMenuItem)}
                     >
                       {page.name}
                     </MenuItem>
@@ -125,7 +124,7 @@ const PortailTopBar: React.FC = () => {
             {(userRights.right_review_transfer_jupyter || userRights.right_read_env_unix_users) && (
               <Button
                 onClick={handleClickEspaceJupyter}
-                className={clsx(
+                className={cx(
                   classes.topBarButton,
                   (pathname.includes('transfert') || pathname.includes('working-environments')) && classes.activeButton
                 )}
@@ -149,7 +148,7 @@ const PortailTopBar: React.FC = () => {
                         navigate(page.pathname)
                         setAnchorElJupyter(null)
                       }}
-                      className={clsx(classes.menuItem, pathname.includes(page.pathname) && classes.activeMenuItem)}
+                      className={cx(classes.menuItem, pathname.includes(page.pathname) && classes.activeMenuItem)}
                     >
                       {page.name}
                     </MenuItem>

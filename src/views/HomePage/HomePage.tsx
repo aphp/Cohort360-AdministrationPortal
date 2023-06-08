@@ -10,7 +10,7 @@ import { useAppSelector } from 'state'
 import { userDefaultRoles } from 'utils/userRoles'
 
 const HomePage = () => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const navigate = useNavigate()
 
   const { me } = useAppSelector((state) => ({ me: state.me }))

@@ -59,7 +59,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
   userRights,
   roles
 }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const navigate = useNavigate()
 
   const [selectedAccess, setSelectedAccess] = useState<(Access & { perimeter?: null | ScopeTreeRow }) | null>(null)

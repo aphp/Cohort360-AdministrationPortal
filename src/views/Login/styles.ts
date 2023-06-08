@@ -1,8 +1,8 @@
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from 'tss-react/mui'
 
 import BackgroundLogin from '../../assets/images/connect-croped-light.jpg'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   root: {
     height: '100vh',
     width: '100vw',

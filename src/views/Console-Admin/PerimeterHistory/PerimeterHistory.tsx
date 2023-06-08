@@ -15,7 +15,7 @@ import { Access, Order, Role } from 'types'
 const orderDefault = { orderBy: 'is_valid', orderDirection: 'asc' } as Order
 
 const PerimeterHistory: React.FC = () => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const [loadingPage, setLoadingPage] = useState(false)
   const [loadingData, setLoadingData] = useState(true)

@@ -44,7 +44,7 @@ const ErrorDialog: React.FC<ErrorDialogProps> = ({ open, setErrorLogin }) => {
 
 const Login = () => {
   const navigate = useNavigate()
-  const classes = useStyles()
+  const { classes } = useStyles()
   const dispatch = useDispatch()
   const [username, setUsername] = useState<string>('')
   const [password, setPassword] = useState<string>('')

@@ -31,7 +31,7 @@ const defaultFilters: ExportFilters = {
 }
 
 const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const [loading, setLoading] = useState(true)
   const [exportsList, setExportsList] = useState<Export[]>([])
