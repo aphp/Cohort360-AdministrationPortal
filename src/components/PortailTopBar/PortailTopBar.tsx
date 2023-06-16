@@ -164,7 +164,6 @@ const PortailTopBar: React.FC = () => {
 
             <IconButton
               onClick={() => {
-                localStorage.clear()
                 logoutRoute()
                 dispatch<any>(logoutAction())
                 navigate('/')
