@@ -10,9 +10,10 @@ import { close as closeAction, open as openAction } from 'state/autoLogout'
 import { useAppDispatch, useAppSelector } from 'state'
 import { logout as logoutAction } from 'state/me'
 
-import { ACCESS_TOKEN, BACK_API_URL, REFRESH_TOKEN, REFRESH_TOKEN_INTERVAL, SESSION_TIMEOUT } from '../../constants'
+import { ACCESS_TOKEN, REFRESH_TOKEN, REFRESH_TOKEN_INTERVAL, SESSION_TIMEOUT } from '../../constants'
 
 import useStyles from './styles'
+import api from '../../services/api'
 
 const AutoLogoutContainer = () => {
   const { classes } = useStyles()
@@ -75,7 +76,7 @@ const AutoLogoutContainer = () => {
 
   const refreshToken = async () => {
     try {
-      const res = await axios.post(`${BACK_API_URL}/accounts/refresh/`)
+      const res = await api.post(`/accounts/refresh/`)
 
       if (res.status === 200) {
         localStorage.setItem(ACCESS_TOKEN, res.data.access)
@@ -90,16 +91,12 @@ const AutoLogoutContainer = () => {
   }
 
   useEffect(() => {
-    if (me !== null) {
-      start()
+    start()
+    const intervall = setInterval(() => {
       refreshToken()
-      setRefreshInterval(
-        setInterval(() => {
-          refreshToken()
-        }, REFRESH_TOKEN_INTERVAL)
-      )
-    } else if (me == null) {
-      clearInterval(refreshInterval)
+    }, REFRESH_TOKEN_INTERVAL)
+    return () => {
+      clearInterval(intervall)
       pause()
     }
   }, [me])
