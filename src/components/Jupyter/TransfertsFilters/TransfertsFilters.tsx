@@ -36,6 +36,10 @@ const statusOptions = [
     code: 'cancelled'
   },
   {
+    display: 'Confirmé',
+    code: 'validated'
+  },
+  {
     display: 'En attente',
     code: 'pending,started,new'
   },
@@ -49,7 +53,7 @@ const statusOptions = [
   },
   {
     display: 'Terminé',
-    code: 'finished, validated'
+    code: 'finished'
   }
 ]
 

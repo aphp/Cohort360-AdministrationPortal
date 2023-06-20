@@ -113,19 +113,50 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
     }
   }
 
-  const getLabel = (status: Export['request_job_status']) => {
+  const getExportsChips = (status: Export['request_job_status']) => {
+    let chipProps = {
+      label: 'Inconnu',
+      backgroundColor: '#dc3545',
+      color: '#FFF'
+    }
+
     switch (status) {
+      case 'finished':
+        chipProps['label'] = 'Terminé'
+        chipProps['backgroundColor'] = '#28A745'
+        break
+      case 'validated':
+        chipProps['label'] = 'Confirmé'
+        chipProps['backgroundColor'] = '#FFC107'
+        chipProps['color'] = '#153D8A'
+        break
+      case 'new':
+      case 'pending':
+      case 'started':
+        chipProps['label'] = 'En cours'
+        chipProps['backgroundColor'] = '#FFC107'
+        chipProps['color'] = '#153D8A'
+        break
       case 'denied':
-        return 'Refusé'
+        chipProps['label'] = 'Refusé'
+        break
       case 'cancelled':
-        return 'Annulé'
+        chipProps['label'] = 'Annulé'
+        break
       case 'failed':
-        return 'Erreur'
-      case 'unknown':
-        return 'Inconnu'
+        chipProps['label'] = 'Erreur'
+        break
       default:
         break
     }
+
+    return (
+      <Chip
+        label={chipProps.label}
+        size="small"
+        style={{ backgroundColor: chipProps.backgroundColor, color: chipProps.color }}
+      />
+    )
   }
 
   const handleDeleteChip = (
@@ -299,27 +330,7 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
                   <TableCell align="center">
                     {exportRequest.insert_datetime ? moment(exportRequest.insert_datetime).format('DD/MM/YYYY') : '-'}
                   </TableCell>
-                  <TableCell align="center">
-                    {exportRequest.request_job_status === 'validated' ||
-                    exportRequest.request_job_status === 'finished' ? (
-                      <Chip label="Validé" size="small" style={{ backgroundColor: '#28a745', color: 'white' }} />
-                    ) : exportRequest.request_job_status === 'new' ||
-                      exportRequest.request_job_status === 'pending' ||
-                      exportRequest.request_job_status === 'started' ? (
-                      <Chip label="En cours" size="small" style={{ backgroundColor: '#ffc107' }} />
-                    ) : exportRequest.request_job_status === 'denied' ||
-                      exportRequest.request_job_status === 'cancelled' ||
-                      exportRequest.request_job_status === 'failed' ||
-                      exportRequest.request_job_status === 'unknown' ? (
-                      <Chip
-                        label={getLabel(exportRequest.request_job_status)}
-                        size="small"
-                        style={{ backgroundColor: '#dc3545', color: 'white' }}
-                      />
-                    ) : (
-                      '-'
-                    )}
-                  </TableCell>
+                  <TableCell align="center">{getExportsChips(exportRequest.request_job_status)}</TableCell>
                 </TableRow>
               )
             )
