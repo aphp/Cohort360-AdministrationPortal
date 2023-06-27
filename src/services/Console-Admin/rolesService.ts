@@ -1,5 +1,5 @@
 import api from '../api'
-import { Role } from '../../types'
+import { Order, Role } from '../../types'
 
 export const getRoles = async () => {
   const rolesResp = await api.get(`/accesses/roles/?ordering=name`)
@@ -65,5 +65,25 @@ export const deleteRole = async (role_id?: number) => {
   } catch (error) {
     console.error("Erreur lors de la suppression d'une habilitation", error)
     return false
+  }
+}
+
+export const getRoleUser = async (habilitationId: string): Promise<string | undefined> => {
+  const getRoleResp = await api.get(`/accesses/roles/${habilitationId}/`)
+  return `${getRoleResp.data.name}` ?? undefined
+}
+
+export const getUsersHabilitation = async (role_id: string, order: Order, page?: number, searchInput?: string) => {
+  const searchFilter = searchInput ? `&filter_by_name=${searchInput}` : ''
+  const getRoleUserResp = await api.get(
+    `/accesses/roles/${role_id}/users/?page=${page}&order=${order.orderDirection === 'desc' ? '-' : ''}${
+      order.orderBy
+    }${searchFilter}`
+  )
+  if (getRoleUserResp.status === 204) getRoleUserResp.data = []
+
+  return {
+    accesses: getRoleUserResp.data.results ?? [],
+    total: getRoleUserResp.data.count ?? 0
   }
 }
