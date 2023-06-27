@@ -297,6 +297,18 @@ export type Order = {
   orderDirection: 'asc' | 'desc'
 }
 
+// Habilitation
+
+export type Habilitation = {
+  provider_username: string
+  firstname: string
+  lastname: string
+  perimeter: string
+  start_datetime: string
+  end_datetime: string
+}
+
+
 // --JUPYTER--
 
 // TODO: change to workspaces/users type

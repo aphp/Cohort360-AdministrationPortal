@@ -8,6 +8,7 @@ import ProvidersHistory from 'views/Console-Admin/ProvidersHistory/ProvidersHist
 import Perimeters from 'views/Console-Admin/Perimeters/Perimeters'
 import PerimeterHistory from 'views/Console-Admin/PerimeterHistory/PerimeterHistory'
 import Habilitations from 'views/Console-Admin/Habilitations/Habilitations'
+import HabilitationsHistory from 'views/Console-Admin/HabilitationHistory/HabilitationsHistory'
 import Logs from 'views/Console-Admin/Logs/Logs'
 
 import Transfert from 'views/Jupyter/Transfert/Transfert'
@@ -119,6 +120,15 @@ const configRoutes: configRoute[] = [
     name: 'Habilitations',
     isPrivate: true,
     element: <Habilitations />
+  },
+
+  {
+    exact: true,
+    displayPortailTopBar: true,
+    path: '/console-admin/habilitation/:habilitationId/users',
+    name: 'Habilitation',
+    isPrivate: true,
+    element: <HabilitationsHistory />
   },
 
   /**
