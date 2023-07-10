@@ -1,13 +1,6 @@
 import { makeStyles } from 'tss-react/mui'
 
 const useStyles = makeStyles()(() => ({
-  buttons: {
-    backgroundColor: '#5BC5F2',
-    color: '#FFF',
-    borderRadius: 25,
-    height: 50,
-    margin: '4px 0'
-  },
   table: {
     minWidth: 650
   },
@@ -15,6 +8,11 @@ const useStyles = makeStyles()(() => ({
     height: 42,
     backgroundColor: '#D1E2F4',
     textTransform: 'uppercase'
+  },
+  loadingSpinnerContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   tableHeadCell: {
     fontSize: 11,
@@ -27,10 +25,17 @@ const useStyles = makeStyles()(() => ({
       backgroundColor: '#FAF9F9'
     }
   },
-  loadingSpinnerContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
+  pagination: {
+    margin: '10px 0',
+    float: 'right',
+    '& button': {
+      backgroundColor: '#fff',
+      color: '#5BC5F2'
+    },
+    '& .MuiPaginationItem-page.Mui-selected': {
+      color: '#0063AF',
+      backgroundColor: '#FFF'
+    }
   }
 }))
 

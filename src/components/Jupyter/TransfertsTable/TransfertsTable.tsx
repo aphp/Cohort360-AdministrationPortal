@@ -31,7 +31,7 @@ const defaultFilters: ExportFilters = {
 }
 
 const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const [loading, setLoading] = useState(true)
   const [exportsList, setExportsList] = useState<Export[]>([])
@@ -95,11 +95,11 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
   const createWorkingEnvironmentUserRights =
     userRights.right_manage_env_unix_users && userRights.right_manage_env_user_links
 
-  const _getExportsList = async () => {
+  const _getExportsList = async (_page: number) => {
     try {
       setLoading(true)
 
-      const exportsList = await getExportsList(page, rowsPerPage, order, filters, debouncedSearchTerm)
+      const exportsList = await getExportsList(_page, rowsPerPage, order, filters, debouncedSearchTerm)
 
       setExportsList(exportsList.list)
       setTotal(exportsList?.total)
@@ -148,20 +148,21 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
     }
   }
 
+  const onChangePage = (value: number) => {
+    setPage(value)
+    _getExportsList(value)
+  }
+
   useEffect(() => {
-    if (page !== 1) {
+    setPage(1)
+    _getExportsList(1)
+  }, [debouncedSearchTerm, order, filters])
+
+  useEffect(() => {
+    if (addTransfertRequestSuccess) {
       setPage(1)
-    } else {
-      _getExportsList()
+      _getExportsList(1)
     }
-  }, [debouncedSearchTerm])
-
-  useEffect(() => {
-    _getExportsList()
-  }, [page, order, filters])
-
-  useEffect(() => {
-    if (addTransfertRequestSuccess) _getExportsList()
   }, [addTransfertRequestSuccess])
 
   return (
@@ -243,7 +244,7 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
         order={order}
         setOrder={setOrder}
         page={page}
-        setPage={setPage}
+        onChangePage={onChangePage}
         rowsPerPage={rowsPerPage}
         total={total}
       >

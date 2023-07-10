@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import {
   Button,
@@ -17,6 +18,7 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 // import DeleteIcon from "@mui/icons-material/Delete"
 import VisibilityIcon from '@mui/icons-material/Visibility'
+import PeopleIcon from '@mui/icons-material/People'
 
 import useStyles from './styles'
 import { Column, Order, Role, UserRole } from 'types'
@@ -39,7 +41,8 @@ type RolesTableProps = {
 }
 
 const RolesTable: React.FC<RolesTableProps> = ({ userRights }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
+  const navigate = useNavigate()
 
   const columns: Column[] = [
     {
@@ -140,6 +143,15 @@ const RolesTable: React.FC<RolesTableProps> = ({ userRights }) => {
                 <TableRow key={role.role_id} className={classes.tableBodyRows} hover>
                   <TableCell align="left">{role.name}</TableCell>
                   <TableCell align="right">
+                    <Tooltip title="Afficher les utilisateurs">
+                      <IconButton
+                        onClick={() => {
+                          navigate(`/console-admin/habilitation/${role.role_id}/users`)
+                        }}
+                      >
+                        <PeopleIcon />
+                      </IconButton>
+                    </Tooltip>
                     <Tooltip title="Visualiser l'habilitation">
                       <IconButton
                         onClick={(event) => {

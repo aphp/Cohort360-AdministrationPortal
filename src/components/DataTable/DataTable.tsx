@@ -22,6 +22,7 @@ type DataTableProps = {
   setOrder?: (order: Order) => void
   page?: number
   setPage?: (page: number) => void
+  onChangePage?: (value: number) => void
   rowsPerPage?: number
   total?: number
   children: ReactNode
@@ -33,11 +34,12 @@ const DataTable: React.FC<DataTableProps> = ({
   setOrder,
   page,
   setPage,
+  onChangePage,
   rowsPerPage,
   total,
   ...props
 }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const createSortHandler = (property: any) => () => {
     if (setOrder) {
@@ -87,7 +89,7 @@ const DataTable: React.FC<DataTableProps> = ({
           className={classes.pagination}
           count={Math.ceil((total ?? 0) / (rowsPerPage ?? 100))}
           shape="circular"
-          onChange={(event, page: number) => setPage && setPage(page)}
+          onChange={(event, page: number) => (onChangePage ? onChangePage(page) : setPage && setPage(page))}
           page={page}
         />
       )}

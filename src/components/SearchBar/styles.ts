@@ -1,6 +1,6 @@
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()((theme) => ({
   searchBar: {
     width: 250,
     backgroundColor: '#FFF',

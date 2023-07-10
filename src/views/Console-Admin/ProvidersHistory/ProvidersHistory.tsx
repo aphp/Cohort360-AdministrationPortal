@@ -11,7 +11,7 @@ import { getUserRights, userDefaultRoles } from 'utils/userRoles'
 import { getRoles } from 'services/Console-Admin/rolesService'
 
 const ProviderHistory: React.FC = () => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const [loading, setLoading] = useState(true)
   const [provider, setProvider] = useState<Provider | undefined>()

@@ -1,6 +1,6 @@
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from 'tss-react/mui'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   jsonDisplay: {
     maxHeight: 100,
     backgroundColor: '#F5F2F1',

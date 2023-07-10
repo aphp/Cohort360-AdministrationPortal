@@ -11,7 +11,7 @@ import { ScopeTreeRow } from 'types'
 import { getUserRights, userDefaultRoles } from 'utils/userRoles'
 
 const Perimeters: React.FC = () => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const navigate = useNavigate()
   const [userRights, setUserRights] = useState(userDefaultRoles)
 

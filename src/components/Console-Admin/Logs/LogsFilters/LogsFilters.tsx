@@ -54,7 +54,7 @@ const httpMethods = ['DELETE', 'GET', 'PATCH', 'PUT', 'POST']
 const statusCodes = ['200', '201', '204', '400', '401', '403', '404', '500']
 
 const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onClose, userRights }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
 
   const formattedPerimeter = filters.perimeter.perimeterId
     ? {

@@ -5,13 +5,14 @@ const api = axios.create({
   baseURL: BACK_API_URL,
   headers: {
     Accept: 'application/json',
+    authorizationMethod: 'JWT',
     'Access-Control-Allow-Origin': '*'
   }
 })
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem(ACCESS_TOKEN)
-  if (config && config.headers && config.headers.Authorization) {
+  if (config && config.headers) {
     config.headers.Authorization = `Bearer ${token}`
   }
   return config

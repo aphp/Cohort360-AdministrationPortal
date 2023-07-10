@@ -27,7 +27,7 @@ type ProvidersTableProps = {
 const orderDefault = { orderBy: 'lastname', orderDirection: 'asc' } as Order
 
 const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
-  const classes = useStyles()
+  const { classes } = useStyles()
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const {
@@ -83,29 +83,30 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
   const rowsPerPage = 20
 
   useEffect(() => {
-    if (page !== 1) {
+    setPage(1)
+    getData(1)
+  }, [debouncedSearchTerm, order])
+
+  useEffect(() => {
+    if (addProviderSuccess || editProviderSuccess) {
       setPage(1)
-    } else {
-      getData()
+      getData(1)
     }
-  }, [debouncedSearchTerm])
-
-  useEffect(() => {
-    getData()
-  }, [order, page]) // eslint-disable-line
-
-  useEffect(() => {
-    if (addProviderSuccess || editProviderSuccess) getData()
   }, [addProviderSuccess, editProviderSuccess])
 
-  const getData = async () => {
+  const getData = async (_page: number) => {
     try {
       if (loading) return
 
-      dispatch<any>(fetchProviders({ page, searchInput, order }))
+      dispatch<any>(fetchProviders({ page: _page, searchInput, order }))
     } catch (error) {
       console.error('Erreur lors de la récupération des providers', error)
     }
+  }
+
+  const onChangePage = (value: number) => {
+    setPage(value)
+    getData(value)
   }
 
   return (
@@ -137,7 +138,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
         order={order}
         setOrder={setOrder}
         page={page}
-        setPage={setPage}
+        onChangePage={onChangePage}
         rowsPerPage={rowsPerPage}
         total={total}
       >

@@ -1,8 +1,10 @@
-import makeStyles from '@mui/styles/makeStyles'
+import { makeStyles } from 'tss-react/mui'
 
-export default makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   item: {
     width: '100vw',
     maxWidth: 500
   }
 }))
+
+export default useStyles
