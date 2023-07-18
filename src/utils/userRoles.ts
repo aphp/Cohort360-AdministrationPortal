@@ -30,7 +30,8 @@ export const userDefaultRoles: UserRole = {
   right_export_csv_pseudo_anonymised: false,
   right_read_env_unix_users: false,
   right_manage_env_unix_users: false,
-  right_manage_env_user_links: false
+  right_manage_env_user_links: false,
+  right_read_opposing_patient: false
 }
 
 export const getMyAccesses = async () => {
@@ -144,6 +145,9 @@ export const getUserRights = async (data?: Access[]) => {
             _userRights.right_manage_env_unix_users = true
           }
           if (access.role.right_manage_env_user_links) {
+            _userRights.right_manage_env_user_links = true
+          }
+          if (access.role.right_read_opposing_patient) {
             _userRights.right_manage_env_user_links = true
           }
         }

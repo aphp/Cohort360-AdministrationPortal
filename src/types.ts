@@ -159,6 +159,7 @@ export type UserRole = {
   right_read_env_unix_users: boolean | null
   right_manage_env_unix_users: boolean | null
   right_manage_env_user_links: boolean | null
+  right_read_opposing_patient: boolean | null
 }
 
 export type Role = UserRole & {
@@ -202,6 +203,7 @@ export type RoleKeys =
   | 'right_read_env_unix_users'
   | 'right_manage_env_unix_users'
   | 'right_manage_env_user_links'
+  | 'right_read_opposing_patient'
 
 // Access
 

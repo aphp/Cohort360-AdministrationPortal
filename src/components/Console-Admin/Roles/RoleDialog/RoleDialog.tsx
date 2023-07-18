@@ -211,6 +211,11 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
       label: 'Gérer les accès des utilisateurs aux environnements de travail',
       status: role?.right_manage_env_user_links,
       keyName: 'right_manage_env_user_links'
+    },
+    {
+      label: "Détermine le droit de lecture des patients opposés à l'utilisation de leur données pour la recherche",
+      status: role?.right_read_opposing_patient,
+      keyName: 'right_read_opposing_patient'
     }
   ]
 
@@ -264,7 +269,8 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
         right_export_csv_pseudo_anonymised: role?.right_export_csv_pseudo_anonymised ?? false,
         right_read_env_unix_users: role?.right_read_env_unix_users ?? false,
         right_manage_env_unix_users: role?.right_manage_env_unix_users ?? false,
-        right_manage_env_user_links: role?.right_manage_env_user_links ?? false
+        right_manage_env_user_links: role?.right_manage_env_user_links ?? false,
+        right_read_opposing_patient: role?.right_read_opposing_patient ?? false
       }
 
       if (isEditable) {
