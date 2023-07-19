@@ -5,7 +5,7 @@ export const getProviderCohorts = async (provider_source_value?: string) => {
     return []
   }
 
-  const cohortsResp = await api.get(`/exports/cohorts/?owner_id=${provider_source_value}`)
+  const cohortsResp = await api.get(`/exports/cohorts/?limit=1000&owner_id=${provider_source_value}`)
 
   if (cohortsResp.status !== 200) {
     return []
