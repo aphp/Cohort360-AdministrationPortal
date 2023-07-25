@@ -35,7 +35,7 @@ const Transfert: React.FC = () => {
   return (
     <Grid container direction="column">
       <Grid container justifyContent="center">
-        <Grid container item xs={12} md={9}>
+        <Grid container item xs={12} md={10}>
           <Typography variant="h1" className={classes.title} align="center">
             Liste des demandes de transfert
           </Typography>

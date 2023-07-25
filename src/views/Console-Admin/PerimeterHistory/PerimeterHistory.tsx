@@ -112,7 +112,7 @@ const PerimeterHistory: React.FC = () => {
         {loadingPage ? (
           <CircularProgress className={classes.loading} />
         ) : (
-          <Grid container item xs={12} sm={9}>
+          <Grid container item xs={12} sm={10}>
             <Typography variant="h1" align="center" className={classes.title}>
               Périmètre {perimeterName}
             </Typography>

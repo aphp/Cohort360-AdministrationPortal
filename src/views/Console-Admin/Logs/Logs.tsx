@@ -117,7 +117,7 @@ const Logs: React.FC = () => {
     <>
       <Grid container direction="column">
         <Grid container justifyContent="center">
-          <Grid container item xs={12} sm={9} justifyContent="flex-end">
+          <Grid container item xs={12} sm={10} justifyContent="flex-end">
             <Typography variant="h1" align="center" className={classes.title}>
               Liste des logs
             </Typography>

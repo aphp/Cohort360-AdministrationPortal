@@ -77,7 +77,7 @@ const ProviderHistory: React.FC = () => {
         {loading ? (
           <CircularProgress className={classes.loading} />
         ) : (
-          <Grid container item xs={12} sm={9}>
+          <Grid container item xs={12} sm={10}>
             <Typography variant="h1" align="center" className={classes.title}>
               {provider?.lastname?.toLocaleUpperCase()} {provider?.firstname} - id APH :{' '}
               {provider?.provider_source_value}

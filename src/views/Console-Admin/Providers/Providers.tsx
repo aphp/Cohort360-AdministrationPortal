@@ -33,7 +33,7 @@ const ProfilesView: React.FC = () => {
   return (
     <Grid id="main-grid-providers" container direction="column">
       <Grid container justifyContent="center">
-        <Grid container item xs={12} sm={9}>
+        <Grid container item xs={12} sm={10}>
           <Typography variant="h1" align="center" className={classes.title}>
             Liste des utilisateurs
           </Typography>
