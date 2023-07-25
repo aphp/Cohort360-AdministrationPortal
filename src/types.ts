@@ -226,6 +226,7 @@ export type Access = {
   care_site_id: number
   entity_id: number
   role_id: number
+  updated_by: string
 }
 
 export type AccessData = {
@@ -309,7 +310,6 @@ export type Habilitation = {
   start_datetime: string
   end_datetime: string
 }
-
 
 // --JUPYTER--
 

@@ -114,6 +114,18 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
       sortableColumn: true
     },
     {
+      label: 'Attribué par',
+      code: 'created_by',
+      align: 'center',
+      sortableColumn: true
+    },
+    {
+      label: 'Modifié par',
+      code: 'updated_by',
+      align: 'center',
+      sortableColumn: true
+    },
+    {
       label: 'Actif',
       code: 'is_valid',
       align: 'center',
@@ -226,6 +238,8 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
                 <TableCell align="center">
                   {access.actual_end_datetime ? moment(access.actual_end_datetime).format('DD/MM/YYYY') : '-'}
                 </TableCell>
+                <TableCell align="center">{access.created_by}</TableCell>
+                <TableCell align="center">{access.updated_by}</TableCell>
                 <TableCell align="center">
                   <Tooltip title={access.is_valid ? 'Accès actif' : 'Accès inactif'}>
                     {access.is_valid ? (
