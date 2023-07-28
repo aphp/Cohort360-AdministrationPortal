@@ -8,12 +8,6 @@ const exportTable: ExportTableType[] = [
     nominative: false
   },
   {
-    id: 'observation',
-    table_name: 'Patient - Données démographiques',
-    table_id: 'observation',
-    nominative: true
-  },
-  {
     id: 'iris',
     table_name: 'Patient - Données géographiques',
     table_id: 'iris',
