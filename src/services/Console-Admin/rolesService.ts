@@ -2,7 +2,7 @@ import api from '../api'
 import { Order, Role } from '../../types'
 
 export const getRoles = async () => {
-  const rolesResp = await api.get(`/accesses/roles/?ordering=name`)
+  const rolesResp = await api.get(`/accesses/roles/?ordering=name&limit=50`)
 
   if (rolesResp.status !== 200) {
     return undefined
