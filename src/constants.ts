@@ -8,3 +8,6 @@ export const SESSION_TIMEOUT = import.meta.env.VITE_SESSION_TIMEOUT
 export const REFRESH_TOKEN_INTERVAL = import.meta.env.VITE_REFRESH_TOKEN_INTERVAL
   ? import.meta.env.VITE_REFRESH_TOKEN_INTERVAL
   : 180000 /* 3 * 60 * 1000 ms*/
+
+export const USERNAME_REGEX = import.meta.env.DEV ? import.meta.env.VITE_USERNAME_REGEX : '{VITE_USERNAME_REGEX}'
+

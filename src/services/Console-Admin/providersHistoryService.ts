@@ -13,17 +13,17 @@ export const getProfile = async (providerSourceValue?: string) => {
   return profileResp.data.results.sort((a: Profile, b: any) => a.cdm_source?.localeCompare(b.cdm_source)) ?? undefined
 }
 
-export const checkProfile = async (providerSourceValue?: string) => {
+export const checkProfile = async (username?: string) => {
   try {
-    if (!providerSourceValue) return null
+    if (!username) return null
 
-    const resCheckProfiles = await api.post(`/accesses/profiles/check/`, {
-      provider_source_value: providerSourceValue
+    const response = await api.post(`/accesses/profiles/check/`, {
+      username: username
     })
 
-    return resCheckProfiles.data ?? null
+    return response.data ?? null
   } catch (error) {
-    console.error('Erreur lors de la recherche du provider', error)
+    console.error('Erreur lors de la vérification du profil', error)
     return
   }
 }

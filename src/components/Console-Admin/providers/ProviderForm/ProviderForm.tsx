@@ -24,6 +24,7 @@ import {
 } from 'services/Console-Admin/providersHistoryService'
 import { CheckProfile, Profile, Provider } from 'types'
 import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
+import {USERNAME_REGEX} from '../../../../constants'
 
 type ProviderFormProps = {
   open: boolean
@@ -134,17 +135,16 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
       }
     }
 
-    if (!isEdition && debouncedSearchTerm && debouncedSearchTerm.length >= 5) {
+    if (!isEdition && debouncedSearchTerm && debouncedSearchTerm.length >= 1) {
       _checkProfile()
     }
   }, [debouncedSearchTerm])
 
   useEffect(() => {
-    const sevenInt = /^[0-9]{3,7}$/
     const name = /^([ \u00c0-\u01ffa-zA-Z'-])+$/
     const aphpMail = /^[a-zA-Z0-9._-]+@aphp[.]fr$/
 
-    if (provider?.provider_source_value && !provider.provider_source_value.match(sevenInt)) {
+    if (provider?.provider_source_value && !provider.provider_source_value.match(USERNAME_REGEX)) {
       setProviderSourceValueError(true)
     } else {
       setProviderSourceValueError(false)
@@ -235,9 +235,8 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
                   error={providerSourceValueError}
                   helperText={
                     providerSourceValueError &&
-                    "L'identifiant APH ne doit contenir que des chiffres (entre 3 et 7 maximum)."
+                    "Le format de cet identifiant APH n'est pas valide."
                   }
-                  inputProps={{ maxlength: 7 }}
                   style={{ margin: '1em' }}
                 />
               </Grid>
