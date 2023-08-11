@@ -9,7 +9,8 @@ const useStyles = makeStyles()(() => ({
     margin: '4px 0'
   },
   table: {
-    minWidth: 650
+    minWidth: 650,
+    marginBottom: 51
   },
   tableHead: {
     height: 42,

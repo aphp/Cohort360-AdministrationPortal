@@ -112,7 +112,7 @@ const RolesTable: React.FC<RolesTableProps> = ({ userRights }) => {
   // }
 
   return (
-    <Grid container justifyContent="flex-end">
+    <Grid container justifyContent="flex-end" className={classes.table}>
       {userRights.right_edit_roles && (
         <Grid container justifyContent="flex-end" alignItems="center">
           <Button
