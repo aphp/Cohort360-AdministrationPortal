@@ -2,7 +2,7 @@ import api from '../api'
 import { Order, Role } from '../../types'
 
 export const getRoles = async () => {
-  const rolesResp = await api.get(`/accesses/roles/?ordering=name&limit=50`)
+  const rolesResp = await api.get(`/accesses/roles/?ordering=name&limit=100`)
 
   if (rolesResp.status !== 200) {
     return undefined
@@ -13,7 +13,7 @@ export const getRoles = async () => {
 export const getAssignableRoles = async (perimeterId?: string | number | null) => {
   if (!perimeterId) return undefined
 
-  const assignableRolesResp = await api.get(`/accesses/roles/assignable/?care_site_id=${perimeterId}`)
+  const assignableRolesResp = await api.get(`/accesses/roles/assignable/?care_site_id=${perimeterId}&limit=100`)
 
   if (assignableRolesResp.status !== 200) {
     return undefined
