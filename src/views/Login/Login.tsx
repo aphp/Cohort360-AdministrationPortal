@@ -88,6 +88,7 @@ const Login = () => {
           !_userRights.right_read_users &&
           !_userRights.right_manage_admin_accesses_same_level &&
           !_userRights.right_read_admin_accesses_same_level &&
+          !_userRights.right_read_admin_accesses_above_levels &&
           !_userRights.right_manage_admin_accesses_inferior_levels &&
           !_userRights.right_read_admin_accesses_inferior_levels &&
           !_userRights.right_manage_data_accesses_same_level &&

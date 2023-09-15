@@ -40,6 +40,7 @@ const PortailTopBar: React.FC = () => {
       pathname: '/console-admin/perimeters',
       rightsToSee:
         userRights.right_read_admin_accesses_same_level ||
+        userRights.right_read_admin_accesses_above_levels ||
         userRights.right_read_admin_accesses_inferior_levels ||
         userRights.right_read_data_accesses_same_level ||
         userRights.right_read_data_accesses_inferior_levels

@@ -59,6 +59,19 @@ export type CareSite = {
   care_site_type_source_value?: string
   parents_ids?: number[]
   children?: CareSite[]
+  count_allowed_users?: number
+  count_allowed_users_inferior_levels?: number
+  count_allowed_users_above_levels?: number
+  cohort_size: string
+}
+
+export enum CareSiteOrder {
+  NAME = 'name',
+  TYPE = 'type',
+  COHORT_SIZE = 'cohort_size',
+  COUNT_ALLOWED_USERS = 'count_allowed_users',
+  COUNT_ALLOWED_USERS_INFERIOR_LEVELS = 'count_allowed_users_inferior_levels',
+  COUNT_ALLOWED_USERS_ABOVE_LEVELS = 'count_allowed_users_above_levels'
 }
 
 export type Perimeter = {
@@ -80,6 +93,9 @@ export type ScopeTreeRow = {
   cohort_size: string
   children: ScopeTreeRow[]
   full_path?: string
+  count_allowed_users?: number
+  count_allowed_users_inferior_levels?: number
+  count_allowed_users_above_levels?: number
 }
 
 // Profile
@@ -137,6 +153,7 @@ export type UserRole = {
   right_read_users: boolean | null
   right_manage_admin_accesses_same_level: boolean | null
   right_read_admin_accesses_same_level: boolean | null
+  right_read_admin_accesses_above_levels: boolean | null
   right_manage_admin_accesses_inferior_levels: boolean | null
   right_read_admin_accesses_inferior_levels: boolean | null
   right_manage_data_accesses_same_level: boolean | null
@@ -181,6 +198,7 @@ export type RoleKeys =
   | 'right_read_users'
   | 'right_manage_admin_accesses_same_level'
   | 'right_read_admin_accesses_same_level'
+  | 'right_read_admin_accesses_above_levels'
   | 'right_manage_admin_accesses_inferior_levels'
   | 'right_read_admin_accesses_inferior_levels'
   | 'right_manage_data_accesses_same_level'

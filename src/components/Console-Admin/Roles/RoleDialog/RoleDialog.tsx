@@ -102,6 +102,11 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
       keyName: 'right_manage_admin_accesses_same_level'
     },
     {
+      label: 'Consulter la liste des accès administrateur des périmètres parents exclusivement',
+      status: role?.right_read_admin_accesses_above_levels,
+      keyName: 'right_read_admin_accesses_above_levels'
+    },
+    {
       label: 'Consulter la liste des accès administrateur des sous-périmètres exclusivement',
       status: role?.right_read_admin_accesses_inferior_levels,
       keyName: 'right_read_admin_accesses_inferior_levels'
@@ -248,6 +253,7 @@ const RoleDialog: React.FC<RoleDialogProps> = ({
         right_read_users: role?.right_read_users ?? false,
         right_read_admin_accesses_same_level: role?.right_read_admin_accesses_same_level ?? false,
         right_manage_admin_accesses_same_level: role?.right_manage_admin_accesses_same_level ?? false,
+        right_read_admin_accesses_above_levels: role?.right_read_admin_accesses_above_levels ?? false,
         right_read_admin_accesses_inferior_levels: role?.right_read_admin_accesses_inferior_levels ?? false,
         right_manage_admin_accesses_inferior_levels: role?.right_manage_admin_accesses_inferior_levels ?? false,
         right_read_data_accesses_same_level: role?.right_read_data_accesses_same_level ?? false,

@@ -85,7 +85,6 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profile, userRights
       </Grid>
 
       <AccessesTable
-        displayName={false}
         loading={loading}
         page={page}
         setPage={setPage}

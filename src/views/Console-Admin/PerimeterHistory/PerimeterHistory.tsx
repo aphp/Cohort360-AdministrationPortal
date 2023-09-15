@@ -1,25 +1,69 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { Alert, CircularProgress, Grid, Typography } from '@mui/material'
+import { Alert, Card, CardContent, CircularProgress, Grid, Tooltip, Typography } from '@mui/material'
+import InfoIcon from '@mui/icons-material/Info'
 
-import useStyles from './styles'
 import { getPerimeter, getPerimeterAccesses } from 'services/Console-Admin/perimetersService'
 import AccessesTable from 'components/Console-Admin/Accesses/AccessesTable/AccessesTable'
 import SearchBar from 'components/SearchBar/SearchBar'
 import { getUserRights, userDefaultRoles } from 'utils/userRoles'
 import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
 import { getRoles } from 'services/Console-Admin/rolesService'
-import { Access, Order, Role } from 'types'
+import { Access, CareSite, Order, Role } from 'types'
+
+import useStyles from './styles'
 
 const orderDefault = { orderBy: 'is_valid', orderDirection: 'asc' } as Order
+
+export const getPerimeterData = (perimeterInfos?: CareSite) => {
+  return [
+    {
+      title: 'Nb de patients',
+      number: perimeterInfos?.cohort_size ?? '-'
+    },
+    {
+      title: (
+        <>
+          Nb utilisateurs
+          <Tooltip title="Estimation du nombre d'utilisateurs ayant un accès à un périmètre exactement">
+            <InfoIcon color="action" fontSize="small" style={{ marginLeft: 4 }} />
+          </Tooltip>
+        </>
+      ),
+      number: perimeterInfos?.count_allowed_users ?? '-'
+    },
+    {
+      title: (
+        <>
+          Nb utilisateurs (inf)
+          <Tooltip title="Estimation du nombre d'utilisateurs ayant un accès à ce périmètre et/ou au moins un de ses sous périmètres">
+            <InfoIcon color="action" fontSize="small" style={{ marginLeft: 4 }} />
+          </Tooltip>
+        </>
+      ),
+      number: perimeterInfos?.count_allowed_users_inferior_levels ?? '-'
+    },
+    {
+      title: (
+        <>
+          Nb utilisateurs (sup)
+          <Tooltip title="Estimation des utilisateurs ayant accès à ce périmètre et/ou au moins un périmètre au-dessus (parent)">
+            <InfoIcon color="action" fontSize="small" style={{ marginLeft: 4 }} />
+          </Tooltip>
+        </>
+      ),
+      number: perimeterInfos?.count_allowed_users_above_levels ?? '-'
+    }
+  ]
+}
 
 const PerimeterHistory: React.FC = () => {
   const { classes } = useStyles()
 
   const [loadingPage, setLoadingPage] = useState(false)
   const [loadingData, setLoadingData] = useState(true)
-  const [perimeterName, setPerimeterName] = useState<string | undefined>()
+  const [perimeterInfos, setPerimeterInfos] = useState<CareSite | undefined>()
   const [perimeterAccesses, setPerimeterAccesses] = useState<Access[] | undefined>([])
   const [userRights, setUserRights] = useState(userDefaultRoles)
   const [searchInput, setSearchInput] = useState('')
@@ -33,6 +77,8 @@ const PerimeterHistory: React.FC = () => {
   const { perimeterId } = useParams<{ perimeterId: string }>()
 
   const _perimeterId = perimeterId ? perimeterId : ''
+
+  const perimeterData = getPerimeterData(perimeterInfos)
 
   const _getPerimeterAccesses = async () => {
     try {
@@ -53,12 +99,12 @@ const PerimeterHistory: React.FC = () => {
     }
   }
 
-  const _getPerimeterName = async () => {
+  const _getPerimeterInfos = async () => {
     try {
       setLoadingPage(true)
 
       const perimeterResp = await getPerimeter(_perimeterId)
-      setPerimeterName(perimeterResp ?? 'Inconnu')
+      setPerimeterInfos(perimeterResp)
 
       setLoadingPage(false)
     } catch (error) {
@@ -99,7 +145,7 @@ const PerimeterHistory: React.FC = () => {
     }
 
     _getUserRights()
-    _getPerimeterName()
+    _getPerimeterInfos()
   }, [perimeterId]) // eslint-disable-line
 
   useEffect(() => {
@@ -114,15 +160,45 @@ const PerimeterHistory: React.FC = () => {
         ) : (
           <Grid container item xs={12} sm={10}>
             <Typography variant="h1" align="center" className={classes.title}>
-              Périmètre {perimeterName}
+              Périmètre {perimeterInfos?.care_site_source_value ? `${perimeterInfos?.care_site_source_value} - ` : ''}
+              {perimeterInfos?.care_site_name ?? 'Inconnu'}
             </Typography>
+
+            <Grid container justifyContent="space-between">
+              {perimeterData.map((data) => (
+                <Card sx={{ minWidth: 275, boxShadow: 0, borderRadius: 2 }}>
+                  <CardContent style={{ paddingBottom: 16 }}>
+                    <Typography
+                      sx={{
+                        fontSize: 10,
+                        color: '#1069A1',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontFamily: "'Open Sans', sans-serif",
+                        textTransform: 'uppercase',
+                        height: 25
+                      }}
+                      variant="h1"
+                      gutterBottom
+                    >
+                      {data.title}
+                    </Typography>
+                    <Typography variant="h4" sx={{ color: '#9FDDE8' }} textAlign={'center'}>
+                      {data.number}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              ))}
+            </Grid>
+
             {perimeterAccesses ? (
               <>
                 <Grid container item justifyContent="flex-end" alignItems="center" className={classes.searchBar}>
                   <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
                 </Grid>
                 <AccessesTable
-                  displayName={true}
+                  displayName
                   loading={loadingData}
                   page={page}
                   setPage={setPage}
@@ -136,7 +212,7 @@ const PerimeterHistory: React.FC = () => {
                 />
               </>
             ) : (
-              <Alert severity="error" style={{ width: '100%' }}>
+              <Alert severity="error" style={{ width: '100%', margin: '12px 0' }}>
                 Erreur lors de la récupération des accès de ce périmètre, veuillez réessayer ultérieurement ou vérifier
                 vos habilitations.
               </Alert>

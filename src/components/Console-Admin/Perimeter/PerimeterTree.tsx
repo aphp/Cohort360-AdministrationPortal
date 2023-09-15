@@ -15,6 +15,7 @@ import {
 } from '@mui/material'
 
 import AssignmentIcon from '@mui/icons-material/Assignment'
+import InfoIcon from '@mui/icons-material/Info'
 import KeyboardArrowRightIcon from '@mui/icons-material/ChevronRight'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 
@@ -27,7 +28,7 @@ import {
   getManageablePerimeters,
   getPerimeters
 } from 'services/Console-Admin/perimetersService'
-import { ScopeTreeRow, UserRole } from 'types'
+import { CareSiteOrder, ScopeTreeRow, UserRole } from 'types'
 import { useAppSelector } from 'state'
 
 import useStyles from './styles'
@@ -39,6 +40,103 @@ type ScopeTreeProps = {
   onChangeSelectedItem: (selectedItems: ScopeTreeRow) => void
   searchInput?: string
   userRights: UserRole
+}
+
+const getHeadCells = (searchInput?: string, isManageable?: boolean) => {
+  return [
+    ...(!searchInput
+      ? [
+          {
+            id: '',
+            align: 'left',
+            disablePadding: true,
+            disableOrderBy: true,
+            label: ''
+          }
+        ]
+      : []),
+    {
+      id: '',
+      align: 'left',
+      disablePadding: true,
+      disableOrderBy: true,
+      label: ''
+    },
+    {
+      id: CareSiteOrder.NAME,
+      align: 'left',
+      disablePadding: false,
+      disableOrderBy: true,
+      label: 'Nom'
+    },
+    {
+      id: CareSiteOrder.TYPE,
+      align: 'center',
+      disablePadding: true,
+      disableOrderBy: true,
+      label: 'Type'
+    },
+    {
+      id: CareSiteOrder.COHORT_SIZE,
+      align: 'center',
+      disablePadding: true,
+      disableOrderBy: true,
+      label: 'Nb de patients'
+    },
+    ...(!isManageable
+      ? [
+          {
+            id: CareSiteOrder.COUNT_ALLOWED_USERS,
+            align: 'center',
+            disablePadding: true,
+            disableOrderBy: true,
+            label: (
+              <>
+                Nb utilisateurs
+                <Tooltip title="Estimation du nombre d'utilisateurs ayant un accès à un périmètre exactement">
+                  <InfoIcon color="action" fontSize="small" style={{ marginLeft: 4 }} />
+                </Tooltip>
+              </>
+            )
+          },
+          {
+            id: CareSiteOrder.COUNT_ALLOWED_USERS_INFERIOR_LEVELS,
+            align: 'center',
+            disablePadding: true,
+            disableOrderBy: true,
+            label: (
+              <>
+                Nb utilisateurs (inf)
+                <Tooltip title="Estimation du nombre d'utilisateurs ayant un accès à ce périmètre et/ou au moins un de ses sous périmètres">
+                  <InfoIcon color="action" fontSize="small" style={{ marginLeft: 4 }} />
+                </Tooltip>
+              </>
+            )
+          },
+          {
+            id: CareSiteOrder.COUNT_ALLOWED_USERS_ABOVE_LEVELS,
+            align: 'center',
+            disablePadding: true,
+            disableOrderBy: true,
+            label: (
+              <>
+                Nb utilisateurs (sup)
+                <Tooltip title="Estimation des utilisateurs ayant accès à ce périmètre et/ou au moins un périmètre au-dessus (parent)">
+                  <InfoIcon color="action" fontSize="small" style={{ marginLeft: 4 }} />
+                </Tooltip>
+              </>
+            )
+          }
+        ]
+      : []),
+    {
+      id: '',
+      align: 'center',
+      disablePadding: true,
+      disableOrderBy: true,
+      label: ''
+    }
+  ]
 }
 
 const ScopeTree: React.FC<ScopeTreeProps> = ({
@@ -134,54 +232,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
     onChangeSelectedItem(row)
   }
 
-  const searchModeHeadCells = [
-    {
-      id: '',
-      align: 'left',
-      disablePadding: true,
-      disableOrderBy: true,
-      label: ''
-    },
-    {
-      id: 'name',
-      align: 'left',
-      disablePadding: false,
-      disableOrderBy: true,
-      label: 'Nom'
-    },
-    {
-      id: 'type',
-      align: 'center',
-      disablePadding: true,
-      disableOrderBy: true,
-      label: 'Type'
-    },
-    {
-      id: 'cohort_size',
-      align: 'center',
-      disablePadding: true,
-      disableOrderBy: true,
-      label: 'Nombre de patient'
-    },
-    {
-      id: '',
-      align: 'center',
-      disablePadding: true,
-      disableOrderBy: true,
-      label: ''
-    }
-  ]
-
-  const headCells = [
-    {
-      id: '',
-      align: 'left',
-      disablePadding: true,
-      disableOrderBy: true,
-      label: ''
-    },
-    ...searchModeHeadCells
-  ]
+  const headCells = getHeadCells(searchInput, isManageable)
 
   return (
     <div className={classes.container}>
@@ -190,12 +241,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
           <CircularProgress size={40} />
         </Grid>
       ) : (
-        <EnhancedTable
-          noCheckbox
-          noPagination
-          rows={rootRows}
-          headCells={searchInput ? searchModeHeadCells : headCells}
-        >
+        <EnhancedTable noCheckbox noPagination rows={rootRows} headCells={headCells}>
           {(row: ScopeTreeRow, index: number) => {
             if (!row) return <></>
             const labelId = `enhanced-table-checkbox-${index}`
@@ -272,8 +318,24 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                       </TableCell>
 
                       <TableCell align="center">
-                        <Typography>{_row.cohort_size}</Typography>
+                        <Typography>{_row.cohort_size ?? 0}</Typography>
                       </TableCell>
+
+                      {!isManageable && (
+                        <>
+                          <TableCell align="center">
+                            <Typography>{_row.count_allowed_users ?? 0}</Typography>
+                          </TableCell>
+
+                          <TableCell align="center">
+                            <Typography>{_row.count_allowed_users_inferior_levels ?? 0}</Typography>
+                          </TableCell>
+
+                          <TableCell align="center">
+                            <Typography>{_row.count_allowed_users_above_levels ?? 0}</Typography>
+                          </TableCell>
+                        </>
+                      )}
 
                       <TableCell align="right">
                         {userRights.right_read_logs && (

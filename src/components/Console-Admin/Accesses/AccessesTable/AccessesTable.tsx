@@ -33,7 +33,7 @@ import DataTable from 'components/DataTable/DataTable'
 import CommonSnackbar from 'components/Snackbar/Snackbar'
 
 type AccessesTableProps = {
-  displayName: boolean
+  displayName?: boolean
   loading: boolean
   page: number
   setPage: (page: number) => void

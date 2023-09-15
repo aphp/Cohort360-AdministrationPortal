@@ -11,7 +11,7 @@ type PerimetersDialogProps = {
   onChangePerimeter: (perimeter: ScopeTreeRow | null) => void
   open: boolean
   onClose: () => void
-  isManageable: boolean
+  isManageable?: boolean
   userRights: UserRole
 }
 

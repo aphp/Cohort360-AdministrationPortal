@@ -56,7 +56,7 @@ const statusCodes = ['200', '201', '204', '400', '401', '403', '404', '500']
 const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onClose, userRights }) => {
   const { classes } = useStyles()
 
-  const formattedPerimeter = filters.perimeter.perimeterId
+  const formattedPerimeter: ScopeTreeRow | null = filters.perimeter.perimeterId
     ? {
         id: filters.perimeter.perimeterId ?? '',
         name: filters.perimeter.perimeterName ?? '',
@@ -255,7 +255,6 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
         onChangePerimeter={setSelectedPerimeter}
         open={openPerimeters}
         onClose={() => setOpenPerimeters(false)}
-        isManageable={false}
         userRights={userRights}
       />
     </Dialog>

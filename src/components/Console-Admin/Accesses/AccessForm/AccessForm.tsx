@@ -337,7 +337,7 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
         onChangePerimeter={setAccessPerimeter}
         open={openPerimeters}
         onClose={() => setOpenPerimeters(false)}
-        isManageable={true}
+        isManageable
         userRights={userRights}
       />
     </Dialog>

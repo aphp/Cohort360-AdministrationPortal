@@ -42,7 +42,7 @@ const AppNavigation = () => (
           />
         )
       })}
-      <Route path="*" element={<Layout displayPortailTopBar={true}>404 not found</Layout>} />
+      <Route path="*" element={<Layout displayPortailTopBar>404 not found</Layout>} />
     </Routes>
   </Router>
 )

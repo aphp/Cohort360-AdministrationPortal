@@ -1,5 +1,5 @@
 import api from '../api'
-import { Order, Perimeter, ScopeTreeRow } from 'types'
+import { CareSite, Order, Perimeter, ScopeTreeRow } from 'types'
 
 const loadingItem: ScopeTreeRow = {
   id: 'loading',
@@ -125,9 +125,9 @@ export const getPerimeterAccesses = async (perimeterId: string, order: Order, pa
 
   const searchFilter = searchInput ? `&search=${searchInput}` : ''
   const perimeterAccessesResp = await api.get(
-    `/accesses/accesses/?perimeter=${perimeterId}&page=${page}&ordering=${
-      _orderDirection === 'desc' ? '-' : ''
-    }${order.orderBy}${searchFilter}`
+    `/accesses/accesses/?perimeter=${perimeterId}&page=${page}&ordering=${_orderDirection === 'desc' ? '-' : ''}${
+      order.orderBy
+    }${searchFilter}`
   )
 
   if (perimeterAccessesResp.status !== 200) return undefined
@@ -138,12 +138,12 @@ export const getPerimeterAccesses = async (perimeterId: string, order: Order, pa
   }
 }
 
-export const getPerimeter = async (perimeterId: string): Promise<string | undefined> => {
+export const getPerimeter = async (perimeterId: string): Promise<CareSite | undefined> => {
   const perimeterResp = await api.get(`/accesses/perimeters/${perimeterId}/`)
 
   if (perimeterResp.status !== 200) return undefined
 
-  return `${perimeterResp.data.care_site_source_value} - ${perimeterResp.data.care_site_name}` ?? undefined
+  return perimeterResp.data ?? undefined
 }
 
 export const searchInPerimeters = async (isManageable?: boolean, searchInput?: string) => {
