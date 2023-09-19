@@ -421,5 +421,4 @@ export type ExportTableType = {
   id: string
   table_name: string
   table_id: string
-  nominative: boolean
 }

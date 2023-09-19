@@ -78,11 +78,6 @@ const TransfertForm: React.FC<TransferFormProps> = ({
   const debouncedProviderSearchTerm = useDebounce(700, providerSearchInput)
   const debouncedEnvironmentSearchTerm = useDebounce(700, environmentSearchInput)
 
-  const nominativeTables = export_table.filter((table) => table.nominative === true).map((table) => table.id)
-  const tablesList = export_table.filter((table) =>
-    transferRequest.confidentiality === 'pseudo' ? !nominativeTables.includes(table.id) : table
-  )
-
   const _onChangeValue = (
     key: 'user' | 'cohort' | 'workingEnvironment' | 'confidentiality' | 'shiftDates' | 'tables',
     value: any
@@ -90,11 +85,6 @@ const TransfertForm: React.FC<TransferFormProps> = ({
     const _transferRequest = { ...transferRequest }
     // @ts-ignore
     _transferRequest[key] = value
-    if (key === 'confidentiality') {
-      _transferRequest['tables'] = transferRequest.tables.filter((table) =>
-        _transferRequest.confidentiality === 'pseudo' ? !nominativeTables.includes(table) : table
-      )
-    }
 
     setTransferRequest(_transferRequest)
   }
@@ -228,14 +218,12 @@ const TransfertForm: React.FC<TransferFormProps> = ({
   }
 
   const handleSelectAllTables = () => {
-    const selectedTables = transferRequest.tables
-
-    if (tablesList.length === selectedTables.length) {
+    if (export_table.length === transferRequest.tables.length) {
       _onChangeValue('tables', [])
     } else {
       _onChangeValue(
         'tables',
-        tablesList.map((table) => table.table_id)
+        export_table.map((table: any) => table.table_id)
       )
     }
   }
@@ -327,9 +315,9 @@ const TransfertForm: React.FC<TransferFormProps> = ({
                 <Checkbox
                   style={{ padding: '4px 12px' }}
                   indeterminate={
-                    transferRequest.tables.length !== tablesList.length && transferRequest.tables.length > 0
+                    transferRequest.tables.length !== export_table.length && transferRequest.tables.length > 0
                   }
-                  checked={transferRequest.tables.length === tablesList.length}
+                  checked={transferRequest.tables.length === export_table.length}
                   onChange={handleSelectAllTables}
                 />
               }
@@ -338,7 +326,7 @@ const TransfertForm: React.FC<TransferFormProps> = ({
             />
 
             <List className={cx(classes.list, classes.autocomplete)} style={{ marginTop: 0 }}>
-              {tablesList.map(({ table_name, table_id }: ExportTableType) => (
+              {export_table.map(({ table_name, table_id }: ExportTableType) => (
                 <ListItem key={table_id}>
                   <ListItemText
                     disableTypography
