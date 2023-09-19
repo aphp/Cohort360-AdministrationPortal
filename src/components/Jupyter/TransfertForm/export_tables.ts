@@ -4,122 +4,97 @@ const exportTable: ExportTableType[] = [
   {
     id: 'person',
     table_name: 'Patient',
-    table_id: 'person',
-    nominative: false
+    table_id: 'person'
   },
   {
     id: 'iris',
     table_name: 'Patient - Données géographiques',
-    table_id: 'iris',
-    nominative: false
+    table_id: 'iris'
   },
   {
     id: 'drug_exposure_prescription',
     table_name: 'Patient - Médicaments - Prescription',
-    table_id: 'drug_exposure_prescription',
-    nominative: false
+    table_id: 'drug_exposure_prescription'
   },
   {
     id: 'drug_exposure_administration',
     table_name: 'Patient - Médicaments - Administration',
-    table_id: 'drug_exposure_administration',
-    nominative: false
+    table_id: 'drug_exposure_administration'
   },
   {
     id: 'measurement',
     table_name: 'Patient - Biologie',
-    table_id: 'measurement',
-    nominative: false
+    table_id: 'measurement'
   },
   {
     id: 'visit_occurrence',
     table_name: 'Prise en charge',
-    table_id: 'visit_occurrence',
-    nominative: false
+    table_id: 'visit_occurrence'
   },
   {
     id: 'visit_detail',
     table_name: 'Prise en charge - Passages ',
-    table_id: 'visit_detail',
-    nominative: false
+    table_id: 'visit_detail'
   },
   {
     id: 'cohort_definition',
     table_name: 'Cohorte - Information',
-    table_id: 'cohort_definition',
-    nominative: false
+    table_id: 'cohort_definition'
   },
   {
     id: 'condition_occurrence',
     table_name: 'Fait - PMSI - Diagnostics',
-    table_id: 'condition_occurrence',
-    nominative: false
+    table_id: 'condition_occurrence'
   },
   {
     id: 'procedure_occurrence',
     table_name: 'Fait - PMSI - Actes',
-    table_id: 'procedure_occurrence',
-    nominative: false
+    table_id: 'procedure_occurrence'
   },
   {
     id: 'cost',
     table_name: 'Fait - PMSI - GHM',
-    table_id: 'cost',
-    nominative: false
+    table_id: 'cost'
   },
   {
     id: 'note',
     table_name: 'Fait - Documents cliniques',
-    table_id: 'note',
-    nominative: true
-  },
-  {
-    id: 'note_deid',
-    table_name: 'Fait - Documents cliniques (pseudo-anonymisés)',
-    table_id: 'note_deid',
-    nominative: false
+    table_id: 'note'
   },
   {
     id: 'imaging_study',
     table_name: 'Imagerie - Étude',
-    table_id: 'imaging_study',
-    nominative: false
+    table_id: 'imaging_study'
   },
   {
     id: 'imaging_series',
     table_name: 'Imagerie - Série',
-    table_id: 'imaging_series',
-    nominative: false
+    table_id: 'imaging_series'
   },
   {
     id: 'care_site',
     table_name: 'Référentiel - Structure hospitalière',
-    table_id: 'care_site',
-    nominative: false
+    table_id: 'care_site'
   },
   {
     id: 'fact_relationship',
     table_name: 'Référentiel - Liens entre entités',
-    table_id: 'fact_relationship',
-    nominative: false
+    table_id: 'fact_relationship'
   },
   {
     id: 'concept',
     table_name: 'Référentiel - Terminologie - Concept',
-    table_id: 'concept',
-    nominative: false
+    table_id: 'concept'
   },
   {
     id: 'concept_relationship',
     table_name: 'Référentiel - Terminologie - Lien entre concepts',
-    table_id: 'concept_relationship',
-    nominative: false
+    table_id: 'concept_relationship'
   },
   {
     id: 'vocabulary',
     table_name: 'Référentiel - Terminologie - Vocabulaire et nomenclature',
-    table_id: 'vocabulary',
-    nominative: false
+    table_id: 'vocabulary'
   }
 ]
 
