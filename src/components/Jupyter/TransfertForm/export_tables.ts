@@ -12,21 +12,6 @@ const exportTable: ExportTableType[] = [
     table_id: 'iris'
   },
   {
-    id: 'drug_exposure_prescription',
-    table_name: 'Patient - Médicaments - Prescription',
-    table_id: 'drug_exposure_prescription'
-  },
-  {
-    id: 'drug_exposure_administration',
-    table_name: 'Patient - Médicaments - Administration',
-    table_id: 'drug_exposure_administration'
-  },
-  {
-    id: 'measurement',
-    table_name: 'Patient - Biologie',
-    table_id: 'measurement'
-  },
-  {
     id: 'visit_occurrence',
     table_name: 'Prise en charge',
     table_id: 'visit_occurrence'
@@ -62,13 +47,28 @@ const exportTable: ExportTableType[] = [
     table_id: 'note'
   },
   {
+    id: 'measurement',
+    table_name: 'Fait - Biologie',
+    table_id: 'measurement'
+  },
+  {
+    id: 'drug_exposure_prescription',
+    table_name: 'Fait - Médicaments - Prescription',
+    table_id: 'drug_exposure_prescription'
+  },
+  {
+    id: 'drug_exposure_administration',
+    table_name: 'Fait - Médicaments - Administration',
+    table_id: 'drug_exposure_administration'
+  },
+  {
     id: 'imaging_study',
-    table_name: 'Imagerie - Étude',
+    table_name: 'Fait - Imagerie - Étude',
     table_id: 'imaging_study'
   },
   {
     id: 'imaging_series',
-    table_name: 'Imagerie - Série',
+    table_name: 'Fait - Imagerie - Série',
     table_id: 'imaging_series'
   },
   {
