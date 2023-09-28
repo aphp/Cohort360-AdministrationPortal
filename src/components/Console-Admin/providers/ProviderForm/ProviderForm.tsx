@@ -24,7 +24,7 @@ import {
 } from 'services/Console-Admin/providersHistoryService'
 import { CheckProfile, Profile, Provider } from 'types'
 import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
-import {USERNAME_REGEX} from '../../../../constants'
+import { USERNAME_REGEX } from '../../../../constants'
 
 type ProviderFormProps = {
   open: boolean
@@ -38,7 +38,7 @@ type ProviderFormProps = {
 
 const defaultProvider: Provider = {
   provider_source_value: '',
-  firstname: '',
+  firstname: undefined,
   lastname: '',
   email: ''
 }
@@ -54,7 +54,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
 }) => {
   const { classes } = useStyles()
 
-  const [provider, setProvider] = useState<CheckProfile | null>(selectedProvider || defaultProvider)
+  const [provider, setProvider] = useState<CheckProfile | null>(selectedProvider || null)
   const [providerHistoryId, setProviderHistoryId] = useState('')
   const [loadingProviderData, setLoadingProviderData] = useState(false)
   const [loadingOnValidate, setLoadingOnValidate] = useState(false)
@@ -113,13 +113,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
         if (checkProfileResp) {
           setProvider(checkProfileResp)
         } else {
-          const _provider: Provider = {
-            ...provider,
-            firstname: '',
-            lastname: '',
-            email: ''
-          }
-          setProvider(_provider)
+          setProvider(null)
         }
         setLoadingProviderData(false)
       } catch (error) {
@@ -233,10 +227,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
                   value={provider?.provider_source_value}
                   onChange={(event) => _onChangeValue('provider_source_value', event.target.value)}
                   error={providerSourceValueError}
-                  helperText={
-                    providerSourceValueError &&
-                    "Le format de cet identifiant APH n'est pas valide."
-                  }
+                  helperText={providerSourceValueError && "Le format de cet identifiant APH n'est pas valide."}
                   style={{ margin: '1em' }}
                 />
               </Grid>
@@ -245,7 +236,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
               <Grid container justifyContent="center" style={{ padding: 16 }}>
                 <CircularProgress />
               </Grid>
-            ) : provider?.firstname ? (
+            ) : provider?.firstname !== undefined ? (
               provider?.manual_profile ? (
                 <div>
                   <ErrorOutlineIcon color="secondary" className={classes.infoIcon} />
