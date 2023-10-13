@@ -1,6 +1,3 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
 import {
   Button,
   CircularProgress,
@@ -12,16 +9,19 @@ import {
   TextField,
   Typography
 } from '@mui/material'
+import React, { useEffect, useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
+import logo from 'assets/images/portail-black.png'
+import NoRights from 'components/Console-Admin/ErrorView/NoRights'
 import { buildPartialUser } from 'services/Console-Admin/userService'
 import { authenticate } from 'services/authentication'
-import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../constants'
 import { login as loginAction } from 'state/me'
-import logo from 'assets/images/portail-black.png'
 import { ErrorDialogProps } from 'types'
-import useStyles from './styles'
-import NoRights from 'components/Console-Admin/ErrorView/NoRights'
 import { getUserRights } from 'utils/userRoles'
+import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../constants'
+import useStyles from './styles'
 
 const ErrorDialog: React.FC<ErrorDialogProps> = ({ open, setErrorLogin }) => {
   const _setErrorLogin = () => {
@@ -120,9 +120,22 @@ const Login = () => {
     }
   }
 
-  const _onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const _onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
     onLogin()
+  }
+
+  const onKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
+    event.key === 'Enter' ? _onSubmit(event) : null
+  }
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target
+    if (name === 'Identifiant') {
+      setUsername(value)
+    } else if (name === 'Votre mot de passe') {
+      setPassword(value)
+    }
   }
 
   useEffect(() => {
@@ -152,7 +165,7 @@ const Login = () => {
 
             <Typography className={classes.bienvenue}>Bienvenue ! Connectez-vous.</Typography>
 
-            <form className={classes.form} noValidate onSubmit={_onSubmit}>
+            <form className={classes.form} noValidate onSubmit={_onSubmit} onKeyDown={onKeyDown}>
               <Grid container direction="column" alignItems="center" justifyContent="center">
                 <TextField
                   margin="normal"
@@ -163,7 +176,7 @@ const Login = () => {
                   name="Identifiant"
                   autoComplete="Identifiant"
                   autoFocus
-                  onChange={(event) => setUsername(event.target.value)}
+                  onChange={handleInputChange}
                 />
 
                 <TextField
@@ -175,7 +188,7 @@ const Login = () => {
                   type="password"
                   id="password"
                   autoComplete="current-password"
-                  onChange={(event) => setPassword(event.target.value)}
+                  onChange={handleInputChange}
                 />
 
                 <Button
