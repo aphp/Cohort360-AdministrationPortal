@@ -82,7 +82,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
           },
           {
             label: 'Périmètre parent',
-            code: 'care_site_name',
+            code: 'perimeter_name',
             align: 'center',
             sortableColumn: true
           }
@@ -90,7 +90,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
       : ([
           {
             label: 'Périmètre',
-            code: 'care_site_name',
+            code: 'perimeter_name',
             align: 'left',
             sortableColumn: true
           }
@@ -133,18 +133,16 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
     }
   ]
 
-  const manageAccessesUserRights =
-    userRights.right_manage_admin_accesses_same_level ||
-    userRights.right_manage_admin_accesses_inferior_levels ||
-    userRights.right_manage_data_accesses_same_level ||
-    userRights.right_manage_data_accesses_inferior_levels ||
-    userRights.right_manage_review_transfer_jupyter ||
-    userRights.right_manage_transfer_jupyter ||
-    userRights.right_manage_export_csv ||
-    userRights.right_manage_env_unix_users
+  const readAccessesUserRights =
+    userRights.right_read_admin_accesses_same_level ||
+    userRights.right_read_admin_accesses_inferior_levels ||
+    userRights.right_read_data_accesses_same_level ||
+    userRights.right_read_data_accesses_inferior_levels ||
+    userRights.right_manage_export_jupyter_accesses ||
+    userRights.right_manage_export_csv_accesses
 
   const _columns =
-    manageAccessesUserRights || userRights.right_read_logs
+    readAccessesUserRights || userRights.right_read_logs
       ? [...columns, { label: 'Actions', align: 'center' } as Column]
       : [...columns]
 
@@ -222,7 +220,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
                         classes={{ tooltip: classes.tooltip }}
                         // @ts-ignore
                         title={roles
-                          .find((role: Role) => role.role_id === access.role?.id)
+                          .find((role: Role) => role.id === access.role?.id)
                           ?.help_text.map((text, index: number) => (
                             <Typography key={index}>- {text}</Typography>
                           ))}
@@ -249,30 +247,35 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
                     )}
                   </Tooltip>
                 </TableCell>
-                {(manageAccessesUserRights || userRights.right_read_logs) && (
+                {(readAccessesUserRights || userRights.right_read_logs) && (
                   <TableCell align="center">
                     <Grid container item alignContent="center" justifyContent="space-between" wrap="nowrap">
-                      {manageAccessesUserRights && (
+                      {readAccessesUserRights && (
                         <>
                           <Grid item xs={userRights.right_read_logs ? 4 : 6}>
-                            {(access.actual_start_datetime || access.actual_end_datetime) && (
-                              <Tooltip title="Éditer l'accès">
-                                <IconButton
-                                  onClick={() => {
-                                    setSelectedAccess(access as Access & { perimeter?: null | ScopeTreeRow })
-                                  }}
-                                  style={{ padding: '4px 12px' }}
-                                  size="large"
-                                >
-                                  <EditIcon />
-                                </IconButton>
-                              </Tooltip>
-                            )}
+                            {(access.actual_start_datetime || access.actual_end_datetime) &&
+                              access.editable &&
+                              (access.is_valid ||
+                                (access.actual_start_datetime &&
+                                  moment(access.actual_start_datetime).isAfter(moment(), 'day'))) && (
+                                <Tooltip title="Éditer l'accès">
+                                  <IconButton
+                                    onClick={() => {
+                                      setSelectedAccess(access as Access & { perimeter?: null | ScopeTreeRow })
+                                    }}
+                                    style={{ padding: '4px 12px' }}
+                                    size="large"
+                                  >
+                                    <EditIcon />
+                                  </IconButton>
+                                </Tooltip>
+                              )}
                           </Grid>
                           <Grid item xs={userRights.right_read_logs ? 4 : 6}>
                             {access.actual_start_datetime &&
                               moment(access.actual_start_datetime).isSameOrBefore(moment(), 'day') &&
-                              access.is_valid && (
+                              access.is_valid &&
+                              access.editable && (
                                 <Tooltip title="Clôturer l'accès">
                                   <IconButton
                                     onClick={() => {
@@ -287,7 +290,8 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
                                 </Tooltip>
                               )}
                             {access.actual_start_datetime &&
-                              moment(access.actual_start_datetime).isAfter(moment(), 'day') && (
+                              moment(access.actual_start_datetime).isAfter(moment(), 'day') &&
+                              access.editable && (
                                 <Tooltip title="Supprimer l'accès">
                                   <IconButton
                                     onClick={() => {

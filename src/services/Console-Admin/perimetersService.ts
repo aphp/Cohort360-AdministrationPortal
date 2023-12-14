@@ -119,15 +119,15 @@ export const getManageablePerimeters = async (): Promise<ScopeTreeRow[]> => {
   return manageablePerimetersResp.data ?? []
 }
 
-export const getPerimeterAccesses = async (perimeterId: string, order: Order, page?: number, searchInput?: string) => {
+export const getPerimeterAccesses
+    = async (perimeterId: string, order: Order, includeParents: boolean, page?: number, searchInput?: string) => {
   const _orderDirection =
     order.orderBy === 'is_valid' ? (order.orderDirection === 'asc' ? 'desc' : 'asc') : order.orderDirection
 
   const searchFilter = searchInput ? `&search=${searchInput}` : ''
   const perimeterAccessesResp = await api.get(
-    `/accesses/accesses/?perimeter=${perimeterId}&page=${page}&ordering=${_orderDirection === 'desc' ? '-' : ''}${
-      order.orderBy
-    }${searchFilter}`
+    `/accesses/accesses/?perimeter_id=${perimeterId}&include_parents=${includeParents}&page=${page}&ordering=${
+      _orderDirection === 'desc' ? '-' : ''}${order.orderBy}${searchFilter}`
   )
 
   if (perimeterAccessesResp.status !== 200) return undefined

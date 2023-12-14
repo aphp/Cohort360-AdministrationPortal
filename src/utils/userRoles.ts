@@ -2,37 +2,31 @@ import api from 'services/api'
 import { Access, UserRole } from 'types'
 
 export const userDefaultRoles: UserRole = {
-  right_edit_roles: false,
+  right_full_admin: false,
   right_read_logs: false,
-  right_add_users: false,
-  right_edit_users: false,
+  right_manage_users: false,
   right_read_users: false,
   right_manage_admin_accesses_same_level: false,
   right_read_admin_accesses_same_level: false,
   right_manage_admin_accesses_inferior_levels: false,
-  right_read_admin_accesses_above_levels: false,
   right_read_admin_accesses_inferior_levels: false,
   right_manage_data_accesses_same_level: false,
   right_read_data_accesses_same_level: false,
   right_manage_data_accesses_inferior_levels: false,
   right_read_data_accesses_inferior_levels: false,
   right_read_patient_nominative: false,
-  right_read_patient_pseudo_anonymised: false,
-  right_search_patient_with_ipp: false,
-  right_manage_review_transfer_jupyter: false,
-  right_review_transfer_jupyter: false,
-  right_manage_transfer_jupyter: false,
-  right_transfer_jupyter_nominative: false,
-  right_transfer_jupyter_pseudo_anonymised: false,
-  right_manage_review_export_csv: false,
-  right_review_export_csv: false,
-  right_manage_export_csv: false,
+  right_read_patient_pseudonymized: false,
+  right_search_patients_by_ipp: false,
+  right_search_opposed_patients: false,
+  right_manage_export_jupyter_accesses: false,
+  right_manage_export_csv_accesses: false,
+  right_export_jupyter_nominative: false,
+  right_export_jupyter_pseudonymized: false,
   right_export_csv_nominative: false,
-  right_export_csv_pseudo_anonymised: false,
-  right_read_env_unix_users: false,
-  right_manage_env_unix_users: false,
-  right_manage_env_user_links: false,
-  right_read_opposing_patient: false
+  right_export_csv_pseudonymized: false,
+  right_manage_datalabs: false,
+  right_read_datalabs: false,
+  right_read_accesses_above_levels: false
 }
 
 export const getMyAccesses = async () => {
@@ -64,17 +58,14 @@ export const getUserRights = async (data?: Access[]) => {
     if (userRightsResponse && userRightsResponse.length > 0) {
       for (const access of userRightsResponse) {
         if (access.is_valid) {
-          if (access.role.right_edit_roles) {
-            _userRights.right_edit_roles = true
+          if (access.role.right_full_admin) {
+            _userRights.right_full_admin = true
           }
           if (access.role.right_read_logs) {
             _userRights.right_read_logs = true
           }
-          if (access.role.right_add_users) {
-            _userRights.right_add_users = true
-          }
-          if (access.role.right_edit_users) {
-            _userRights.right_edit_users = true
+          if (access.role.right_manage_users) {
+            _userRights.right_manage_users = true
           }
           if (access.role.right_read_users) {
             _userRights.right_read_users = true
@@ -87,9 +78,6 @@ export const getUserRights = async (data?: Access[]) => {
           }
           if (access.role.right_manage_admin_accesses_inferior_levels) {
             _userRights.right_manage_admin_accesses_inferior_levels = true
-          }
-          if (access.role.right_read_admin_accesses_above_levels) {
-            _userRights.right_read_admin_accesses_above_levels = true
           }
           if (access.role.right_read_admin_accesses_inferior_levels) {
             _userRights.right_read_admin_accesses_inferior_levels = true
@@ -109,50 +97,41 @@ export const getUserRights = async (data?: Access[]) => {
           if (access.role.right_read_patient_nominative) {
             _userRights.right_read_patient_nominative = true
           }
-          if (access.role.right_read_patient_pseudo_anonymised) {
-            _userRights.right_read_patient_pseudo_anonymised = true
+          if (access.role.right_read_patient_pseudonymized) {
+            _userRights.right_read_patient_pseudonymized = true
           }
-          if (access.role.right_manage_review_transfer_jupyter) {
-            _userRights.right_manage_review_transfer_jupyter = true
+          if (access.role.right_manage_export_jupyter_accesses) {
+            _userRights.right_manage_export_jupyter_accesses = true
           }
-          if (access.role.right_review_transfer_jupyter) {
-            _userRights.right_review_transfer_jupyter = true
+          if (access.role.right_export_jupyter_nominative) {
+            _userRights.right_export_jupyter_nominative = true
           }
-          if (access.role.right_manage_transfer_jupyter) {
-            _userRights.right_manage_transfer_jupyter = true
+          if (access.role.right_export_jupyter_pseudonymized) {
+            _userRights.right_export_jupyter_pseudonymized = true
           }
-          if (access.role.right_transfer_jupyter_nominative) {
-            _userRights.right_transfer_jupyter_nominative = true
-          }
-          if (access.role.right_transfer_jupyter_pseudo_anonymised) {
-            _userRights.right_transfer_jupyter_pseudo_anonymised = true
-          }
-          if (access.role.right_manage_review_export_csv) {
-            _userRights.right_manage_review_export_csv = true
-          }
-          if (access.role.right_review_export_csv) {
-            _userRights.right_review_export_csv = true
-          }
-          if (access.role.right_manage_export_csv) {
-            _userRights.right_manage_export_csv = true
+          if (access.role.right_manage_export_csv_accesses) {
+            _userRights.right_manage_export_csv_accesses = true
           }
           if (access.role.right_export_csv_nominative) {
             _userRights.right_export_csv_nominative = true
           }
-          if (access.role.right_export_csv_pseudo_anonymised) {
-            _userRights.right_export_csv_pseudo_anonymised = true
+          if (access.role.right_export_csv_pseudonymized) {
+            _userRights.right_export_csv_pseudonymized = true
           }
-          if (access.role.right_read_env_unix_users) {
-            _userRights.right_read_env_unix_users = true
+          if (access.role.right_read_datalabs) {
+            _userRights.right_read_datalabs = true
           }
-          if (access.role.right_manage_env_unix_users) {
-            _userRights.right_manage_env_unix_users = true
+          if (access.role.right_manage_datalabs) {
+            _userRights.right_manage_datalabs = true
           }
-          if (access.role.right_manage_env_user_links) {
-            _userRights.right_manage_env_user_links = true
+          if (access.role.right_search_opposed_patients) {
+            _userRights.right_search_opposed_patients = true
           }
-          if (access.role.right_read_opposing_patient) {
-            _userRights.right_manage_env_user_links = true
+          if (access.role.right_search_patients_by_ipp) {
+            _userRights.right_search_patients_by_ipp = true
+          }
+          if (access.role.right_read_accesses_above_levels) {
+            _userRights.right_read_accesses_above_levels = true
           }
         }
       }
@@ -160,7 +139,7 @@ export const getUserRights = async (data?: Access[]) => {
 
     return _userRights
   } catch (error) {
-    console.error("Erreur lors de la récupération des habilitations de l'utilisateur")
+    console.error("Erreur lors de la récupération des droits de l'utilisateur")
     return userDefaultRoles
   }
 }

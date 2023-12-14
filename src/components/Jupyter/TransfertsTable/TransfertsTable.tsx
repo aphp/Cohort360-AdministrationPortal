@@ -92,9 +92,6 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
 
   const rowsPerPage = 20
 
-  const createWorkingEnvironmentUserRights =
-    userRights.right_manage_env_unix_users && userRights.right_manage_env_user_links
-
   const _getExportsList = async (_page: number) => {
     try {
       setLoading(true)
@@ -201,10 +198,14 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
       <Grid
         container
         item
-        justifyContent={createWorkingEnvironmentUserRights ? 'space-between' : 'flex-end'}
+        justifyContent={userRights.right_manage_export_jupyter_accesses ||
+                        userRights.right_export_jupyter_nominative ||
+                        userRights.right_export_jupyter_pseudonymized ? 'space-between' : 'flex-end'}
         style={{ margin: '12px 0' }}
       >
-        {createWorkingEnvironmentUserRights && (
+        {(userRights.right_manage_export_jupyter_accesses ||
+         userRights.right_export_jupyter_nominative ||
+         userRights.right_export_jupyter_pseudonymized) && (
           <Button
             variant="contained"
             disableElevation

@@ -83,7 +83,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
 
         if (profilesResp) {
           const manualProfile = profilesResp.find(
-            (profile: Profile) => profile.cdm_source?.toLocaleLowerCase() === 'manual'
+            (profile: Profile) => profile.source?.toLocaleLowerCase() === 'manual'
           )
 
           setProviderHistoryId(manualProfile.provider_history_id)
@@ -180,9 +180,8 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
         const providerData = {
           firstname: provider?.firstname,
           lastname: provider?.lastname,
-          provider_source_value: provider?.provider_source_value,
-          email: provider?.email,
-          provider_id: provider?.provider?.provider_id
+          user_id: provider?.provider_source_value,
+          email: provider?.email
         }
         const createProfileResp = await submitCreateProfile(providerData)
 

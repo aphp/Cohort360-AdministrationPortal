@@ -108,7 +108,7 @@ export type CheckProfile = Provider & {
 export type Profile = {
   birth_date: string | null
   care_site_id: number | null
-  cdm_source: string | null
+  source: string | null
   creation_datetime: string
   dea: string | null
   delete_datetime: string
@@ -146,14 +146,14 @@ export type Profile = {
 // Roles
 
 export type UserRole = {
-  right_edit_roles: boolean | null
+  right_full_admin: boolean | null
   right_read_logs: boolean | null
-  right_add_users: boolean | null
-  right_edit_users: boolean | null
+  right_manage_users: boolean | null
   right_read_users: boolean | null
+  right_manage_datalabs: boolean | null
+  right_read_datalabs: boolean | null
   right_manage_admin_accesses_same_level: boolean | null
   right_read_admin_accesses_same_level: boolean | null
-  right_read_admin_accesses_above_levels: boolean | null
   right_manage_admin_accesses_inferior_levels: boolean | null
   right_read_admin_accesses_inferior_levels: boolean | null
   right_manage_data_accesses_same_level: boolean | null
@@ -161,44 +161,36 @@ export type UserRole = {
   right_manage_data_accesses_inferior_levels: boolean | null
   right_read_data_accesses_inferior_levels: boolean | null
   right_read_patient_nominative: boolean | null
-  right_read_patient_pseudo_anonymised: boolean | null
-  right_search_patient_with_ipp: boolean | null
-  right_manage_review_transfer_jupyter: boolean | null
-  right_review_transfer_jupyter: boolean | null
-  right_manage_transfer_jupyter: boolean | null
-  right_transfer_jupyter_nominative: boolean | null
-  right_transfer_jupyter_pseudo_anonymised: boolean | null
-  right_manage_review_export_csv: boolean | null
-  right_review_export_csv: boolean | null
-  right_manage_export_csv: boolean | null
+  right_read_patient_pseudonymized: boolean | null
+  right_search_patients_by_ipp: boolean | null
+  right_search_opposed_patients: boolean | null
+  right_manage_export_jupyter_accesses: boolean | null
+  right_export_jupyter_nominative: boolean | null
+  right_export_jupyter_pseudonymized: boolean | null
+  right_manage_export_csv_accesses: boolean | null
   right_export_csv_nominative: boolean | null
-  right_export_csv_pseudo_anonymised: boolean | null
-  right_read_env_unix_users: boolean | null
-  right_manage_env_unix_users: boolean | null
-  right_manage_env_user_links: boolean | null
-  right_read_opposing_patient: boolean | null
+  right_export_csv_pseudonymized: boolean | null
+  right_read_accesses_above_levels: boolean | null
 }
 
 export type Role = UserRole & {
   id?: number
-  role_id?: number
   insert_datetime?: string | null
   update_datetime?: string | null
   delete_datetime?: string | null
   help_text?: string[]
   name?: string
-  invalid_reason?: string | null
 }
 
 export type RoleKeys =
   | 'name'
-  | 'right_edit_roles'
-  | 'right_add_users'
-  | 'right_edit_users'
+  | 'right_full_admin'
+  | 'right_manage_users'
   | 'right_read_users'
+  | 'right_read_datalabs'
+  | 'right_manage_datalabs'
   | 'right_manage_admin_accesses_same_level'
   | 'right_read_admin_accesses_same_level'
-  | 'right_read_admin_accesses_above_levels'
   | 'right_manage_admin_accesses_inferior_levels'
   | 'right_read_admin_accesses_inferior_levels'
   | 'right_manage_data_accesses_same_level'
@@ -206,22 +198,16 @@ export type RoleKeys =
   | 'right_manage_data_accesses_inferior_levels'
   | 'right_read_data_accesses_inferior_levels'
   | 'right_read_patient_nominative'
-  | 'right_read_patient_pseudo_anonymised'
-  | 'right_search_patient_with_ipp'
-  | 'right_manage_review_transfer_jupyter'
-  | 'right_review_transfer_jupyter'
-  | 'right_manage_transfer_jupyter'
-  | 'right_transfer_jupyter_nominative'
-  | 'right_transfer_jupyter_pseudo_anonymised'
-  | 'right_manage_review_export_csv'
-  | 'right_review_export_csv'
-  | 'right_manage_export_csv'
+  | 'right_read_patient_pseudonymized'
+  | 'right_search_patients_by_ipp'
+  | 'right_search_opposed_patients'
+  | 'right_manage_export_jupyter_accesses'
+  | 'right_export_jupyter_nominative'
+  | 'right_export_jupyter_pseudonymized'
+  | 'right_manage_export_csv_accesses'
   | 'right_export_csv_nominative'
-  | 'right_export_csv_pseudo_anonymised'
-  | 'right_read_env_unix_users'
-  | 'right_manage_env_unix_users'
-  | 'right_manage_env_user_links'
-  | 'right_read_opposing_patient'
+  | 'right_export_csv_pseudonymized'
+  | 'right_read_accesses_above_levels'
 
 // Access
 
@@ -245,11 +231,12 @@ export type Access = {
   entity_id: number
   role_id: number
   updated_by: string
+  editable: boolean
 }
 
 export type AccessData = {
-  provider_history_id?: number
-  care_site_id?: number | string
+  profile_id?: number
+  perimeter_id?: number | string
   role_id?: number
   start_datetime?: string | null
   end_datetime?: string | null
@@ -320,7 +307,7 @@ export type Order = {
 
 // Habilitation
 
-export type Habilitation = {
+export type UserInHabilitation = {
   provider_username: string
   firstname: string
   lastname: string

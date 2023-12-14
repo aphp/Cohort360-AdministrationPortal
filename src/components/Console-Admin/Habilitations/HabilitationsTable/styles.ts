@@ -32,6 +32,13 @@ const useStyles = makeStyles()(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  recordName: {
+    width: 'max-content',
+    cursor: 'pointer',
+    '&:hover': {
+      textDecoration: 'underline'
+    }
   }
 }))
 

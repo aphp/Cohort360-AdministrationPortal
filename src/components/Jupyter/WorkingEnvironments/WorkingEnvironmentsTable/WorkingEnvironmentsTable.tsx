@@ -57,9 +57,6 @@ const WorkingEnvironmentsTable: React.FC<WorkingEnvironmentsTableProps> = ({ use
   const [addWorkingEnvironmentSuccess, setAddWorkingEnvironmentSuccess] = useState(false)
   const [addWorkingEnvironmentFail, setAddWorkingEnvironmentFail] = useState(false)
 
-  const createWorkingEnvironmentUserRights =
-    userRights.right_manage_env_unix_users && userRights.right_manage_env_user_links
-
   const _getWorkingEnvironments = async (_page: number) => {
     try {
       setLoading(true)
@@ -93,10 +90,10 @@ const WorkingEnvironmentsTable: React.FC<WorkingEnvironmentsTableProps> = ({ use
       <Grid
         container
         item
-        justifyContent={createWorkingEnvironmentUserRights ? 'space-between' : 'flex-end'}
+        justifyContent={userRights.right_manage_datalabs ? 'space-between' : 'flex-end'}
         style={{ margin: '12px 0' }}
       >
-        {createWorkingEnvironmentUserRights && (
+        {userRights.right_manage_datalabs && (
           <Button
             variant="contained"
             disableElevation

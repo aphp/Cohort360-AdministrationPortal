@@ -74,7 +74,7 @@ const Logs: React.FC = () => {
       setUserRights(getUserRightsResponse)
       setLoadingRights(false)
     } catch (error) {
-      console.error("Erreur lors de la récupération des habilitations de l'utilisateur", error)
+      console.error("Erreur lors de la récupération des droits de l'utilisateur", error)
       setLoadingRights(false)
     }
   }

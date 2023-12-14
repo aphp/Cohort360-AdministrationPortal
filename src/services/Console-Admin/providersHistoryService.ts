@@ -4,13 +4,13 @@ import api from '../api'
 export const getProfile = async (providerSourceValue?: string) => {
   if (!providerSourceValue) return undefined
 
-  const profileResp = await api.get(`/accesses/profiles/?provider_source_value=${providerSourceValue}`)
+  const profileResp = await api.get(`/accesses/profiles/?user_id=${providerSourceValue}`)
 
   if (profileResp.status !== 200) {
     return undefined
   }
 
-  return profileResp.data.results.sort((a: Profile, b: any) => a.cdm_source?.localeCompare(b.cdm_source)) ?? undefined
+  return profileResp.data.results.sort((a: Profile, b: any) => a.source?.localeCompare(b.source)) ?? undefined
 }
 
 export const checkProfile = async (username?: string) => {
@@ -33,18 +33,18 @@ export const submitCreateProfile = async (providerData: Provider) => {
     const createProfile = await api.post(`/accesses/profiles/`, providerData)
     return createProfile.status === 201
   } catch (error) {
-    console.error('Erreur lors de la création de profil', error)
+    console.error('Erreur lors de la création du profil', error)
     return false
   }
 }
 
-export const editProfile = async (providerHistoryId: string, profileData: {}) => {
+export const editProfile = async (profileId: string, profileData: {}) => {
   try {
-    const editProfileResp = await api.patch(`/accesses/profiles/${providerHistoryId}/`, profileData)
+    const editProfileResp = await api.patch(`/accesses/profiles/${profileId}/`, profileData)
 
     return editProfileResp.status === 200
   } catch (error) {
-    console.error("Erreur lors de l'édition d'un profil", error)
+    console.error("Erreur lors de l'édition du profil", error)
     return false
   }
 }
@@ -54,7 +54,7 @@ export const getAccesses = async (providerHistoryId: number, page: number, order
     order.orderBy === 'is_valid' ? (order.orderDirection === 'asc' ? 'desc' : 'asc') : order.orderDirection
 
   const accessesResp = await api.get(
-    `/accesses/accesses/?page=${page}&provider_history_id=${providerHistoryId}&ordering=${
+    `/accesses/accesses/?page=${page}&profile_id=${providerHistoryId}&ordering=${
       _orderDirection === 'desc' ? '-' : ''
     }${order.orderBy}`
   )
@@ -66,21 +66,6 @@ export const getAccesses = async (providerHistoryId: number, page: number, order
   return {
     accesses: accessesResp.data.results ?? undefined,
     total: accessesResp.data.count ?? 0
-  }
-}
-
-export const getUserAccesses = async (providerSourceValue?: string) => {
-  try {
-    const getUserAccessesResp = await api.get(`/accesses/accesses/?provider_source_value=${providerSourceValue}`)
-
-    if (getUserAccessesResp.status !== 200) {
-      return []
-    }
-
-    return getUserAccessesResp.data.results ?? []
-  } catch (error) {
-    console.error("Erreur lors de la récupération des accès de l'utilisateur", error)
-    return []
   }
 }
 

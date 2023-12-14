@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
-import { Alert, Card, CardContent, CircularProgress, Grid, Tooltip, Typography } from '@mui/material'
+import { Card, CardContent, CircularProgress, Grid, Switch, Tooltip, Typography } from '@mui/material'
 import InfoIcon from '@mui/icons-material/Info'
 
 import { getPerimeter, getPerimeterAccesses } from 'services/Console-Admin/perimetersService'
@@ -71,6 +71,7 @@ const PerimeterHistory: React.FC = () => {
   const [total, setTotal] = useState(0)
   const [order, setOrder] = useState(orderDefault)
   const [roles, setRoles] = useState<Role[]>([])
+  const [includeParentPerimeters, setIncludeParentPerimeters] = useState<boolean>(false)
 
   const debouncedSearchTerm = useDebounce(500, searchInput)
 
@@ -84,7 +85,13 @@ const PerimeterHistory: React.FC = () => {
     try {
       setLoadingData(true)
 
-      const perimeterAccessesResp = await getPerimeterAccesses(_perimeterId, order, page, searchInput.trim())
+      const perimeterAccessesResp = await getPerimeterAccesses(
+        _perimeterId,
+        order,
+        includeParentPerimeters,
+        page,
+        searchInput.trim()
+      )
 
       setPerimeterAccesses(perimeterAccessesResp?.accesses)
       setTotal(perimeterAccessesResp?.total)
@@ -140,7 +147,7 @@ const PerimeterHistory: React.FC = () => {
 
         setUserRights(getUserRightsResponse)
       } catch (error) {
-        console.error("Erreur lors de la récupération des habilitations de l'utilisateur", error)
+        console.error("Erreur lors de la récupération des droits de l'utilisateur", error)
       }
     }
 
@@ -150,7 +157,7 @@ const PerimeterHistory: React.FC = () => {
 
   useEffect(() => {
     _getPerimeterAccesses()
-  }, [debouncedSearchTerm, page, order]) // eslint-disable-line
+  }, [debouncedSearchTerm, page, order, includeParentPerimeters]) // eslint-disable-line
 
   return (
     <Grid container direction="column">
@@ -191,32 +198,35 @@ const PerimeterHistory: React.FC = () => {
                 </Card>
               ))}
             </Grid>
-
-            {perimeterAccesses ? (
-              <>
-                <Grid container item justifyContent="flex-end" alignItems="center" className={classes.searchBar}>
-                  <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
+            <Grid
+              container
+              justifyContent={userRights.right_read_accesses_above_levels ? 'space-between' : 'flex-end'}
+              className={classes.searchBar}
+            >
+              {userRights.right_read_accesses_above_levels && (
+                <Grid display="flex" alignItems="center">
+                  <Typography variant="h3">Afficher les accès sur les périmètres parents</Typography>
+                  <Switch
+                    checked={includeParentPerimeters}
+                    onChange={(event) => setIncludeParentPerimeters(!includeParentPerimeters)}
+                  />
                 </Grid>
-                <AccessesTable
-                  displayName
-                  loading={loadingData}
-                  page={page}
-                  setPage={setPage}
-                  total={total}
-                  accesses={perimeterAccesses}
-                  getAccesses={_getPerimeterAccesses}
-                  order={order}
-                  setOrder={setOrder}
-                  userRights={userRights}
-                  roles={roles}
-                />
-              </>
-            ) : (
-              <Alert severity="error" style={{ width: '100%', margin: '12px 0' }}>
-                Erreur lors de la récupération des accès de ce périmètre, veuillez réessayer ultérieurement ou vérifier
-                vos habilitations.
-              </Alert>
-            )}
+              )}
+              <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
+            </Grid>
+            <AccessesTable
+              displayName
+              loading={loadingData}
+              page={page}
+              setPage={setPage}
+              total={total}
+              accesses={perimeterAccesses}
+              getAccesses={_getPerimeterAccesses}
+              order={order}
+              setOrder={setOrder}
+              userRights={userRights}
+              roles={roles}
+            />
           </Grid>
         )}
       </Grid>

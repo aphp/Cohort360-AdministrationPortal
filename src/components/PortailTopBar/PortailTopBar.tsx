@@ -40,7 +40,7 @@ const PortailTopBar: React.FC = () => {
       pathname: '/console-admin/perimeters',
       rightsToSee:
         userRights.right_read_admin_accesses_same_level ||
-        userRights.right_read_admin_accesses_above_levels ||
+        userRights.right_read_accesses_above_levels ||
         userRights.right_read_admin_accesses_inferior_levels ||
         userRights.right_read_data_accesses_same_level ||
         userRights.right_read_data_accesses_inferior_levels
@@ -61,12 +61,15 @@ const PortailTopBar: React.FC = () => {
     {
       name: 'Transfert Jupyter',
       pathname: `/espace-jupyter/transfert`,
-      rightsToSee: userRights.right_review_transfer_jupyter
+      rightsToSee:
+        userRights.right_manage_export_jupyter_accesses ||
+        userRights.right_export_jupyter_nominative ||
+        userRights.right_export_jupyter_pseudonymized
     },
     {
       name: 'Environnements',
       pathname: `/espace-jupyter/working-environments`,
-      rightsToSee: userRights.right_read_env_unix_users
+      rightsToSee: userRights.right_read_datalabs
     }
   ]
 
@@ -122,7 +125,10 @@ const PortailTopBar: React.FC = () => {
                   )
               )}
             </Menu>
-            {(userRights.right_review_transfer_jupyter || userRights.right_read_env_unix_users) && (
+            {(userRights.right_manage_export_jupyter_accesses ||
+              userRights.right_export_jupyter_nominative ||
+              userRights.right_export_jupyter_pseudonymized ||
+              userRights.right_read_datalabs) && (
               <Button
                 onClick={handleClickEspaceJupyter}
                 className={cx(
