@@ -36,10 +36,8 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profile, userRights
     userRights.right_manage_admin_accesses_inferior_levels ||
     userRights.right_manage_data_accesses_same_level ||
     userRights.right_manage_data_accesses_inferior_levels ||
-    userRights.right_manage_review_transfer_jupyter ||
-    userRights.right_manage_transfer_jupyter ||
-    userRights.right_manage_export_csv ||
-    userRights.right_manage_env_unix_users
+    userRights.right_manage_export_jupyter_accesses ||
+    userRights.right_manage_export_csv_accesses
 
   const _getAccesses = async () => {
     try {
@@ -69,9 +67,9 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profile, userRights
     <Grid container justifyContent="flex-end">
       <Grid container justifyContent="space-between" alignItems="center">
         <Typography align="left" variant="h2" className={classes.title}>
-          Type de profil : {profile.cdm_source}
+          Type de profil : {profile.source}
         </Typography>
-        {profile.cdm_source?.toLocaleLowerCase() === 'manual' && manageAccessesUserRights && (
+        {profile.source?.toLocaleLowerCase() === 'manual' && manageAccessesUserRights && (
           <Button
             variant="contained"
             disableElevation

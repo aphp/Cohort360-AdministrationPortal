@@ -4,17 +4,17 @@ import { useParams } from 'react-router-dom'
 import { Alert, CircularProgress, Grid, Typography } from '@mui/material'
 
 import HabilitationTable from 'components/HabilitationTable/HabilitationTable'
-import { getUsersHabilitation, getRoleUser } from 'services/Console-Admin/rolesService'
+import { getUsersRole, getRoleUser } from 'services/Console-Admin/rolesService'
 import SearchBar from 'components/SearchBar/SearchBar'
 import useStyles from './style'
-import { Habilitation, Order } from 'types'
+import { UserInHabilitation, Order } from 'types'
 import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
 
 const orderDefault = { orderBy: 'lastname', orderDirection: 'asc' } as Order
 
-const HabilitationsHistory: React.FC = () => {
+const HabilitationHistory: React.FC = () => {
   const [habilitationName, setHabilitationName] = useState<string | undefined>()
-  const [habilitations, setHabilitations] = useState<Habilitation[] | undefined>([])
+  const [usersInHabilitation, setUsersInHabilitation] = useState<UserInHabilitation[] | undefined>([])
   const [loadingPage, setLoadingPage] = useState(false)
   const [searchInput, setSearchInput] = useState('')
   const [page, setPage] = useState(1)
@@ -31,12 +31,12 @@ const HabilitationsHistory: React.FC = () => {
   const _getHabilitationAccesses = async () => {
     try {
       setLoadingPage(true)
-      const habilitationAccessesResp = await getUsersHabilitation(_habilitationId, order, page, searchInput.trim())
-      setHabilitations(habilitationAccessesResp?.accesses)
+      const habilitationAccessesResp = await getUsersRole(_habilitationId, order, page, searchInput.trim())
+      setUsersInHabilitation(habilitationAccessesResp?.accesses)
       setTotal(habilitationAccessesResp?.total)
     } catch (error) {
       console.error('Erreur lors de la récupération des utilisateurs liés à une habilitation.', error)
-      setHabilitations([])
+      setUsersInHabilitation([])
       setTotal(0)
     } finally {
       setLoadingPage(false)
@@ -70,13 +70,13 @@ const HabilitationsHistory: React.FC = () => {
             <Typography variant="h1" align="center" className={classes.title}>
               Habilitation - {habilitationName}
             </Typography>
-            {habilitations ? (
+            {usersInHabilitation ? (
               <>
                 <Grid container item justifyContent="flex-end" alignItems="center" className={classes.searchBar}>
                   <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
                 </Grid>
                 <HabilitationTable
-                  habilitations={habilitations}
+                  usersInHabilitation={usersInHabilitation}
                   page={page}
                   setPage={setPage}
                   total={total}
@@ -87,7 +87,7 @@ const HabilitationsHistory: React.FC = () => {
             ) : (
               <Alert severity="error" style={{ width: '100%' }}>
                 Erreur lors de la récupération des utilisateurs pour cette habilitation, veuillez réessayer
-                ultérieurement ou vérifier vos habilitations.
+                ultérieurement ou vérifier vos droits.
               </Alert>
             )}
           </Grid>
@@ -97,4 +97,4 @@ const HabilitationsHistory: React.FC = () => {
   )
 }
 
-export default HabilitationsHistory
+export default HabilitationHistory

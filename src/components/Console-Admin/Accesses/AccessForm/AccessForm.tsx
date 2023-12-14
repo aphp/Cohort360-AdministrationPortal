@@ -135,9 +135,9 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
 
       if (!isEdition) {
         accessData = {
-          provider_history_id: entityId,
-          care_site_id: _access.perimeter?.id,
-          role_id: _access.role?.role_id
+          profile_id: entityId,
+          perimeter_id: _access.perimeter?.id,
+          role_id: _access.role?.id
         }
       }
 

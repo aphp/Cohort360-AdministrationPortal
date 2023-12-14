@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import { CircularProgress, Grid, Typography } from '@mui/material'
 
-import RolesTable from 'components/Console-Admin/Roles/RolesTable/RolesTable'
+import HabilitationsTable from 'components/Console-Admin/Habilitations/HabilitationsTable/HabilitationsTable'
 
 import { getUserRights, userDefaultRoles } from 'utils/userRoles'
 
@@ -23,7 +23,7 @@ const Habilitations: React.FC = () => {
         setUserRights(getUserRightsResponse)
         setLoading(false)
       } catch (error) {
-        console.error("Erreur lors de la récupération des habilitations de l'utilisateur", error)
+        console.error("Erreur lors de la récupération des droits de l'utilisateur", error)
         setLoading(false)
       }
     }
@@ -43,7 +43,7 @@ const Habilitations: React.FC = () => {
               <CircularProgress />
             </Grid>
           ) : (
-            <RolesTable userRights={userRights} />
+            <HabilitationsTable userRights={userRights} />
           )}
         </Grid>
       </Grid>

@@ -13,14 +13,14 @@ export const getRoles = async () => {
 export const getAssignableRoles = async (perimeterId?: string | number | null) => {
   if (!perimeterId) return undefined
 
-  const assignableRolesResp = await api.get(`/accesses/roles/assignable/?care_site_id=${perimeterId}&limit=100`)
+  const assignableRolesResp = await api.get(`/accesses/roles/assignable/?perimeter_id=${perimeterId}&limit=100`)
 
   if (assignableRolesResp.status !== 200) {
     return undefined
   }
 
-  const assignableRoles =
-    assignableRolesResp.data.results.sort((a: Role, b: Role) => {
+  return (
+    assignableRolesResp.data.sort((a: Role, b: Role) => {
       if (a.name && b.name) {
         if (a.name > b.name) {
           return 1
@@ -30,8 +30,7 @@ export const getAssignableRoles = async (perimeterId?: string | number | null) =
         return 0
       } else return 0
     }) ?? undefined
-
-  return assignableRoles
+  )
 }
 
 //have to finish the function of editing Role
@@ -52,7 +51,7 @@ export const createRoles = async (createData: Role) => {
 
     return createRoleResp.status === 201
   } catch (error) {
-    console.error("Erreur lors de la création de l'habilitation", error)
+    console.error("Erreur lors de la création d'une habilitation", error)
     return false
   }
 }
@@ -63,17 +62,17 @@ export const deleteRole = async (role_id?: number) => {
 
     return deleteRoleResp.status === 204
   } catch (error) {
-    console.error("Erreur lors de la suppression d'une habilitation", error)
+    console.error("Erreur lors de la suppression de l'habilitation", error)
     return false
   }
 }
 
-export const getRoleUser = async (habilitationId: string): Promise<string | undefined> => {
-  const getRoleResp = await api.get(`/accesses/roles/${habilitationId}/`)
+export const getRoleUser = async (roleId: string): Promise<string | undefined> => {
+  const getRoleResp = await api.get(`/accesses/roles/${roleId}/`)
   return `${getRoleResp.data.name}` ?? undefined
 }
 
-export const getUsersHabilitation = async (role_id: string, order: Order, page?: number, searchInput?: string) => {
+export const getUsersRole = async (role_id: string, order: Order, page?: number, searchInput?: string) => {
   const searchFilter = searchInput ? `&filter_by_name=${searchInput}` : ''
   const getRoleUserResp = await api.get(
     `/accesses/roles/${role_id}/users/?page=${page}&order=${order.orderDirection === 'desc' ? '-' : ''}${

@@ -18,10 +18,10 @@ import LaunchIcon from '@mui/icons-material/Launch'
 import useStyles from './styles'
 import moment from 'moment'
 import { useNavigate } from 'react-router'
-import { Column, Habilitation, Order } from 'types'
+import { Column, Order, UserInHabilitation } from 'types'
 
-interface HabilitationProps {
-  habilitations: Habilitation[]
+interface HabilitationTableProps {
+  usersInHabilitation: UserInHabilitation[]
   page?: number
   setPage?: (page: number) => void
   onChangePage?: (value: number) => void
@@ -30,8 +30,8 @@ interface HabilitationProps {
   setOrder?: (order: Order) => void
 }
 
-const HabilitationTable: React.FC<HabilitationProps> = (props) => {
-  const { habilitations, page, setPage, onChangePage, total, order, setOrder } = props
+const HabilitationTable: React.FC<HabilitationTableProps> = (props) => {
+  const { usersInHabilitation, page, setPage, onChangePage, total, order, setOrder } = props
   const { classes } = useStyles()
   const navigate = useNavigate()
 
@@ -47,19 +47,19 @@ const HabilitationTable: React.FC<HabilitationProps> = (props) => {
     {
       label: 'Perimètre',
       code: 'perimeter',
-      align: 'center',
+      align: 'left',
       sortableColumn: true
     },
     {
       label: 'Date de début',
       code: 'start_datetime',
-      align: 'center',
+      align: 'left',
       sortableColumn: true
     },
     {
       label: 'Date de fin',
       code: 'end_datetime',
-      align: 'center',
+      align: 'left',
       sortableColumn: true
     }
   ]
@@ -106,25 +106,21 @@ const HabilitationTable: React.FC<HabilitationProps> = (props) => {
           </TableHead>
 
           <TableBody>
-            {habilitations && habilitations.length > 0 ? (
-              habilitations.map((habilitation, index) => (
+            {usersInHabilitation && usersInHabilitation.length > 0 ? (
+              usersInHabilitation.map((user, index) => (
                 <TableRow key={index} className={classes.tableBodyRows}>
                   <TableCell align="left">
-                    {habilitation.lastname.toLocaleUpperCase()} {habilitation.firstname}
+                    {user.lastname.toLocaleUpperCase()} {user.firstname}
                     <IconButton
-                      onClick={() => navigate(`/console-admin/user-profile/${habilitation.provider_username}`)}
+                      onClick={() => navigate(`/console-admin/user-profile/${user.provider_username}`)}
                       size="large"
                     >
                       <LaunchIcon fontSize="small" />
                     </IconButton>
                   </TableCell>
-                  <TableCell>{habilitation.perimeter}</TableCell>
-                  <TableCell>
-                    {habilitation.start_datetime ? moment(habilitation.start_datetime).format('DD/MM/YYYY') : '-'}
-                  </TableCell>
-                  <TableCell>
-                    {habilitation.end_datetime ? moment(habilitation.end_datetime).format('DD/MM/YYYY') : '-'}
-                  </TableCell>
+                  <TableCell>{user.perimeter}</TableCell>
+                  <TableCell>{user.start_datetime ? moment(user.start_datetime).format('DD/MM/YYYY') : '-'}</TableCell>
+                  <TableCell>{user.end_datetime ? moment(user.end_datetime).format('DD/MM/YYYY') : '-'}</TableCell>
                 </TableRow>
               ))
             ) : (

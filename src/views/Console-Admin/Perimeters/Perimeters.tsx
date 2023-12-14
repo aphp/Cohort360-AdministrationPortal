@@ -29,7 +29,7 @@ const Perimeters: React.FC = () => {
         setUserRights(getUserRightsResponse)
         setLoading(false)
       } catch (error) {
-        console.error("Erreur lors de la récupération des habilitations de l'utilisateur", error)
+        console.error("Erreur lors de la récupération des droits de l'utilisateur", error)
         setLoading(false)
       }
     }

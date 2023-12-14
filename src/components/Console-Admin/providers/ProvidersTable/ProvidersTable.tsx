@@ -62,12 +62,11 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
 
   const readAccessesUserRights =
     userRights.right_read_admin_accesses_same_level ||
-    userRights.right_read_admin_accesses_above_levels ||
     userRights.right_read_admin_accesses_inferior_levels ||
     userRights.right_read_data_accesses_same_level ||
     userRights.right_read_data_accesses_inferior_levels
 
-  const actionsUserRights = readAccessesUserRights || userRights.right_edit_users || userRights.right_read_logs
+  const actionsUserRights = readAccessesUserRights || userRights.right_manage_users || userRights.right_read_logs
 
   const _columns = actionsUserRights ? [...columns, { label: 'Actions', align: 'center' } as Column] : [...columns]
 
@@ -115,10 +114,10 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
       <Grid
         container
         item
-        justifyContent={userRights.right_add_users ? 'space-between' : 'flex-end'}
+        justifyContent={userRights.right_manage_users ? 'space-between' : 'flex-end'}
         style={{ margin: '12px 0' }}
       >
-        {userRights.right_add_users && (
+        {userRights.right_manage_users && (
           <Button
             variant="contained"
             disableElevation
@@ -194,7 +193,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                           </IconButton>
                         </Tooltip>
                       )}
-                      {userRights.right_edit_users && (
+                      {userRights.right_manage_users && (
                         <Tooltip title="Éditer l'utilisateur" style={{ padding: '0 12px' }}>
                           <IconButton
                             onClick={(event) => {
