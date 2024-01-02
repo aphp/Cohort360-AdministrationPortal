@@ -21,6 +21,27 @@ export const getWorkingEnvironments = async (order: Order, page: number, exports
   }
 }
 
+export const getDatalab = async (order: Order, searchInput?: string) => {
+  try {
+    // const searchFilter = searchInput ? `&search=${searchInput}` : ''
+    const searchFilter = ''
+    // const workingEnvironmentsResp = await api.get(
+    //   `/exports/v1/datalabs/?ordering=${order.orderDirection === 'desc' ? '-' : ''}${order.orderBy}${searchFilter}`
+    // )
+
+    const workingEnvironmentsResp = await api.get(`/exports/v1/datalabs/${searchFilter}`)
+
+    const workingEnvironments = workingEnvironmentsResp.data.results ?? []
+
+    return {
+      workingEnvironments: workingEnvironments,
+      total: workingEnvironmentsResp.data.count ?? 0
+    }
+  } catch (error) {
+    console.error('Erreur lors de la récupération des environnements de travail', error)
+  }
+}
+
 export const getJupyterMachines = async () => {
   try {
     const jupyterMachinesResp = await api.get('/workspaces/jupyter-machines/')

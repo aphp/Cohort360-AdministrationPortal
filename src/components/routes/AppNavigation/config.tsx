@@ -2,6 +2,7 @@ import React from 'react'
 import { RouteObject } from 'react-router'
 import Login from 'views/Login/Login'
 import HomePage from 'views/HomePage/HomePage'
+import HealthCheck from 'views/HealthCheck/HealthCheck'
 
 import Users from 'views/Console-Admin/Users/Users'
 import ProfilesView from 'views/Console-Admin/Profiles/Profiles'
@@ -12,8 +13,8 @@ import HabilitationHistory from 'views/Console-Admin/HabilitationHistory/Habilit
 import Logs from 'views/Console-Admin/Logs/Logs'
 
 import Transfert from 'views/Jupyter/Transfert/Transfert'
+import TransfertDatalab from 'views/Jupyter/Transfert/TransfertDatalab'
 import WorkingEnvironments from 'views/Jupyter/WorkingEnvironments/WorkingEnvironments'
-import HealthCheck from 'views/HealthCheck/HealthCheck'
 
 type configRoute = RouteObject & {
   exact?: boolean
@@ -158,6 +159,19 @@ const configRoutes: configRoute[] = [
     isPrivate: true,
     element: <Transfert />
   }
+
+  /**
+   * Jupyter - Datalab Transfer View
+   */
+
+  {
+    exact: true,
+    displayPortailTopBar: true,
+    path: '/espace-jupyter/export',
+    name: 'Transfert Datalab',
+    isPrivate: true,
+    element: <TransfertDatalab />
+  },
 
   /**
    * Jupyter Working Environments View

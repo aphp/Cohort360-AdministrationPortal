@@ -163,6 +163,29 @@ const TransfertForm: React.FC<TransferFormProps> = ({
   }, [transferRequest.user])
 
   useEffect(() => {
+    const _getProviderCohorts = async () => {
+      try {
+        setLoadingOnGetCohorts(true)
+
+        const cohortsResp = await getUserCohorts(transferRequest.user?.username)
+
+        setCohortsOptions(cohortsResp)
+
+        setLoadingOnGetCohorts(false)
+      } catch (error) {
+        console.error("Erreur lors de la récupération des cohortes de l'utilisateur", error)
+        setCohortsOptions([])
+        setLoadingOnGetCohorts(false)
+      }
+    }
+
+    setTransferRequest({ ...transferRequest, ['cohort']: null })
+    if (transferRequest.user !== null) {
+      _getProviderCohorts()
+    }
+  }, [transferRequest.user])
+
+  useEffect(() => {
     const _getWorkingEnvironments = async () => {
       try {
         setLoadingOnWorkingEnvironments(true)
@@ -326,15 +349,15 @@ const TransfertForm: React.FC<TransferFormProps> = ({
             />
 
             <List className={cx(classes.list, classes.autocomplete)} style={{ marginTop: 0 }}>
-              {export_table.map(({ table_name, table_id }: ExportTableType) => (
-                <ListItem key={table_id}>
+              {export_table.map(({ name, id }: ExportTableType) => (
+                <ListItem key={id}>
                   <ListItemText
                     disableTypography
                     primary={
                       <Grid container direction="row" alignItems="center">
-                        <Typography variant="body1">{table_name} - </Typography>
+                        <Typography variant="body1">{name} - </Typography>
                         <Typography variant="body1" style={{ fontStyle: 'italic', paddingLeft: 4 }}>
-                          {table_id}
+                          {id}
                         </Typography>
                       </Grid>
                     }
@@ -342,8 +365,8 @@ const TransfertForm: React.FC<TransferFormProps> = ({
 
                   <ListItemSecondaryAction>
                     <Checkbox
-                      checked={!!transferRequest.tables.find((tableId: string) => tableId === table_id)}
-                      onChange={() => handleChangeTables(table_id)}
+                      checked={!!transferRequest.tables.find((tableId: string) => tableId === id)}
+                      onChange={() => handleChangeTables(id)}
                     />
                   </ListItemSecondaryAction>
                 </ListItem>
