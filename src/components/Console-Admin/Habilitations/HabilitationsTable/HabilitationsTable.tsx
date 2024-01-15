@@ -44,12 +44,15 @@ const HabilitationsTable: React.FC<HabilitationsTableProps> = ({ userRights }) =
     {
       label: 'Habilitation',
       align: 'left'
-    },
-    {
+    }
+    ]
+
+  if (userRights.right_full_admin || userRights.right_read_users) {
+    columns.push({
       label: 'Actions',
       align: 'right'
-    }
-  ]
+    })
+  }
 
   const [_roles, setRoles] = useState<Role[] | null>(null)
   const [loading, setLoading] = useState(false)
@@ -145,27 +148,33 @@ const HabilitationsTable: React.FC<HabilitationsTableProps> = ({ userRights }) =
                       {role.name}
                     </Typography>
                   </TableCell>
-                  <TableCell align="right">
-                    <Tooltip title="Afficher les utilisateurs">
-                      <IconButton
-                        onClick={() => {
-                          navigate(`/console-admin/habilitation/${role.id}/users`)
-                        }}
-                      >
-                        <PeopleIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Supprimer l'habilitation">
-                      <IconButton
-                        onClick={() => {
-                          setDeleteRole(role)
-                        }}
-                        size="large"
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
+                  {(userRights.right_full_admin || userRights.right_read_users) && (
+                    <TableCell align="right">
+                      {userRights.right_read_users && (
+                        <Tooltip title="Afficher les utilisateurs">
+                          <IconButton
+                            onClick={() => {
+                              navigate(`/console-admin/habilitation/${role.id}/users`)
+                            }}
+                          >
+                            <PeopleIcon />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                      {userRights.right_full_admin && (
+                        <Tooltip title="Supprimer l'habilitation">
+                          <IconButton
+                            onClick={() => {
+                              setDeleteRole(role)
+                            }}
+                            size="large"
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                    </TableCell>
+                  )}
                 </TableRow>
               )
             )
