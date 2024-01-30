@@ -59,75 +59,73 @@ const Login = () => {
   }, [])
 
   const onLogin = async () => {
-    try {
-      setLoading(true)
-      if (!username || !password) {
-        setLoading(false)
-        return setErrorLogin(true)
-      }
+    if (loading) return
+    setLoading(true)
 
-      const response = await authenticate(username, password)
-      if (!response) {
-        setLoading(false)
-        return setErrorLogin(true)
-      }
-
-      const { status, data = {} } = response
-      if (status === 200) {
-        const _userRights = await getUserRights(data.accesses)
-        dispatch(loginAction(buildPartialUser(data.provider, _userRights)))
-
-        localStorage.setItem(ACCESS_TOKEN, data.jwt.access)
-        localStorage.setItem(REFRESH_TOKEN, data.jwt.refresh)
-
-        if (
-          !_userRights.right_full_admin &&
-          !_userRights.right_read_logs &&
-          !_userRights.right_manage_users &&
-          !_userRights.right_read_users &&
-          !_userRights.right_manage_datalabs &&
-          !_userRights.right_read_datalabs &&
-          !_userRights.right_manage_admin_accesses_same_level &&
-          !_userRights.right_read_admin_accesses_same_level &&
-          !_userRights.right_manage_admin_accesses_inferior_levels &&
-          !_userRights.right_read_admin_accesses_inferior_levels &&
-          !_userRights.right_manage_data_accesses_same_level &&
-          !_userRights.right_read_data_accesses_same_level &&
-          !_userRights.right_manage_data_accesses_inferior_levels &&
-          !_userRights.right_read_data_accesses_inferior_levels &&
-          !_userRights.right_read_accesses_above_levels &&
-          !_userRights.right_read_patient_nominative &&
-          !_userRights.right_read_patient_pseudonymized &&
-          !_userRights.right_search_opposed_patients &&
-          !_userRights.right_search_patients_by_ipp &&
-          !_userRights.right_manage_export_jupyter_accesses &&
-          !_userRights.right_manage_export_csv_accesses &&
-          !_userRights.right_export_csv_nominative &&
-          !_userRights.right_export_csv_pseudonymized &&
-          !_userRights.right_export_jupyter_nominative &&
-          !_userRights.right_export_jupyter_pseudonymized
-        ) {
-          setNoRights(true)
-        } else {
-          navigate('/homepage')
-        }
-      } else {
-        setLoading(false)
-        setErrorLogin(true)
-      }
-    } catch (err) {
-      console.error("Erreur lors de l'authentification", err)
+    if (!username || !password) {
       setLoading(false)
-      setErrorLogin(true)
+      return setErrorLogin(true)
+    }
+
+    const response = await authenticate(username, password)
+
+    if (!response) {
+      setLoading(false)
+      return setErrorLogin(true)
+    }
+
+    const { status, data = {} } = response
+
+    if (status === 200) {
+      const _userRights = await getUserRights(data.accesses)
+      dispatch(loginAction(buildPartialUser(data.provider, _userRights)))
+
+      localStorage.setItem(ACCESS_TOKEN, data.jwt.access)
+      localStorage.setItem(REFRESH_TOKEN, data.jwt.refresh)
+
+      if (
+        !_userRights.right_full_admin &&
+        !_userRights.right_read_logs &&
+        !_userRights.right_manage_users &&
+        !_userRights.right_read_users &&
+        !_userRights.right_manage_datalabs &&
+        !_userRights.right_read_datalabs &&
+        !_userRights.right_manage_admin_accesses_same_level &&
+        !_userRights.right_read_admin_accesses_same_level &&
+        !_userRights.right_manage_admin_accesses_inferior_levels &&
+        !_userRights.right_read_admin_accesses_inferior_levels &&
+        !_userRights.right_manage_data_accesses_same_level &&
+        !_userRights.right_read_data_accesses_same_level &&
+        !_userRights.right_manage_data_accesses_inferior_levels &&
+        !_userRights.right_read_data_accesses_inferior_levels &&
+        !_userRights.right_read_accesses_above_levels &&
+        !_userRights.right_read_patient_nominative &&
+        !_userRights.right_read_patient_pseudonymized &&
+        !_userRights.right_search_opposed_patients &&
+        !_userRights.right_search_patients_by_ipp &&
+        !_userRights.right_manage_export_jupyter_accesses &&
+        !_userRights.right_manage_export_csv_accesses &&
+        !_userRights.right_export_csv_nominative &&
+        !_userRights.right_export_csv_pseudonymized &&
+        !_userRights.right_export_jupyter_nominative &&
+        !_userRights.right_export_jupyter_pseudonymized
+      ) {
+        setNoRights(true)
+      } else {
+        navigate('/homepage')
+      }
+    } else {
+      setLoading(false)
+      return setErrorLogin(true)
     }
   }
 
-  const _onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const _onSubmit = (event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLInputElement>) => {
     event.preventDefault()
     onLogin()
   }
 
-  const onKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
+  const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     event.key === 'Enter' ? _onSubmit(event) : null
   }
 
@@ -162,54 +160,55 @@ const Login = () => {
           alignItems="center"
           className={classes.rightPanel}
         >
-          <Grid container xs={8} lg={6} direction="column" alignItems="center" justifyContent="center">
+          <Grid item xs={8} lg={6} container direction="column" alignItems="center" justifyContent="center">
             <img className={classes.logo} src={logo} alt="Logo Portail" />
 
             <Typography className={classes.bienvenue}>Bienvenue ! Connectez-vous.</Typography>
 
-            <form className={classes.form} noValidate onSubmit={_onSubmit} onKeyDown={onKeyDown}>
-              <Grid container direction="column" alignItems="center" justifyContent="center">
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="Identifiant"
-                  label="Identifiant"
-                  name="Identifiant"
-                  autoComplete="Identifiant"
-                  autoFocus
-                  onChange={handleInputChange}
-                />
+            <Grid className={classes.form} container direction="column" alignItems="center" justifyContent="center">
+              <TextField
+                margin="normal"
+                required
+                sx={{ width: '60%' }}
+                id="Identifiant"
+                label="Identifiant"
+                name="Identifiant"
+                autoComplete="Identifiant"
+                autoFocus
+                onChange={handleInputChange}
+                onKeyDown={onKeyDown}
+              />
 
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="Votre mot de passe"
-                  label="Votre mot de passe"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                  onChange={handleInputChange}
-                />
+              <TextField
+                margin="normal"
+                required
+                sx={{ width: '60%' }}
+                name="Votre mot de passe"
+                label="Votre mot de passe"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                onChange={handleInputChange}
+                onKeyDown={onKeyDown}
+              />
 
-                <Button
-                  disabled={loading || !username || !password}
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  className={classes.submit}
-                >
-                  {loading ? <CircularProgress /> : 'Connexion'}
-                </Button>
-              </Grid>
-            </form>
+              <Button
+                disabled={loading || !username || !password}
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                onClick={_onSubmit}
+              >
+                {loading ? <CircularProgress /> : 'Connexion'}
+              </Button>
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
 
-      <ErrorDialog open={errorLogin !== false} setErrorLogin={setErrorLogin} />
+      <ErrorDialog open={errorLogin} setErrorLogin={setErrorLogin} />
     </Grid>
   )
 }
