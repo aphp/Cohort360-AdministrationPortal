@@ -9,34 +9,34 @@ import EditIcon from '@mui/icons-material/Edit'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 
-import ProviderForm from '../ProviderForm/ProviderForm'
+import UserForm from '../UserForm/UserForm'
 import SearchBar from '../../../SearchBar/SearchBar'
 
 import useStyles from './styles'
-import { Column, Order, Provider, UserRole } from 'types'
+import { Column, Order, User, UserRole } from 'types'
 import { useAppSelector } from 'state'
-import { fetchProviders, setSelectedProvider } from 'state/providers'
+import { fetchUsers, setSelectedUser } from 'state/users'
 import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
 import DataTable from 'components/DataTable/DataTable'
 import CommonSnackbar from 'components/Snackbar/Snackbar'
 
-type ProvidersTableProps = {
+type UsersTableProps = {
   userRights: UserRole
 }
 
 const orderDefault = { orderBy: 'lastname', orderDirection: 'asc' } as Order
 
-const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
+const UsersTable: React.FC<UsersTableProps> = ({ userRights }) => {
   const { classes } = useStyles()
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const {
-    providers: { loading, providersList, total, selectedProvider }
-  } = useAppSelector((state) => ({ providers: state.providers }))
+    users: { loading, usersList, total, selectedUser }
+  } = useAppSelector((state) => ({ users: state.users }))
   const columns: Column[] = [
     {
       label: 'Identifiant APH',
-      code: 'provider_source_value',
+      code: 'username',
       align: 'center',
       sortableColumn: true
     },
@@ -74,10 +74,10 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
   const [order, setOrder] = useState(orderDefault)
   const [searchInput, setSearchInput] = useState('')
 
-  const [addProviderSuccess, setAddProviderSuccess] = useState(false)
-  const [addProviderFail, setAddProviderFail] = useState(false)
-  const [editProviderSuccess, setEditProviderSuccess] = useState(false)
-  const [editProviderFail, setEditProviderFail] = useState(false)
+  const [addUserSuccess, setAddUserSuccess] = useState(false)
+  const [addUserFail, setAddUserFail] = useState(false)
+  const [editUserSuccess, setEditUserSuccess] = useState(false)
+  const [editUserFail, setEditUserFail] = useState(false)
 
   const debouncedSearchTerm = useDebounce(500, searchInput)
   const rowsPerPage = 20
@@ -88,19 +88,19 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
   }, [debouncedSearchTerm, order])
 
   useEffect(() => {
-    if (addProviderSuccess || editProviderSuccess) {
+    if (addUserSuccess || editUserSuccess) {
       setPage(1)
       getData(1)
     }
-  }, [addProviderSuccess, editProviderSuccess])
+  }, [addUserSuccess, editUserSuccess])
 
   const getData = async (_page: number) => {
     try {
       if (loading) return
 
-      dispatch<any>(fetchProviders({ page: _page, searchInput, order }))
+      dispatch<any>(fetchUsers({ page: _page, searchInput, order }))
     } catch (error) {
-      console.error('Erreur lors de la récupération des providers', error)
+      console.error('Erreur lors de la récupération des utilisateurs', error)
     }
   }
 
@@ -123,7 +123,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
             disableElevation
             startIcon={<PersonAddIcon height="15px" fill="#FFF" />}
             className={classes.searchButton}
-            onClick={() => dispatch(setSelectedProvider({}))}
+            onClick={() => dispatch(setSelectedUser({}))}
           >
             Nouvel utilisateur
           </Button>
@@ -150,34 +150,34 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
               </div>
             </TableCell>
           </TableRow>
-        ) : !providersList || providersList?.length === 0 ? (
+        ) : !usersList || usersList?.length === 0 ? (
           <TableRow>
             <TableCell colSpan={7}>
               <Typography className={classes.loadingSpinnerContainer}>Aucun résultat à afficher</Typography>
             </TableCell>
           </TableRow>
         ) : (
-          providersList.map((provider: Provider) => {
+          usersList.map((user: User) => {
             return (
-              provider && (
+              user && (
                 <TableRow
-                  key={provider.provider_id}
+                  key={user.username}
                   className={classes.tableBodyRows}
                   hover
                   onClick={() => {
                     if (readAccessesUserRights) {
-                      navigate(`/console-admin/user-profile/${provider.provider_source_value}`)
+                      navigate(`/console-admin/user-profile/${user.username}`)
                     }
                   }}
                 >
                   <TableCell align="center">
                     <Typography onClick={(event) => event.stopPropagation()}>
-                      {provider.provider_source_value}
+                      {user.username}
                     </Typography>
                   </TableCell>
-                  <TableCell align="center">{provider.lastname?.toLocaleUpperCase()}</TableCell>
-                  <TableCell align="center">{provider.firstname}</TableCell>
-                  <TableCell align="center">{provider.email ?? '-'}</TableCell>
+                  <TableCell align="center">{user.lastname?.toLocaleUpperCase()}</TableCell>
+                  <TableCell align="center">{user.firstname}</TableCell>
+                  <TableCell align="center">{user.email ?? '-'}</TableCell>
                   {actionsUserRights && (
                     <TableCell align="center">
                       {readAccessesUserRights && (
@@ -185,7 +185,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                           <IconButton
                             onClick={(event) => {
                               event.stopPropagation()
-                              navigate(`/console-admin/user-profile/${provider.provider_source_value}`)
+                              navigate(`/console-admin/user-profile/${user.username}`)
                             }}
                             size="large"
                           >
@@ -198,7 +198,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                           <IconButton
                             onClick={(event) => {
                               event.stopPropagation()
-                              dispatch(setSelectedProvider(provider))
+                              dispatch(setSelectedUser(user))
                             }}
                             size="large"
                           >
@@ -213,7 +213,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
                               event.stopPropagation()
                               navigate({
                                 pathname: '/console-admin/logs',
-                                search: `?user=${provider.provider_source_value}`
+                                search: `?user=${user.username}`
                               })
                             }}
                             size="large"
@@ -231,37 +231,37 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
         )}
       </DataTable>
 
-      {selectedProvider !== null && (
-        <ProviderForm
+      {selectedUser !== null && (
+        <UserForm
           open
-          onClose={() => dispatch(setSelectedProvider(null))}
-          selectedProvider={selectedProvider}
-          onAddProviderSuccess={setAddProviderSuccess}
-          onEditProviderSuccess={setEditProviderSuccess}
-          onAddProviderFail={setAddProviderFail}
-          onEditProviderFail={setEditProviderSuccess}
+          onClose={() => dispatch(setSelectedUser(null))}
+          selectedUser={selectedUser}
+          onAddUserSuccess={setAddUserSuccess}
+          onEditUserSuccess={setEditUserSuccess}
+          onAddUserFail={setAddUserFail}
+          onEditUserFail={setEditUserSuccess}
         />
       )}
 
-      {(addProviderSuccess || editProviderSuccess) && (
+      {(addUserSuccess || editUserSuccess) && (
         <CommonSnackbar
           severity="success"
           onClose={() => {
-            if (addProviderSuccess) setAddProviderSuccess(false)
-            if (editProviderSuccess) setEditProviderSuccess(false)
+            if (addUserSuccess) setAddUserSuccess(false)
+            if (editUserSuccess) setEditUserSuccess(false)
           }}
-          message={`L'utilisateur a bien été ${addProviderSuccess && 'créé'}${editProviderSuccess && 'édité'}.`}
+          message={`L'utilisateur a bien été ${addUserSuccess && 'créé'}${editUserSuccess && 'édité'}.`}
         />
       )}
-      {(addProviderFail || editProviderFail) && (
+      {(addUserFail || editUserFail) && (
         <CommonSnackbar
           severity="error"
           onClose={() => {
-            if (addProviderFail) setAddProviderFail(false)
-            if (editProviderFail) setEditProviderFail(false)
+            if (addUserFail) setAddUserFail(false)
+            if (editUserFail) setEditUserFail(false)
           }}
-          message={`Erreur lors de ${addProviderFail && 'la création'}${
-            editProviderFail && "l'édition"
+          message={`Erreur lors de ${addUserFail && 'la création'}${
+            editUserFail && "l'édition"
           } de l'utilisateur.`}
         />
       )}
@@ -269,4 +269,4 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({ userRights }) => {
   )
 }
 
-export default ProvidersTable
+export default UsersTable

@@ -28,7 +28,7 @@ import useStyles from './styles'
 import AccessForm from '../AccessForm/AccessForm'
 import { Access, Column, Order, Role, ScopeTreeRow, UserRole } from 'types'
 import moment from 'moment'
-import { onDeleteOrTerminateAccess } from 'services/Console-Admin/providersHistoryService'
+import { onDeleteOrTerminateAccess } from 'services/Console-Admin/profilesService'
 import DataTable from 'components/DataTable/DataTable'
 import CommonSnackbar from 'components/Snackbar/Snackbar'
 
@@ -149,7 +149,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
   const handleDeleteAction = async () => {
     try {
       setLoadingOnConfirm(true)
-      const terminateAccessResp = await onDeleteOrTerminateAccess(terminateAccess, deleteAccess?.care_site_history_id)
+      const terminateAccessResp = await onDeleteOrTerminateAccess(terminateAccess, deleteAccess?.id)
 
       if (terminateAccessResp) {
         setDeleteAccessSuccess(true)
@@ -198,10 +198,10 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
               <TableRow key={access.id} className={classes.tableBodyRows}>
                 {displayName && (
                   <TableCell align="left">
-                    {access.provider_history.lastname?.toLocaleUpperCase()} {access.provider_history.firstname}
+                    {access.profile.lastname?.toLocaleUpperCase()} {access.profile.firstname}
                     <IconButton
                       onClick={() =>
-                        navigate(`/console-admin/user-profile/${access.provider_history.provider_source_value}`)
+                        navigate(`/console-admin/user-profile/${access.profile.username}`)
                       }
                       size="large"
                     >
@@ -315,7 +315,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
                               onClick={() => {
                                 navigate({
                                   pathname: '/console-admin/logs',
-                                  search: `?access=${access.care_site_history_id}`
+                                  search: `?access=${access.id}`
                                 })
                               }}
                               style={{ padding: '4px 12px' }}

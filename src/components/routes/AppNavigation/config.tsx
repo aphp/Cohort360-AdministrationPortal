@@ -3,8 +3,8 @@ import { RouteObject } from 'react-router'
 import Login from 'views/Login/Login'
 import HomePage from 'views/HomePage/HomePage'
 
-import Providers from 'views/Console-Admin/Providers/Providers'
-import ProvidersHistory from 'views/Console-Admin/ProvidersHistory/ProvidersHistory'
+import Users from 'views/Console-Admin/Users/Users'
+import ProfilesView from 'views/Console-Admin/Profiles/Profiles'
 import Perimeters from 'views/Console-Admin/Perimeters/Perimeters'
 import PerimeterHistory from 'views/Console-Admin/PerimeterHistory/PerimeterHistory'
 import Habilitations from 'views/Console-Admin/Habilitations/Habilitations'
@@ -59,7 +59,7 @@ const configRoutes: configRoute[] = [
   /*************************************************************** Console-admin View ***************************************************************** */
 
   /**
-   * Console-Admin Providers View
+   * Console-Admin Users View
    */
 
   {
@@ -68,19 +68,19 @@ const configRoutes: configRoute[] = [
     path: '/console-admin/users',
     name: 'Users',
     isPrivate: true,
-    element: <Providers />
+    element: <Users />
   },
 
   /**
-   * Console-Admin ProvidersHistory View
+   * Console-Admin Profiles View
    */
 
   {
     exact: true,
     displayPortailTopBar: true,
-    path: '/console-admin/user-profile/:providerSourceValue',
+    path: '/console-admin/user-profile/:user_id',
     isPrivate: true,
-    element: <ProvidersHistory />
+    element: <ProfilesView />
   },
 
   /**

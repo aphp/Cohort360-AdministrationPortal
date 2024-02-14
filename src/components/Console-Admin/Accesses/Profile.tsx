@@ -5,7 +5,7 @@ import AddIcon from '@mui/icons-material/Add'
 
 import AccessForm from './AccessForm/AccessForm'
 import AccessesTable from './AccessesTable/AccessesTable'
-import { getAccesses } from 'services/Console-Admin/providersHistoryService'
+import { getAccesses } from 'services/Console-Admin/profilesService'
 import { Access, Order, Profile, Role, UserRole } from 'types'
 
 import useStyles from './styles'
@@ -43,7 +43,7 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profile, userRights
     try {
       setLoading(true)
 
-      const accessesResp = await getAccesses(profile.provider_history_id, page, order)
+      const accessesResp = await getAccesses(profile.id, page, order)
 
       setAccesses(accessesResp?.accesses)
       setTotal(accessesResp?.total)
@@ -97,7 +97,7 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profile, userRights
       <AccessForm
         open={open}
         onClose={onClose}
-        entityId={profile.provider_history_id}
+        entityId={profile.id}
         onSuccess={setAddAccessSuccess}
         onFail={setAddAccessFail}
         userRights={userRights}

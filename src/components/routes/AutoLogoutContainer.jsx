@@ -76,11 +76,11 @@ const AutoLogoutContainer = () => {
 
   const refreshToken = async () => {
     try {
-      const res = await api.post(`/accounts/refresh/`)
+      const res = await api.post(`/auth/refresh/`, { refresh_token: localStorage.getItem(REFRESH_TOKEN) })
 
       if (res.status === 200) {
-        localStorage.setItem(ACCESS_TOKEN, res.data.access)
-        localStorage.setItem(REFRESH_TOKEN, res.data.refresh)
+        localStorage.setItem(ACCESS_TOKEN, res.data.access_token)
+        localStorage.setItem(REFRESH_TOKEN, res.data.refresh_token)
       } else {
         logout()
       }

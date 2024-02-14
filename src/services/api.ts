@@ -25,7 +25,7 @@ api.interceptors.response.use(
   async function (error) {
     if (
       error?.response?.status === 401 ||
-      (error?.response?.status === 403 && error.config.url.includes('/accounts/refresh/'))
+      (error?.response?.status === 403 && error.config.url.includes('/auth/refresh/'))
     ) {
       localStorage.clear()
       window.location.href = '/'

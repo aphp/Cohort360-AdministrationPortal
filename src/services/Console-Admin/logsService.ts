@@ -27,7 +27,7 @@ export const getLogs = async (filters: LogsFiltersObject, page: number) => {
 
     if (filters.access && page === 1) {
       const getCreateAccessLogsResp = await api.get(
-        `/logs/?page=${page}&ordering=-requested_at&path=/accesses/&response="care_site_history_id":${filters.access}${userFilter}${statusCodeFilter}${httpMethodFilter}${afterDateFilter}${beforeDateFilter}${perimeterFilters}`
+        `/logs/?page=${page}&ordering=-requested_at&path=/accesses/&response="id":${filters.access}${userFilter}${statusCodeFilter}${httpMethodFilter}${afterDateFilter}${beforeDateFilter}${perimeterFilters}`
       )
 
       const createAccessLogs: Log[] = getCreateAccessLogsResp?.data?.results ?? []

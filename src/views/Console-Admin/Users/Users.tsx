@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { CircularProgress, Grid, Typography } from '@mui/material'
 
-import ProvidersTable from 'components/Console-Admin/providers/ProvidersTable/ProvidersTable'
+import UsersTable from 'components/Console-Admin/users/UsersTable/UsersTable'
 
 import { getUserRights, userDefaultRoles } from 'utils/userRoles'
 
 import useStyles from './styles'
 
-const ProfilesView: React.FC = () => {
+const UsersView: React.FC = () => {
   const { classes } = useStyles()
   const [userRights, setUserRights] = useState(userDefaultRoles)
   const [loading, setLoading] = useState(true)
@@ -31,7 +31,7 @@ const ProfilesView: React.FC = () => {
   }, []) // eslint-disable-line
 
   return (
-    <Grid id="main-grid-providers" container direction="column">
+    <Grid id="main-grid-users" container direction="column">
       <Grid container justifyContent="center">
         <Grid container item xs={12} sm={10}>
           <Typography variant="h1" align="center" className={classes.title}>
@@ -42,7 +42,7 @@ const ProfilesView: React.FC = () => {
               <CircularProgress />
             </Grid>
           ) : (
-            <ProvidersTable userRights={userRights} />
+            <UsersTable userRights={userRights} />
           )}
         </Grid>
       </Grid>
@@ -50,4 +50,4 @@ const ProfilesView: React.FC = () => {
   )
 }
 
-export default ProfilesView
+export default UsersView
