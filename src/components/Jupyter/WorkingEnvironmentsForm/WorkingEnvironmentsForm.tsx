@@ -17,11 +17,11 @@ import {
   Typography
 } from '@mui/material'
 
-import ProvidersTable from './components/ProvidersTable/ProvidersTable'
+import UsersTable from './components/UsersTable/UsersTable'
 import { getJupyterMachines, getRangerHivePolicies } from 'services/Jupyter/workingEnvironmentsService'
-import { getProviders } from 'services/Console-Admin/providersService'
+import { getUsers } from 'services/Console-Admin/usersService'
 import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
-import { JupyterMachine, Order, Provider, UserRole } from 'types'
+import { JupyterMachine, Order, User, UserRole } from 'types'
 
 type WorkingEnvironmentsFormProps = {
   userRights: UserRole
@@ -32,7 +32,7 @@ type WorkingEnvironmentsFormProps = {
 
 const workingEnvironmentDefault = {
   name: '',
-  usersAssociated: [] as Provider[],
+  usersAssociated: [] as User[],
   sshAccess: 'no',
   publicKey: '',
   machines: [],
@@ -55,7 +55,7 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
   const [workingEnvironment, setWorkingEnvironment] = useState(workingEnvironmentDefault)
   const [jupyterMachines, setJupyterMachines] = useState<JupyterMachine[]>([])
   const [rangerhivePolicies, setRangerhivePolicies] = useState([])
-  const [providersSearchResults, setProvidersSearchResults] = useState<Provider[]>([])
+  const [usersSearchResults, setUsersSearchResults] = useState<User[]>([])
   const [searchInput, setSearchInput] = useState('')
 
   const debouncedSearchTerm = useDebounce(700, searchInput)
@@ -81,21 +81,21 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
     setWorkingEnvironment(_workingEnvironmentCopy)
   }
 
-  const addProvider = (provider?: Provider | null) => {
-    if (!provider) return
+  const addUser = (user?: User | null) => {
+    if (!user) return
 
     const _usersAssociatedCopy = workingEnvironment.usersAssociated ?? []
 
     let alreadyExists = false
 
-    for (const user of _usersAssociatedCopy) {
-      if (user.displayed_name === provider.displayed_name) {
+    for (const _user of _usersAssociatedCopy) {
+      if (user.display_name === _user.display_name) {
         alreadyExists = true
       }
     }
 
     if (!alreadyExists) {
-      _usersAssociatedCopy.push(provider)
+      _usersAssociatedCopy.push(user)
     }
     _onChangeValue('usersAssociated', _usersAssociatedCopy)
   }
@@ -128,26 +128,26 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
   }, [])
 
   useEffect(() => {
-    const _searchProviders = async () => {
+    const _searchUsers = async () => {
       try {
         setLoadingOnSearch(true)
 
-        const providersResp = await getProviders(orderDefault, 1, debouncedSearchTerm)
+        const usersResp = await getUsers(orderDefault, 1, debouncedSearchTerm)
 
-        setProvidersSearchResults(providersResp.providers)
+        setUsersSearchResults(usersResp.users)
 
         setLoadingOnSearch(false)
       } catch (error) {
         console.error('Erreur lors de la recherche des utilisateurs')
-        setProvidersSearchResults([])
+        setUsersSearchResults([])
         setLoadingOnSearch(false)
       }
     }
 
     if (debouncedSearchTerm && debouncedSearchTerm?.length > 0) {
-      _searchProviders()
+      _searchUsers()
     } else {
-      setProvidersSearchResults([])
+      setUsersSearchResults([])
     }
   }, [debouncedSearchTerm])
 
@@ -185,16 +185,16 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
                   <Autocomplete
                     noOptionsText="Recherchez un utilisateur"
                     clearOnEscape
-                    options={providersSearchResults ?? []}
+                    options={usersSearchResults ?? []}
                     loading={loadingOnSearch}
                     onChange={(e, value) => {
-                      addProvider(value)
+                      addUser(value)
                       setSearchInput('')
                     }}
                     inputValue={searchInput}
                     onInputChange={() => setSearchInput('')}
                     getOptionLabel={(option) =>
-                      `${option.provider_source_value} - ${option.lastname?.toLocaleUpperCase()} ${
+                      `${option.username} - ${option.lastname?.toLocaleUpperCase()} ${
                         option.firstname
                       } - ${option.email}` ?? ''
                     }
@@ -218,8 +218,8 @@ const WorkingEnvironmentsForm: React.FC<WorkingEnvironmentsFormProps> = ({
                     )}
                   />
 
-                  <ProvidersTable
-                    providersList={workingEnvironment.usersAssociated}
+                  <UsersTable
+                    usersList={workingEnvironment.usersAssociated}
                     onChangeUsersAssociated={_onChangeValue}
                     usersAssociated={workingEnvironment.usersAssociated}
                   />

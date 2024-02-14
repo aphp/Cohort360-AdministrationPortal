@@ -32,7 +32,7 @@ const WorkingEnvironments = () => {
   }, []) // eslint-disable-line
 
   return (
-    <Grid id="main-grid-providers" container direction="column">
+    <Grid id="main-grid-users" container direction="column">
       <Grid container justifyContent="center">
         <Grid container item xs={12} sm={10}>
           <Typography variant="h1" align="center" className={classes.title}>

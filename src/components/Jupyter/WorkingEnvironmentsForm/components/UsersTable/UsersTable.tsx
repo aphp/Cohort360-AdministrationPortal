@@ -16,17 +16,17 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete'
 
 import useStyles from './styles'
-import { Provider } from 'types'
+import { User } from 'types'
 
-type ProvidersTableProps = {
-  providersList: Provider[]
+type UsersTableProps = {
+  usersList: User[]
   loading?: boolean
-  usersAssociated?: Provider[]
+  usersAssociated?: User[]
   onChangeUsersAssociated: (key: any, value: any) => void
 }
 
-const ProvidersTable: React.FC<ProvidersTableProps> = ({
-  providersList,
+const UsersTable: React.FC<UsersTableProps> = ({
+  usersList,
   loading,
   usersAssociated,
   onChangeUsersAssociated
@@ -36,7 +36,7 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({
   const columns = [
     {
       label: 'Identifiant APH',
-      code: 'provider_source_value'
+      code: 'username'
     },
     {
       label: 'Nom',
@@ -55,10 +55,10 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({
     }
   ]
 
-  const deleteItem = (provider: Provider) => {
+  const deleteItem = (user: User) => {
     const _usersAssociatedCopy = usersAssociated ?? []
 
-    const index = _usersAssociatedCopy.indexOf(provider) ?? -1
+    const index = _usersAssociatedCopy.indexOf(user) ?? -1
     if (index > -1) {
       _usersAssociatedCopy.splice(index, 1)
     }
@@ -87,27 +87,27 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({
                 </div>
               </TableCell>
             </TableRow>
-          ) : !providersList || providersList?.length === 0 ? (
+          ) : !usersList || usersList?.length === 0 ? (
             <TableRow>
               <TableCell colSpan={7}>
                 <Typography className={classes.loadingSpinnerContainer}>Aucun résultat à afficher</Typography>
               </TableCell>
             </TableRow>
           ) : (
-            providersList.map((provider: Provider) => {
+            usersList.map((user: User) => {
               return (
-                provider && (
-                  <TableRow key={provider.provider_id} className={classes.tableBodyRows} hover>
-                    <TableCell align="center">{provider.provider_source_value}</TableCell>
-                    <TableCell align="center">{provider.lastname?.toLocaleUpperCase()}</TableCell>
-                    <TableCell align="center">{provider.firstname}</TableCell>
-                    <TableCell align="center">{provider.email ?? '-'}</TableCell>
+                user && (
+                  <TableRow key={user.username} className={classes.tableBodyRows} hover>
+                    <TableCell align="center">{user.username}</TableCell>
+                    <TableCell align="center">{user.lastname?.toLocaleUpperCase()}</TableCell>
+                    <TableCell align="center">{user.firstname}</TableCell>
+                    <TableCell align="center">{user.email ?? '-'}</TableCell>
                     <TableCell align="center">
                       <Tooltip title="Supprimer l'utilisateur" style={{ padding: '0 12px' }}>
                         <IconButton
                           onClick={(event) => {
                             event.stopPropagation()
-                            deleteItem(provider)
+                            deleteItem(user)
                           }}
                           size="large"
                         >
@@ -126,4 +126,4 @@ const ProvidersTable: React.FC<ProvidersTableProps> = ({
   )
 }
 
-export default ProvidersTable
+export default UsersTable

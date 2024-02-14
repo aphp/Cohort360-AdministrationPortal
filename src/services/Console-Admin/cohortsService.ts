@@ -1,11 +1,11 @@
 import api from '../api'
 
-export const getProviderCohorts = async (provider_source_value?: string) => {
-  if (!provider_source_value) {
+export const getUserCohorts = async (username?: string) => {
+  if (!username) {
     return []
   }
 
-  const cohortsResp = await api.get(`/exports/cohorts/?owner_id=${provider_source_value}&limit=1000`)
+  const cohortsResp = await api.get(`/exports/cohorts/?owner_id=${username}&limit=1000`)
 
   if (cohortsResp.status !== 200) {
     return []

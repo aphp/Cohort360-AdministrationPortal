@@ -15,13 +15,14 @@ import { useNavigate } from 'react-router-dom'
 
 import logo from 'assets/images/portail-black.png'
 import NoRights from 'components/Console-Admin/ErrorView/NoRights'
-import { buildPartialUser } from 'services/Console-Admin/userService'
+import { buildPartialUser } from 'services/Console-Admin/usersService'
 import { authenticate } from 'services/authentication'
 import { login as loginAction } from 'state/me'
 import { ErrorDialogProps } from 'types'
 import { getUserRights } from 'utils/userRoles'
 import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../constants'
 import useStyles from './styles'
+import { getValidAccesses } from '../../services/Console-Admin/profilesService'
 
 const ErrorDialog: React.FC<ErrorDialogProps> = ({ open, setErrorLogin }) => {
   const _setErrorLogin = () => {
@@ -54,8 +55,8 @@ const Login = () => {
 
   useEffect(() => {
     localStorage.removeItem('user')
-    localStorage.removeItem('access')
-    localStorage.removeItem('refresh')
+    localStorage.removeItem('access_token')
+    localStorage.removeItem('refresh_token')
   }, [])
 
   const onLogin = async () => {
@@ -74,43 +75,9 @@ const Login = () => {
 
       const { status, data = {} } = response
       if (status === 200) {
-        const _userRights = await getUserRights(data.accesses)
-        dispatch(loginAction(buildPartialUser(data.provider, _userRights)))
-
-        localStorage.setItem(ACCESS_TOKEN, data.jwt.access)
-        localStorage.setItem(REFRESH_TOKEN, data.jwt.refresh)
-
-        if (
-          !_userRights.right_full_admin &&
-          !_userRights.right_read_logs &&
-          !_userRights.right_manage_users &&
-          !_userRights.right_read_users &&
-          !_userRights.right_manage_datalabs &&
-          !_userRights.right_read_datalabs &&
-          !_userRights.right_manage_admin_accesses_same_level &&
-          !_userRights.right_read_admin_accesses_same_level &&
-          !_userRights.right_manage_admin_accesses_inferior_levels &&
-          !_userRights.right_read_admin_accesses_inferior_levels &&
-          !_userRights.right_manage_data_accesses_same_level &&
-          !_userRights.right_read_data_accesses_same_level &&
-          !_userRights.right_manage_data_accesses_inferior_levels &&
-          !_userRights.right_read_data_accesses_inferior_levels &&
-          !_userRights.right_read_accesses_above_levels &&
-          !_userRights.right_read_patient_nominative &&
-          !_userRights.right_read_patient_pseudonymized &&
-          !_userRights.right_search_opposed_patients &&
-          !_userRights.right_search_patients_by_ipp &&
-          !_userRights.right_manage_export_jupyter_accesses &&
-          !_userRights.right_manage_export_csv_accesses &&
-          !_userRights.right_export_csv_nominative &&
-          !_userRights.right_export_csv_pseudonymized &&
-          !_userRights.right_export_jupyter_nominative &&
-          !_userRights.right_export_jupyter_pseudonymized
-        ) {
-          setNoRights(true)
-        } else {
-          navigate('/homepage')
-        }
+        localStorage.setItem(ACCESS_TOKEN, data.access_token)
+        localStorage.setItem(REFRESH_TOKEN, data.refresh_token)
+        buildUserRights(data.user)
       } else {
         setLoading(false)
         setErrorLogin(true)
@@ -120,6 +87,44 @@ const Login = () => {
       setLoading(false)
       setErrorLogin(true)
     }
+  }
+
+  const buildUserRights = async (user: any) => {
+    const accesses = await getValidAccesses(user.username)
+    const _userRights = await getUserRights(accesses)
+      dispatch(loginAction(buildPartialUser(user, _userRights)))
+
+      if (
+        !_userRights.right_full_admin &&
+        !_userRights.right_read_logs &&
+        !_userRights.right_manage_users &&
+        !_userRights.right_read_users &&
+        !_userRights.right_manage_datalabs &&
+        !_userRights.right_read_datalabs &&
+        !_userRights.right_manage_admin_accesses_same_level &&
+        !_userRights.right_read_admin_accesses_same_level &&
+        !_userRights.right_manage_admin_accesses_inferior_levels &&
+        !_userRights.right_read_admin_accesses_inferior_levels &&
+        !_userRights.right_manage_data_accesses_same_level &&
+        !_userRights.right_read_data_accesses_same_level &&
+        !_userRights.right_manage_data_accesses_inferior_levels &&
+        !_userRights.right_read_data_accesses_inferior_levels &&
+        !_userRights.right_read_accesses_above_levels &&
+        !_userRights.right_read_patient_nominative &&
+        !_userRights.right_read_patient_pseudonymized &&
+        !_userRights.right_search_opposed_patients &&
+        !_userRights.right_search_patients_by_ipp &&
+        !_userRights.right_manage_export_jupyter_accesses &&
+        !_userRights.right_manage_export_csv_accesses &&
+        !_userRights.right_export_csv_nominative &&
+        !_userRights.right_export_csv_pseudonymized &&
+        !_userRights.right_export_jupyter_nominative &&
+        !_userRights.right_export_jupyter_pseudonymized
+      ) {
+        setNoRights(true)
+      } else {
+        navigate('/homepage')
+      }
   }
 
   const _onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -141,7 +146,7 @@ const Login = () => {
   }
 
   useEffect(() => {
-    localStorage.removeItem('providers')
+    localStorage.removeItem('users')
   })
 
   if (noRights) return <NoRights />

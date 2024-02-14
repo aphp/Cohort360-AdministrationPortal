@@ -23,7 +23,7 @@ import InfoIcon from '@mui/icons-material/Info'
 import EditIcon from '@mui/icons-material/Edit'
 
 import { getAssignableRoles } from 'services/Console-Admin/rolesService'
-import { submitCreateAccess, submitEditAccess } from 'services/Console-Admin/providersHistoryService'
+import { submitCreateAccess, submitEditAccess } from 'services/Console-Admin/profilesService'
 import PerimetersDialog from 'components/Console-Admin/Accesses/AccessForm/components/PerimetersDialog/PerimetersDialog'
 import { Access, AccessData, ScopeTreeRow, UserRole } from 'types'
 
@@ -152,7 +152,7 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
       }
 
       if (isEdition) {
-        const submitEditAccessResp = await submitEditAccess(accessData, access?.care_site_history_id)
+        const submitEditAccessResp = await submitEditAccess(accessData, access?.id)
         if (submitEditAccessResp) {
           onSuccess(true)
         } else {

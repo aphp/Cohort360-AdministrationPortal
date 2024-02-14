@@ -3,12 +3,10 @@
 // State
 
 export type MeState = null | {
-  providerId: number
+  username: string
   firstName: string | null
   lastName: string | null
   email: string | null
-  providerSourceValue: string
-  yearOfBirth: number | null
   displayName: string | null
   userRights: UserRole
   // [key: string]: number | string | boolean | Date | null
@@ -28,22 +26,6 @@ export type ErrorDialogProps = {
   setErrorLogin: (b: boolean) => void
 }
 
-// Service
-
-export type BackendUserReceived = {
-  provider_id: number
-  firstname: string | null
-  lastname: string | null
-  email: string | null
-  provider_source_value: string
-  displayed_name: string | null
-  year_of_birth: number | null
-  provider_name: string
-  is_main_admin: boolean
-  dea: string | null
-  npi: string | null
-  accesses: Access[]
-}
 
 // --CONSOLE-ADMIN--
 
@@ -100,47 +82,26 @@ export type ScopeTreeRow = {
 
 // Profile
 
-export type CheckProfile = Provider & {
-  provider?: Provider
+export type CheckProfile = User & {
+  user?: User
   manual_profile?: Profile
 }
 
 export type Profile = {
-  birth_date: string | null
-  care_site_id: number | null
+  id: number
   source: string | null
-  creation_datetime: string
-  dea: string | null
-  delete_datetime: string
   email: string | null
-  entry_created_by: number
-  entry_deleted_by: number
   firstname: string | null
-  gender_concept_id: number | null
-  gender_source_concept_id: number | null
-  gender_source_value: number | null
-  insert_datetime: string
-  invalid_reason: string
   is_active: boolean | null
-  key: string | null
   lastname: string | null
   manual_is_active: boolean | null
   manual_valid_end_datetime: string | null
   manual_valid_start_datetime: string | null
   modified_datetime: string
-  npi: string | null
-  provider: Provider
-  provider_history_id: number
-  provider_id: number
-  provider_name: string | null
-  provider_source_value: string | null
-  specialty_concept_id: number | null
-  specialty_source_concept_id: number | null
-  specialty_source_value: string | null
+  username: string | null
   update_datetime: string
   valid_end_datetime: string | null
   valid_start_datetime: string | null
-  year_of_birth: number | null
 }
 
 // Roles
@@ -212,24 +173,20 @@ export type RoleKeys =
 // Access
 
 export type Access = {
-  id: string
-  care_site_history_id: number
+  id: number
   is_valid: boolean
-  provider_history: Provider
-  provider_history_id: number
+  profile: Profile
+  profile_id: number
   care_site?: CareSite
   perimeter?: Perimeter
   perimeter_id?: string
   role: Role
-  entry_created_by: number
+  role_id: number
   created_by: string
   start_datetime: string
   end_datetime: string
   actual_start_datetime: string
   actual_end_datetime: string
-  care_site_id: number
-  entity_id: number
-  role_id: number
   updated_by: string
   editable: boolean
 }
@@ -242,28 +199,14 @@ export type AccessData = {
   end_datetime?: string | null
 }
 
-// Provider
+// User
 
-export type Provider = {
-  birth_date?: string
-  cdm_source?: string
-  delete_datetime?: string
-  displayed_name?: string
-  email?: string
+export type User = {
+  username?: string
   firstname?: string
-  gender_concept_id?: number
-  gender_source_concept_id?: number
-  gender_source_value?: string
-  insert_datetime?: string
   lastname?: string
-  provider_id?: number
-  provider_name?: string
-  provider_source_value?: string
-  specialty_concept_id?: number
-  specialty_source_concept_id?: number
-  specialty_source_value?: string
-  update_datetime?: string
-  year_of_birth?: number
+  email?: string
+  display_name?: string
 }
 
 export type Log = {
@@ -280,7 +223,7 @@ export type Log = {
   response_ms?: number
   status_code?: number
   user?: number
-  user_details: Provider
+  user_details: User
   username_persistent?: string
   view?: string
   view_method?: string
@@ -308,7 +251,7 @@ export type Order = {
 // Habilitation
 
 export type UserInHabilitation = {
-  provider_username: string
+  username: string
   firstname: string
   lastname: string
   perimeter: string
@@ -369,7 +312,7 @@ export type Column = {
 }
 
 export type JupyterTransferForm = {
-  user: Provider | null
+  user: User | null
   cohort: Cohort | null
   confidentiality: 'nomi' | 'pseudo'
   workingEnvironment: WorkingEnvironment | null

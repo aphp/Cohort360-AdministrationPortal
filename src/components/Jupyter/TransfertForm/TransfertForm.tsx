@@ -22,9 +22,9 @@ import {
 } from '@mui/material'
 import InfoIcon from '@mui/icons-material/Info'
 
-import { Cohort, ExportTableType, JupyterTransferForm, Order, Provider, UserRole, WorkingEnvironment } from 'types'
-import { getProviders } from 'services/Console-Admin/providersService'
-import { getProviderCohorts } from 'services/Console-Admin/cohortsService'
+import { Cohort, ExportTableType, JupyterTransferForm, Order, User, UserRole, WorkingEnvironment } from 'types'
+import { getUsers } from 'services/Console-Admin/usersService'
+import { getUserCohorts } from 'services/Console-Admin/cohortsService'
 import { getWorkingEnvironments } from 'services/Jupyter/workingEnvironmentsService'
 import export_table from './export_tables'
 
@@ -63,19 +63,19 @@ const TransfertForm: React.FC<TransferFormProps> = ({
 }) => {
   const { classes, cx } = useStyles()
 
-  const [loadingOnSearchProvider, setLoadingOnSearchProvider] = useState(false)
+  const [loadingOnSearchUser, setLoadingOnSearchUser] = useState(false)
   const [loadingOnGetCohorts, setLoadingOnGetCohorts] = useState(false)
   const [loadingOnWorkingEnvironments, setLoadingOnWorkingEnvironments] = useState(false)
   const [loadingOnValidate, setLoadingOnValidate] = useState(false)
   const [transferRequest, setTransferRequest] = useState(defaultTransfer)
 
-  const [providersSearchResults, setProvidersSearchResults] = useState<Provider[]>([])
-  const [providerSearchInput, setProviderSearchInput] = useState('')
+  const [usersSearchResults, setUsersSearchResults] = useState<User[]>([])
+  const [userSearchInput, setUserSearchInput] = useState('')
   const [environmentSearchInput, setEnvironmentSearchInput] = useState('')
   const [cohortsOptions, setCohortsOptions] = useState<Cohort[]>([])
   const [workingEnvironments, setWorkingEnvironments] = useState<WorkingEnvironment[]>([])
 
-  const debouncedProviderSearchTerm = useDebounce(700, providerSearchInput)
+  const debouncedUserSearchTerm = useDebounce(700, userSearchInput)
   const debouncedEnvironmentSearchTerm = useDebounce(700, environmentSearchInput)
 
   const _onChangeValue = (
@@ -116,35 +116,35 @@ const TransfertForm: React.FC<TransferFormProps> = ({
   }
 
   useEffect(() => {
-    const _searchProviders = async () => {
+    const _searchUsers = async () => {
       try {
-        setLoadingOnSearchProvider(true)
+        setLoadingOnSearchUser(true)
 
-        const providersResp = await getProviders(orderDefault, 1, debouncedProviderSearchTerm)
+        const usersResp = await getUsers(orderDefault, 1, debouncedUserSearchTerm)
 
-        setProvidersSearchResults(providersResp.providers)
+        setUsersSearchResults(usersResp.users)
 
-        setLoadingOnSearchProvider(false)
+        setLoadingOnSearchUser(false)
       } catch (error) {
         console.error('Erreur lors de la recherche des utilisateurs', error)
-        setProvidersSearchResults([])
-        setLoadingOnSearchProvider(false)
+        setUsersSearchResults([])
+        setLoadingOnSearchUser(false)
       }
     }
 
-    if (debouncedProviderSearchTerm && debouncedProviderSearchTerm?.length > 0) {
-      _searchProviders()
+    if (debouncedUserSearchTerm && debouncedUserSearchTerm?.length > 0) {
+      _searchUsers()
     } else {
-      setProvidersSearchResults([])
+      setUsersSearchResults([])
     }
-  }, [debouncedProviderSearchTerm])
+  }, [debouncedUserSearchTerm])
 
   useEffect(() => {
-    const _getProviderCohorts = async () => {
+    const _getUserCohorts = async () => {
       try {
         setLoadingOnGetCohorts(true)
 
-        const cohortsResp = await getProviderCohorts(transferRequest.user?.provider_source_value)
+        const cohortsResp = await getUserCohorts(transferRequest.user?.username)
 
         setCohortsOptions(cohortsResp)
 
@@ -158,7 +158,7 @@ const TransfertForm: React.FC<TransferFormProps> = ({
 
     setTransferRequest({ ...transferRequest, ['cohort']: null })
     if (transferRequest.user !== null) {
-      _getProviderCohorts()
+      _getUserCohorts()
     }
   }, [transferRequest.user])
 
@@ -192,7 +192,7 @@ const TransfertForm: React.FC<TransferFormProps> = ({
       const transferData = {
         output_format: 'hive',
         cohort_id: transferRequest.cohort?.fhir_group_id,
-        provider_source_value: transferRequest.user?.provider_source_value,
+        user_source_value: transferRequest.user?.username,
         target_unix_account: transferRequest.workingEnvironment?.uid,
         tables: transferRequest.tables.map((table: string) => ({
           omop_table_name: table
@@ -244,27 +244,27 @@ const TransfertForm: React.FC<TransferFormProps> = ({
             <Autocomplete
               className={classes.autocomplete}
               noOptionsText="Recherchez un utilisateur"
-              options={providersSearchResults ?? []}
-              loading={loadingOnSearchProvider}
+              options={usersSearchResults ?? []}
+              loading={loadingOnSearchUser}
               onChange={(e, value) => _onChangeValue('user', value)}
-              getOptionLabel={(option) =>
-                `${option.provider_source_value} - ${option.lastname?.toLocaleUpperCase()} ${option.firstname} - ${
+              getOptionLabel={(option: User) =>
+                `${option.username} - ${option.lastname?.toLocaleUpperCase()} ${option.firstname} - ${
                   option.email
                 }` ?? ''
               }
               value={transferRequest.user}
-              isOptionEqualToValue={(option, value) => option.provider_id === value.provider_id}
+              isOptionEqualToValue={(option, value) => option.username === value.username}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   label="Recherchez un utilisateur"
-                  value={providerSearchInput}
-                  onChange={(e) => setProviderSearchInput(e.target.value)}
+                  value={userSearchInput}
+                  onChange={(e) => setUserSearchInput(e.target.value)}
                   InputProps={{
                     ...params.InputProps,
                     endAdornment: (
                       <Fragment>
-                        {loadingOnSearchProvider ? <CircularProgress color="inherit" size={20} /> : null}
+                        {loadingOnSearchUser ? <CircularProgress color="inherit" size={20} /> : null}
                         {params.InputProps.endAdornment}
                       </Fragment>
                     )

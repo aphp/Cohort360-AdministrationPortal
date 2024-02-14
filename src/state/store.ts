@@ -3,12 +3,12 @@ import thunkMiddleware from 'redux-thunk'
 import logger from 'redux-logger'
 
 import me from './me'
-import providers from './providers'
+import users from './users'
 import autoLogout from './autoLogout'
 
 const rootReducer = combineReducers({
   me,
-  providers,
+  users,
   autoLogout
 })
 
@@ -17,9 +17,9 @@ export const store = createStore(rootReducer, applyMiddleware(thunkMiddleware, l
 store.subscribe(() => {
   // Auto save store inside localStorage
   const _store = store.getState() ?? {}
-  const { me, providers, autoLogout } = _store // eslint-disable-line
+  const { me, users, autoLogout } = _store // eslint-disable-line
 
   localStorage.setItem('user', JSON.stringify(me))
-  localStorage.setItem('providers', JSON.stringify(providers))
+  localStorage.setItem('users', JSON.stringify(users))
   localStorage.setItem('autoLogout', JSON.stringify(autoLogout))
 })

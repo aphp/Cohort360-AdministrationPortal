@@ -21,79 +21,79 @@ import {
   editProfile,
   getProfile,
   submitCreateProfile
-} from 'services/Console-Admin/providersHistoryService'
-import { CheckProfile, Profile, Provider } from 'types'
+} from 'services/Console-Admin/profilesService'
+import { CheckProfile, Profile, User } from 'types'
 import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
 import { USERNAME_REGEX } from '../../../../constants'
 
-type ProviderFormProps = {
+type UserFormProps = {
   open: boolean
-  selectedProvider: Provider | null
+  selectedUser: User | null
   onClose: () => void
-  onAddProviderSuccess: (success: boolean) => void
-  onEditProviderSuccess: (fail: boolean) => void
-  onAddProviderFail: (success: boolean) => void
-  onEditProviderFail: (fail: boolean) => void
+  onAddUserSuccess: (success: boolean) => void
+  onEditUserSuccess: (fail: boolean) => void
+  onAddUserFail: (success: boolean) => void
+  onEditUserFail: (fail: boolean) => void
 }
 
-const defaultProvider: Provider = {
-  provider_source_value: '',
+const defaultUser: User = {
+  username: '',
   firstname: undefined,
   lastname: '',
   email: ''
 }
 
-const ProviderForm: React.FC<ProviderFormProps> = ({
+const UserForm: React.FC<UserFormProps> = ({
   open,
-  selectedProvider,
+  selectedUser,
   onClose,
-  onAddProviderSuccess,
-  onEditProviderSuccess,
-  onAddProviderFail,
-  onEditProviderFail
+  onAddUserSuccess,
+  onEditUserSuccess,
+  onAddUserFail,
+  onEditUserFail
 }) => {
   const { classes } = useStyles()
 
-  const [provider, setProvider] = useState<CheckProfile | null>(selectedProvider || null)
-  const [providerHistoryId, setProviderHistoryId] = useState('')
-  const [loadingProviderData, setLoadingProviderData] = useState(false)
+  const [user, setUser] = useState<CheckProfile | null>(selectedUser || null)
+  const [profileId, setProfileId] = useState('')
+  const [loadingUserData, setLoadingUserData] = useState(false)
   const [loadingOnValidate, setLoadingOnValidate] = useState(false)
 
   const [error, setError] = useState(false)
-  const [providerSourceValueError, setProviderSourceValueError] = useState(false)
+  const [usernameError, setUsernameError] = useState(false)
   const [firstNameError, setFirstNameError] = useState(false)
   const [lastNameError, setLastNameError] = useState(false)
   const [emailError, setEmailError] = useState(false)
 
-  const isEdition = selectedProvider?.provider_source_value
+  const isEdition = selectedUser?.username
 
-  const _onChangeValue = (key: 'provider_source_value' | 'firstname' | 'lastname' | 'email', value: any) => {
-    const _provider = provider ? { ...provider } : {}
-    _provider[key] = value
-    setProvider(_provider)
+  const _onChangeValue = (key: 'username' | 'firstname' | 'lastname' | 'email', value: any) => {
+    const _user = user ? { ...user } : {}
+    _user[key] = value
+    setUser(_user)
   }
 
   useEffect(() => {
     const _getProfile = async () => {
       try {
-        const providerSourceValue = provider?.provider_source_value?.toString()
-        setLoadingProviderData(true)
+        const username = user?.username?.toString()
+        setLoadingUserData(true)
 
-        const profilesResp = await getProfile(providerSourceValue)
+        const profilesResp = await getProfile(username)
 
         if (profilesResp) {
           const manualProfile = profilesResp.find(
             (profile: Profile) => profile.source?.toLocaleLowerCase() === 'manual'
           )
 
-          setProviderHistoryId(manualProfile.provider_history_id)
+          setProfileId(manualProfile.id)
         }
 
-        setLoadingProviderData(false)
+        setLoadingUserData(false)
       } catch (error) {
         console.error('Erreur lors de la récupération du profil', error)
         setError(true)
-        setLoadingProviderData(false)
+        setLoadingUserData(false)
       }
     }
 
@@ -102,30 +102,31 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
     }
   }, []) // eslint-disable-line
 
-  const debouncedSearchTerm = useDebounce(700, provider?.provider_source_value)
+  const debouncedSearchTerm = useDebounce(700, user?.username)
 
   useEffect(() => {
     const _checkProfile = async () => {
       try {
-        setLoadingProviderData(true)
-        const checkProfileResp = await checkProfile(provider?.provider_source_value)
+        setLoadingUserData(true)
+        const checkProfileResp = await checkProfile(user?.username)
+        console.log('*************** checkProfileResp', checkProfileResp)
 
         if (checkProfileResp) {
-          setProvider(checkProfileResp)
+          setUser(checkProfileResp)
         } else {
-          setProvider(null)
+          setUser(null)
         }
-        setLoadingProviderData(false)
+        setLoadingUserData(false)
       } catch (error) {
         console.error('Erreur lors de la vérification du profil')
-        const _provider: Provider = {
-          ...provider,
+        const _user: User = {
+          ...user,
           firstname: '',
           lastname: '',
           email: ''
         }
-        setProvider(_provider)
-        setLoadingProviderData(false)
+        setUser(_user)
+        setLoadingUserData(false)
       }
     }
 
@@ -138,65 +139,65 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
     const name = /^([ \u00c0-\u01ffa-zA-Z'-])+$/
     const aphpMail = /^[a-zA-Z0-9._-]+@aphp[.]fr$/
 
-    if (provider?.provider_source_value && !provider.provider_source_value.match(USERNAME_REGEX)) {
-      setProviderSourceValueError(true)
+    if (user?.username && !user.username.match(USERNAME_REGEX)) {
+      setUsernameError(true)
     } else {
-      setProviderSourceValueError(false)
+      setUsernameError(false)
     }
 
-    if (provider?.lastname && !provider.lastname.match(name)) {
+    if (user?.lastname && !user.lastname.match(name)) {
       setLastNameError(true)
     } else {
       setLastNameError(false)
     }
 
-    if (provider?.firstname && !provider.firstname.match(name)) {
+    if (user?.firstname && !user.firstname.match(name)) {
       setFirstNameError(true)
     } else {
       setFirstNameError(false)
     }
 
-    if (provider?.email && provider?.email.length > 0 && !provider.email.match(aphpMail)) {
+    if (user?.email && user?.email.length > 0 && !user.email.match(aphpMail)) {
       setEmailError(true)
     } else {
       setEmailError(false)
     }
-  }, [provider])
+  }, [user])
 
   const onSubmit = async () => {
     try {
       setLoadingOnValidate(true)
       if (isEdition) {
-        const providerData = {
-          firstname: provider?.firstname,
-          lastname: provider?.lastname,
-          email: provider?.email
+        const userData = {
+          firstname: user?.firstname,
+          lastname: user?.lastname,
+          email: user?.email
         }
 
-        const editProfileResp = await editProfile(providerHistoryId, providerData)
+        const editProfileResp = await editProfile(profileId, userData)
 
-        editProfileResp ? onEditProviderSuccess(true) : onEditProviderFail(true)
+        editProfileResp ? onEditUserSuccess(true) : onEditUserFail(true)
       } else {
-        const providerData = {
-          firstname: provider?.firstname,
-          lastname: provider?.lastname,
-          user_id: provider?.provider_source_value,
-          email: provider?.email
+        const userData = {
+          firstname: user?.firstname,
+          lastname: user?.lastname,
+          user_id: user?.username,
+          email: user?.email
         }
-        const createProfileResp = await submitCreateProfile(providerData)
+        const createProfileResp = await submitCreateProfile(userData)
 
-        createProfileResp ? onAddProviderSuccess(true) : onAddProviderFail(true)
+        createProfileResp ? onAddUserSuccess(true) : onAddUserFail(true)
       }
 
       setLoadingOnValidate(false)
 
-      setProvider(defaultProvider)
+      setUser(defaultUser)
       onClose()
     } catch (error) {
       console.error(`Erreur lors de ${isEdition ? "l'édition" : 'la création'} de l'utilisateur`, error)
-      isEdition ? onEditProviderFail(true) : onAddProviderFail(true)
+      isEdition ? onEditUserFail(true) : onAddUserFail(true)
 
-      setProvider(defaultProvider)
+      setUser(defaultUser)
       setLoadingOnValidate(false)
       onClose()
     }
@@ -206,7 +207,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>{isEdition ? 'Éditer un utilisateur :' : 'Créer un nouvel utilisateur :'}</DialogTitle>
       <DialogContent className={classes.dialog}>
-        {isEdition && loadingProviderData ? (
+        {isEdition && loadingUserData ? (
           <Grid container justifyContent="center" style={{ padding: 16 }}>
             <CircularProgress />
           </Grid>
@@ -223,20 +224,20 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
                   margin="normal"
                   autoFocus
                   placeholder="Exemple: 4010101"
-                  value={provider?.provider_source_value}
-                  onChange={(event) => _onChangeValue('provider_source_value', event.target.value)}
-                  error={providerSourceValueError}
-                  helperText={providerSourceValueError && "Le format de cet identifiant APH n'est pas valide."}
+                  value={user?.username}
+                  onChange={(event) => _onChangeValue('username', event.target.value)}
+                  error={usernameError}
+                  helperText={usernameError && "Le format de cet identifiant APH n'est pas valide."}
                   style={{ margin: '1em' }}
                 />
               </Grid>
             )}
-            {loadingProviderData ? (
+            {loadingUserData ? (
               <Grid container justifyContent="center" style={{ padding: 16 }}>
                 <CircularProgress />
               </Grid>
-            ) : provider?.firstname !== undefined ? (
-              provider?.manual_profile ? (
+            ) : user?.firstname !== undefined ? (
+              user?.manual_profile ? (
                 <div>
                   <ErrorOutlineIcon color="secondary" className={classes.infoIcon} />
                   <Typography component="span" color="secondary">
@@ -251,7 +252,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
                       margin="normal"
                       autoFocus
                       placeholder="Exemple: Dupont"
-                      value={provider?.lastname}
+                      value={user?.lastname}
                       onChange={(event) => _onChangeValue('lastname', event.target.value)}
                       error={lastNameError}
                       helperText={
@@ -267,7 +268,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
                       margin="normal"
                       autoFocus
                       placeholder="Exemple: Jean"
-                      value={provider?.firstname}
+                      value={user?.firstname}
                       onChange={(event) => _onChangeValue('firstname', event.target.value)}
                       error={firstNameError}
                       helperText={
@@ -283,7 +284,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
                       margin="normal"
                       autoFocus
                       placeholder="Exemple: jean.dupont@aphp.fr"
-                      value={provider?.email}
+                      value={user?.email}
                       onChange={(event) => _onChangeValue('email', event.target.value)}
                       error={emailError}
                       helperText={emailError && `L'adresse e-mail doit être du format "prenom.nom@aphp.fr"`}
@@ -313,15 +314,15 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
           disabled={
             loadingOnValidate ||
             error ||
-            providerSourceValueError ||
+            usernameError ||
             lastNameError ||
             firstNameError ||
             emailError ||
-            (!isEdition && provider?.manual_profile !== null) ||
-            !provider?.provider_source_value ||
-            !provider.firstname ||
-            !provider.lastname ||
-            !provider.email
+            (!isEdition && user?.manual_profile !== null) ||
+            !user?.username ||
+            !user.firstname ||
+            !user.lastname ||
+            !user.email
           }
           onClick={onSubmit}
           color="primary"
@@ -333,4 +334,4 @@ const ProviderForm: React.FC<ProviderFormProps> = ({
   )
 }
 
-export default ProviderForm
+export default UserForm
