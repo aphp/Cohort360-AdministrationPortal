@@ -22,11 +22,6 @@ const exportTable: ExportTableType[] = [
     table_id: 'visit_detail'
   },
   {
-    id: 'cohort_definition',
-    table_name: 'Cohorte - Information (requête)',
-    table_id: 'cohort_definition'
-  },
-  {
     id: 'condition_occurrence',
     table_name: 'Fait - PMSI - Diagnostics',
     table_id: 'condition_occurrence'
