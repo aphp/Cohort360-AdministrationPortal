@@ -22,7 +22,7 @@ import PeopleIcon from '@mui/icons-material/People'
 import useStyles from './styles'
 import { Column, Order, Role, UserRole } from 'types'
 import { getRoles, deleteRole } from 'services/Console-Admin/rolesService'
-import RoleDialog from '../HabilitationDialog/HabilitationDialog'
+import HabilitationDialog from '../HabilitationDialog/HabilitationDialog'
 import { userDefaultRoles } from 'utils/userRoles'
 import DataTable from 'components/DataTable/DataTable'
 import CommonSnackbar from 'components/Snackbar/Snackbar'
@@ -183,7 +183,7 @@ const HabilitationsTable: React.FC<HabilitationsTableProps> = ({ userRights }) =
       </DataTable>
 
       {selectedRole && (
-        <RoleDialog
+        <HabilitationDialog
           open
           userRights={userRights}
           selectedRole={selectedRole}
