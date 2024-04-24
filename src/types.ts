@@ -370,3 +370,20 @@ export type ExportTableType = {
   table_name: string
   table_id: string
 }
+
+export type RightsCategory = {
+  name: string
+  is_global: boolean
+  rights: RightInRole[]
+}
+
+export type RightInRole = {
+  label: string
+  name: RoleKeys
+  depends_on: RoleKeys
+}
+
+export type RightsDependency = {
+  dependent: RoleKeys
+  dependency: RoleKeys
+}

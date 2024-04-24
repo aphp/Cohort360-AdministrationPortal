@@ -19,7 +19,8 @@ import EditIcon from '@mui/icons-material/Edit'
 
 import useStyles from './styles'
 import { createRoles, submitEditRoles } from 'services/Console-Admin/rolesService'
-import { Role, RoleKeys, UserRole } from 'types'
+import { Role, RoleKeys, UserRole, RightsCategory, RightsDependency } from 'types'
+import api from '../../../../services/api'
 
 type HabilitationDialogProps = {
   open: boolean
@@ -49,196 +50,36 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
   const [editMode, setEditMode] = useState(false)
   const [disabledRights, setDisabledRights] = useState<string[]>([])
   const [loadingOnValidate, setLoadingOnValidate] = useState(false)
+  const [rightsCategories, setRightsCategories] = useState<RightsCategory[]>([])
+  const [rightsDependencies, setRightsDependencies] = useState<RightsDependency[]>([])
 
   const isEditable = selectedRole?.id ? true : false
 
-  const rightsCategories = [
-    {
-      name: 'Administration',
-      isGlobal: true,
-      rights: [{ label: 'Admin Central', status: role?.right_full_admin, keyName: 'right_full_admin' }]
-    },
-    {
-      name: 'Logs',
-      isGlobal: true,
-      rights: [{ label: 'Consulter les logs', status: role?.right_read_logs, keyName: 'right_read_logs' }]
-    },
-    {
-      name: 'Utilisateurs',
-      isGlobal: true,
-      rights: [
-        {
-          label: 'Gérer la liste des utilisateurs / profils',
-          status: role?.right_manage_users,
-          keyName: 'right_manage_users'
-        },
-        {
-          label: 'Consulter la liste des utilisateurs / profils',
-          status: role?.right_read_users,
-          keyName: 'right_read_users'
-        }
-      ]
-    },
-    {
-      name: 'Datalabs',
-      isGlobal: true,
-      rights: [
-        {
-          label: 'Gérer les environnements de travail',
-          status: role?.right_manage_datalabs,
-          keyName: 'right_manage_datalabs'
-        },
-        {
-          label: 'Consulter la liste des environnements de travail',
-          status: role?.right_read_datalabs,
-          keyName: 'right_read_datalabs'
-        }
-      ]
-    },
-    {
-      name: 'Accès Exports',
-      isGlobal: true,
-      rights: [
-        {
-          label: 'Gérer les accès permettant de réaliser des exports de données en format CSV',
-          status: role?.right_manage_export_csv_accesses,
-          keyName: 'right_manage_export_csv_accesses'
-        },
-        {
-          label: "Gérer les accès permettant d'exporter les cohortes vers des environnements Jupyter",
-          status: role?.right_manage_export_jupyter_accesses,
-          keyName: 'right_manage_export_jupyter_accesses'
-        }
-      ]
-    },
-    {
-      name: 'Exports CSV',
-      isGlobal: true,
-      rights: [
-        {
-          label: 'Demander à exporter ses cohortes de patients sous forme nominative en format CSV',
-          status: role?.right_export_csv_nominative,
-          keyName: 'right_export_csv_nominative'
-        },
-        {
-          label: 'Demander à exporter ses cohortes de patients sous forme pseudonymisée en format CSV',
-          status: role?.right_export_csv_pseudonymized,
-          keyName: 'right_export_csv_pseudonymized'
-        }
-      ]
-    },
-    {
-      name: 'Exports Jupyter',
-      isGlobal: true,
-      rights: [
-        {
-          label: 'Exporter ses cohortes de patients sous forme nominative vers un environnement Jupyter',
-          status: role?.right_export_jupyter_nominative,
-          keyName: 'right_export_jupyter_nominative'
-        },
-        {
-          label: 'Exporter ses cohortes de patients sous forme pseudonymisée vers un environnement Jupyter',
-          status: role?.right_export_jupyter_pseudonymized,
-          keyName: 'right_export_jupyter_pseudonymized'
-        }
-      ]
-    },
-    {
-      name: 'Recherche de Patients',
-      isGlobal: true,
-      rights: [
-        {
-          label: 'Chercher les patients par IPP',
-          status: role?.right_search_patients_by_ipp,
-          keyName: 'right_search_patients_by_ipp'
-        },
-        {
-          label: "Chercher les patients opposés à l'utilisation de leurs données pour la recherche",
-          status: role?.right_search_opposed_patients,
-          keyName: 'right_search_opposed_patients'
-        }
-      ]
-    },
-    {
-      name: 'Lecture de Données Patients',
-      isGlobal: false,
-      rights: [
-        {
-          label: 'Lecture de données patients nominatives',
-          status: role?.right_read_patient_nominative,
-          keyName: 'right_read_patient_nominative'
-        },
-        {
-          label: 'Lecture de données patients pseudonymisées',
-          status: role?.right_read_patient_pseudonymized,
-          keyName: 'right_read_patient_pseudonymized'
-        }
-      ]
-    },
-    {
-      name: 'Gestion des "Accès Admin"',
-      isGlobal: false,
-      rights: [
-        {
-          label: "Gérer les accès administrateurs d'un périmètre exclusivement",
-          status: role?.right_manage_admin_accesses_same_level,
-          keyName: 'right_manage_admin_accesses_same_level'
-        },
-        {
-          label: "Consulter la liste des accès administrateur d'un périmètre exclusivement",
-          status: role?.right_read_admin_accesses_same_level,
-          keyName: 'right_read_admin_accesses_same_level'
-        },
-        {
-          label: 'Gérer les accès administrateurs des sous-périmètres exclusivement',
-          status: role?.right_manage_admin_accesses_inferior_levels,
-          keyName: 'right_manage_admin_accesses_inferior_levels'
-        },
-        {
-          label: 'Consulter la liste des accès administrateur des sous-périmètres exclusivement',
-          status: role?.right_read_admin_accesses_inferior_levels,
-          keyName: 'right_read_admin_accesses_inferior_levels'
-        }
-      ]
-    },
-    {
-      name: 'Gestion des "Accès Données"',
-      isGlobal: false,
-      rights: [
-        {
-          label: "Gérer les accès aux données patients d'un périmètre exclusivement",
-          status: role?.right_manage_data_accesses_same_level,
-          keyName: 'right_manage_data_accesses_same_level'
-        },
-        {
-          label: "Consulter la liste des accès aux données patients d'un périmètre exclusivement",
-          status: role?.right_read_data_accesses_same_level,
-          keyName: 'right_read_data_accesses_same_level'
-        },
-        {
-          label: 'Gérer les accès aux données patients des sous-périmètres exclusivement',
-          status: role?.right_manage_data_accesses_inferior_levels,
-          keyName: 'right_manage_data_accesses_inferior_levels'
-        },
-        {
-          label: 'Consulter la liste des accès aux données patients des sous-périmètres exclusivement',
-          status: role?.right_read_data_accesses_inferior_levels,
-          keyName: 'right_read_data_accesses_inferior_levels'
-        }
-      ]
-    },
-    {
-      name: 'Divers',
-      isGlobal: true,
-      rights: [
-        {
-          label: "Consulter les accès en provenance des périmètres parents d'un périmètre P",
-          status: role?.right_read_accesses_above_levels,
-          keyName: 'right_read_accesses_above_levels'
-        }
-      ]
+  const getRightCategories = async () => {
+    try {
+      const rightsResp = await api.get('/accesses/rights/')
+      buildRightsDependencies(rightsResp.data)
+    } catch (error) {
+      console.error('Erreur lors de la récupération des droits', error)
     }
-  ]
+  }
+
+  const buildRightsDependencies = (_rightsCategories: RightsCategory[]) => {
+    setRightsCategories(_rightsCategories)
+    const _rightsDependencies: RightsDependency[] = []
+    _rightsCategories.map((category) => {
+      category.rights.map((right) => {
+        if (right.depends_on) {
+          _rightsDependencies.push({ dependent: right.name, dependency: right.depends_on })
+        }
+      })
+    })
+    setRightsDependencies(_rightsDependencies)
+  }
+
+  useEffect(() => {
+    getRightCategories()
+  }, [isEditable])
 
   useEffect(() => {
     if ((role.name && role.name.length < 4) || !role.name) {
@@ -248,39 +89,27 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
     }
   }, [role])
 
-  const rightsDependencies = [
-    { dependency: 'right_manage_users', dependant: 'right_read_users' },
-    { dependency: 'right_manage_datalabs', dependant: 'right_read_datalabs' },
-    { dependency: 'right_manage_admin_accesses_same_level', dependant: 'right_read_admin_accesses_same_level' },
-    {
-      dependency: 'right_manage_admin_accesses_inferior_levels',
-      dependant: 'right_read_admin_accesses_inferior_levels'
-    },
-    { dependency: 'right_manage_data_accesses_same_level', dependant: 'right_read_data_accesses_same_level' },
-    { dependency: 'right_manage_data_accesses_inferior_levels', dependant: 'right_read_data_accesses_inferior_levels' }
-  ]
-
-  const toggleDependantRights = (role: any, right: RoleKeys, value: boolean) => {
+  const toggleDependentRights = (role: any, right: RoleKeys, value: boolean) => {
     let disabled_rights = [...disabledRights]
     if (right === 'right_full_admin') {
-      for (let prop in role) {
-        if (prop.includes('right_') && prop !== right) {
-          role[prop] = value
+      for (let r in role) {
+        if (r.includes('right_') && r !== right) {
+          role[r] = value
           if (value) {
-            disabled_rights.push(prop)
+            disabled_rights.push(r)
           } else {
-            disabled_rights = disabled_rights.filter((r) => r !== prop)
+            disabled_rights = disabled_rights.filter((dr) => dr !== r)
           }
         }
       }
     } else {
-      rightsDependencies.map((e) => {
-        if (e.dependency === right) {
+      rightsDependencies.map((r) => {
+        if (r.dependency === right) {
           if (value) {
-            role[e.dependant] = value
-            disabled_rights.push(e.dependant)
+            role[r.dependent] = value
+            disabled_rights.push(r.dependent)
           } else {
-            disabled_rights = disabled_rights.filter((r) => r !== e.dependant)
+            disabled_rights = disabled_rights.filter((dr) => dr !== r.dependent)
           }
         }
       })
@@ -292,7 +121,7 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
     const _role = { ...role }
     // @ts-ignore
     _role[key] = value
-    toggleDependantRights(_role, key, value)
+    toggleDependentRights(_role, key, value)
     setRole(_role)
   }
 
@@ -308,7 +137,7 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
     } else {
       rightsDependencies.map((e) => {
         if (role[e.dependency]) {
-          disabled_rights.push(e.dependant)
+          disabled_rights.push(e.dependent)
         }
       })
     }
@@ -388,11 +217,11 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
           ''
         )}
         <div className={classes.cardsGrid}>
-          {rightsCategories.map((category, index) => (
+          {rightsCategories.map((category) => (
             <div className={classes.card}>
               <Grid display="flex" justifyContent="space-between" alignItems="center">
                 <Typography variant="h6">{category.name}</Typography>
-                {category.isGlobal ? (
+                {category.is_global ? (
                   <span className={classes.chipGlobal}>Global</span>
                 ) : (
                   <span className={classes.chipHierarchical}>Hiérarchique</span>
@@ -404,14 +233,14 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
                   <div>
                     {(isEditable && editMode) || !isEditable ? (
                       <Switch
-                        checked={!!right.status}
+                        checked={!!role[right.name]}
                         onChange={(event) =>
                           // @ts-ignore
-                          _onChangeValue(right.keyName, event.target.checked)
+                          _onChangeValue(right.name, event.target.checked)
                         }
-                        disabled={disabledRights.some((r) => r === right.keyName)}
+                        disabled={disabledRights.some((r) => r === right.name)}
                       />
-                    ) : right.status ? (
+                    ) : role[right.name] ? (
                       <CheckCircleIcon style={{ color: '#BDEA88' }} />
                     ) : (
                       <CancelIcon style={{ color: '#ED6D91' }} />
