@@ -14,6 +14,7 @@ const useStyles = makeStyles()(() => ({
     marginBottom: 24
   },
   error: {
+    marginTop: 12,
     color: '#f44336'
   },
   infoIcon: {

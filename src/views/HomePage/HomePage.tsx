@@ -52,12 +52,12 @@ const HomePage = () => {
         userRights.right_manage_export_jupyter_accesses ||
         userRights.right_export_jupyter_nominative ||
         userRights.right_export_jupyter_pseudonymized
-    },
-    {
-      name: 'Environnements de travail',
-      pathname: `/espace-jupyter/working-environments`,
-      rightsToSee: userRights.right_read_datalabs
     }
+    // {
+    //   name: 'Environnements de travail',
+    //   pathname: `/espace-jupyter/working-environments`,
+    //   rightsToSee: userRights.right_read_datalabs
+    // }
   ]
 
   return (

@@ -157,20 +157,20 @@ const configRoutes: configRoute[] = [
     name: 'Transfert Jupyter',
     isPrivate: true,
     element: <Transfert />
-  },
+  }
 
   /**
    * Jupyter Working Environments View
    */
 
-  {
-    exact: true,
-    displayPortailTopBar: true,
-    path: '/espace-jupyter/working-environments',
-    name: 'Environnements de travail',
-    isPrivate: true,
-    element: <WorkingEnvironments />
-  }
+  // {
+  //   exact: true,
+  //   displayPortailTopBar: true,
+  //   path: '/espace-jupyter/working-environments',
+  //   name: 'Environnements de travail',
+  //   isPrivate: true,
+  //   element: <WorkingEnvironments />
+  // }
 ]
 
 export default configRoutes

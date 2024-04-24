@@ -61,15 +61,41 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
       : defaultAccess
   )
   const [accessPerimeter, setAccessPerimeter] = useState<ScopeTreeRow | null>(null)
-  const [dateError, setDateError] = useState(false)
+  const [dateError, setDateError] = useState('')
   const [openPerimeters, setOpenPerimeters] = useState(false)
   const [roles, setRoles] = useState([])
   const [loadingValidate, setLoadingValidate] = useState(false)
   const [loadingAssignableRoles, setLoadingAssignableRoles] = useState(false)
 
   const isEdition = access
-  const isStartDatePast = _access.actual_start_datetime ? _access.actual_start_datetime.isBefore() : false
-  const isEndDatePast = _access.actual_end_datetime ? _access.actual_end_datetime.isBefore() : false
+
+  useEffect(() => {
+    let error = ''
+
+    if (
+      (_access?.actual_start_datetime !== null && !_access.actual_start_datetime.isValid()) ||
+      (_access?.actual_end_datetime !== null && !_access.actual_end_datetime.isValid())
+    ) {
+      error = 'Les dates doivent être au format "JJ/MM/AAAA"'
+    } else if (
+      (_access?.actual_start_datetime !== null && _access.actual_start_datetime.isBefore(moment(), 'day')) ||
+      (_access?.actual_end_datetime !== null && _access.actual_end_datetime.isBefore(moment(), 'day'))
+    ) {
+      error = 'Les dates renseignées ne peuvent pas être dans le passé'
+    }
+
+    if (
+      _access?.actual_start_datetime !== null &&
+      _access?.actual_end_datetime !== null &&
+      _access?.actual_start_datetime.isValid() &&
+      _access?.actual_end_datetime.isValid() &&
+      _access?.actual_end_datetime.isBefore(_access.actual_start_datetime)
+    ) {
+      error = 'La date de fin ne peut pas être avant la date de début.'
+    }
+
+    setDateError(error)
+  }, [_access.actual_start_datetime, _access.actual_end_datetime])
 
   useEffect(() => {
     const _getAssignableRoles = async () => {
@@ -97,14 +123,6 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
     _accessCopy['perimeter'] = accessPerimeter
     setAccess(_accessCopy)
   }, [accessPerimeter])
-
-  useEffect(() => {
-    if (moment(_access.actual_start_datetime).isAfter(_access.actual_end_datetime)) {
-      setDateError(true)
-    } else {
-      setDateError(false)
-    }
-  }, [_access.actual_start_datetime, _access.actual_end_datetime])
 
   const _onChangeValue = (key: 'perimeter' | 'role' | 'actual_start_datetime' | 'actual_end_datetime', value: any) => {
     const _accessCopy = _access ? { ..._access } : defaultAccess
@@ -254,15 +272,9 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
               <DatePicker
                 onChange={(date) => _onChangeValue('actual_start_datetime', date)}
                 value={_access.actual_start_datetime}
+                minDate={moment().startOf('day')}
                 renderInput={(params: any) => (
-                  <TextField
-                    {...params}
-                    variant="standard"
-                    error={dateError}
-                    helperText={dateError && 'La date doit être au format "JJ/MM/AAAA"'}
-                    style={{ width: 'calc(100% - 120px)' }}
-                    minDate={moment()}
-                  />
+                  <TextField {...params} variant="standard" error={dateError} style={{ width: 'calc(100% - 120px)' }} />
                 )}
               />
             </LocalizationProvider>
@@ -275,24 +287,14 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
               <DatePicker
                 onChange={(date) => _onChangeValue('actual_end_datetime', date)}
                 value={_access.actual_end_datetime}
+                minDate={moment().add(1, 'days')}
                 renderInput={(params: any) => (
-                  <TextField
-                    {...params}
-                    variant="standard"
-                    error={dateError}
-                    helperText={dateError && 'La date doit être au format "JJ/MM/AAAA"'}
-                    style={{ width: 'calc(100% - 120px)' }}
-                    minDate={moment().add(1, 'days')}
-                  />
+                  <TextField {...params} variant="standard" error={dateError} style={{ width: 'calc(100% - 120px)' }} />
                 )}
               />
             </LocalizationProvider>
 
-            {dateError && (
-              <Typography className={classes.error}>
-                Vous ne pouvez pas sélectionner de date de début supérieure à la date de fin.
-              </Typography>
-            )}
+            {dateError && <Typography className={classes.error}>{dateError}</Typography>}
           </Grid>
         )}
 
@@ -318,13 +320,7 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
           Annuler
         </Button>
         <Button
-          disabled={
-            loadingValidate ||
-            dateError ||
-            (isStartDatePast && isEndDatePast) ||
-            (!isEdition && !_access.perimeter) ||
-            !_access.role
-          }
+          disabled={loadingValidate || !!dateError || (!isEdition && !_access.perimeter) || !_access.role}
           onClick={onSubmit}
           color="primary"
         >
