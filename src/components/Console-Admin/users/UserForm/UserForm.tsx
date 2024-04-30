@@ -16,19 +16,14 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
 import InfoIcon from '@mui/icons-material/Info'
 
 import useStyles from './styles'
-import {
-  checkProfile,
-  editProfile,
-  getProfile,
-  submitCreateProfile
-} from 'services/Console-Admin/profilesService'
-import { CheckProfile, Profile, User } from 'types'
+import { checkProfile, editUser, submitCreateProfile } from 'services/Console-Admin/profilesService'
+import { CheckProfile, User } from 'types'
 import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
 import { USERNAME_REGEX } from '../../../../constants'
 
 type UserFormProps = {
   open: boolean
-  selectedUser: User | null
+  selectedUser: User
   onClose: () => void
   onAddUserSuccess: (success: boolean) => void
   onEditUserSuccess: (fail: boolean) => void
@@ -36,12 +31,7 @@ type UserFormProps = {
   onEditUserFail: (fail: boolean) => void
 }
 
-const defaultUser: User = {
-  username: '',
-  firstname: undefined,
-  lastname: '',
-  email: ''
-}
+const defaultUser: User = { username: '' }
 
 const UserForm: React.FC<UserFormProps> = ({
   open,
@@ -54,12 +44,10 @@ const UserForm: React.FC<UserFormProps> = ({
 }) => {
   const { classes } = useStyles()
 
-  const [user, setUser] = useState<CheckProfile | null>(selectedUser || null)
-  const [profileId, setProfileId] = useState('')
+  const [user, setUser] = useState<CheckProfile>(selectedUser)
   const [loadingUserData, setLoadingUserData] = useState(false)
   const [loadingOnValidate, setLoadingOnValidate] = useState(false)
 
-  const [error, setError] = useState(false)
   const [usernameError, setUsernameError] = useState(false)
   const [firstNameError, setFirstNameError] = useState(false)
   const [lastNameError, setLastNameError] = useState(false)
@@ -68,59 +56,27 @@ const UserForm: React.FC<UserFormProps> = ({
   const isEdition = selectedUser?.username
 
   const _onChangeValue = (key: 'username' | 'firstname' | 'lastname' | 'email', value: any) => {
-    const _user = user ? { ...user } : {}
+    const _user = user ? { ...user } : { username: '' }
     _user[key] = value
     setUser(_user)
   }
 
-  useEffect(() => {
-    const _getProfile = async () => {
-      try {
-        const username = user?.username?.toString()
-        setLoadingUserData(true)
-
-        const profilesResp = await getProfile(username)
-
-        if (profilesResp) {
-          const manualProfile = profilesResp.find(
-            (profile: Profile) => profile.source?.toLocaleLowerCase() === 'manual'
-          )
-
-          setProfileId(manualProfile.id)
-        }
-
-        setLoadingUserData(false)
-      } catch (error) {
-        console.error('Erreur lors de la récupération du profil', error)
-        setError(true)
-        setLoadingUserData(false)
-      }
-    }
-
-    if (isEdition) {
-      _getProfile()
-    }
-  }, []) // eslint-disable-line
-
-  const debouncedSearchTerm = useDebounce(700, user?.username)
+  const debouncedSearchTerm = useDebounce(700, user.username)
 
   useEffect(() => {
     const _checkProfile = async () => {
       try {
         setLoadingUserData(true)
-        const checkProfileResp = await checkProfile(user?.username)
-        console.log('*************** checkProfileResp', checkProfileResp)
+        const checkProfileResp: CheckProfile = await checkProfile(user.username)
 
         if (checkProfileResp) {
           setUser(checkProfileResp)
-        } else {
-          setUser(null)
         }
         setLoadingUserData(false)
       } catch (error) {
         console.error('Erreur lors de la vérification du profil')
         const _user: User = {
-          ...user,
+          username: user.username ?? '',
           firstname: '',
           lastname: '',
           email: ''
@@ -139,25 +95,25 @@ const UserForm: React.FC<UserFormProps> = ({
     const name = /^([ \u00c0-\u01ffa-zA-Z'-])+$/
     const aphpMail = /^[a-zA-Z0-9._-]+@aphp[.]fr$/
 
-    if (user?.username && !user.username.match(USERNAME_REGEX)) {
+    if (user.username && !user.username.match(USERNAME_REGEX)) {
       setUsernameError(true)
     } else {
       setUsernameError(false)
     }
 
-    if (user?.lastname && !user.lastname.match(name)) {
+    if (user.lastname && !user.lastname.match(name)) {
       setLastNameError(true)
     } else {
       setLastNameError(false)
     }
 
-    if (user?.firstname && !user.firstname.match(name)) {
+    if (user.firstname && !user.firstname.match(name)) {
       setFirstNameError(true)
     } else {
       setFirstNameError(false)
     }
 
-    if (user?.email && user?.email.length > 0 && !user.email.match(aphpMail)) {
+    if (user.email && user.email.length > 0 && !user.email.match(aphpMail)) {
       setEmailError(true)
     } else {
       setEmailError(false)
@@ -169,20 +125,20 @@ const UserForm: React.FC<UserFormProps> = ({
       setLoadingOnValidate(true)
       if (isEdition) {
         const userData = {
-          firstname: user?.firstname,
-          lastname: user?.lastname,
-          email: user?.email
+          firstname: user.firstname,
+          lastname: user.lastname,
+          email: user.email
         }
 
-        const editProfileResp = await editProfile(profileId, userData)
+        const editUserResp = await editUser(user.username, userData)
 
-        editProfileResp ? onEditUserSuccess(true) : onEditUserFail(true)
+        editUserResp ? onEditUserSuccess(true) : onEditUserFail(true)
       } else {
         const userData = {
-          firstname: user?.firstname,
-          lastname: user?.lastname,
-          user_id: user?.username,
-          email: user?.email
+          firstname: user.firstname,
+          lastname: user.lastname,
+          user_id: user.username,
+          email: user.email
         }
         const createProfileResp = await submitCreateProfile(userData)
 
@@ -211,10 +167,6 @@ const UserForm: React.FC<UserFormProps> = ({
           <Grid container justifyContent="center" style={{ padding: 16 }}>
             <CircularProgress />
           </Grid>
-        ) : error ? (
-          <Typography>
-            Erreur lors de l'édition de l'utilisateur. Veuillez réessayer ultérieurement ou vérifier vos droits.
-          </Typography>
         ) : (
           <>
             {!isEdition && (
@@ -224,7 +176,7 @@ const UserForm: React.FC<UserFormProps> = ({
                   margin="normal"
                   autoFocus
                   placeholder="Exemple: 4010101"
-                  value={user?.username}
+                  value={user.username}
                   onChange={(event) => _onChangeValue('username', event.target.value)}
                   error={usernameError}
                   helperText={usernameError && "Le format de cet identifiant APH n'est pas valide."}
@@ -236,8 +188,8 @@ const UserForm: React.FC<UserFormProps> = ({
               <Grid container justifyContent="center" style={{ padding: 16 }}>
                 <CircularProgress />
               </Grid>
-            ) : user?.firstname !== undefined ? (
-              user?.manual_profile ? (
+            ) : user.firstname !== undefined ? (
+              user.manual_profile ? (
                 <div>
                   <ErrorOutlineIcon color="secondary" className={classes.infoIcon} />
                   <Typography component="span" color="secondary">
@@ -252,7 +204,7 @@ const UserForm: React.FC<UserFormProps> = ({
                       margin="normal"
                       autoFocus
                       placeholder="Exemple: Dupont"
-                      value={user?.lastname}
+                      value={user.lastname}
                       onChange={(event) => _onChangeValue('lastname', event.target.value)}
                       error={lastNameError}
                       helperText={
@@ -268,7 +220,7 @@ const UserForm: React.FC<UserFormProps> = ({
                       margin="normal"
                       autoFocus
                       placeholder="Exemple: Jean"
-                      value={user?.firstname}
+                      value={user.firstname}
                       onChange={(event) => _onChangeValue('firstname', event.target.value)}
                       error={firstNameError}
                       helperText={
@@ -284,7 +236,7 @@ const UserForm: React.FC<UserFormProps> = ({
                       margin="normal"
                       autoFocus
                       placeholder="Exemple: jean.dupont@aphp.fr"
-                      value={user?.email}
+                      value={user.email}
                       onChange={(event) => _onChangeValue('email', event.target.value)}
                       error={emailError}
                       helperText={emailError && `L'adresse e-mail doit être du format "prenom.nom@aphp.fr"`}
@@ -313,13 +265,12 @@ const UserForm: React.FC<UserFormProps> = ({
         <Button
           disabled={
             loadingOnValidate ||
-            error ||
             usernameError ||
             lastNameError ||
             firstNameError ||
             emailError ||
             (!isEdition && user?.manual_profile !== null) ||
-            !user?.username ||
+            !user.username ||
             !user.firstname ||
             !user.lastname ||
             !user.email
