@@ -28,7 +28,12 @@ export const checkProfile = async (username?: string) => {
   }
 }
 
-export const submitCreateProfile = async (userData: User) => {
+export const submitCreateProfile = async (userData: {
+  user_id: string
+  firstname?: string
+  lastname?: string
+  email?: string
+}) => {
   try {
     const createProfile = await api.post(`/accesses/profiles/`, userData)
     return createProfile.status === 201
@@ -38,13 +43,13 @@ export const submitCreateProfile = async (userData: User) => {
   }
 }
 
-export const editProfile = async (profileId: string, profileData: {}) => {
+export const editUser = async (userId: string, userData: {}) => {
   try {
-    const editProfileResp = await api.patch(`/accesses/profiles/${profileId}/`, profileData)
+    const editUserResp = await api.patch(`/users/${userId}/`, userData)
 
-    return editProfileResp.status === 200
+    return editUserResp.status === 200
   } catch (error) {
-    console.error("Erreur lors de l'édition du profil", error)
+    console.error("Erreur lors de l'édition de l'utilisateur", error)
     return false
   }
 }
@@ -54,9 +59,9 @@ export const getAccesses = async (profileId: number, page: number, order: Order)
     order.orderBy === 'is_valid' ? (order.orderDirection === 'asc' ? 'desc' : 'asc') : order.orderDirection
 
   const accessesResp = await api.get(
-    `/accesses/accesses/?page=${page}&profile_id=${profileId}&ordering=${
-      _orderDirection === 'desc' ? '-' : ''
-    }${order.orderBy}`
+    `/accesses/accesses/?page=${page}&profile_id=${profileId}&ordering=${_orderDirection === 'desc' ? '-' : ''}${
+      order.orderBy
+    }`
   )
 
   if (accessesResp.status !== 200) {

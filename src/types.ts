@@ -26,7 +26,6 @@ export type ErrorDialogProps = {
   setErrorLogin: (b: boolean) => void
 }
 
-
 // --CONSOLE-ADMIN--
 
 // Service
@@ -202,7 +201,7 @@ export type AccessData = {
 // User
 
 export type User = {
-  username?: string
+  username: string
   firstname?: string
   lastname?: string
   email?: string

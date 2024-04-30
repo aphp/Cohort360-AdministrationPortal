@@ -8,14 +8,14 @@ export type UsersState = {
   usersList: User[]
   total: number
   loading: boolean
-  selectedUser: User | null
+  selectedUser: User
 }
 
 const defaultInitialState: UsersState = {
   usersList: [],
   total: 0,
   loading: false,
-  selectedUser: null
+  selectedUser: { username: '' }
 }
 
 const localStorageUsers = localStorage.getItem('users') || null
@@ -25,7 +25,7 @@ type fetchUsersReturn = {
   usersList: User[]
   total: number
   loading: boolean
-  selectedUser: null
+  selectedUser: { username: '' }
 }
 type fetchUsersArgs = {
   page?: number
@@ -42,7 +42,7 @@ const fetchUsers = createAsyncThunk<fetchUsersReturn, fetchUsersArgs, { state: U
         usersList: usersResp.users,
         total: usersResp.total,
         loading: false,
-        selectedUser: null
+        selectedUser: { username: '' }
       }
     } catch (error) {
       console.error(error)
@@ -88,7 +88,7 @@ const usersSlice = createSlice({
   name: 'users',
   initialState: initialState as UsersState,
   reducers: {
-    setSelectedUser: (state: UsersState, action: PayloadAction<User | null>) => {
+    setSelectedUser: (state: UsersState, action: PayloadAction<User>) => {
       const selectedUser = action.payload
       return { ...state, selectedUser }
     }
@@ -105,7 +105,7 @@ const usersSlice = createSlice({
       loading: false,
       total: 0,
       usersList: [],
-      selectedUser: null
+      selectedUser: { username: '' }
     }))
     // builder.addCase(fetchUsers.pending, (state) => ({ ...state, loading: true }))
     // builder.addCase(editProvider.fulfilled, (state, action) => ({

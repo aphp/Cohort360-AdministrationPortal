@@ -75,6 +75,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ userRights }) => {
   const [page, setPage] = useState(1)
   const [order, setOrder] = useState(orderDefault)
   const [searchInput, setSearchInput] = useState('')
+  const [openUserForm, setOpenUserForm] = useState(false)
 
   const [addUserSuccess, setAddUserSuccess] = useState(false)
   const [addUserFail, setAddUserFail] = useState(false)
@@ -125,7 +126,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ userRights }) => {
             disableElevation
             startIcon={<PersonAddIcon height="15px" fill="#FFF" />}
             className={classes.searchButton}
-            onClick={() => dispatch(setSelectedUser({}))}
+            onClick={() => setOpenUserForm(true)}
           >
             Nouvel utilisateur
           </Button>
@@ -173,9 +174,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ userRights }) => {
                   }}
                 >
                   <TableCell align="center">
-                    <Typography onClick={(event) => event.stopPropagation()}>
-                      {user.username}
-                    </Typography>
+                    <Typography onClick={(event) => event.stopPropagation()}>{user.username}</Typography>
                   </TableCell>
                   <TableCell align="center">{user.lastname?.toLocaleUpperCase()}</TableCell>
                   <TableCell align="center">{user.firstname}</TableCell>
@@ -201,6 +200,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ userRights }) => {
                             onClick={(event) => {
                               event.stopPropagation()
                               dispatch(setSelectedUser(user))
+                              setOpenUserForm(true)
                             }}
                             size="large"
                           >
@@ -233,15 +233,18 @@ const UsersTable: React.FC<UsersTableProps> = ({ userRights }) => {
         )}
       </DataTable>
 
-      {selectedUser !== null && (
+      {openUserForm && (
         <UserForm
           open
-          onClose={() => dispatch(setSelectedUser(null))}
+          onClose={() => {
+            setOpenUserForm(false)
+            dispatch(setSelectedUser({ username: '' }))
+          }}
           selectedUser={selectedUser}
           onAddUserSuccess={setAddUserSuccess}
           onEditUserSuccess={setEditUserSuccess}
           onAddUserFail={setAddUserFail}
-          onEditUserFail={setEditUserSuccess}
+          onEditUserFail={setEditUserFail}
         />
       )}
 
@@ -252,7 +255,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ userRights }) => {
             if (addUserSuccess) setAddUserSuccess(false)
             if (editUserSuccess) setEditUserSuccess(false)
           }}
-          message={`L'utilisateur a bien été ${addUserSuccess && 'créé'}${editUserSuccess && 'édité'}.`}
+          message={`L'utilisateur a bien été ${addUserSuccess ? 'créé' : ''}${editUserSuccess ? 'édité' : ''}.`}
         />
       )}
       {(addUserFail || editUserFail) && (
@@ -262,8 +265,8 @@ const UsersTable: React.FC<UsersTableProps> = ({ userRights }) => {
             if (addUserFail) setAddUserFail(false)
             if (editUserFail) setEditUserFail(false)
           }}
-          message={`Erreur lors de ${addUserFail && 'la création'}${
-            editUserFail && "l'édition"
+          message={`Erreur lors de ${addUserFail ? 'la création' : ''}${
+            editUserFail ? "l'édition" : ''
           } de l'utilisateur.`}
         />
       )}
