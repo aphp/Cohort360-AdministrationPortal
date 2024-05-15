@@ -26,7 +26,7 @@ import {
   DatalabTransferForm,
   Order,
   User,
-  RessourceType,
+  ResourceType,
   SavedFilter,
   UserRole
 } from 'types'
@@ -56,7 +56,7 @@ const defaultTransfer: DatalabTransferForm = {
   shiftDates: 'no',
   tables: export_table.map<DatalabTable>((table) => ({
     ...table,
-    checked: false,
+    checked: table.label === 'person' ? true : false,
     fhir_filter: null,
     fhir_filter_user: null,
     cohort: null,
@@ -69,10 +69,7 @@ const orderDefault = { orderBy: 'lastname', orderDirection: 'asc' } as Order
 const datalabOrderDefault = { orderBy: 'name', orderDirection: 'asc' } as Order
 
 const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
-  // TODO: allow page according to user Rights
-  // userRights,
   onClose,
-  // selectedTransferRequest,
   setSelectedTransferRequest,
   onAddTransfertRequestSuccess,
   onAddTransfertRequestFail
@@ -121,45 +118,13 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
       'tables',
       transferRequest.tables.map<DatalabTable>((table) => ({
         ...table,
-        checked: checkedTables.length !== transferRequest.tables.length
+        checked: table.label !== 'person' ? transferRequest.tables.length !== checkedTables.length : true
       }))
     )
   }
 
   const handleChangeTables = (tableId: string) => {
     let existingTables: DatalabTable[] = transferRequest.tables
-
-    switch (tableId) {
-      case 'fact_relationship': {
-        const careSiteTableNotCheckedIndex = existingTables.findIndex(
-          (table) => table.label === 'care_site' && !table.checked
-        )
-        if (careSiteTableNotCheckedIndex > -1) existingTables[careSiteTableNotCheckedIndex].checked = true
-        break
-      }
-      case 'care_site': {
-        const factRelationshipCheckedIndex = existingTables.findIndex(
-          (table) => table.label === 'fact_relationship' && table.checked
-        )
-        if (factRelationshipCheckedIndex > -1) existingTables[factRelationshipCheckedIndex].checked = false
-        break
-      }
-      case 'concept_relationship': {
-        const conceptTableNotCheckedIndex = existingTables.findIndex(
-          (table) => table.label === 'concept' && !table.checked
-        )
-        if (conceptTableNotCheckedIndex > -1) existingTables[conceptTableNotCheckedIndex].checked = true
-        break
-      }
-      case 'concept': {
-        const conceptRelationshipTableNotCheckedIndex = existingTables.findIndex(
-          (table) => table.label === 'concept_relationship' && table.checked
-        )
-        if (conceptRelationshipTableNotCheckedIndex > -1)
-          existingTables[conceptRelationshipTableNotCheckedIndex].checked = false
-        break
-      }
-    }
 
     existingTables = existingTables.map((table) => ({
       ...table,
@@ -230,26 +195,33 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
     try {
       setLoadingOnValidate(true)
 
-      const transferData = {
-        output_format: 'hive',
-        datalab: transferRequest.workingEnvironment?.uuid,
-        export_tables: transferRequest.tables.map((table: DatalabTable) => ({
-          name: table.id,
-          fhir_filter: table.fhir_filter?.uuid,
-          cohort_result_source: table.cohort?.uuid,
-          respect_table_relationships: table.respect_table_relationships
-        })),
-        nominative: transferRequest.confidentiality === 'nomi',
-        shift_dates: transferRequest.shiftDates === 'yes'
+      const canExport = transferRequest.tables.find((table) => table.label === 'person')?.cohort !== null
+
+      if (canExport) {
+        const transferData = {
+          output_format: 'hive',
+          datalab: transferRequest.workingEnvironment?.uuid,
+          export_tables: transferRequest.tables
+            .filter((table) => table.checked === true)
+            .map((table: DatalabTable) => ({
+              table_ids: table.id,
+              fhir_filter: table.fhir_filter?.uuid,
+              cohort_result_source: table.cohort?.uuid,
+              respect_table_relationships: table.respect_table_relationships
+            })),
+          nominative: transferRequest.confidentiality === 'nomi',
+          shift_dates: transferRequest.shiftDates === 'yes'
+        }
+
+        const transferRequestResp = await datalabTransfer(transferData)
+
+        transferRequestResp ? onAddTransfertRequestSuccess(true) : onAddTransfertRequestFail(true)
+        setSelectedTransferRequest(null)
+        // setTransferRequest(defaultTransfer)
+        setLoadingOnValidate(false)
+      } else {
+        setLoadingOnValidate(false)
       }
-
-      const transferRequestResp = await datalabTransfer(transferData)
-
-      transferRequestResp ? onAddTransfertRequestSuccess(true) : onAddTransfertRequestFail(true)
-
-      setSelectedTransferRequest(null)
-      setTransferRequest(defaultTransfer)
-      setLoadingOnValidate(false)
     } catch (error) {
       console.error("Erreur lors de l'envoi du formulaire", error)
       onAddTransfertRequestFail(false)
@@ -259,8 +231,10 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
     }
   }
 
+
+
   function renderExportTable(exportTable: DatalabTable) {
-    const { id, name, checked, subtitle, label } = exportTable
+    const { id, name, checked, subtitle, label, resourceType } = exportTable
 
     const isItemExpanded = expandedTableIds.includes(label)
 
@@ -269,6 +243,7 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
         <ExportTableAccordionSummary
           expandIcon={
             <Checkbox
+              disabled={label === 'person'}
               checked={checked}
               className={classes.checkbox}
               onClick={(e) => {
@@ -307,7 +282,7 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
         </ExportTableAccordionSummary>
         <AccordionDetails className={classes.accordionContent}>
           <ExportTable
-            key={id}
+            key={name}
             exportTable={exportTable}
             transferRequest={transferRequest}
             handleTransferRequestChange={setTransferRequest}
@@ -318,7 +293,15 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
   }
 
   return (
-    <Dialog open onClose={onClose} maxWidth="md" fullWidth>
+    <Dialog
+      open
+      onClose={() => {
+        onClose()
+        // _defaultTransfer()
+      }}
+      maxWidth="md"
+      fullWidth
+    >
       <DialogTitle sx={{ fontSize: '24px' }}>Transfert vers un Datalab</DialogTitle>
       <DialogContent>
         {loadingOnValidate ? (
@@ -332,7 +315,7 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
             </Typography>
             <Autocomplete
               className={classes.autocomplete}
-              noOptionsText="Recherchez un environnement de travail Jupyter"
+              noOptionsText="Recherchez un Datalab"
               options={workingEnvironments ?? []}
               loading={loadingOnWorkingEnvironments}
               onChange={(_, value) => _onChangeValue('workingEnvironment', value)}
@@ -358,7 +341,7 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
               )}
             />
             <Typography align="left" variant="h5">
-              Choix de l'utilisateur par défaut pour les filtres d'export
+              Choix de l'utilisateur par défaut:
             </Typography>
             <Autocomplete
               className={classes.autocomplete}
@@ -367,9 +350,8 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
               loading={loadingOnSearchProvider}
               onChange={(_, value) => _onChangeValue('user', value)}
               getOptionLabel={(option) =>
-                `${option.username} - ${option.lastname?.toLocaleUpperCase()} ${option.firstname} - ${
-                  option.email
-                }` ?? ''
+                `${option.username} - ${option.lastname?.toLocaleUpperCase()} ${option.firstname} - ${option.email}` ??
+                ''
               }
               value={transferRequest.user}
               isOptionEqualToValue={(option, value) => option.username === value.username}
@@ -469,10 +451,7 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
           variant="contained"
           disableElevation
           className={classes.validateButton}
-          disabled={
-            checkedTables.length === 0 ||
-            transferRequest.workingEnvironment === null
-          }
+          disabled={checkedTables.length === 0 || transferRequest.workingEnvironment === null}
           onClick={onSubmit}
         >
           Envoyer
@@ -490,7 +469,11 @@ type ExportTableProps = {
   handleTransferRequestChange: (newTransferRequest: DatalabTransferForm) => void
 }
 
-const ExportTable: React.FC<ExportTableProps> = ({ exportTable, transferRequest, handleTransferRequestChange }) => {
+const ExportTable: React.FC<ExportTableProps> = ({
+  exportTable,
+  transferRequest,
+  handleTransferRequestChange
+}) => {
   const { classes } = useStyles()
 
   const [loadingOnSearchCohortUser, setLoadingOnSearchCohortUser] = useState(false)
@@ -549,9 +532,9 @@ const ExportTable: React.FC<ExportTableProps> = ({ exportTable, transferRequest,
         setCohortsOptions([])
       }
     }
-    const _getProviderFilters = async (provider: User | null) => {
+    const _getProviderFilters = async (provider: User | null, resourceType: ResourceType) => {
       try {
-        const filtersResp = await getProviderFilters(provider?.username, RessourceType.PATIENT)
+        const filtersResp = await getProviderFilters(provider?.username, resourceType)
 
         setFiltersOptions(filtersResp)
       } catch (error) {
@@ -564,7 +547,7 @@ const ExportTable: React.FC<ExportTableProps> = ({ exportTable, transferRequest,
       _getUserCohorts(exportTable.cohort_user)
     }
     if (exportTable.fhir_filter_user) {
-      _getProviderFilters(exportTable.fhir_filter_user)
+      _getProviderFilters(exportTable.fhir_filter_user, exportTable.resourceType)
     }
   }, [transferRequest.user, cohortUsersSearchResults, filterUsersSearchResults, exportTable])
 
@@ -622,6 +605,7 @@ const ExportTable: React.FC<ExportTableProps> = ({ exportTable, transferRequest,
         </Grid>
         <Grid item xs={4}>
           <Autocomplete
+            disabled={exportTable.checked === false}
             size="small"
             className={classes.autocomplete}
             noOptionsText={exportTable.cohort_user ? 'Aucun utilisateur trouvé' : 'Recherchez un utilisateur'}
@@ -629,9 +613,7 @@ const ExportTable: React.FC<ExportTableProps> = ({ exportTable, transferRequest,
             loading={loadingOnSearchCohortUser}
             onChange={(e, value) => _onChangeValue('cohort_user', value)}
             getOptionLabel={(option) =>
-              `${option.username} - ${option.lastname?.toLocaleUpperCase()} ${option.firstname} - ${
-                option.email
-              }` ?? ''
+              `${option.username} - ${option.lastname?.toLocaleUpperCase()} ${option.firstname} - ${option.email}` ?? ''
             }
             value={exportTable.cohort_user}
             isOptionEqualToValue={(option, value) => option.username === value.username}
@@ -658,7 +640,7 @@ const ExportTable: React.FC<ExportTableProps> = ({ exportTable, transferRequest,
           <Autocomplete
             size="small"
             noOptionsText="Aucune cohorte disponible"
-            disabled={exportTable.cohort_user === null}
+            disabled={exportTable.cohort_user === null || exportTable.checked === false}
             getOptionLabel={(option) => option.name}
             options={cohortsOptions}
             onChange={(_, value) => _onChangeValue('cohort', value)}
@@ -670,59 +652,61 @@ const ExportTable: React.FC<ExportTableProps> = ({ exportTable, transferRequest,
           />
         </Grid>
       </Grid>
-      <Grid item container alignItems="center">
-        <Grid item xs={4}>
-          <Typography className={classes.textBody2}>Filtrer cette table avec un filtre :</Typography>
+      {exportTable.resourceType !== ResourceType.UNKNOWN && (
+        <Grid item container alignItems="center">
+          <Grid item xs={4}>
+            <Typography className={classes.textBody2}>Filtrer cette table avec un filtre :</Typography>
+          </Grid>
+          <Grid item xs={4}>
+            <Autocomplete
+              disabled={exportTable.checked === false}
+              size="small"
+              className={classes.autocomplete}
+              noOptionsText={exportTable.fhir_filter_user ? 'Aucun utilisateur trouvé' : 'Recherchez un utilisateur'}
+              options={filterUsersSearchResults ?? []}
+              loading={loadingOnSearchFilterUser}
+              onChange={(_, value) => _onChangeValue('fhir_filter_user', value)}
+              getOptionLabel={(option) =>
+                `${option.username} - ${option.lastname?.toLocaleUpperCase()} ${option.firstname} - ${option.email}` ??
+                ''
+              }
+              value={exportTable.fhir_filter_user}
+              isOptionEqualToValue={(option, value) => option.username === value.username}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Recherchez un utilisateur"
+                  value={filterUserSearchInput}
+                  onChange={(e) => setFilterUserSearchInput(e.target.value)}
+                  InputProps={{
+                    ...params.InputProps,
+                    endAdornment: (
+                      <Fragment>
+                        {loadingOnSearchFilterUser ? <CircularProgress color="inherit" size={20} /> : null}
+                        {params.InputProps.endAdornment}
+                      </Fragment>
+                    )
+                  }}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Autocomplete
+              className={classes.autocomplete}
+              size="small"
+              noOptionsText="Aucun filtre disponible"
+              disabled={exportTable.fhir_filter_user === null || exportTable.checked === false}
+              getOptionLabel={(option) => `Filtre: ${option.name}`}
+              options={filtersOptions}
+              onChange={(_, value) => _onChangeValue('fhir_filter', value)}
+              value={exportTable.fhir_filter}
+              renderOption={(props, option) => <li {...props}>{option.name}</li>}
+              renderInput={(params) => <TextField {...params} label="Sélectionnez un filtre" />}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={4}>
-          <Autocomplete
-            size="small"
-            className={classes.autocomplete}
-            noOptionsText={exportTable.fhir_filter_user ? 'Aucun utilisateur trouvé' : 'Recherchez un utilisateur'}
-            options={filterUsersSearchResults ?? []}
-            loading={loadingOnSearchFilterUser}
-            onChange={(_, value) => _onChangeValue('fhir_filter_user', value)}
-            getOptionLabel={(option) =>
-              `${option.username} - ${option.lastname?.toLocaleUpperCase()} ${option.firstname} - ${
-                option.email
-              }` ?? ''
-            }
-            value={exportTable.fhir_filter_user}
-            isOptionEqualToValue={(option, value) => option.username === value.username}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Recherchez un utilisateur"
-                value={filterUserSearchInput}
-                onChange={(e) => setFilterUserSearchInput(e.target.value)}
-                InputProps={{
-                  ...params.InputProps,
-                  endAdornment: (
-                    <Fragment>
-                      {loadingOnSearchFilterUser ? <CircularProgress color="inherit" size={20} /> : null}
-                      {params.InputProps.endAdornment}
-                    </Fragment>
-                  )
-                }}
-              />
-            )}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <Autocomplete
-            className={classes.autocomplete}
-            size="small"
-            noOptionsText="Aucun filtre disponible"
-            disabled={exportTable.fhir_filter_user === null}
-            getOptionLabel={(option) => `Filtre: ${option.name}`}
-            options={filtersOptions}
-            onChange={(_, value) => _onChangeValue('fhir_filter', value)}
-            value={exportTable.fhir_filter}
-            renderOption={(props, option) => <li {...props}>{option.name}</li>}
-            renderInput={(params) => <TextField {...params} label="Sélectionnez un filtre" />}
-          />
-        </Grid>
-      </Grid>
+      )}
       <Grid item container alignItems="center">
         <Grid item xs={4}>
           <Typography className={classes.textBody2}>

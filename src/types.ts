@@ -339,7 +339,7 @@ export type DatalabTransferForm = {
 }
 
 export type DatalabTable = {
-  id: string
+  id: string[]
   name: string
   label: string
   subtitle?: string
@@ -349,6 +349,7 @@ export type DatalabTable = {
   cohort: Cohort | null
   cohort_user: User | null
   respect_table_relationships: boolean
+  resourceType: ResourceType
 }
 
 export type Export = {
@@ -398,7 +399,7 @@ export type Cohort = {
 }
 
 export type ExportTableType = {
-  id: string
+  id: string[]
   name: string
   label: string
   subtitle?: string
@@ -409,7 +410,7 @@ export type SavedFilter = {
   created_at: string
   deleted: string
   deleted_by_cascade: boolean
-  fhir_resource: RessourceType
+  fhir_resource: ResourceType
   fhir_version: string
   filter: string
   modified_at: string
@@ -425,24 +426,41 @@ export type SavedFiltersResults = {
   results: SavedFilter[]
 }
 
-export enum RessourceType {
-  REQUEST = 'Request',
+// export enum RessourceType {
+//   REQUEST = 'Request',
+//   IPP_LIST = 'IPPList',
+//   PATIENT = 'Patient',
+//   ENCOUNTER = 'Encounter',
+//   DOCUMENTS = 'DocumentReference',
+//   PMSI = 'pmsi',
+//   CONDITION = 'Condition',
+//   PROCEDURE = 'Procedure',
+//   CLAIM = 'Claim',
+//   MEDICATION = 'Medication',
+//   MEDICATION_REQUEST = 'MedicationRequest',
+//   MEDICATION_ADMINISTRATION = 'MedicationAdministration',
+//   BIO_MICRO = 'biologie_microbiologie',
+//   OBSERVATION = 'Observation',
+//   MICROBIOLOGIE = 'microbiologie',
+//   PHYSIOLOGIE = 'physiologie',
+//   IMAGING = 'ImagingStudy'
+// }
+
+export enum ResourceType {
+  UNKNOWN = 'Unknown',
   IPP_LIST = 'IPPList',
   PATIENT = 'Patient',
   ENCOUNTER = 'Encounter',
   DOCUMENTS = 'DocumentReference',
-  PMSI = 'pmsi',
   CONDITION = 'Condition',
   PROCEDURE = 'Procedure',
   CLAIM = 'Claim',
-  MEDICATION = 'Medication',
   MEDICATION_REQUEST = 'MedicationRequest',
   MEDICATION_ADMINISTRATION = 'MedicationAdministration',
-  BIO_MICRO = 'biologie_microbiologie',
   OBSERVATION = 'Observation',
-  MICROBIOLOGIE = 'microbiologie',
-  PHYSIOLOGIE = 'physiologie',
-  IMAGING = 'ImagingStudy'
+  IMAGING = 'ImagingStudy',
+  QUESTIONNAIRE = 'Questionnaire',
+  QUESTIONNAIRE_RESPONSE = 'QuestionnaireResponse'
 }
 
 export type RightsCategory = {

@@ -81,7 +81,7 @@ const HomePage = () => {
           Bienvenue sur le portail de l'EDS
         </Typography>
         <Grid item xs={12} lg={8} container justifyContent="space-around">
-          <Grid item xs={12} sm={4} container direction="column" alignItems="center" className={classes.box}>
+          <Grid item xs={12} sm={3} container direction="column" alignItems="center" className={classes.box}>
             <ComputerIcon style={{ fontSize: 100, marginBottom: 12 }} />
             <Typography variant="h6" style={{ fontSize: 16, marginBottom: 28, lineHeight: 'inherit' }}>
               Console Admin
@@ -105,7 +105,7 @@ const HomePage = () => {
             userRights.right_export_jupyter_nominative ||
             userRights.right_export_jupyter_pseudonymized ||
             userRights.right_read_datalabs) && (
-            <Grid item xs={12} sm={4} container direction="column" alignItems="center" className={classes.box}>
+            <Grid item xs={12} sm={3} container direction="column" alignItems="center" className={classes.box}>
               <FlipCameraAndroidIcon style={{ fontSize: 100, marginBottom: 12 }} />
               <Typography variant="h6" style={{ fontSize: 16, marginBottom: 28, lineHeight: 'inherit' }}>
                 Espace Jupyter

@@ -44,6 +44,7 @@ const useStyles = makeStyles()(() => ({
   },
   paper: {
     backgroundColor: '#232E6A',
+    width: 140,
     color: '#FFFFFF',
     borderRadius: '0 0 4px 4px'
   },

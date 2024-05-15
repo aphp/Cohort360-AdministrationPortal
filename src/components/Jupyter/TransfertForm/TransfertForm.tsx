@@ -350,7 +350,7 @@ const TransfertForm: React.FC<TransferFormProps> = ({
 
             <List className={cx(classes.list, classes.autocomplete)} style={{ marginTop: 0 }}>
               {export_table.map(({ name, id }: ExportTableType) => (
-                <ListItem key={id}>
+                <ListItem key={name}>
                   <ListItemText
                     disableTypography
                     primary={
@@ -365,8 +365,8 @@ const TransfertForm: React.FC<TransferFormProps> = ({
 
                   <ListItemSecondaryAction>
                     <Checkbox
-                      checked={!!transferRequest.tables.find((tableId: string) => tableId === id)}
-                      onChange={() => handleChangeTables(id)}
+                      checked={!!transferRequest.tables.find((tableId: string) => tableId === name)}
+                      onChange={() => handleChangeTables(name)}
                     />
                   </ListItemSecondaryAction>
                 </ListItem>

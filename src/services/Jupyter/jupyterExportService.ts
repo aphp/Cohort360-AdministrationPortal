@@ -13,7 +13,7 @@ export const jupyterTransfer = async (transferRequestData: {}) => {
 
 export const datalabTransfer = async (transferRequestData: {}) => {
   try {
-    const createProfile = await api.post(`/exports/v1/exports/`, transferRequestData)
+    const createProfile = await api.post(`/exports/`, transferRequestData)
     return createProfile.status === 201
   } catch (error) {
     console.error("Erreur lors de l'envoi de la demande de transfert vers un Datalab", error)
@@ -82,7 +82,7 @@ export const getDatalabExportsList = async (
     if (insert_datetime_lte) _filters = [..._filters, `insert_datetime_lte=${insert_datetime_lte}`]
     if (searchInput) _filters = [..._filters, `search=${searchInput.trim()}`]
 
-    const exportsResp = await api.get(`/exports/v1/exports/?${_filters.join('&')}`)
+    const exportsResp = await api.get(`/exports/?${_filters.join('&')}`)
 
     return {
       list: exportsResp.data.results ?? [],

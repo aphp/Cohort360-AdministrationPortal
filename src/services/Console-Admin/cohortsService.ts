@@ -1,4 +1,4 @@
-import { RessourceType } from 'types'
+import { ResourceType } from 'types'
 import api from '../api'
 
 export const getUserCohorts = async (username?: string) => {
@@ -15,7 +15,7 @@ export const getUserCohorts = async (username?: string) => {
   return cohortsResp.data.results ?? []
 }
 
-export const getProviderFilters = async (provider_source_value?: string, fhir_resource?: RessourceType) => {
+export const getProviderFilters = async (provider_source_value?: string, fhir_resource?: ResourceType) => {
   if (!provider_source_value || !fhir_resource) {
     return []
   }

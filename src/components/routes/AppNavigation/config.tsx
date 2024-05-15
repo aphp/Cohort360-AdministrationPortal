@@ -158,7 +158,7 @@ const configRoutes: configRoute[] = [
     name: 'Transfert Jupyter',
     isPrivate: true,
     element: <Transfert />
-  }
+  },
 
   /**
    * Jupyter - Datalab Transfer View
