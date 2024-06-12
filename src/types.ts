@@ -30,6 +30,7 @@ export type ErrorDialogProps = {
 
 // Service
 
+
 export type CareSiteType = 'AP-HP' | 'Hopital' | 'Groupe Hospitalier'
 
 export type CareSite = {
