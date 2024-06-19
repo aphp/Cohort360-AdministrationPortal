@@ -8,16 +8,16 @@ import { ReactComponent as FilterIcon } from 'assets/icones/filter.svg'
 import AddIcon from '@mui/icons-material/Add'
 
 import DataTable from 'components/DataTable/DataTable'
-import TransfertForm from 'components/Jupyter/TransfertForm/TransfertForm'
+import TransfertDatalabForm from 'components/Jupyter/TransfertForm/TransfertDatalabForm'
 import TransfertsFilters from 'components/Jupyter/TransfertsFilters/TransfertsFilters'
 import SearchBar from 'components/SearchBar/SearchBar'
 import CommonSnackbar from 'components/Snackbar/Snackbar'
-import { getExportsList } from 'services/Jupyter/jupyterExportService'
+import { getDatalabExportsList, getExportsList } from 'services/Jupyter/jupyterExportService'
 
-import { Column, Export, ExportFilters, JupyterTransferForm, Order, UserRole } from 'types'
+import { Column, DatalabTransferForm, Export, ExportFilters, Order, UserRole } from 'types'
 import useStyles from './styles'
 
-type TransfertsTableProps = {
+type TransfertsDatalabTableProps = {
   userRights: UserRole
 }
 
@@ -30,12 +30,12 @@ const defaultFilters: ExportFilters = {
   insert_datetime_lte: null
 }
 
-const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
+const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRights }) => {
   const { classes } = useStyles()
 
   const [loading, setLoading] = useState(true)
   const [exportsList, setExportsList] = useState<Export[]>([])
-  const [selectedTransferRequest, setSelectedTransferRequest] = useState<JupyterTransferForm | null>(null)
+  const [selectedTransferRequest, setSelectedTransferRequest] = useState<DatalabTransferForm | null>(null)
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
   const [order, setOrder] = useState(orderDefault)
@@ -96,7 +96,7 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
     try {
       setLoading(true)
 
-      const exportsList = await getExportsList(_page, rowsPerPage, order, filters, debouncedSearchTerm)
+      const exportsList = await getDatalabExportsList(_page, rowsPerPage, order, filters, debouncedSearchTerm)
 
       setExportsList(exportsList.list)
       setTotal(exportsList?.total)
@@ -198,22 +198,26 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
       <Grid
         container
         item
-        justifyContent={userRights.right_manage_export_jupyter_accesses ||
-                        userRights.right_export_jupyter_nominative ||
-                        userRights.right_export_jupyter_pseudonymized ? 'space-between' : 'flex-end'}
+        justifyContent={
+          userRights.right_manage_export_jupyter_accesses ||
+          userRights.right_export_jupyter_nominative ||
+          userRights.right_export_jupyter_pseudonymized
+            ? 'space-between'
+            : 'flex-end'
+        }
         style={{ margin: '12px 0' }}
       >
         {(userRights.right_manage_export_jupyter_accesses ||
-         userRights.right_export_jupyter_nominative ||
-         userRights.right_export_jupyter_pseudonymized) && (
+          userRights.right_export_jupyter_nominative ||
+          userRights.right_export_jupyter_pseudonymized) && (
           <Button
             variant="contained"
             disableElevation
             startIcon={<AddIcon height="15px" fill="#FFF" />}
             className={classes.searchButton}
-            onClick={() => setSelectedTransferRequest({} as JupyterTransferForm)}
+            onClick={() => setSelectedTransferRequest({} as DatalabTransferForm)}
           >
-            Nouveau transfert
+            Nouvel export
           </Button>
         )}
         <Grid container item xs={6} justifyContent="flex-end" alignItems="center">
@@ -338,7 +342,7 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
           })}
       </DataTable>
       {selectedTransferRequest !== null && (
-        <TransfertForm
+        <TransfertDatalabForm
           userRights={userRights}
           onClose={() => setSelectedTransferRequest(null)}
           selectedTransferRequest={selectedTransferRequest}
@@ -381,4 +385,4 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
   )
 }
 
-export default TransfertsTable
+export default TransfertsDatalabTable

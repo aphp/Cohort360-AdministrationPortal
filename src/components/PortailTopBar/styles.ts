@@ -44,8 +44,8 @@ const useStyles = makeStyles()(() => ({
   },
   paper: {
     backgroundColor: '#232E6A',
-    color: '#FFFFFF',
     width: 140,
+    color: '#FFFFFF',
     borderRadius: '0 0 4px 4px'
   },
   menuItem: {
