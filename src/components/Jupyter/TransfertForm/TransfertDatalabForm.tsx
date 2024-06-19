@@ -173,7 +173,7 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
       try {
         setLoadingOnWorkingEnvironments(true)
 
-        const workingEnvironmentsResp = await getDatalab(datalabOrderDefault, environmentSearchInput)
+        const workingEnvironmentsResp = await getDatalab(datalabOrderDefault, debouncedEnvironmentSearchTerm)
 
         setWorkingEnvironments(workingEnvironmentsResp?.workingEnvironments)
         setLoadingOnWorkingEnvironments(false)
