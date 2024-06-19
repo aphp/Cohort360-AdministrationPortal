@@ -23,13 +23,9 @@ export const getWorkingEnvironments = async (order: Order, page: number, exports
 
 export const getDatalab = async (order: Order, searchInput?: string) => {
   try {
-    // const searchFilter = searchInput ? `&search=${searchInput}` : ''
-    const searchFilter = ''
-    // const workingEnvironmentsResp = await api.get(
-    //   `/exports/datalabs/?ordering=${order.orderDirection === 'desc' ? '-' : ''}${order.orderBy}${searchFilter}`
-    // )
+    const searchFilter = searchInput ? `search=${searchInput}` : ''
 
-    const workingEnvironmentsResp = await api.get(`/exports/datalabs/${searchFilter}`)
+    const workingEnvironmentsResp = await api.get(`/exports/datalabs/?${searchFilter}`)
 
     const workingEnvironments = workingEnvironmentsResp.data.results ?? []
 
