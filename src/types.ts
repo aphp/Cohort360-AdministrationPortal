@@ -82,26 +82,19 @@ export type ScopeTreeRow = {
 
 // Profile
 
-export type CheckProfile = User & {
-  user?: User
-  manual_profile?: Profile
+export type CheckUser = User & {
+  already_exists?: boolean
+  found?: boolean
 }
 
 export type Profile = {
   id: number
-  source: string | null
-  email: string | null
+  user_id: string | null
   firstname: string | null
-  is_active: boolean | null
   lastname: string | null
-  manual_is_active: boolean | null
-  manual_valid_end_datetime: string | null
-  manual_valid_start_datetime: string | null
-  modified_datetime: string
-  username: string | null
-  update_datetime: string
-  valid_end_datetime: string | null
-  valid_start_datetime: string | null
+  email: string | null
+  source: string | null
+  is_active: boolean | null
 }
 
 // Roles
