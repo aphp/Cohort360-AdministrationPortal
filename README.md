@@ -1,5 +1,9 @@
 # omop-admin-wui
 
+[![Actions Status](https://github.com/aphp/Cohort360-AdministrationPortal/workflows/Cohort360-AdministrationPortal-main-pipeline/badge.svg)](https://github.com/aphp/Cohort360-AdministrationPortal/actions)
+<!-- [![Coverage Status](https://sonarcloud.io/api/project_badges/measure?project=aphp_Cohort360-AdministrationPortal&metric=coverage)](https://sonarcloud.io/component_measures?id=aphp_Cohort360-AdministrationPortal&metric=coverage)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=aphp_Cohort360-AdministrationPortal&metric=alert_status)](https://sonarcloud.io/dashboard?id=aphp_Cohort360) -->
+
 ## Available Scripts
 
 In the project directory, you can run:
