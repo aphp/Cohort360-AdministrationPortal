@@ -78,7 +78,9 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
     ) {
       error = 'Les dates doivent être au format "JJ/MM/AAAA"'
     } else if (
-      (_access?.actual_start_datetime !== null && _access.actual_start_datetime.isBefore(moment(), 'day')) ||
+      (!isEdition &&
+        _access?.actual_start_datetime !== null &&
+        _access.actual_start_datetime.isBefore(moment(), 'day')) ||
       (_access?.actual_end_datetime !== null && _access.actual_end_datetime.isBefore(moment(), 'day'))
     ) {
       error = 'Les dates renseignées ne peuvent pas être dans le passé'
@@ -280,23 +282,22 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
             </LocalizationProvider>
           </Grid>
         )}
-        {(!isEdition || (isEdition && !_access.actual_end_datetime?.isBefore())) && (
-          <Grid container justifyContent="space-between" alignItems="center" className={classes.filter}>
-            <Typography variant="h6">Date de fin :</Typography>
-            <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={'fr'}>
-              <DatePicker
-                onChange={(date) => _onChangeValue('actual_end_datetime', date)}
-                value={_access.actual_end_datetime}
-                minDate={moment().add(1, 'days')}
-                renderInput={(params: any) => (
-                  <TextField {...params} variant="standard" error={dateError} style={{ width: 'calc(100% - 120px)' }} />
-                )}
-              />
-            </LocalizationProvider>
 
-            {dateError && <Typography className={classes.error}>{dateError}</Typography>}
-          </Grid>
-        )}
+        <Grid container justifyContent="space-between" alignItems="center" className={classes.filter}>
+          <Typography variant="h6">Date de fin :</Typography>
+          <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={'fr'}>
+            <DatePicker
+              onChange={(date) => _onChangeValue('actual_end_datetime', date)}
+              value={_access.actual_end_datetime}
+              minDate={moment().add(1, 'days')}
+              renderInput={(params: any) => (
+                <TextField {...params} variant="standard" error={dateError} style={{ width: 'calc(100% - 120px)' }} />
+              )}
+            />
+          </LocalizationProvider>
+
+          {dateError && <Typography className={classes.error}>{dateError}</Typography>}
+        </Grid>
 
         {isEdition && (
           <div>
