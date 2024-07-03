@@ -59,14 +59,6 @@ const PortailTopBar: React.FC = () => {
 
   const jupyterPages = [
     {
-      name: 'Transfert Jupyter',
-      pathname: `/espace-jupyter/transfert`,
-      rightsToSee:
-        userRights.right_manage_export_jupyter_accesses ||
-        userRights.right_export_jupyter_nominative ||
-        userRights.right_export_jupyter_pseudonymized
-    },
-    {
       name: 'Transfert Datalab',
       pathname: `/espace-jupyter/export`,
       rightsToSee:

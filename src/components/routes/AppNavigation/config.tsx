@@ -148,19 +148,6 @@ const configRoutes: configRoute[] = [
   /*************************************************************** Jupyter View ********************************************************************** */
 
   /**
-   * Jupyter Tranfert View
-   */
-
-  {
-    exact: true,
-    displayPortailTopBar: true,
-    path: '/espace-jupyter/transfert',
-    name: 'Transfert Jupyter',
-    isPrivate: true,
-    element: <Transfert />
-  },
-
-  /**
    * Jupyter - Datalab Transfer View
    */
 
