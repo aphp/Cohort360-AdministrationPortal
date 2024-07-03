@@ -21,7 +21,7 @@ type TransfertsDatalabTableProps = {
   userRights: UserRole
 }
 
-const orderDefault = { orderBy: 'insert_datetime', orderDirection: 'desc' } as Order
+const orderDefault = { orderBy: 'created_at', orderDirection: 'desc' } as Order
 
 const defaultFilters: ExportFilters = {
   exportType: [],
@@ -79,7 +79,7 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
       label: 'Date de la demande',
       align: 'center',
       sortableColumn: true,
-      code: 'insert_datetime'
+      code: 'created_at'
     },
     {
       label: 'Statut',
@@ -333,7 +333,7 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
                     </Tooltip>
                   </TableCell>
                   <TableCell align="center">
-                    {exportRequest.insert_datetime ? moment(exportRequest.insert_datetime).format('DD/MM/YYYY') : '-'}
+                    {exportRequest.created_at ? moment(exportRequest.created_at).format('DD/MM/YYYY') : '-'}
                   </TableCell>
                   <TableCell align="center">{getExportsChips(exportRequest.request_job_status)}</TableCell>
                 </TableRow>

@@ -358,7 +358,7 @@ export type Export = {
   cohort_id?: number
   cohort_name?: string
   patients_count?: string
-  insert_datetime?: string
+  created_at?: string
   request_job_status?:
     | 'new'
     | 'denied'
