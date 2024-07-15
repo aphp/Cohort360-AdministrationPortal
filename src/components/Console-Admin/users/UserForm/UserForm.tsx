@@ -65,14 +65,10 @@ const UserForm: React.FC<UserFormProps> = ({
 
   useEffect(() => {
     const _checkUser = async () => {
-      try {
-        setLoadingUserData(true)
-        const checkUserResp: CheckUser = await checkUser(user.username)
-        setUser(checkUserResp)
-        setLoadingUserData(false)
-      } catch (error) {
-        setLoadingUserData(false)
-      }
+      setLoadingUserData(true)
+      const checkUserResp: CheckUser = await checkUser(user.username)
+      setUser(checkUserResp)
+      setLoadingUserData(false)
     }
 
     if (!isEdition && debouncedSearchTerm && debouncedSearchTerm.length >= 1) {
@@ -234,7 +230,7 @@ const UserForm: React.FC<UserFormProps> = ({
                   Cet utilisateur existe déjà.
                 </Typography>
               </div>
-              ) : (user.username && !user.found) ? (
+              ) : (user.username && user.found !== undefined && !user.found) ? (
               <div>
                 <ErrorOutlineIcon color="error" className={classes.infoIcon} />
                 <Typography component="span" color="secondary">Aucun utilisateur trouvé. Veuillez entrer un identifiant APH valide.</Typography>

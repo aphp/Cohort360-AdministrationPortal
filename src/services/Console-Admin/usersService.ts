@@ -65,8 +65,8 @@ export const checkUser = async (username?: string) => {
     // if (!username) return null
     const response = await api.get(`/users/${username}/check/`)
     return response.data
-  } catch (error) {
-    console.error(`Erreur lors de la vérification de l'utilisateur`, error)
+  } catch (error: any) {
+    console.error(`Erreur lors de la vérification de l'utilisateur: `, error.response.data.message)
     return {
       username:username,
       found: false
