@@ -1,95 +1,104 @@
-import { ExportTableType } from 'types'
+import { ResourceType } from 'types'
+
+export type ExportTableType = {
+  id: string[]
+  name: string
+  label: string
+  subtitle?: string
+  resourceType: ResourceType
+}
 
 const exportTable: ExportTableType[] = [
   {
-    id: 'person',
-    table_name: 'Patient',
-    table_id: 'person'
+    id: ['person'],
+    name: 'Patient',
+    label: 'person',
+    resourceType: ResourceType.PATIENT
   },
   {
-    id: 'iris',
-    table_name: 'Patient - Données géographiques',
-    table_id: 'iris'
+    id: ['iris'],
+    name: 'Zone géographique',
+    label: 'iris',
+    resourceType: ResourceType.UNKNOWN
   },
   {
-    id: 'visit_occurrence',
-    table_name: 'Prise en charge',
-    table_id: 'visit_occurrence'
+    id: ['visit_occurrence'],
+    name: 'Prise en charge',
+    label: 'visit_occurrence',
+    resourceType: ResourceType.UNKNOWN
   },
   {
-    id: 'visit_detail',
-    table_name: 'Prise en charge - Passages ',
-    table_id: 'visit_detail'
+    id: ['visit_detail'],
+    name: 'Détail de prise en charge',
+    label: 'visit_detail',
+    resourceType: ResourceType.UNKNOWN
   },
   {
-    id: 'condition_occurrence',
-    table_name: 'Fait - PMSI - Diagnostics',
-    table_id: 'condition_occurrence'
+    id: ['condition_occurrence'],
+    name: 'Fait - PMSI - Diagnostics',
+    label: 'condition_occurrence',
+    resourceType: ResourceType.CONDITION
   },
   {
-    id: 'procedure_occurrence',
-    table_name: 'Fait - PMSI - Actes',
-    table_id: 'procedure_occurrence'
+    id: ['procedure_occurrence'],
+    name: 'Fait - PMSI - Actes',
+    label: 'procedure_occurrence',
+    resourceType: ResourceType.PROCEDURE
   },
   {
-    id: 'cost',
-    table_name: 'Fait - PMSI - GHM',
-    table_id: 'cost'
+    id: ['cost'],
+    name: 'Fait - PMSI - GHM',
+    label: 'cost',
+    resourceType: ResourceType.CLAIM
   },
   {
-    id: 'note',
-    table_name: 'Fait - Documents cliniques',
-    table_id: 'note'
+    id: ['note'],
+    name: 'Fait - Documents cliniques',
+    label: 'note',
+    resourceType: ResourceType.DOCUMENTS
   },
   {
-    id: 'measurement',
-    table_name: 'Fait - Biologie',
-    table_id: 'measurement'
+    id: ['measurement'],
+    name: 'Fait - Biologie',
+    label: 'measurement',
+    resourceType: ResourceType.OBSERVATION
   },
   {
-    id: 'drug_exposure_prescription',
-    table_name: 'Fait - Médicaments - Prescription',
-    table_id: 'drug_exposure_prescription'
+    id: ['drug_exposure_prescription'],
+    name: 'Fait - Médicaments - Prescription',
+    label: 'drug_exposure_prescription',
+    resourceType: ResourceType.MEDICATION_REQUEST
   },
   {
-    id: 'drug_exposure_administration',
-    table_name: 'Fait - Médicaments - Administration',
-    table_id: 'drug_exposure_administration'
+    id: ['drug_exposure_administration'],
+    name: 'Fait - Médicaments - Administration',
+    label: 'drug_exposure_administration',
+    resourceType: ResourceType.MEDICATION_ADMINISTRATION
   },
   {
-    id: 'imaging_study',
-    table_name: 'Fait - Imagerie - Étude',
-    table_id: 'imaging_study'
+    id: ['care_site', 'fact_relationship'],
+    name: 'Référentiel - Structure hospitalière',
+    label: 'care_site - fact_relationship',
+    resourceType: ResourceType.UNKNOWN
   },
   {
-    id: 'imaging_series',
-    table_name: 'Fait - Imagerie - Série',
-    table_id: 'imaging_series'
+    id: ['imaging_study', 'imaging_series'],
+    name: 'Fait - Imagerie - Étude & Séries',
+    label: 'imaging_study - imaging_series',
+    resourceType: ResourceType.IMAGING
   },
   {
-    id: 'care_site',
-    table_name: 'Référentiel - Structure hospitalière',
-    table_id: 'care_site'
-  },
-  {
-    id: 'fact_relationship',
-    table_name: 'Référentiel - Liens entre entités',
-    table_id: 'fact_relationship'
-  },
-  {
-    id: 'concept',
-    table_name: 'Référentiel - Terminologie - Concept',
-    table_id: 'concept'
-  },
-  {
-    id: 'concept_relationship',
-    table_name: 'Référentiel - Terminologie - Lien entre concepts',
-    table_id: 'concept_relationship'
-  },
-  {
-    id: 'vocabulary',
-    table_name: 'Référentiel - Terminologie - Vocabulaire et nomenclature',
-    table_id: 'vocabulary'
+    id: [
+      'questionnaire',
+      'questionnaire__item',
+      'questionnaireresponse',
+      'questionnaireresponse__item',
+      'questionnaireresponse__item__answer'
+    ],
+    name: 'Formulaires',
+    label:
+      'questionnaire - questionnaire__item - questionnaireresponse - questionnaireresponse__item - questionnaireresponse__item__answer',
+    resourceType: ResourceType.UNKNOWN
   }
 ]
 

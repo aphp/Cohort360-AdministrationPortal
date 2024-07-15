@@ -30,6 +30,7 @@ export type ErrorDialogProps = {
 
 // Service
 
+
 export type CareSiteType = 'AP-HP' | 'Hopital' | 'Groupe Hospitalier'
 
 export type CareSite = {
@@ -282,6 +283,16 @@ export type WorkingEnvironment = {
   // status: 'new' | 'validated' | 'not_validated' | 'aborted' | 'in progress' | 'closed'
 }
 
+export type Datalab = {
+  created_at: string
+  deleted: string | null
+  deleted_by_cascade: boolean
+  infrastructure_provider: string
+  modified_at: string
+  name: string
+  uuid: string
+}
+
 export type RangerHivePolicy = {
   id: number
   policy_type: 'default_user' | 'default_cse' | 'default_dsip' | 'default_bdr'
@@ -312,12 +323,35 @@ export type JupyterTransferForm = {
   tables: string[]
 }
 
+export type DatalabTransferForm = {
+  user: User | null
+  confidentiality: 'nomi' | 'pseudo'
+  workingEnvironment: Datalab | null
+  shiftDates: 'yes' | 'no'
+  tables: DatalabTable[]
+}
+
+export type DatalabTable = {
+  id: string[]
+  name: string
+  label: string
+  subtitle?: string
+  checked: boolean
+  fhir_filter: SavedFilter | null
+  fhir_filter_user: User | null
+  cohort: Cohort | null
+  cohort_user: User | null
+  respect_table_relationships: boolean
+  resourceType: ResourceType
+}
+
 export type Export = {
   owner?: string
   output_format?: 'csv' | 'hive' | 'psql'
   cohort_id?: number
   cohort_name?: string
   patients_count?: string
+  created_at?: string
   insert_datetime?: string
   request_job_status?:
     | 'new'
@@ -355,12 +389,72 @@ export type Cohort = {
   created_at: string
   request_job_status: string
   fhir_group_id: string
+  uuid: string
 }
 
 export type ExportTableType = {
-  id: string
-  table_name: string
-  table_id: string
+  id: string[]
+  name: string
+  label: string
+  subtitle?: string
+  resourceType: string
+}
+
+export type SavedFilter = {
+  created_at: string
+  deleted: string
+  deleted_by_cascade: boolean
+  fhir_resource: ResourceType
+  fhir_version: string
+  filter: string
+  modified_at: string
+  name: string
+  owner: string
+  uuid: string
+}
+
+export type SavedFiltersResults = {
+  count: number
+  next: string | null
+  previous: string | null
+  results: SavedFilter[]
+}
+
+// export enum RessourceType {
+//   REQUEST = 'Request',
+//   IPP_LIST = 'IPPList',
+//   PATIENT = 'Patient',
+//   ENCOUNTER = 'Encounter',
+//   DOCUMENTS = 'DocumentReference',
+//   PMSI = 'pmsi',
+//   CONDITION = 'Condition',
+//   PROCEDURE = 'Procedure',
+//   CLAIM = 'Claim',
+//   MEDICATION = 'Medication',
+//   MEDICATION_REQUEST = 'MedicationRequest',
+//   MEDICATION_ADMINISTRATION = 'MedicationAdministration',
+//   BIO_MICRO = 'biologie_microbiologie',
+//   OBSERVATION = 'Observation',
+//   MICROBIOLOGIE = 'microbiologie',
+//   PHYSIOLOGIE = 'physiologie',
+//   IMAGING = 'ImagingStudy'
+// }
+
+export enum ResourceType {
+  UNKNOWN = 'Unknown',
+  IPP_LIST = 'IPPList',
+  PATIENT = 'Patient',
+  ENCOUNTER = 'Encounter',
+  DOCUMENTS = 'DocumentReference',
+  CONDITION = 'Condition',
+  PROCEDURE = 'Procedure',
+  CLAIM = 'Claim',
+  MEDICATION_REQUEST = 'MedicationRequest',
+  MEDICATION_ADMINISTRATION = 'MedicationAdministration',
+  OBSERVATION = 'Observation',
+  IMAGING = 'ImagingStudy',
+  QUESTIONNAIRE = 'Questionnaire',
+  QUESTIONNAIRE_RESPONSE = 'QuestionnaireResponse'
 }
 
 export type RightsCategory = {

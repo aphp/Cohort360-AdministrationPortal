@@ -59,12 +59,17 @@ const PortailTopBar: React.FC = () => {
 
   const jupyterPages = [
     {
-      name: 'Transfert Jupyter',
-      pathname: `/espace-jupyter/transfert`,
+      name: 'Transfert Datalab',
+      pathname: `/espace-jupyter/export`,
       rightsToSee:
         userRights.right_manage_export_jupyter_accesses ||
         userRights.right_export_jupyter_nominative ||
         userRights.right_export_jupyter_pseudonymized
+    },
+    {
+      name: 'Environnements',
+      pathname: `/espace-jupyter/working-environments`,
+      rightsToSee: userRights.right_read_datalabs
     }
     // {
     //   name: 'Environnements',

@@ -27,7 +27,7 @@ const AppNavigation = () => (
     <Routes>
       {configRoutes.map((route, index) => {
         return route.isPrivate ? (
-          <Route element={<PrivateRoute />}>
+          <Route key={index} element={<PrivateRoute />}>
             <Route
               index={index}
               path={route.path}
@@ -36,6 +36,7 @@ const AppNavigation = () => (
           </Route>
         ) : (
           <Route
+            key={index}
             index={index}
             path={route.path}
             element={<Layout displayPortailTopBar={route.displayPortailTopBar}>{route.element}</Layout>}
