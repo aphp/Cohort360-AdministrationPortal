@@ -1,11 +1,17 @@
 #!/bin/sh
 set -e
 
-sed -i "s@{JWT_URL}@$JWT_URL@g" /etc/nginx/conf.d/nginx.conf
 sed -i "s@{BACK_URL}@$BACK_URL@g" /etc/nginx/conf.d/nginx.conf
 
 sed -i "s@{VITE_BACK_API_URL}@$VITE_BACK_API_URL@g" /app/build/assets/*.js
 sed -i "s@{VITE_USERNAME_REGEX}@$VITE_USERNAME_REGEX@g" /app/build/assets/*.js
+
+sed -i "s@{VITE_OIDC_PROVIDER_URL}@$VITE_OIDC_PROVIDER_URL@g" /app/build/assets/*.js
+sed -i "s@{VITE_OIDC_REDIRECT_URI}@$VITE_OIDC_REDIRECT_URI@g" /app/build/assets/*.js
+sed -i "s@{VITE_OIDC_RESPONSE_TYPE}@$VITE_OIDC_RESPONSE_TYPE@g" /app/build/assets/*.js
+sed -i "s@{VITE_OIDC_CLIENT_ID}@$VITE_OIDC_CLIENT_ID@g" /app/build/assets/*.js
+sed -i "s@{VITE_OIDC_SCOPE}@$VITE_OIDC_SCOPE@g" /app/build/assets/*.js
+sed -i "s@{VITE_OIDC_STATE}@$VITE_OIDC_STATE@g" /app/build/assets/*.js
 
 service nginx restart
 

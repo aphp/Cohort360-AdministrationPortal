@@ -5,15 +5,16 @@ const api = axios.create({
   baseURL: BACK_API_URL,
   headers: {
     Accept: 'application/json',
-    authorizationMethod: 'JWT',
     'Access-Control-Allow-Origin': '*'
   }
 })
 
 api.interceptors.request.use((config) => {
+  const oidcAuthState = localStorage.getItem('oidcAuth')
   const token = localStorage.getItem(ACCESS_TOKEN)
   if (config && config.headers) {
     config.headers.Authorization = `Bearer ${token}`
+    config.headers.authorizationMethod = oidcAuthState === 'true' ? 'OIDC' : 'JWT'
   }
   return config
 })
