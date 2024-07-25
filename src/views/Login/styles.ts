@@ -46,6 +46,17 @@ const useStyles = makeStyles()((theme) => ({
   },
   mention: {
     marginTop: 8
+  },
+  oidcButton: {
+    backgroundColor: '#153D8A',
+    width: 250
+  },
+  oidcConnexionProgress: {
+    margin: '10%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    rowGap: 30
   }
 }))
 

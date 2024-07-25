@@ -9,18 +9,19 @@ import {
   TextField,
   Typography
 } from '@mui/material'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { KeyboardEvent as ReactKeyboardEvent, SyntheticEvent, UIEvent, useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
+import {ReactComponent as Keycloak} from 'assets/icones/keycloak.svg'
 import logo from 'assets/images/portail-black.png'
 import NoRights from 'components/Console-Admin/ErrorView/NoRights'
 import { buildPartialUser } from 'services/Console-Admin/usersService'
-import { authenticate } from 'services/authentication'
+import { authenticate, authenticateWithOIDC } from 'services/authentication'
 import { login as loginAction } from 'state/me'
 import { ErrorDialogProps } from 'types'
 import { getUserRights } from 'utils/userRoles'
-import { ACCESS_TOKEN, REFRESH_TOKEN } from '../../constants'
+import { ACCESS_TOKEN, CODE_DISPLAY_JWT, OIDC_CLIENT_ID, OIDC_PROVIDER_URL, OIDC_REDIRECT_URI, OIDC_RESPONSE_TYPE, OIDC_SCOPE, OIDC_STATE, REFRESH_TOKEN } from '../../constants'
 import useStyles from './styles'
 import { getValidAccesses } from '../../services/Console-Admin/profilesService'
 
@@ -45,13 +46,16 @@ const ErrorDialog: React.FC<ErrorDialogProps> = ({ open, setErrorLogin }) => {
 
 const Login = () => {
   const navigate = useNavigate()
-  const { classes } = useStyles()
+  const { classes, cx } = useStyles()
   const dispatch = useDispatch()
   const [username, setUsername] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [errorLogin, setErrorLogin] = useState<boolean>(false)
   const [noRights, setNoRights] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
+  const [display_jwt_form, setDisplay_jwt_form] = useState(false)
+  const urlParams = new URLSearchParams(window.location.search)
+  const oidcCode = urlParams.get('code')
 
   useEffect(() => {
     localStorage.removeItem('user')
@@ -59,16 +63,30 @@ const Login = () => {
     localStorage.removeItem('refresh_token')
   }, [])
 
+  useEffect(() => {
+    if (oidcCode) onLogin()
+  }, [oidcCode])
+
   const onLogin = async () => {
     try {
       setLoading(true)
-      if (!username || !password) {
-        setLoading(false)
-        return setErrorLogin(true)
+      let response = null
+
+      if (oidcCode) {
+        response = await authenticateWithOIDC(oidcCode)
+        localStorage.setItem('oidcAuth', 'true')
+      } else {
+        if (!username || !password) {
+          setLoading(false)
+          return setErrorLogin(true)
+        }
+        if (username && password) {
+          response = await authenticate(username, password)
+          localStorage.setItem('oidcAuth', 'false')
+        }
       }
 
-      const response = await authenticate(username, password)
-      if (!response) {
+      if (!response || response instanceof Error) {
         setLoading(false)
         return setErrorLogin(true)
       }
@@ -132,9 +150,38 @@ const Login = () => {
     onLogin()
   }
 
+  const oidcLogin = (event: SyntheticEvent) => {
+    event.preventDefault()
+    window.location.href =
+      `${OIDC_PROVIDER_URL}?state=${OIDC_STATE}&` +
+      `client_id=${OIDC_CLIENT_ID}&` +
+      `redirect_uri=${OIDC_REDIRECT_URI}&` +
+      `response_type=${OIDC_RESPONSE_TYPE}&` +
+      `scope=${OIDC_SCOPE}`
+  }
+
   const onKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
     event.key === 'Enter' ? _onSubmit(event) : null
   }
+
+  useEffect(() => {
+    const code_display_jwt = CODE_DISPLAY_JWT.split(',')
+    let code_display_jwtPosition = 0
+
+    const keyHandler = (event: KeyboardEvent) => {
+      if (event.key === code_display_jwt[code_display_jwtPosition]) {
+        code_display_jwtPosition++
+      } else {
+        code_display_jwtPosition = 0
+      }
+      if (code_display_jwtPosition === code_display_jwt.length) {
+        setDisplay_jwt_form(!display_jwt_form)
+        code_display_jwtPosition = 0
+      }
+    }
+    document.addEventListener('keydown', keyHandler)
+    return () => document.removeEventListener('keydown', keyHandler)
+  }, [display_jwt_form])
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
@@ -151,7 +198,15 @@ const Login = () => {
 
   if (noRights) return <NoRights />
 
-  return (
+  
+  return oidcCode ? (
+    <Grid className={classes.oidcConnexionProgress}>
+      <Typography variant="h2" color="primary">
+        Connexion...
+      </Typography>
+      <CircularProgress />
+    </Grid>
+  ) : (
     <Grid container component="main" className={classes.root}>
       <Grid container className={classes.container}>
         <Grid item xs={false} sm={6} md={6} className={classes.image} />
@@ -171,7 +226,7 @@ const Login = () => {
             <img className={classes.logo} src={logo} alt="Logo Portail" />
 
             <Typography className={classes.bienvenue}>Bienvenue ! Connectez-vous.</Typography>
-
+            {display_jwt_form &&
             <form className={classes.form} noValidate onSubmit={_onSubmit} onKeyDown={onKeyDown}>
               <Grid container direction="column" alignItems="center" justifyContent="center">
                 <TextField
@@ -209,7 +264,19 @@ const Login = () => {
                   {loading ? <CircularProgress /> : 'Connexion'}
                 </Button>
               </Grid>
-            </form>
+            </form>}
+
+            <Button
+              type="submit"
+              onClick={oidcLogin}
+              variant="contained"
+              className={cx(classes.submit, classes.oidcButton)}
+              style={{ marginBottom: 40 }}
+              id="oidc-login"
+              startIcon={<Keycloak height="25px" />}
+            >
+              Connexion via Keycloak
+            </Button>
           </Grid>
         </Grid>
       </Grid>
