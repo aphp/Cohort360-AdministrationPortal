@@ -73,16 +73,16 @@ const Login = () => {
       let response = null
 
       if (oidcCode) {
-        response = await authenticateWithOIDC(oidcCode)
         localStorage.setItem('oidcAuth', 'true')
+        response = await authenticateWithOIDC(oidcCode)
       } else {
         if (!username || !password) {
           setLoading(false)
           return setErrorLogin(true)
         }
         if (username && password) {
-          response = await authenticate(username, password)
           localStorage.setItem('oidcAuth', 'false')
+          response = await authenticate(username, password)
         }
       }
 
