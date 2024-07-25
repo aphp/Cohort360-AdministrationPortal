@@ -25,3 +25,5 @@ export const OIDC_SCOPE = import.meta.env.DEV ? import.meta.env.VITE_OIDC_SCOPE 
 export const OIDC_STATE = import.meta.env.DEV ? import.meta.env.VITE_OIDC_STATE : '{VITE_OIDC_STATE}'
 
 export const CODE_DISPLAY_JWT = import.meta.env.DEV ? import.meta.env.VITE_CODE_DISPLAY_JWT : '{VITE_CODE_DISPLAY_JWT}'
+
+export const ROOT_PERIMETER_TYPE = import.meta.env.DEV ? import.meta.env.VITE_ROOT_PERIMETER_TYPE : '{VITE_ROOT_PERIMETER_TYPE}'

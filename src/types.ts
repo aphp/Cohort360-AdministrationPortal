@@ -31,8 +31,6 @@ export type ErrorDialogProps = {
 // Service
 
 
-export type CareSiteType = 'AP-HP' | 'Hopital' | 'Groupe Hospitalier'
-
 export type CareSite = {
   care_site_id: number
   care_site_name: string

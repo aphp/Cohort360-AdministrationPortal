@@ -1,3 +1,4 @@
+import { ROOT_PERIMETER_TYPE } from '../../constants'
 import api from '../api'
 import { CareSite, Order, Perimeter, ScopeTreeRow } from 'types'
 
@@ -10,7 +11,7 @@ const loadingItem: ScopeTreeRow = {
 }
 
 export const getPerimeters = async () => {
-  const perimetersResp = await api.get(`/accesses/perimeters/?type_source_value=AP-HP`)
+  const perimetersResp = await api.get(`/accesses/perimeters/?type_source_value=${ROOT_PERIMETER_TYPE}`)
 
   if (!perimetersResp) return undefined
 
