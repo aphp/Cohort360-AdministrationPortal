@@ -13,6 +13,8 @@ sed -i "s@{VITE_OIDC_CLIENT_ID}@$VITE_OIDC_CLIENT_ID@g" /app/build/assets/*.js
 sed -i "s@{VITE_OIDC_SCOPE}@$VITE_OIDC_SCOPE@g" /app/build/assets/*.js
 sed -i "s@{VITE_OIDC_STATE}@$VITE_OIDC_STATE@g" /app/build/assets/*.js
 
+sed -i "s@{VITE_CODE_DISPLAY_JWT}@$VITE_CODE_DISPLAY_JWT@g" /app/build/assets/*.js
+
 service nginx restart
 
 sleep infinity
