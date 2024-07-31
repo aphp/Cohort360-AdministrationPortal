@@ -59,6 +59,7 @@ const UserForm: React.FC<UserFormProps> = ({
     const _user = user ? { ...user } : { ...defaultUser }
     _user[key] = value
     setUser(_user)
+    console.log('********** _user: ', _user)
   }
 
   const debouncedSearchTerm = useDebounce(700, user.username)
@@ -222,18 +223,18 @@ const UserForm: React.FC<UserFormProps> = ({
                   </div>
               </>
             )}
-            {!isEdition && (
-             user.already_exists ? (
+            {(!isEdition && user.username) && (
+              user.already_exists ? (
               <div>
                 <ErrorOutlineIcon color="error" className={classes.infoIcon} />
                 <Typography component="span" color="secondary">
                   Cet utilisateur existe déjà.
                 </Typography>
               </div>
-              ) : (user.username && user.found !== undefined && !user.found) ? (
+              ) : (user.found !== undefined && !user.found) ? (
               <div>
                 <ErrorOutlineIcon color="error" className={classes.infoIcon} />
-                <Typography component="span" color="secondary">Aucun utilisateur trouvé. Veuillez entrer un identifiant APH valide.</Typography>
+                <Typography component="span" color="secondary">Aucun utilisateur trouvé.</Typography>
               </div>
              ) : (<></>)
             )}

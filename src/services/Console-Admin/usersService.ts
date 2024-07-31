@@ -62,7 +62,6 @@ export const editUser = async (userId: string, userData: {}) => {
 
 export const checkUser = async (username?: string) => {
   try {
-    // if (!username) return null
     const response = await api.get(`/users/${username}/check/`)
     return response.data
   } catch (error: any) {
