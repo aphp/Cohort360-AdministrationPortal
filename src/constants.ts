@@ -27,3 +27,5 @@ export const OIDC_STATE = import.meta.env.DEV ? import.meta.env.VITE_OIDC_STATE 
 export const CODE_DISPLAY_JWT = import.meta.env.DEV ? import.meta.env.VITE_CODE_DISPLAY_JWT : '{VITE_CODE_DISPLAY_JWT}'
 
 export const ROOT_PERIMETER_TYPE = import.meta.env.DEV ? import.meta.env.VITE_ROOT_PERIMETER_TYPE : '{VITE_ROOT_PERIMETER_TYPE}'
+
+export const USE_CHECKED_PROFILES = (import.meta.env.DEV ? import.meta.env.VITE_USE_CHECKED_PROFILES : '{VITE_USE_CHECKED_PROFILES}') === 'true'

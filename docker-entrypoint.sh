@@ -17,6 +17,8 @@ sed -i "s@{VITE_CODE_DISPLAY_JWT}@$VITE_CODE_DISPLAY_JWT@g" /app/build/assets/*.
 
 sed -i "s@{VITE_ROOT_PERIMETER_TYPE}@$VITE_ROOT_PERIMETER_TYPE@g" /app/build/assets/*.js
 
+sed -i "s@{VITE_USE_CHECKED_PROFILES}@$VITE_USE_CHECKED_PROFILES@g" /app/build/assets/*.js
+
 service nginx restart
 
 sleep infinity
