@@ -8,6 +8,7 @@ import useStyles from './styles'
 import { useNavigate } from 'react-router-dom'
 import { useAppSelector } from 'state'
 import { userDefaultRoles } from 'utils/userRoles'
+import { ENABLE_DATALABS } from '../../constants'
 
 const HomePage = () => {
   const { classes } = useStyles()
@@ -104,7 +105,7 @@ const HomePage = () => {
           {(userRights.right_manage_export_jupyter_accesses ||
             userRights.right_export_jupyter_nominative ||
             userRights.right_export_jupyter_pseudonymized ||
-            userRights.right_read_datalabs) && (
+            userRights.right_read_datalabs) && ENABLE_DATALABS && (
             <Grid item xs={12} sm={3} container direction="column" alignItems="center" className={classes.box}>
               <FlipCameraAndroidIcon style={{ fontSize: 100, marginBottom: 12 }} />
               <Typography variant="h6" style={{ fontSize: 16, marginBottom: 28, lineHeight: 'inherit' }}>

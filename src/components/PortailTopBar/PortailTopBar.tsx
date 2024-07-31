@@ -13,6 +13,7 @@ import { userDefaultRoles } from 'utils/userRoles'
 import { logout as logoutRoute } from 'services/authentication'
 
 import useStyles from './styles'
+import { ENABLE_DATALABS } from '../../constants'
 
 const PortailTopBar: React.FC = () => {
   const { classes, cx } = useStyles()
@@ -133,7 +134,7 @@ const PortailTopBar: React.FC = () => {
             {(userRights.right_manage_export_jupyter_accesses ||
               userRights.right_export_jupyter_nominative ||
               userRights.right_export_jupyter_pseudonymized ||
-              userRights.right_read_datalabs) && (
+              userRights.right_read_datalabs) && ENABLE_DATALABS && (
               <Button
                 onClick={handleClickEspaceJupyter}
                 className={cx(
