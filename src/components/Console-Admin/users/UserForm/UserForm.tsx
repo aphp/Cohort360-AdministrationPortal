@@ -19,7 +19,7 @@ import useStyles from './styles'
 import { checkUser, editUser, submitCreateUser } from 'services/Console-Admin/usersService'
 import { CheckUser, User } from 'types'
 import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
-import { USERNAME_REGEX } from '../../../../constants'
+import { USE_CHECKED_PROFILES, USERNAME_REGEX } from '../../../../constants'
 
 type UserFormProps = {
   open: boolean
@@ -72,7 +72,7 @@ const UserForm: React.FC<UserFormProps> = ({
       setLoadingUserData(false)
     }
 
-    if (!isEdition && debouncedSearchTerm && debouncedSearchTerm.length >= 1) {
+    if (!isEdition && USE_CHECKED_PROFILES && debouncedSearchTerm && debouncedSearchTerm.length >= 1) {
       _checkUser()
     }
   }, [debouncedSearchTerm])
@@ -170,7 +170,7 @@ const UserForm: React.FC<UserFormProps> = ({
                 />
               </Grid>
             )}
-            {(isEdition || user.found) && (
+            {(isEdition || user.found || !USE_CHECKED_PROFILES) && (
               <>
                 <Grid container direction="column">
                   <Typography variant="h6">Nom :</Typography>
