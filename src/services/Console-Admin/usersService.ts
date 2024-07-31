@@ -24,6 +24,21 @@ export const getUsers = async (order: Order, page?: number, searchInput?: string
   }
 }
 
+export const submitCreateUser = async (userData: {
+  username: string
+  firstname?: string
+  lastname?: string
+  email?: string
+}) => {
+  try {
+    const createUser = await api.post(`/users/`, userData)
+    return createUser.status === 201
+  } catch (error) {
+    console.error(`Erreur lors de la création de l'utilisateur`, error)
+    return false
+  }
+}
+
 export const getUser = async (username: string) => {
   try {
     const userResp = await api.get(`/users/${username}/`)
@@ -31,6 +46,30 @@ export const getUser = async (username: string) => {
     return userResp.data ?? undefined
   } catch (error) {
     console.error("Erreur lors de la récupération de l'utilisateur", error)
+  }
+}
+
+export const editUser = async (userId: string, userData: {}) => {
+  try {
+    const editUserResp = await api.patch(`/users/${userId}/`, userData)
+
+    return editUserResp.status === 200
+  } catch (error) {
+    console.error("Erreur lors de l'édition de l'utilisateur", error)
+    return false
+  }
+}
+
+export const checkUser = async (username?: string) => {
+  try {
+    const response = await api.get(`/users/${username}/check/`)
+    return response.data
+  } catch (error: any) {
+    console.error(`Erreur lors de la vérification de l'utilisateur: `, error.response.data.message)
+    return {
+      username:username,
+      found: false
+    }
   }
 }
 

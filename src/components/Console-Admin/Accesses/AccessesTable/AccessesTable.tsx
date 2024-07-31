@@ -201,7 +201,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
                     {access.profile.lastname?.toLocaleUpperCase()} {access.profile.firstname}
                     <IconButton
                       onClick={() =>
-                        navigate(`/console-admin/user-profile/${access.profile.username}`)
+                        navigate(`/console-admin/user-profile/${access.profile.user_id}`)
                       }
                       size="large"
                     >

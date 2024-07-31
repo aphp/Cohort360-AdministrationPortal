@@ -16,8 +16,8 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
 import InfoIcon from '@mui/icons-material/Info'
 
 import useStyles from './styles'
-import { checkProfile, editUser, submitCreateProfile } from 'services/Console-Admin/profilesService'
-import { CheckProfile, User } from 'types'
+import { checkUser, editUser, submitCreateUser } from 'services/Console-Admin/usersService'
+import { CheckUser, User } from 'types'
 import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
 import { USERNAME_REGEX } from '../../../../constants'
 
@@ -44,7 +44,7 @@ const UserForm: React.FC<UserFormProps> = ({
 }) => {
   const { classes } = useStyles()
 
-  const [user, setUser] = useState<CheckProfile>(selectedUser)
+  const [user, setUser] = useState<CheckUser>(selectedUser)
   const [loadingUserData, setLoadingUserData] = useState(false)
   const [loadingOnValidate, setLoadingOnValidate] = useState(false)
 
@@ -56,38 +56,24 @@ const UserForm: React.FC<UserFormProps> = ({
   const isEdition = selectedUser?.username
 
   const _onChangeValue = (key: 'username' | 'firstname' | 'lastname' | 'email', value: any) => {
-    const _user = user ? { ...user } : { username: '' }
+    const _user = user ? { ...user } : { ...defaultUser }
     _user[key] = value
     setUser(_user)
+    console.log('********** _user: ', _user)
   }
 
   const debouncedSearchTerm = useDebounce(700, user.username)
 
   useEffect(() => {
-    const _checkProfile = async () => {
-      try {
-        setLoadingUserData(true)
-        const checkProfileResp: CheckProfile = await checkProfile(user.username)
-
-        if (checkProfileResp) {
-          setUser(checkProfileResp)
-        }
-        setLoadingUserData(false)
-      } catch (error) {
-        console.error('Erreur lors de la vérification du profil')
-        const _user: User = {
-          username: user.username ?? '',
-          firstname: '',
-          lastname: '',
-          email: ''
-        }
-        setUser(_user)
-        setLoadingUserData(false)
-      }
+    const _checkUser = async () => {
+      setLoadingUserData(true)
+      const checkUserResp: CheckUser = await checkUser(user.username)
+      setUser(checkUserResp)
+      setLoadingUserData(false)
     }
 
     if (!isEdition && debouncedSearchTerm && debouncedSearchTerm.length >= 1) {
-      _checkProfile()
+      _checkUser()
     }
   }, [debouncedSearchTerm])
 
@@ -137,12 +123,12 @@ const UserForm: React.FC<UserFormProps> = ({
         const userData = {
           firstname: user.firstname,
           lastname: user.lastname,
-          user_id: user.username,
+          username: user.username,
           email: user.email
         }
-        const createProfileResp = await submitCreateProfile(userData)
+        const createUserResp = await submitCreateUser(userData)
 
-        createProfileResp ? onAddUserSuccess(true) : onAddUserFail(true)
+        createUserResp ? onAddUserSuccess(true) : onAddUserFail(true)
       }
 
       setLoadingOnValidate(false)
@@ -163,7 +149,7 @@ const UserForm: React.FC<UserFormProps> = ({
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>{isEdition ? 'Éditer un utilisateur :' : 'Créer un nouvel utilisateur :'}</DialogTitle>
       <DialogContent className={classes.dialog}>
-        {isEdition && loadingUserData ? (
+        {loadingUserData ? (
           <Grid container justifyContent="center" style={{ padding: 16 }}>
             <CircularProgress />
           </Grid>
@@ -184,76 +170,73 @@ const UserForm: React.FC<UserFormProps> = ({
                 />
               </Grid>
             )}
-            {loadingUserData ? (
-              <Grid container justifyContent="center" style={{ padding: 16 }}>
-                <CircularProgress />
-              </Grid>
-            ) : user.firstname !== undefined ? (
-              user.manual_profile ? (
+            {(isEdition || user.found) && (
+              <>
+                <Grid container direction="column">
+                  <Typography variant="h6">Nom :</Typography>
+                  <TextField
+                    margin="normal"
+                    autoFocus
+                    placeholder="Exemple: Dupont"
+                    value={user.lastname}
+                    onChange={(event) => _onChangeValue('lastname', event.target.value)}
+                    error={lastNameError}
+                    helperText={
+                      lastNameError &&
+                      "Le nom ne peut pas contenir de chiffres ou de caractères spéciaux hormis ' et -."
+                    }
+                    style={{ margin: '1em' }}
+                  />
+                </Grid>
+                <Grid container direction="column">
+                  <Typography variant="h6">Prénom :</Typography>
+                  <TextField
+                    margin="normal"
+                    autoFocus
+                    placeholder="Exemple: Jean"
+                    value={user.firstname}
+                    onChange={(event) => _onChangeValue('firstname', event.target.value)}
+                    error={firstNameError}
+                    helperText={
+                      firstNameError &&
+                      "Le prénom ne peut pas contenir de chiffres ou de caractères spéciaux hormis ' et -."
+                    }
+                    style={{ margin: '1em' }}
+                  />
+                </Grid>
+                <Grid container direction="column">
+                  <Typography variant="h6">Adresse e-mail :</Typography>
+                  <TextField
+                    margin="normal"
+                    autoFocus
+                    placeholder="Exemple: jean.dupont@aphp.fr"
+                    value={user.email}
+                    onChange={(event) => _onChangeValue('email', event.target.value)}
+                    error={emailError}
+                    helperText={emailError && `L'adresse e-mail doit être du format "prenom.nom@aphp.fr"`}
+                    style={{ margin: '1em' }}
+                  />
+                </Grid>
                 <div>
-                  <ErrorOutlineIcon color="secondary" className={classes.infoIcon} />
-                  <Typography component="span" color="secondary">
-                    Cet utilisateur possède déjà un profil.
-                  </Typography>
-                </div>
-              ) : (
-                <>
-                  <Grid container direction="column">
-                    <Typography variant="h6">Nom :</Typography>
-                    <TextField
-                      margin="normal"
-                      autoFocus
-                      placeholder="Exemple: Dupont"
-                      value={user.lastname}
-                      onChange={(event) => _onChangeValue('lastname', event.target.value)}
-                      error={lastNameError}
-                      helperText={
-                        lastNameError &&
-                        "Le nom ne peut pas contenir de chiffres ou de caractères spéciaux hormis ' et -."
-                      }
-                      style={{ margin: '1em' }}
-                    />
-                  </Grid>
-                  <Grid container direction="column">
-                    <Typography variant="h6">Prénom :</Typography>
-                    <TextField
-                      margin="normal"
-                      autoFocus
-                      placeholder="Exemple: Jean"
-                      value={user.firstname}
-                      onChange={(event) => _onChangeValue('firstname', event.target.value)}
-                      error={firstNameError}
-                      helperText={
-                        firstNameError &&
-                        "Le prénom ne peut pas contenir de chiffres ou de caractères spéciaux hormis ' et -."
-                      }
-                      style={{ margin: '1em' }}
-                    />
-                  </Grid>
-                  <Grid container direction="column">
-                    <Typography variant="h6">Adresse e-mail :</Typography>
-                    <TextField
-                      margin="normal"
-                      autoFocus
-                      placeholder="Exemple: jean.dupont@aphp.fr"
-                      value={user.email}
-                      onChange={(event) => _onChangeValue('email', event.target.value)}
-                      error={emailError}
-                      helperText={emailError && `L'adresse e-mail doit être du format "prenom.nom@aphp.fr"`}
-                      style={{ margin: '1em' }}
-                    />
-                  </Grid>
-                  <div>
                     <InfoIcon color="action" className={classes.infoIcon} />
                     <Typography component="span">Tous les champs sont obligatoires.</Typography>
                   </div>
-                </>
-              )
-            ) : (
+              </>
+            )}
+            {(!isEdition && user.username) && (
+              user.already_exists ? (
               <div>
-                <ErrorOutlineIcon color="action" className={classes.infoIcon} />
-                <Typography component="span">Veuillez entrer un identifiant APH valide.</Typography>
+                <ErrorOutlineIcon color="error" className={classes.infoIcon} />
+                <Typography component="span" color="secondary">
+                  Cet utilisateur existe déjà.
+                </Typography>
               </div>
+              ) : (user.found !== undefined && !user.found) ? (
+              <div>
+                <ErrorOutlineIcon color="error" className={classes.infoIcon} />
+                <Typography component="span" color="secondary">Aucun utilisateur trouvé.</Typography>
+              </div>
+             ) : (<></>)
             )}
           </>
         )}
@@ -269,7 +252,7 @@ const UserForm: React.FC<UserFormProps> = ({
             lastNameError ||
             firstNameError ||
             emailError ||
-            (!isEdition && user?.manual_profile !== null) ||
+            (!isEdition && user?.already_exists) ||
             !user.username ||
             !user.firstname ||
             !user.lastname ||
