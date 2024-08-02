@@ -1,5 +1,7 @@
 export const BACK_API_URL = import.meta.env.DEV ? import.meta.env.VITE_BACK_API_URL : '{VITE_BACK_API_URL}'
 
+let BOOLEAN_TRUE = 'true'
+
 export const ACCESS_TOKEN = 'access_token'
 export const REFRESH_TOKEN = 'refresh_token'
 export const SESSION_TIMEOUT = import.meta.env.VITE_SESSION_TIMEOUT
@@ -28,5 +30,5 @@ export const CODE_DISPLAY_JWT = import.meta.env.DEV ? import.meta.env.VITE_CODE_
 
 export const ROOT_PERIMETER_TYPE = import.meta.env.DEV ? import.meta.env.VITE_ROOT_PERIMETER_TYPE : '{VITE_ROOT_PERIMETER_TYPE}'
 
-export const USE_CHECKED_PROFILES = (import.meta.env.DEV ? import.meta.env.VITE_USE_CHECKED_PROFILES : '{VITE_USE_CHECKED_PROFILES}') === 'true'
-export const ENABLE_DATALABS = (import.meta.env.DEV ? import.meta.env.VITE_ENABLE_DATALABS : '{VITE_ENABLE_DATALABS}') === 'true'
+export const USE_CHECKED_PROFILES = (import.meta.env.DEV ? import.meta.env.VITE_USE_CHECKED_PROFILES : '{VITE_USE_CHECKED_PROFILES}') == `${BOOLEAN_TRUE}`
+export const ENABLE_DATALABS = (import.meta.env.DEV ? import.meta.env.VITE_ENABLE_DATALABS : '{VITE_ENABLE_DATALABS}') == `${BOOLEAN_TRUE}`
