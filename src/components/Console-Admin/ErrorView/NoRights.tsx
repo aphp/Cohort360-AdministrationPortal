@@ -5,6 +5,7 @@ import { Button, Grid, Typography } from '@mui/material'
 import WarningIcon from '@mui/icons-material/Report'
 
 import useStyles from './styles'
+import { MAIL_SUPPORT } from 'constants.js'
 
 const PortailNoRights = () => {
   const { classes } = useStyles()
@@ -30,7 +31,7 @@ const PortailNoRights = () => {
             </Typography>
             <Typography style={{ marginBottom: 16 }} align="center">
               S'il s'agit d'une erreur, vous pouvez contacter le support Portail d'administration à l'adresse suivante:
-              dsi-id-recherche-support-cohort360@aphp.fr
+              {MAIL_SUPPORT}
             </Typography>
           </Grid>
         </Grid>

@@ -19,7 +19,7 @@ import useStyles from './styles'
 import { checkUser, editUser, submitCreateUser } from 'services/Console-Admin/usersService'
 import { CheckUser, User } from 'types'
 import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
-import { USE_CHECKED_PROFILES, USERNAME_REGEX } from '../../../../constants'
+import { MAIL_REGEX, USE_CHECKED_PROFILES, USERNAME_REGEX } from '../../../../constants'
 
 type UserFormProps = {
   open: boolean
@@ -79,7 +79,7 @@ const UserForm: React.FC<UserFormProps> = ({
 
   useEffect(() => {
     const name = /^([ \u00c0-\u01ffa-zA-Z'-])+$/
-    const aphpMail = /^[a-zA-Z0-9._-]+@aphp[.]fr$/
+    const aphpMail = RegExp(MAIL_REGEX)
 
     if (user.username && !user.username.match(USERNAME_REGEX)) {
       setUsernameError(true)

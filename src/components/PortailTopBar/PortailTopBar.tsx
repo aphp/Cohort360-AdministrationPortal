@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { AppBar, Button, Grid, IconButton, ListItemIcon, Menu, MenuItem, Toolbar } from '@mui/material'
 
@@ -92,9 +92,9 @@ const PortailTopBar: React.FC = () => {
       <Toolbar style={{ height: 64 }}>
         <Grid container alignItems="center" justifyContent="space-between" style={{ height: '100%' }}>
           <Grid container item alignItems="center" xs={9} style={{ height: '100%' }}>
-            <a href="/homepage">
+            <Link to="/homepage">
               <img src={PortailLogo} alt="Portail logo" className={classes.logoIcon} />
-            </a>
+            </Link>
             <Button
               onClick={handleClickConsoleAdmin}
               className={cx(

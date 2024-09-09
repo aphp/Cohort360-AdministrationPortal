@@ -19,6 +19,8 @@ sed -i "s@{VITE_ROOT_PERIMETER_TYPE}@$VITE_ROOT_PERIMETER_TYPE@g" /app/build/ass
 
 sed -i "s@{VITE_USE_CHECKED_PROFILES}@$VITE_USE_CHECKED_PROFILES@g" /app/build/assets/*.js
 sed -i "s@{VITE_ENABLE_DATALABS}@$VITE_ENABLE_DATALABS@g" /app/build/assets/*.js
+sed -i "s/{VITE_MAIL_SUPPORT}/$VITE_MAIL_SUPPORT/g" /app/build/assets/*.js
+sed -i "s/{VITE_MAIL_REGEX}/$VITE_MAIL_REGEX/g" /app/build/assets/*.js
 
 
 service nginx restart
