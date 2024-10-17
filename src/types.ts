@@ -242,7 +242,7 @@ export type Order = {
 // Habilitation
 
 export type UserInHabilitation = {
-  username: string
+  provider_username: string
   firstname: string
   lastname: string
   perimeter: string

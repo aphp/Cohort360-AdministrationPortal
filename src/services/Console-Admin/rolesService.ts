@@ -69,7 +69,7 @@ export const deleteRole = async (role_id?: number) => {
 
 export const getRoleUser = async (roleId: string): Promise<string | undefined> => {
   const getRoleResp = await api.get(`/accesses/roles/${roleId}/`)
-  return `${getRoleResp.data.name}` ?? undefined
+  return `${getRoleResp.data.name}`
 }
 
 export const getUsersRole = async (role_id: string, order: Order, page?: number, searchInput?: string) => {

@@ -105,6 +105,8 @@ const HabilitationTable: React.FC<HabilitationTableProps> = (props) => {
             </TableRow>
           </TableHead>
 
+          
+
           <TableBody>
             {usersInHabilitation && usersInHabilitation.length > 0 ? (
               usersInHabilitation.map((userAccess, index) => (
@@ -112,15 +114,19 @@ const HabilitationTable: React.FC<HabilitationTableProps> = (props) => {
                   <TableCell align="left">
                     {userAccess.lastname.toLocaleUpperCase()} {userAccess.firstname}
                     <IconButton
-                      onClick={() => navigate(`/console-admin/user-profile/${userAccess.username}`)}
+                      onClick={() => navigate(`/console-admin/user-profile/${userAccess.provider_username}`)}
                       size="large"
                     >
                       <LaunchIcon fontSize="small" />
                     </IconButton>
                   </TableCell>
                   <TableCell>{userAccess.perimeter}</TableCell>
-                  <TableCell>{userAccess.start_datetime ? moment(userAccess.start_datetime).format('DD/MM/YYYY') : '-'}</TableCell>
-                  <TableCell>{userAccess.end_datetime ? moment(userAccess.end_datetime).format('DD/MM/YYYY') : '-'}</TableCell>
+                  <TableCell>
+                    {userAccess.start_datetime ? moment(userAccess.start_datetime).format('DD/MM/YYYY') : '-'}
+                  </TableCell>
+                  <TableCell>
+                    {userAccess.end_datetime ? moment(userAccess.end_datetime).format('DD/MM/YYYY') : '-'}
+                  </TableCell>
                 </TableRow>
               ))
             ) : (

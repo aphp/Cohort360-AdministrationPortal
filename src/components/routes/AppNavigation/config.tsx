@@ -12,9 +12,9 @@ import Habilitations from 'views/Console-Admin/Habilitations/Habilitations'
 import HabilitationHistory from 'views/Console-Admin/HabilitationHistory/HabilitationHistory'
 import Logs from 'views/Console-Admin/Logs/Logs'
 
-import Transfert from 'views/Jupyter/Transfert/Transfert'
+// import Transfert from 'views/Jupyter/Transfert/Transfert'
 import TransfertDatalab from 'views/Jupyter/Transfert/TransfertDatalab'
-import WorkingEnvironments from 'views/Jupyter/WorkingEnvironments/WorkingEnvironments'
+// import WorkingEnvironments from 'views/Jupyter/WorkingEnvironments/WorkingEnvironments'
 
 type configRoute = RouteObject & {
   exact?: boolean
