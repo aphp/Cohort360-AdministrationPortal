@@ -200,9 +200,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
                   <TableCell align="left">
                     {access.profile.lastname?.toLocaleUpperCase()} {access.profile.firstname}
                     <IconButton
-                      onClick={() =>
-                        navigate(`/console-admin/user-profile/${access.profile.user_id}`)
-                      }
+                      onClick={() => navigate(`/console-admin/user-profile/${access.profile.provider_id}`)}
                       size="large"
                     >
                       <LaunchIcon fontSize="small" />

@@ -87,7 +87,7 @@ export type CheckUser = User & {
 
 export type Profile = {
   id: number
-  user_id: string | null
+  provider_id: string | null
   firstname: string | null
   lastname: string | null
   email: string | null
