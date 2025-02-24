@@ -14,6 +14,7 @@ import Logs from 'views/Console-Admin/Logs/Logs'
 
 // import Transfert from 'views/Jupyter/Transfert/Transfert'
 import TransfertDatalab from 'views/Jupyter/Transfert/TransfertDatalab'
+import ContentManagement from 'views/Console-Admin/ContentManagement'
 // import WorkingEnvironments from 'views/Jupyter/WorkingEnvironments/WorkingEnvironments'
 
 type configRoute = RouteObject & {
@@ -145,6 +146,19 @@ const configRoutes: configRoute[] = [
     element: <Logs />
   },
 
+  /**
+   * Console-Admin Logs View
+   */
+
+  {
+    exact: true,
+    displayPortailTopBar: true,
+    path: '/console-admin/contents',
+    name: 'Contenus',
+    isPrivate: true,
+    element: <ContentManagement />
+  },
+
   /*************************************************************** Jupyter View ********************************************************************** */
 
   /**
@@ -158,7 +172,7 @@ const configRoutes: configRoute[] = [
     name: 'Transfert Datalab',
     isPrivate: true,
     element: <TransfertDatalab />
-  },
+  }
 
   /**
    * Jupyter Working Environments View

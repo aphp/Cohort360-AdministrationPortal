@@ -30,7 +30,6 @@ export type ErrorDialogProps = {
 
 // Service
 
-
 export type CareSite = {
   care_site_id: number
   care_site_name: string
@@ -237,6 +236,29 @@ export type LogsFiltersObject = {
 export type Order = {
   orderBy: string
   orderDirection: 'asc' | 'desc'
+}
+
+// Web contents
+
+export type WebContentType = {
+  label: string
+  description: string
+}
+
+export type WebContentTypes = Record<string, WebContentType>
+
+export type WebContentCreation = {
+  title: string
+  content: string
+  content_type: string
+  page: string
+  metadata: Record<string, string>
+}
+
+export type WebContent = WebContentCreation & {
+  id: number
+  created_at: string
+  modified_at: string
 }
 
 // Habilitation
@@ -470,4 +492,10 @@ export type RightInRole = {
 export type RightsDependency = {
   dependent: RoleKeys
   dependency: RoleKeys
+}
+
+export type ContentManagementLabels = {
+  contentType: string
+  deleteMessage: string
+  contentTypeGender: 'f' | 'm'
 }
