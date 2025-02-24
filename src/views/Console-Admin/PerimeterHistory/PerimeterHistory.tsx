@@ -153,11 +153,11 @@ const PerimeterHistory: React.FC = () => {
 
     _getUserRights()
     _getPerimeterInfos()
-  }, [perimeterId]) // eslint-disable-line
+  }, [perimeterId])
 
   useEffect(() => {
     _getPerimeterAccesses()
-  }, [debouncedSearchTerm, page, order, includeParentPerimeters]) // eslint-disable-line
+  }, [debouncedSearchTerm, page, order, includeParentPerimeters])
 
   return (
     <Grid container direction="column">

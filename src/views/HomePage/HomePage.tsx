@@ -87,28 +87,29 @@ const HomePage = () => {
           {(userRights.right_manage_export_jupyter_accesses ||
             userRights.right_export_jupyter_nominative ||
             userRights.right_export_jupyter_pseudonymized ||
-            userRights.right_read_datalabs) && ENABLE_DATALABS && (
-            <Grid item xs={12} sm={3} container direction="column" alignItems="center" className={classes.box}>
-              <FlipCameraAndroidIcon style={{ fontSize: 100, marginBottom: 12 }} />
-              <Typography variant="h6" style={{ fontSize: 16, marginBottom: 28, lineHeight: 'inherit' }}>
-                Espace Jupyter
-              </Typography>
-              {jupyterPages.map(
-                (page, index: number) =>
-                  page.rightsToSee && (
-                    <Button
-                      key={index}
-                      variant="contained"
-                      disableElevation
-                      onClick={() => navigate(page.pathname)}
-                      className={classes.linkButton}
-                    >
-                      {page.name}
-                    </Button>
-                  )
-              )}
-            </Grid>
-          )}
+            userRights.right_read_datalabs) &&
+            ENABLE_DATALABS && (
+              <Grid item xs={12} sm={3} container direction="column" alignItems="center" className={classes.box}>
+                <FlipCameraAndroidIcon style={{ fontSize: 100, marginBottom: 12 }} />
+                <Typography variant="h6" style={{ fontSize: 16, marginBottom: 28, lineHeight: 'inherit' }}>
+                  Espace Jupyter
+                </Typography>
+                {jupyterPages.map(
+                  (page, index: number) =>
+                    page.rightsToSee && (
+                      <Button
+                        key={index}
+                        variant="contained"
+                        disableElevation
+                        onClick={() => navigate(page.pathname)}
+                        className={classes.linkButton}
+                      >
+                        {page.name}
+                      </Button>
+                    )
+                )}
+              </Grid>
+            )}
         </Grid>
       </Grid>
     </Grid>

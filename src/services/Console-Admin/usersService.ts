@@ -67,7 +67,7 @@ export const checkUser = async (username?: string) => {
   } catch (error: any) {
     console.error(`Erreur lors de la vérification de l'utilisateur: `, error.response.data.message)
     return {
-      username:username,
+      username: username,
       found: false
     }
   }

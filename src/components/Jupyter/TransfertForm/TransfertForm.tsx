@@ -271,9 +271,8 @@ const TransfertForm: React.FC<TransferFormProps> = ({
               loading={loadingOnSearchUser}
               onChange={(e, value) => _onChangeValue('user', value)}
               getOptionLabel={(option: User) =>
-                `${option.username} - ${option.lastname?.toLocaleUpperCase()} ${option.firstname} - ${
-                  option.email
-                }` ?? ''
+                `${option.username} - ${option.lastname?.toLocaleUpperCase()} ${option.firstname} - ${option.email}` ??
+                ''
               }
               value={transferRequest.user}
               isOptionEqualToValue={(option, value) => option.username === value.username}

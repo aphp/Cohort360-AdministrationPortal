@@ -231,8 +231,6 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
     }
   }
 
-
-
   function renderExportTable(exportTable: DatalabTable) {
     const { id, name, checked, subtitle, label, resourceType } = exportTable
 
@@ -469,11 +467,7 @@ type ExportTableProps = {
   handleTransferRequestChange: (newTransferRequest: DatalabTransferForm) => void
 }
 
-const ExportTable: React.FC<ExportTableProps> = ({
-  exportTable,
-  transferRequest,
-  handleTransferRequestChange
-}) => {
+const ExportTable: React.FC<ExportTableProps> = ({ exportTable, transferRequest, handleTransferRequestChange }) => {
   const { classes } = useStyles()
 
   const [loadingOnSearchCohortUser, setLoadingOnSearchCohortUser] = useState(false)

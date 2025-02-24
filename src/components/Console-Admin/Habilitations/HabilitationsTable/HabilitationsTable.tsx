@@ -45,7 +45,7 @@ const HabilitationsTable: React.FC<HabilitationsTableProps> = ({ userRights }) =
       label: 'Habilitation',
       align: 'left'
     }
-    ]
+  ]
 
   if (userRights.right_full_admin || userRights.right_read_users) {
     columns.push({
@@ -68,13 +68,13 @@ const HabilitationsTable: React.FC<HabilitationsTableProps> = ({ userRights }) =
 
   useEffect(() => {
     _getRoles()
-  }, []) // eslint-disable-line
+  }, [])
 
   useEffect(() => {
     if (addRoleSuccess) _getRoles()
     if (editRoleSuccess) _getRoles()
     if (deleteRoleSuccess) _getRoles()
-  }, [addRoleSuccess, editRoleSuccess, _deleteRole]) // eslint-disable-line
+  }, [addRoleSuccess, editRoleSuccess, _deleteRole])
 
   const _getRoles = async () => {
     try {

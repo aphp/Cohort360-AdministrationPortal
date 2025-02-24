@@ -92,7 +92,7 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
   const toggleDependentRights = (role: any, right: RoleKeys, value: boolean) => {
     let disabled_rights = [...disabledRights]
     if (right === 'right_full_admin') {
-      for (let r in role) {
+      for (const r in role) {
         if (r.includes('right_') && r !== right) {
           role[r] = value
           if (value) {
@@ -127,9 +127,9 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
 
   const enterEditMode = (role: any) => {
     setEditMode(true)
-    let disabled_rights = [...disabledRights]
+    const disabled_rights = [...disabledRights]
     if (role['right_full_admin']) {
-      for (let prop in role) {
+      for (const prop in role) {
         if (prop.includes('right_') && prop !== 'right_full_admin') {
           disabled_rights.push(prop)
         }

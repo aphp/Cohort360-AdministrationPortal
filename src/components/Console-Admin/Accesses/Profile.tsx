@@ -56,7 +56,7 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profile, userRights
 
   useEffect(() => {
     _getAccesses()
-  }, [order, page]) // eslint-disable-line
+  }, [order, page])
 
   const onClose = () => {
     setOpen(false)

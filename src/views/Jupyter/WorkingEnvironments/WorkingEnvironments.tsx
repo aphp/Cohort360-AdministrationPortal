@@ -29,7 +29,7 @@ const WorkingEnvironments = () => {
     }
 
     _getUserRights()
-  }, []) // eslint-disable-line
+  }, [])
 
   return (
     <Grid id="main-grid-users" container direction="column">

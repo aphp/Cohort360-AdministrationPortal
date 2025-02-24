@@ -29,7 +29,7 @@ const Habilitations: React.FC = () => {
     }
 
     _getUserRights()
-  }, []) // eslint-disable-line
+  }, [])
 
   return (
     <Grid container direction="column">

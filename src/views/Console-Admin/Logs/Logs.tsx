@@ -85,7 +85,7 @@ const Logs: React.FC = () => {
 
   useEffect(() => {
     _getLogs()
-  }, [page, filters]) // eslint-disable-line
+  }, [page, filters])
 
   const handleDeleteChip = (filterName: string, value?: any) => {
     const _filters = { ...filters }

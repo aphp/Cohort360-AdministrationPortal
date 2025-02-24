@@ -17,7 +17,7 @@ export const store = createStore(rootReducer, applyMiddleware(thunkMiddleware, l
 store.subscribe(() => {
   // Auto save store inside localStorage
   const _store = store.getState() ?? {}
-  const { me, users, autoLogout } = _store // eslint-disable-line
+  const { me, users, autoLogout } = _store
 
   localStorage.setItem('user', JSON.stringify(me))
   localStorage.setItem('users', JSON.stringify(users))

@@ -219,9 +219,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
                         // @ts-ignore
                         title={roles
                           .find((role: Role) => role.id === access.role?.id)
-                          ?.help_text.map((text, index: number) => (
-                            <Typography key={index}>- {text}</Typography>
-                          ))}
+                          ?.help_text.map((text, index: number) => <Typography key={index}>- {text}</Typography>)}
                       >
                         <InfoIcon color="action" fontSize="small" className={classes.infoIcon} />
                       </Tooltip>
@@ -378,8 +376,8 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
             editAccessSuccess
               ? "Les dates d'accès ont bien été éditées."
               : deleteAccessSuccess
-              ? `L'accès a bien été ${terminateAccess ? 'clôturé' : 'supprimé'}.`
-              : ''
+                ? `L'accès a bien été ${terminateAccess ? 'clôturé' : 'supprimé'}.`
+                : ''
           }
         />
       )}
@@ -394,8 +392,8 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
             editAccessFail
               ? "Erreur lors de l'édition de l'accès"
               : deleteAccessFail
-              ? `Erreur lors de la ${terminateAccess ? 'clôture' : 'suppression'} de l'accès.`
-              : ''
+                ? `Erreur lors de la ${terminateAccess ? 'clôture' : 'suppression'} de l'accès.`
+                : ''
           }
         />
       )}

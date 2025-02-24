@@ -105,8 +105,6 @@ const HabilitationTable: React.FC<HabilitationTableProps> = (props) => {
             </TableRow>
           </TableHead>
 
-          
-
           <TableBody>
             {usersInHabilitation && usersInHabilitation.length > 0 ? (
               usersInHabilitation.map((userAccess, index) => (

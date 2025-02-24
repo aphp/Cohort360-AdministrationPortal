@@ -13,7 +13,7 @@ import React, { KeyboardEvent as ReactKeyboardEvent, SyntheticEvent, UIEvent, us
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import {ReactComponent as Keycloak} from 'assets/icones/keycloak.svg'
+import { ReactComponent as Keycloak } from 'assets/icones/keycloak.svg'
 import logo from 'assets/images/portail-black.png'
 import NoRights from 'components/Console-Admin/ErrorView/NoRights'
 import { buildPartialUser } from 'services/Console-Admin/usersService'
@@ -21,7 +21,17 @@ import { authenticate, authenticateWithOIDC } from 'services/authentication'
 import { login as loginAction } from 'state/me'
 import { ErrorDialogProps } from 'types'
 import { getUserRights } from 'utils/userRoles'
-import { ACCESS_TOKEN, CODE_DISPLAY_JWT, OIDC_CLIENT_ID, OIDC_PROVIDER_URL, OIDC_REDIRECT_URI, OIDC_RESPONSE_TYPE, OIDC_SCOPE, OIDC_STATE, REFRESH_TOKEN } from '../../constants'
+import {
+  ACCESS_TOKEN,
+  CODE_DISPLAY_JWT,
+  OIDC_CLIENT_ID,
+  OIDC_PROVIDER_URL,
+  OIDC_REDIRECT_URI,
+  OIDC_RESPONSE_TYPE,
+  OIDC_SCOPE,
+  OIDC_STATE,
+  REFRESH_TOKEN
+} from '../../constants'
 import useStyles from './styles'
 import { getValidAccesses } from '../../services/Console-Admin/profilesService'
 
@@ -110,39 +120,39 @@ const Login = () => {
   const buildUserRights = async (user: any) => {
     const accesses = await getValidAccesses(user.username)
     const _userRights = await getUserRights(accesses)
-      dispatch(loginAction(buildPartialUser(user, _userRights)))
+    dispatch(loginAction(buildPartialUser(user, _userRights)))
 
-      if (
-        !_userRights.right_full_admin &&
-        !_userRights.right_read_logs &&
-        !_userRights.right_manage_users &&
-        !_userRights.right_read_users &&
-        !_userRights.right_manage_datalabs &&
-        !_userRights.right_read_datalabs &&
-        !_userRights.right_manage_admin_accesses_same_level &&
-        !_userRights.right_read_admin_accesses_same_level &&
-        !_userRights.right_manage_admin_accesses_inferior_levels &&
-        !_userRights.right_read_admin_accesses_inferior_levels &&
-        !_userRights.right_manage_data_accesses_same_level &&
-        !_userRights.right_read_data_accesses_same_level &&
-        !_userRights.right_manage_data_accesses_inferior_levels &&
-        !_userRights.right_read_data_accesses_inferior_levels &&
-        !_userRights.right_read_accesses_above_levels &&
-        !_userRights.right_read_patient_nominative &&
-        !_userRights.right_read_patient_pseudonymized &&
-        !_userRights.right_search_opposed_patients &&
-        !_userRights.right_search_patients_by_ipp &&
-        !_userRights.right_manage_export_jupyter_accesses &&
-        !_userRights.right_manage_export_csv_accesses &&
-        !_userRights.right_export_csv_nominative &&
-        !_userRights.right_export_csv_pseudonymized &&
-        !_userRights.right_export_jupyter_nominative &&
-        !_userRights.right_export_jupyter_pseudonymized
-      ) {
-        setNoRights(true)
-      } else {
-        navigate('/homepage')
-      }
+    if (
+      !_userRights.right_full_admin &&
+      !_userRights.right_read_logs &&
+      !_userRights.right_manage_users &&
+      !_userRights.right_read_users &&
+      !_userRights.right_manage_datalabs &&
+      !_userRights.right_read_datalabs &&
+      !_userRights.right_manage_admin_accesses_same_level &&
+      !_userRights.right_read_admin_accesses_same_level &&
+      !_userRights.right_manage_admin_accesses_inferior_levels &&
+      !_userRights.right_read_admin_accesses_inferior_levels &&
+      !_userRights.right_manage_data_accesses_same_level &&
+      !_userRights.right_read_data_accesses_same_level &&
+      !_userRights.right_manage_data_accesses_inferior_levels &&
+      !_userRights.right_read_data_accesses_inferior_levels &&
+      !_userRights.right_read_accesses_above_levels &&
+      !_userRights.right_read_patient_nominative &&
+      !_userRights.right_read_patient_pseudonymized &&
+      !_userRights.right_search_opposed_patients &&
+      !_userRights.right_search_patients_by_ipp &&
+      !_userRights.right_manage_export_jupyter_accesses &&
+      !_userRights.right_manage_export_csv_accesses &&
+      !_userRights.right_export_csv_nominative &&
+      !_userRights.right_export_csv_pseudonymized &&
+      !_userRights.right_export_jupyter_nominative &&
+      !_userRights.right_export_jupyter_pseudonymized
+    ) {
+      setNoRights(true)
+    } else {
+      navigate('/homepage')
+    }
   }
 
   const _onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -198,7 +208,6 @@ const Login = () => {
 
   if (noRights) return <NoRights />
 
-  
   return oidcCode ? (
     <Grid className={classes.oidcConnexionProgress}>
       <Typography variant="h2" color="primary">
@@ -226,45 +235,46 @@ const Login = () => {
             <img className={classes.logo} src={logo} alt="Logo Portail" />
 
             <Typography className={classes.bienvenue}>Bienvenue ! Connectez-vous.</Typography>
-            {display_jwt_form &&
-            <form className={classes.form} noValidate onSubmit={_onSubmit} onKeyDown={onKeyDown}>
-              <Grid container direction="column" alignItems="center" justifyContent="center">
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  id="Identifiant"
-                  label="Identifiant"
-                  name="Identifiant"
-                  autoComplete="Identifiant"
-                  autoFocus
-                  onChange={handleInputChange}
-                />
+            {display_jwt_form && (
+              <form className={classes.form} noValidate onSubmit={_onSubmit} onKeyDown={onKeyDown}>
+                <Grid container direction="column" alignItems="center" justifyContent="center">
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="Identifiant"
+                    label="Identifiant"
+                    name="Identifiant"
+                    autoComplete="Identifiant"
+                    autoFocus
+                    onChange={handleInputChange}
+                  />
 
-                <TextField
-                  margin="normal"
-                  required
-                  fullWidth
-                  name="Votre mot de passe"
-                  label="Votre mot de passe"
-                  type="password"
-                  id="password"
-                  autoComplete="current-password"
-                  onChange={handleInputChange}
-                />
+                  <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    name="Votre mot de passe"
+                    label="Votre mot de passe"
+                    type="password"
+                    id="password"
+                    autoComplete="current-password"
+                    onChange={handleInputChange}
+                  />
 
-                <Button
-                  disabled={loading || !username || !password}
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  className={classes.submit}
-                >
-                  {loading ? <CircularProgress /> : 'Connexion'}
-                </Button>
-              </Grid>
-            </form>}
+                  <Button
+                    disabled={loading || !username || !password}
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                  >
+                    {loading ? <CircularProgress /> : 'Connexion'}
+                  </Button>
+                </Grid>
+              </form>
+            )}
 
             <Button
               type="submit"

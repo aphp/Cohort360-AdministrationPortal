@@ -111,7 +111,7 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
   }
 
   const getExportsChips = (status: Export['request_job_status']) => {
-    let chipProps = {
+    const chipProps = {
       label: 'Inconnu',
       backgroundColor: '#dc3545',
       color: '#FFF'
@@ -198,14 +198,18 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
       <Grid
         container
         item
-        justifyContent={userRights.right_manage_export_jupyter_accesses ||
-                        userRights.right_export_jupyter_nominative ||
-                        userRights.right_export_jupyter_pseudonymized ? 'space-between' : 'flex-end'}
+        justifyContent={
+          userRights.right_manage_export_jupyter_accesses ||
+          userRights.right_export_jupyter_nominative ||
+          userRights.right_export_jupyter_pseudonymized
+            ? 'space-between'
+            : 'flex-end'
+        }
         style={{ margin: '12px 0' }}
       >
         {(userRights.right_manage_export_jupyter_accesses ||
-         userRights.right_export_jupyter_nominative ||
-         userRights.right_export_jupyter_pseudonymized) && (
+          userRights.right_export_jupyter_nominative ||
+          userRights.right_export_jupyter_pseudonymized) && (
           <Button
             variant="contained"
             disableElevation
@@ -315,8 +319,8 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
                     {exportRequest.output_format === 'csv'
                       ? 'CSV'
                       : exportRequest.output_format === 'hive'
-                      ? 'Jupyter'
-                      : 'psql'}
+                        ? 'Jupyter'
+                        : 'psql'}
                   </TableCell>
                   <TableCell align="center">
                     {exportRequest.target_env !== '' ? exportRequest.target_env : '-'}

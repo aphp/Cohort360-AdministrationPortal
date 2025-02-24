@@ -134,17 +134,19 @@ const PortailTopBar: React.FC = () => {
             {(userRights.right_manage_export_jupyter_accesses ||
               userRights.right_export_jupyter_nominative ||
               userRights.right_export_jupyter_pseudonymized ||
-              userRights.right_read_datalabs) && ENABLE_DATALABS && (
-              <Button
-                onClick={handleClickEspaceJupyter}
-                className={cx(
-                  classes.topBarButton,
-                  (pathname.includes('transfert') || pathname.includes('working-environments')) && classes.activeButton
-                )}
-              >
-                Espace Jupyter
-              </Button>
-            )}
+              userRights.right_read_datalabs) &&
+              ENABLE_DATALABS && (
+                <Button
+                  onClick={handleClickEspaceJupyter}
+                  className={cx(
+                    classes.topBarButton,
+                    (pathname.includes('transfert') || pathname.includes('working-environments')) &&
+                      classes.activeButton
+                  )}
+                >
+                  Espace Jupyter
+                </Button>
+              )}
             <Menu
               anchorEl={anchorElJupyter}
               elevation={0}

@@ -185,7 +185,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
     } else if (!debouncedSearchTerm) {
       _init()
     }
-  }, [debouncedSearchTerm]) // eslint-disable-line
+  }, [debouncedSearchTerm])
 
   useEffect(() => setSelectedItem(defaultSelectedItems), [defaultSelectedItems])
 

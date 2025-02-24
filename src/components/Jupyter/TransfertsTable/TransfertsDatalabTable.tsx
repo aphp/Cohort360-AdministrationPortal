@@ -111,7 +111,7 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
   }
 
   const getExportsChips = (status: Export['request_job_status']) => {
-    let chipProps = {
+    const chipProps = {
       label: 'Inconnu',
       backgroundColor: '#dc3545',
       color: '#FFF'
@@ -319,8 +319,8 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
                     {exportRequest.output_format === 'csv'
                       ? 'CSV'
                       : exportRequest.output_format === 'hive'
-                      ? 'Jupyter'
-                      : 'psql'}
+                        ? 'Jupyter'
+                        : 'psql'}
                   </TableCell>
                   <TableCell align="center">
                     {exportRequest.target_env !== '' ? exportRequest.target_env : '-'}

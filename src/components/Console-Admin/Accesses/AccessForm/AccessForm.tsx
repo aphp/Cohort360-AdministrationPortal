@@ -118,7 +118,7 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
     if (!isEdition) {
       _getAssignableRoles()
     }
-  }, [_access.perimeter]) // eslint-disable-line
+  }, [_access.perimeter])
 
   useEffect(() => {
     const _accessCopy = { ..._access }

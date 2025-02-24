@@ -69,7 +69,7 @@ const ProfilesView: React.FC = () => {
     _getUserRights()
     _getProfile()
     _getRoles()
-  }, [user_id]) // eslint-disable-line
+  }, [user_id])
 
   return (
     <Grid container direction="column">
@@ -79,7 +79,7 @@ const ProfilesView: React.FC = () => {
         ) : (
           <Grid container item xs={12} sm={10}>
             <Typography variant="h1" align="center" className={classes.title}>
-              {user?.lastname?.toLocaleUpperCase()} {user?.firstname} - id APH :{' '}{user?.username}
+              {user?.lastname?.toLocaleUpperCase()} {user?.firstname} - id APH : {user?.username}
             </Typography>
             <>
               {profiles ? (

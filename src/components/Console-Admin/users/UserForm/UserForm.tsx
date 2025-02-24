@@ -218,26 +218,30 @@ const UserForm: React.FC<UserFormProps> = ({
                   />
                 </Grid>
                 <div>
-                    <InfoIcon color="action" className={classes.infoIcon} />
-                    <Typography component="span">Tous les champs sont obligatoires.</Typography>
-                  </div>
+                  <InfoIcon color="action" className={classes.infoIcon} />
+                  <Typography component="span">Tous les champs sont obligatoires.</Typography>
+                </div>
               </>
             )}
-            {(!isEdition && user.username) && (
-              user.already_exists ? (
-              <div>
-                <ErrorOutlineIcon color="error" className={classes.infoIcon} />
-                <Typography component="span" color="secondary">
-                  Cet utilisateur existe déjà.
-                </Typography>
-              </div>
-              ) : (user.found !== undefined && !user.found) ? (
-              <div>
-                <ErrorOutlineIcon color="error" className={classes.infoIcon} />
-                <Typography component="span" color="secondary">Aucun utilisateur trouvé.</Typography>
-              </div>
-             ) : (<></>)
-            )}
+            {!isEdition &&
+              user.username &&
+              (user.already_exists ? (
+                <div>
+                  <ErrorOutlineIcon color="error" className={classes.infoIcon} />
+                  <Typography component="span" color="secondary">
+                    Cet utilisateur existe déjà.
+                  </Typography>
+                </div>
+              ) : user.found !== undefined && !user.found ? (
+                <div>
+                  <ErrorOutlineIcon color="error" className={classes.infoIcon} />
+                  <Typography component="span" color="secondary">
+                    Aucun utilisateur trouvé.
+                  </Typography>
+                </div>
+              ) : (
+                <></>
+              ))}
           </>
         )}
       </DialogContent>
