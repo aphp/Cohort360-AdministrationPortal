@@ -1,5 +1,5 @@
 import api from 'services/api'
-import { DatalabTransferForm, ExportFilters, Order } from 'types'
+import { ExportFilters, Order } from 'types'
 
 export const jupyterTransfer = async (transferRequestData: {}) => {
   try {
@@ -13,8 +13,8 @@ export const jupyterTransfer = async (transferRequestData: {}) => {
 
 export const datalabTransfer = async (transferRequestData: {}) => {
   try {
-    const createProfile = await api.post(`/exports/`, transferRequestData)
-    return createProfile.status === 201
+    const exportResponse = await api.post(`/exports/`, transferRequestData)
+    return exportResponse.status === 201
   } catch (error) {
     console.error("Erreur lors de l'envoi de la demande de transfert vers un Datalab", error)
     return false
