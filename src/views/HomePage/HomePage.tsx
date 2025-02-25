@@ -42,6 +42,11 @@ const HomePage = () => {
       name: 'Logs',
       pathname: '/console-admin/logs',
       rightsToSee: userRights.right_read_logs
+    },
+    {
+      name: 'Contenus',
+      pathname: '/console-admin/contents',
+      rightsToSee: userRights.right_full_admin
     }
   ]
 
