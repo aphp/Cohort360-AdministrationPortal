@@ -72,7 +72,8 @@ const PerimeterHistory: React.FC = () => {
   const [order, setOrder] = useState(orderDefault)
   const [roles, setRoles] = useState<Role[]>([])
   const [includeParentPerimeters, setIncludeParentPerimeters] = useState<boolean>(false)
-
+  const [includeChildPerimeters, setIncludeChildPerimeters] = useState<boolean>(false)
+  const [userCanReadAccessFromOtherLevels, setUserCanReadAccessFromOtherLevels] = useState<boolean>(false)
   const debouncedSearchTerm = useDebounce(500, searchInput)
 
   const { perimeterId } = useParams<{ perimeterId: string }>()
@@ -89,6 +90,7 @@ const PerimeterHistory: React.FC = () => {
         _perimeterId,
         order,
         includeParentPerimeters,
+        includeChildPerimeters,
         page,
         searchInput.trim()
       )
@@ -146,6 +148,13 @@ const PerimeterHistory: React.FC = () => {
         const getUserRightsResponse = await getUserRights()
 
         setUserRights(getUserRightsResponse)
+        setUserCanReadAccessFromOtherLevels(
+          !!(
+            getUserRightsResponse.right_read_accesses_above_levels ||
+            getUserRightsResponse.right_read_data_accesses_inferior_levels ||
+            getUserRightsResponse.right_read_admin_accesses_inferior_levels
+          )
+        )
       } catch (error) {
         console.error("Erreur lors de la récupération des droits de l'utilisateur", error)
       }
@@ -157,7 +166,7 @@ const PerimeterHistory: React.FC = () => {
 
   useEffect(() => {
     _getPerimeterAccesses()
-  }, [debouncedSearchTerm, page, order, includeParentPerimeters])
+  }, [debouncedSearchTerm, page, order, includeParentPerimeters, includeChildPerimeters])
 
   return (
     <Grid container direction="column">
@@ -172,8 +181,8 @@ const PerimeterHistory: React.FC = () => {
             </Typography>
 
             <Grid container justifyContent="space-between">
-              {perimeterData.map((data) => (
-                <Card sx={{ minWidth: 275, boxShadow: 0, borderRadius: 2 }}>
+              {perimeterData.map((data, index: number) => (
+                <Card key={index} sx={{ minWidth: 275, boxShadow: 0, borderRadius: 2 }}>
                   <CardContent style={{ paddingBottom: 16 }}>
                     <Typography
                       sx={{
@@ -200,16 +209,30 @@ const PerimeterHistory: React.FC = () => {
             </Grid>
             <Grid
               container
-              justifyContent={userRights.right_read_accesses_above_levels ? 'space-between' : 'flex-end'}
+              justifyContent={userCanReadAccessFromOtherLevels ? 'space-between' : 'flex-end'}
               className={classes.searchBar}
             >
-              {userRights.right_read_accesses_above_levels && (
-                <Grid display="flex" alignItems="center">
-                  <Typography variant="h3">Afficher les accès sur les périmètres parents</Typography>
-                  <Switch
-                    checked={includeParentPerimeters}
-                    onChange={(event) => setIncludeParentPerimeters(!includeParentPerimeters)}
-                  />
+              {userCanReadAccessFromOtherLevels && (
+                <Grid display={'flex'}>
+                  {userRights.right_read_accesses_above_levels && (
+                    <Grid display="flex" alignItems="center">
+                      <Typography variant="h3">Afficher les accès sur les périmètres parents</Typography>
+                      <Switch
+                        checked={includeParentPerimeters}
+                        onChange={() => setIncludeParentPerimeters(!includeParentPerimeters)}
+                      />
+                    </Grid>
+                  )}
+                  {(userRights.right_read_data_accesses_inferior_levels ||
+                    userRights.right_read_admin_accesses_inferior_levels) && (
+                    <Grid display="flex" alignItems="center">
+                      <Typography variant="h3">Afficher les accès sur les périmètres inférieurs</Typography>
+                      <Switch
+                        checked={includeChildPerimeters}
+                        onChange={() => setIncludeChildPerimeters(!includeChildPerimeters)}
+                      />
+                    </Grid>
+                  )}
                 </Grid>
               )}
               <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
