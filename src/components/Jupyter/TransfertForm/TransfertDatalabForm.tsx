@@ -204,7 +204,7 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
           export_tables: transferRequest.tables
             .filter((table) => table.checked === true)
             .map((table: DatalabTable) => ({
-              table_ids: table.id,
+              table_name: table.id,
               fhir_filter: table.fhir_filter?.uuid,
               cohort_result_source: table.cohort?.uuid,
               respect_table_relationships: table.respect_table_relationships

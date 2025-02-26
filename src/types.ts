@@ -352,7 +352,7 @@ export type DatalabTransferForm = {
 }
 
 export type DatalabTable = {
-  id: string[]
+  id: string
   name: string
   label: string
   subtitle?: string

@@ -1,7 +1,7 @@
 import { ResourceType } from 'types'
 
 export type ExportTableType = {
-  id: string[]
+  id: string
   name: string
   label: string
   subtitle?: string
@@ -10,94 +10,99 @@ export type ExportTableType = {
 
 const exportTable: ExportTableType[] = [
   {
-    id: ['person'],
+    id: 'person',
     name: 'Patient',
     label: 'person',
     resourceType: ResourceType.PATIENT
   },
   {
-    id: ['iris'],
+    id: 'iris',
     name: 'Zone géographique',
     label: 'iris',
     resourceType: ResourceType.UNKNOWN
   },
   {
-    id: ['visit_occurrence'],
+    id: 'visit_occurrence',
     name: 'Prise en charge',
     label: 'visit_occurrence',
     resourceType: ResourceType.UNKNOWN
   },
   {
-    id: ['visit_detail'],
+    id: 'visit_detail',
     name: 'Détail de prise en charge',
     label: 'visit_detail',
     resourceType: ResourceType.UNKNOWN
   },
   {
-    id: ['condition_occurrence'],
+    id: 'condition_occurrence',
     name: 'Fait - PMSI - Diagnostics',
     label: 'condition_occurrence',
     resourceType: ResourceType.CONDITION
   },
   {
-    id: ['procedure_occurrence'],
+    id: 'procedure_occurrence',
     name: 'Fait - PMSI - Actes',
     label: 'procedure_occurrence',
     resourceType: ResourceType.PROCEDURE
   },
   {
-    id: ['cost'],
+    id: 'cost',
     name: 'Fait - PMSI - GHM',
     label: 'cost',
     resourceType: ResourceType.CLAIM
   },
   {
-    id: ['note'],
+    id: 'note',
     name: 'Fait - Documents cliniques',
     label: 'note',
     resourceType: ResourceType.DOCUMENTS
   },
   {
-    id: ['measurement'],
+    id: 'measurement',
     name: 'Fait - Biologie',
     label: 'measurement',
     resourceType: ResourceType.OBSERVATION
   },
   {
-    id: ['drug_exposure_prescription'],
+    id: 'drug_exposure_prescription',
     name: 'Fait - Médicaments - Prescription',
     label: 'drug_exposure_prescription',
     resourceType: ResourceType.MEDICATION_REQUEST
   },
   {
-    id: ['drug_exposure_administration'],
+    id: 'drug_exposure_administration',
     name: 'Fait - Médicaments - Administration',
     label: 'drug_exposure_administration',
     resourceType: ResourceType.MEDICATION_ADMINISTRATION
   },
   {
-    id: ['care_site', 'fact_relationship'],
-    name: 'Référentiel - Structure hospitalière',
-    label: 'care_site - fact_relationship',
+    id: 'care_site',
+    name: 'Structure hospitalière',
+    label: 'care_site',
     resourceType: ResourceType.UNKNOWN
   },
   {
-    id: ['imaging_study', 'imaging_series'],
-    name: 'Fait - Imagerie - Étude & Séries',
-    label: 'imaging_study - imaging_series',
+    id: 'fact_relationship',
+    name: 'Référentiel',
+    label: 'fact_relationship',
+    resourceType: ResourceType.UNKNOWN
+  },
+  {
+    id: 'imaging_study',
+    name: 'Fait - Imagerie - Étude',
+    label: 'imaging_study',
     resourceType: ResourceType.IMAGING
   },
   {
-    id: [
-      'questionnaire',
-      'questionnaire__item',
-      'questionnaireresponse',
-      'questionnaireresponse__item',
-      'questionnaireresponse__item__answer'
-    ],
+    id: 'imaging_series',
+    name: 'Fait - Imagerie - Séries',
+    label: 'imaging_series',
+    resourceType: ResourceType.IMAGING
+  },
+  {
+    id: 'questionnaireresponse',
     name: 'Formulaires',
-    label:
-      'questionnaire - questionnaire__item - questionnaireresponse - questionnaireresponse__item - questionnaireresponse__item__answer',
+    label: 'questionnaireresponse',
     resourceType: ResourceType.UNKNOWN
   }
 ]
