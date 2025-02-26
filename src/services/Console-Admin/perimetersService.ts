@@ -124,6 +124,7 @@ export const getPerimeterAccesses = async (
   perimeterId: string,
   order: Order,
   includeParents: boolean,
+  includeChildren: boolean,
   page?: number,
   searchInput?: string
 ) => {
@@ -132,7 +133,7 @@ export const getPerimeterAccesses = async (
 
   const searchFilter = searchInput ? `&search=${searchInput}` : ''
   const perimeterAccessesResp = await api.get(
-    `/accesses/accesses/?perimeter_id=${perimeterId}&include_parents=${includeParents}&page=${page}&ordering=${
+    `/accesses/accesses/?perimeter_id=${perimeterId}&include_parents=${includeParents}&include_children=${includeChildren}&page=${page}&ordering=${
       _orderDirection === 'desc' ? '-' : ''
     }${order.orderBy}${searchFilter}`
   )
