@@ -366,8 +366,9 @@ export type DatalabTable = {
 }
 
 export type Export = {
+  uuid: string
   owner?: string
-  output_format?: 'csv' | 'hive' | 'psql'
+  output_format?: 'csv' | 'hive' | 'xlsx'
   cohort_id?: number
   cohort_name?: string
   patients_count?: string
@@ -384,7 +385,7 @@ export type Export = {
     | 'cleaned'
     | 'started'
     | 'unknown'
-  target_env?: string
+  target_datalab?: string
   target_name?: string
 }
 

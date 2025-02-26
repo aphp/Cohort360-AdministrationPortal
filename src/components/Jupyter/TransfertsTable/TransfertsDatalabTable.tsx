@@ -2,17 +2,32 @@ import React, { useEffect, useState } from 'react'
 import moment from 'moment'
 import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
 
-import { Button, Chip, CircularProgress, Grid, TableCell, TableRow, Typography, Tooltip } from '@mui/material'
+import {
+  Button,
+  Chip,
+  CircularProgress,
+  Grid,
+  TableCell,
+  TableRow,
+  Typography,
+  Tooltip,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
+} from '@mui/material'
 import { ReactComponent as FilterIcon } from 'assets/icones/filter.svg'
 
 import AddIcon from '@mui/icons-material/Add'
+import RefreshIcon from '@mui/icons-material/Refresh'
 
 import DataTable from 'components/DataTable/DataTable'
 import TransfertDatalabForm from 'components/Jupyter/TransfertForm/TransfertDatalabForm'
 import TransfertsFilters from 'components/Jupyter/TransfertsFilters/TransfertsFilters'
 import SearchBar from 'components/SearchBar/SearchBar'
 import CommonSnackbar from 'components/Snackbar/Snackbar'
-import { getDatalabExportsList, getExportsList } from 'services/Jupyter/jupyterExportService'
+import { getDatalabExportsList, retryExportRequest } from 'services/Jupyter/jupyterExportService'
 
 import { Column, DatalabTransferForm, Export, ExportFilters, Order, UserRole } from 'types'
 import useStyles from './styles'
@@ -42,6 +57,9 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
   const [searchInput, setSearchInput] = useState('')
   const [filters, setFilters] = useState(defaultFilters)
   const [openFilters, setOpenFilters] = useState(false)
+  const [dialogOpen, setOpenDialog] = useState(false)
+  const [selectedExport, setSelectedExport] = useState<Export | undefined>()
+
 
   const debouncedSearchTerm = useDebounce(500, searchInput)
 
@@ -89,6 +107,8 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
 
   const [addTransfertRequestSuccess, setAddTransfertRequestSuccess] = useState(false)
   const [addTransfertRequestFail, setAddTransfertRequestFail] = useState(false)
+  const [retryExportFail, setRetryExportFail] = useState(false)
+  const [retryExportSuccess, setRetryExportSuccess] = useState(false)
 
   const rowsPerPage = 20
 
@@ -192,6 +212,20 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
       _getExportsList(1)
     }
   }, [addTransfertRequestSuccess])
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false)
+  }
+
+  const retryExport = async (exportRequest: Export) => {
+    const retryOk = await retryExportRequest(exportRequest.uuid)
+    if (retryOk) {
+      setRetryExportSuccess(true)
+      _getExportsList(page)
+    } else {
+      setRetryExportFail(true)
+    }
+  }
 
   return (
     <Grid container justifyContent="flex-end">
@@ -320,10 +354,10 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
                       ? 'CSV'
                       : exportRequest.output_format === 'hive'
                         ? 'Jupyter'
-                        : 'psql'}
+                        : 'XLSX'}
                   </TableCell>
                   <TableCell align="center">
-                    {exportRequest.target_env !== '' ? exportRequest.target_env : '-'}
+                    {exportRequest.target_datalab !== '' ? exportRequest.target_datalab : '-'}
                   </TableCell>
                   <TableCell align="center">
                     <Tooltip title={exportRequest.target_name ?? '-'}>
@@ -335,7 +369,24 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
                   <TableCell align="center">
                     {exportRequest.created_at ? moment(exportRequest.created_at).format('DD/MM/YYYY') : '-'}
                   </TableCell>
-                  <TableCell align="center">{getExportsChips(exportRequest.request_job_status)}</TableCell>
+                  <TableCell align="right">
+                    <Grid display="flex" alignItems="center">
+                      {getExportsChips(exportRequest.request_job_status)}
+                      {userRights.right_full_admin && exportRequest.request_job_status === 'failed' && (
+                        <Tooltip title="Relancer l'export">
+                          <IconButton
+                            color="primary"
+                            onClick={() => {
+                              setOpenDialog(true)
+                              setSelectedExport(exportRequest)
+                            }}
+                          >
+                            <RefreshIcon />
+                          </IconButton>
+                        </Tooltip>
+                      )}
+                    </Grid>
+                  </TableCell>
                 </TableRow>
               )
             )
@@ -361,6 +412,49 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
           onClose={() => setOpenFilters(false)}
         />
       )}
+      <Dialog
+        open={dialogOpen}
+        onClose={handleCloseDialog}
+        aria-labelledby="retry-export-title"
+        aria-describedby="retry-export-description"
+        fullWidth
+        maxWidth="xs"
+      >
+        <DialogTitle id="retry-export-title">Relancer l'export</DialogTitle>
+        <DialogContent style={{ margin: '0 5%', backgroundColor: '#F8F8FFC8' }}>
+          <Grid display="flex" justifyContent="space-between" marginTop="5px">
+            <Typography variant="h3">Type d'export</Typography>
+            <Typography>{selectedExport?.output_format ?? '---'}</Typography>
+          </Grid>
+          <Grid display="flex" justifyContent="space-between" marginTop="5px">
+            <Typography variant="h3">Cohorte</Typography>
+            <Typography>
+              {selectedExport?.cohort_name} (N° {selectedExport?.cohort_id})
+            </Typography>
+          </Grid>
+          <Grid display="flex" justifyContent="space-between" marginTop="5px">
+            <Typography variant="h3">Nombre de patients</Typography>
+            <Typography>{selectedExport?.patients_count ?? '---'}</Typography>
+          </Grid>
+          <Grid display="flex" justifyContent="space-between" marginTop="5px">
+            <Typography variant="h3">Propriétaire</Typography>
+            <Typography>{selectedExport?.owner ?? '---'}</Typography>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="secondary">Annuler</Button>
+          <Button
+            onClick={(event) => {
+              event.stopPropagation()
+              handleCloseDialog()
+              retryExport(selectedExport!)
+            }}
+            color="primary"
+          >
+            Relancer
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {addTransfertRequestSuccess && (
         <CommonSnackbar
@@ -379,6 +473,24 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
           }}
           severity="error"
           message={'Erreur lors de la création la demande de transfert.'}
+        />
+      )}
+      {retryExportSuccess && (
+        <CommonSnackbar
+          onClose={() => {
+            if (retryExportSuccess) setRetryExportSuccess(false)
+          }}
+          severity="success"
+          message={"L'export a bien été relancé."}
+        />
+      )}
+      {retryExportFail && (
+        <CommonSnackbar
+          onClose={() => {
+            if (retryExportFail) setRetryExportFail(false)
+          }}
+          severity="error"
+          message={"Erreur lors de la relance de l'export."}
         />
       )}
     </Grid>
