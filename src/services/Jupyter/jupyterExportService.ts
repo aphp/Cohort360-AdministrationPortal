@@ -96,3 +96,12 @@ export const getDatalabExportsList = async (
     }
   }
 }
+
+export const retryExportRequest = async (exportId: string) => {
+  try {
+    const retryResponse = await api.post(`/exports/${exportId}/retry/`)
+    return retryResponse.status === 200
+  } catch (error) {
+    console.error("Erreur lors de la relance de l'export")
+  }
+}

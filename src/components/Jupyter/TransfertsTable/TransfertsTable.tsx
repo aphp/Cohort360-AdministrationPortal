@@ -323,7 +323,7 @@ const TransfertsTable: React.FC<TransfertsTableProps> = ({ userRights }) => {
                         : 'psql'}
                   </TableCell>
                   <TableCell align="center">
-                    {exportRequest.target_env !== '' ? exportRequest.target_env : '-'}
+                    {exportRequest.target_datalab !== '' ? exportRequest.target_datalab : '-'}
                   </TableCell>
                   <TableCell align="center">
                     <Tooltip title={exportRequest.target_name ?? '-'}>
