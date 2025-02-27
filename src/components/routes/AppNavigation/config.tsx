@@ -15,6 +15,7 @@ import Logs from 'views/Console-Admin/Logs/Logs'
 // import Transfert from 'views/Jupyter/Transfert/Transfert'
 import TransfertDatalab from 'views/Jupyter/Transfert/TransfertDatalab'
 import ContentManagement from 'views/Console-Admin/ContentManagement'
+import MaintenanceManagement from 'views/Console-Admin/Maintenance'
 // import WorkingEnvironments from 'views/Jupyter/WorkingEnvironments/WorkingEnvironments'
 
 type configRoute = RouteObject & {
@@ -144,6 +145,19 @@ const configRoutes: configRoute[] = [
     name: 'Logs',
     isPrivate: true,
     element: <Logs />
+  },
+
+  /**
+   * Console-Admin Logs View
+   */
+
+  {
+    exact: true,
+    displayPortailTopBar: true,
+    path: '/console-admin/maintenance',
+    name: 'Maintenance',
+    isPrivate: true,
+    element: <MaintenanceManagement />
   },
 
   /**
