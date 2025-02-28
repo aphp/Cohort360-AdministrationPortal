@@ -105,8 +105,8 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
     }
   ]
 
-  const [addTransfertRequestSuccess, setAddTransfertRequestSuccess] = useState(false)
-  const [addTransfertRequestFail, setAddTransfertRequestFail] = useState(false)
+  const [addTransferRequestSuccess, setAddTransferRequestSuccess] = useState(false)
+  const [addTransferRequestFail, setAddTransferRequestFail] = useState(false)
   const [retryExportFail, setRetryExportFail] = useState(false)
   const [retryExportSuccess, setRetryExportSuccess] = useState(false)
 
@@ -207,11 +207,11 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
   }, [debouncedSearchTerm, order, filters])
 
   useEffect(() => {
-    if (addTransfertRequestSuccess) {
+    if (addTransferRequestSuccess) {
       setPage(1)
       _getExportsList(1)
     }
-  }, [addTransfertRequestSuccess])
+  }, [addTransferRequestSuccess])
 
   const handleCloseDialog = () => {
     setOpenDialog(false)
@@ -398,8 +398,8 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
           onClose={() => setSelectedTransferRequest(null)}
           selectedTransferRequest={selectedTransferRequest}
           setSelectedTransferRequest={setSelectedTransferRequest}
-          onAddTransfertRequestSuccess={setAddTransfertRequestSuccess}
-          onAddTransfertRequestFail={setAddTransfertRequestFail}
+          onAddTransferRequestSuccess={setAddTransferRequestSuccess}
+          onAddTransferRequestFail={setAddTransferRequestFail}
         />
       )}
       {openFilters && (
@@ -456,20 +456,20 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
         </DialogActions>
       </Dialog>
 
-      {addTransfertRequestSuccess && (
+      {addTransferRequestSuccess && (
         <CommonSnackbar
           onClose={() => {
-            if (addTransfertRequestSuccess) setAddTransfertRequestSuccess(false)
+            if (addTransferRequestSuccess) setAddTransferRequestSuccess(false)
           }}
           severity="success"
           message={'La demande de transfert a bien été créée.'}
         />
       )}
 
-      {addTransfertRequestFail && (
+      {addTransferRequestFail && (
         <CommonSnackbar
           onClose={() => {
-            if (addTransfertRequestFail) setAddTransfertRequestFail(false)
+            if (addTransferRequestFail) setAddTransferRequestFail(false)
           }}
           severity="error"
           message={'Erreur lors de la création la demande de transfert.'}

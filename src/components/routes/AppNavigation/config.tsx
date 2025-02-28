@@ -16,7 +16,7 @@ import Logs from 'views/Console-Admin/Logs/Logs'
 import TransfertDatalab from 'views/Jupyter/Transfert/TransfertDatalab'
 import ContentManagement from 'views/Console-Admin/ContentManagement'
 import MaintenanceManagement from 'views/Console-Admin/Maintenance'
-// import WorkingEnvironments from 'views/Jupyter/WorkingEnvironments/WorkingEnvironments'
+import Datalabs from 'views/Jupyter/Datalabs/Datalabs'
 
 type configRoute = RouteObject & {
   exact?: boolean
@@ -186,20 +186,20 @@ const configRoutes: configRoute[] = [
     name: 'Transfert Datalab',
     isPrivate: true,
     element: <TransfertDatalab />
-  }
+  },
 
   /**
    * Jupyter Working Environments View
    */
 
-  // {
-  //   exact: true,
-  //   displayPortailTopBar: true,
-  //   path: '/espace-jupyter/working-environments',
-  //   name: 'Environnements de travail',
-  //   isPrivate: true,
-  //   element: <WorkingEnvironments />
-  // }
+  {
+    exact: true,
+    displayPortailTopBar: true,
+    path: '/espace-jupyter/datalabs',
+    name: 'Datalabs',
+    isPrivate: true,
+    element: <Datalabs />
+  }
 ]
 
 export default configRoutes

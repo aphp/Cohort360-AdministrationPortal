@@ -78,15 +78,10 @@ const PortailTopBar: React.FC = () => {
         userRights.right_export_jupyter_pseudonymized
     },
     {
-      name: 'Environnements',
-      pathname: `/espace-jupyter/working-environments`,
+      name: 'Datalabs',
+      pathname: `/espace-jupyter/datalabs`,
       rightsToSee: userRights.right_read_datalabs
     }
-    // {
-    //   name: 'Environnements',
-    //   pathname: `/espace-jupyter/working-environments`,
-    //   rightsToSee: userRights.right_read_datalabs
-    // }
   ]
 
   const handleClickConsoleAdmin = (event: any) => {

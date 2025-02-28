@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react'
 
 import { CircularProgress, Grid, Typography } from '@mui/material'
 
-import WorkingEnvironmentsTable from 'components/Jupyter/WorkingEnvironments/WorkingEnvironmentsTable/WorkingEnvironmentsTable'
+import DatalabsTable from 'components/Jupyter/Datalabs/DatalabsTable/DatalabsTable'
 
 import { getUserRights, userDefaultRoles } from 'utils/userRoles'
 
 import useStyles from './styles'
 
-const WorkingEnvironments = () => {
+const Datalabs = () => {
   const { classes } = useStyles()
   const [userRights, setUserRights] = useState(userDefaultRoles)
   const [loading, setLoading] = useState(true)
@@ -36,14 +36,14 @@ const WorkingEnvironments = () => {
       <Grid container justifyContent="center">
         <Grid container item xs={12} sm={10}>
           <Typography variant="h1" align="center" className={classes.title}>
-            Liste des environnements de travail
+            Liste des datalabs
           </Typography>
           {loading ? (
             <Grid container item justifyContent="center">
               <CircularProgress />
             </Grid>
           ) : (
-            <WorkingEnvironmentsTable userRights={userRights} />
+            <DatalabsTable userRights={userRights} />
           )}
         </Grid>
       </Grid>
@@ -51,4 +51,4 @@ const WorkingEnvironments = () => {
   )
 }
 
-export default WorkingEnvironments
+export default Datalabs
