@@ -113,8 +113,13 @@ export type UserRole = {
   right_read_data_accesses_inferior_levels: boolean | null
   right_read_patient_nominative: boolean | null
   right_read_patient_pseudonymized: boolean | null
+  right_read_administrative_data: boolean | null
+  right_read_medical_data: boolean | null
+  right_read_treatments_data: boolean | null
+  right_read_practitioner_data: boolean | null
   right_search_patients_by_ipp: boolean | null
   right_search_opposed_patients: boolean | null
+  right_search_patients_unlimited: boolean | null
   right_manage_export_jupyter_accesses: boolean | null
   right_export_jupyter_nominative: boolean | null
   right_export_jupyter_pseudonymized: boolean | null
@@ -124,41 +129,17 @@ export type UserRole = {
   right_read_accesses_above_levels: boolean | null
 }
 
-export type Role = UserRole & {
+
+export type Role = {
   id?: number
   insert_datetime?: string | null
   update_datetime?: string | null
   delete_datetime?: string | null
   help_text?: string[]
   name?: string
-}
+} & UserRole
 
-export type RoleKeys =
-  | 'name'
-  | 'right_full_admin'
-  | 'right_manage_users'
-  | 'right_read_users'
-  | 'right_read_datalabs'
-  | 'right_manage_datalabs'
-  | 'right_manage_admin_accesses_same_level'
-  | 'right_read_admin_accesses_same_level'
-  | 'right_manage_admin_accesses_inferior_levels'
-  | 'right_read_admin_accesses_inferior_levels'
-  | 'right_manage_data_accesses_same_level'
-  | 'right_read_data_accesses_same_level'
-  | 'right_manage_data_accesses_inferior_levels'
-  | 'right_read_data_accesses_inferior_levels'
-  | 'right_read_patient_nominative'
-  | 'right_read_patient_pseudonymized'
-  | 'right_search_patients_by_ipp'
-  | 'right_search_opposed_patients'
-  | 'right_manage_export_jupyter_accesses'
-  | 'right_export_jupyter_nominative'
-  | 'right_export_jupyter_pseudonymized'
-  | 'right_manage_export_csv_accesses'
-  | 'right_export_csv_nominative'
-  | 'right_export_csv_pseudonymized'
-  | 'right_read_accesses_above_levels'
+export type RoleKeys = 'name' | keyof UserRole
 
 // Access
 
