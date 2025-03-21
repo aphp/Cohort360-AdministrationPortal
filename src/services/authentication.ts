@@ -13,7 +13,7 @@ export const authenticate = async (username: string, password: string): Promise<
 export const authenticateWithOIDC = async (code: string): Promise<Authentication | AxiosError> => {
   try {
     return await api.post<Authentication>(
-      `/auth/oidc/login`,
+      `/auth/login/`,
       { auth_code: code, redirect_uri: OIDC_REDIRECT_URI },
       {
         headers: { authorizationMethod: 'OIDC' }
