@@ -213,7 +213,7 @@ const UserForm: React.FC<UserFormProps> = ({
                     value={user.email}
                     onChange={(event) => _onChangeValue('email', event.target.value)}
                     error={emailError}
-                    helperText={emailError && `L'adresse e-mail doit être du format "prenom.nom@aphp.fr"`}
+                    helperText={emailError && `L'adresse e-mail doit être du format ${MAIL_REGEX}`}
                     style={{ margin: '1em' }}
                   />
                 </Grid>
