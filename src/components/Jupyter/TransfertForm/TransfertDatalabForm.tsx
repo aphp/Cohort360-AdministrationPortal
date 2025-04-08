@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 
 import {
   AccordionDetails,
@@ -33,7 +33,7 @@ import {
 import { getUsers } from 'services/Console-Admin/usersService'
 import { getUserCohorts, getProviderFilters } from 'services/Console-Admin/cohortsService'
 import { datalabTransfer } from 'services/Jupyter/jupyterExportService'
-import { getDatalab } from 'services/Jupyter/workingEnvironmentsService'
+import { getDatalabs } from 'services/Jupyter/datalabsService'
 import export_table from './export_tables'
 
 import useStyles from './styles'
@@ -45,18 +45,18 @@ type TransferDatalabFormProps = {
   onClose: () => void
   selectedTransferRequest: DatalabTransferForm | null
   setSelectedTransferRequest: (transferRequest: DatalabTransferForm | null) => void
-  onAddTransfertRequestSuccess: (success: boolean) => void
-  onAddTransfertRequestFail: (fail: boolean) => void
+  onAddTransferRequestSuccess: (success: boolean) => void
+  onAddTransferRequestFail: (fail: boolean) => void
 }
 
 const defaultTransfer: DatalabTransferForm = {
   user: null,
-  workingEnvironment: null,
+  datalab: null,
   confidentiality: 'pseudo',
   shiftDates: 'no',
   tables: export_table.map<DatalabTable>((table) => ({
     ...table,
-    checked: table.label === 'person' ? true : false,
+    checked: table.label === 'person',
     fhir_filter: null,
     fhir_filter_user: null,
     cohort: null,
@@ -71,31 +71,28 @@ const datalabOrderDefault = { orderBy: 'name', orderDirection: 'asc' } as Order
 const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
   onClose,
   setSelectedTransferRequest,
-  onAddTransfertRequestSuccess,
-  onAddTransfertRequestFail
+  onAddTransferRequestSuccess,
+  onAddTransferRequestFail
 }) => {
   const { classes } = useStyles()
 
   const [expandedTableIds, setExpandedTableIds] = useState<string[]>([])
 
   const [loadingOnSearchProvider, setLoadingOnSearchProvider] = useState(false)
-  const [loadingOnWorkingEnvironments, setLoadingOnWorkingEnvironments] = useState(false)
+  const [loadingOnDatalabs, setLoadingOnDatalabs] = useState(false)
   const [loadingOnValidate, setLoadingOnValidate] = useState(false)
   const [transferRequest, setTransferRequest] = useState(defaultTransfer)
   const checkedTables = transferRequest.tables.filter((table) => table.checked)
 
   const [usersSearchResults, setUsersSearchResults] = useState<User[]>([])
   const [userSearchInput, setUserSearchInput] = useState('')
-  const [environmentSearchInput, setEnvironmentSearchInput] = useState('')
-  const [workingEnvironments, setWorkingEnvironments] = useState<Datalab[]>([])
+  const [datalabSearchInput, setDatalabSearchInput] = useState('')
+  const [datalabs, setDatalabs] = useState<Datalab[]>([])
 
   const debouncedUserSearchTerm = useDebounce(700, userSearchInput)
-  const debouncedEnvironmentSearchTerm = useDebounce(700, environmentSearchInput)
+  const debouncedDatalabSearchTerm = useDebounce(700, datalabSearchInput)
 
-  const _onChangeValue = (
-    key: 'user' | 'workingEnvironment' | 'confidentiality' | 'shiftDates' | 'tables',
-    value: any
-  ) => {
+  const _onChangeValue = (key: 'user' | 'datalab' | 'confidentiality' | 'shiftDates' | 'tables', value: any) => {
     const _transferRequest = { ...transferRequest }
 
     if (key === 'user') {
@@ -169,27 +166,27 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
   }, [debouncedUserSearchTerm])
 
   useEffect(() => {
-    const _getWorkingEnvironments = async () => {
+    const _getDatalabs = async () => {
       try {
-        setLoadingOnWorkingEnvironments(true)
+        setLoadingOnDatalabs(true)
 
-        const workingEnvironmentsResp = await getDatalab(datalabOrderDefault, debouncedEnvironmentSearchTerm)
+        const datalabsResp = await getDatalabs(datalabOrderDefault, 1, debouncedDatalabSearchTerm)
 
-        setWorkingEnvironments(workingEnvironmentsResp?.workingEnvironments)
-        setLoadingOnWorkingEnvironments(false)
+        setDatalabs(datalabsResp?.datalabs)
+        setLoadingOnDatalabs(false)
       } catch (error) {
         console.error('Erreur lors de la récupération des machines Jupyter', error)
-        setWorkingEnvironments([])
-        setLoadingOnWorkingEnvironments(false)
+        setDatalabs([])
+        setLoadingOnDatalabs(false)
       }
     }
 
-    if (debouncedEnvironmentSearchTerm && debouncedEnvironmentSearchTerm?.length > 0) {
-      _getWorkingEnvironments()
+    if (debouncedDatalabSearchTerm && debouncedDatalabSearchTerm?.length > 0) {
+      _getDatalabs()
     } else {
-      setWorkingEnvironments([])
+      setDatalabs([])
     }
-  }, [debouncedEnvironmentSearchTerm])
+  }, [debouncedDatalabSearchTerm])
 
   const onSubmit = async () => {
     try {
@@ -200,9 +197,9 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
       if (canExport) {
         const transferData = {
           output_format: 'hive',
-          datalab: transferRequest.workingEnvironment?.uuid,
+          datalab: transferRequest.datalab?.uuid,
           export_tables: transferRequest.tables
-            .filter((table) => table.checked === true)
+            .filter((table) => table.checked)
             .map((table: DatalabTable) => ({
               table_name: table.id,
               fhir_filter: table.fhir_filter?.uuid,
@@ -215,7 +212,11 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
 
         const transferRequestResp = await datalabTransfer(transferData)
 
-        transferRequestResp ? onAddTransfertRequestSuccess(true) : onAddTransfertRequestFail(true)
+        if (transferRequestResp) {
+          onAddTransferRequestSuccess(true)
+        } else {
+          onAddTransferRequestFail(true)
+        }
         setSelectedTransferRequest(null)
         // setTransferRequest(defaultTransfer)
         setLoadingOnValidate(false)
@@ -224,7 +225,7 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
       }
     } catch (error) {
       console.error("Erreur lors de l'envoi du formulaire", error)
-      onAddTransfertRequestFail(false)
+      onAddTransferRequestFail(false)
       setSelectedTransferRequest(null)
       setTransferRequest(defaultTransfer)
       setLoadingOnValidate(false)
@@ -232,7 +233,7 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
   }
 
   function renderExportTable(exportTable: DatalabTable) {
-    const { id, name, checked, subtitle, label, resourceType } = exportTable
+    const { name, checked, subtitle, label } = exportTable
 
     const isItemExpanded = expandedTableIds.includes(label)
 
@@ -314,23 +315,23 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
             <Autocomplete
               className={classes.autocomplete}
               noOptionsText="Recherchez un Datalab"
-              options={workingEnvironments ?? []}
-              loading={loadingOnWorkingEnvironments}
-              onChange={(_, value) => _onChangeValue('workingEnvironment', value)}
-              getOptionLabel={(option) => `${option.name}` ?? ''}
-              value={transferRequest.workingEnvironment}
+              options={datalabs ?? []}
+              loading={loadingOnDatalabs}
+              onChange={(_, value) => _onChangeValue('datalab', value)}
+              getOptionLabel={(option) => option.name ?? ''}
+              value={transferRequest.datalab}
               isOptionEqualToValue={(option, value) => option.uuid === value.uuid}
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="Recherchez un environnement de travail Jupyter"
-                  value={environmentSearchInput}
-                  onChange={(e) => setEnvironmentSearchInput(e.target.value)}
+                  label="Recherchez un datalab"
+                  value={datalabSearchInput}
+                  onChange={(e) => setDatalabSearchInput(e.target.value)}
                   InputProps={{
                     ...params.InputProps,
                     endAdornment: (
                       <Fragment>
-                        {loadingOnWorkingEnvironments ? <CircularProgress color="inherit" size={20} /> : null}
+                        {loadingOnDatalabs ? <CircularProgress color="inherit" size={20} /> : null}
                         {params.InputProps.endAdornment}
                       </Fragment>
                     )
@@ -348,8 +349,7 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
               loading={loadingOnSearchProvider}
               onChange={(_, value) => _onChangeValue('user', value)}
               getOptionLabel={(option) =>
-                `${option.username} - ${option.lastname?.toLocaleUpperCase()} ${option.firstname} - ${option.email}` ??
-                ''
+                `${option.username} - ${option.lastname?.toLocaleUpperCase()} ${option.firstname} - ${option.email}`
               }
               value={transferRequest.user}
               isOptionEqualToValue={(option, value) => option.username === value.username}
@@ -449,7 +449,7 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
           variant="contained"
           disableElevation
           className={classes.validateButton}
-          disabled={checkedTables.length === 0 || transferRequest.workingEnvironment === null}
+          disabled={checkedTables.length === 0 || transferRequest.datalab === null}
           onClick={onSubmit}
         >
           Envoyer
@@ -599,7 +599,7 @@ const ExportTable: React.FC<ExportTableProps> = ({ exportTable, transferRequest,
         </Grid>
         <Grid item xs={4}>
           <Autocomplete
-            disabled={exportTable.checked === false}
+            disabled={!exportTable.checked}
             size="small"
             className={classes.autocomplete}
             noOptionsText={exportTable.cohort_user ? 'Aucun utilisateur trouvé' : 'Recherchez un utilisateur'}
@@ -607,7 +607,7 @@ const ExportTable: React.FC<ExportTableProps> = ({ exportTable, transferRequest,
             loading={loadingOnSearchCohortUser}
             onChange={(e, value) => _onChangeValue('cohort_user', value)}
             getOptionLabel={(option) =>
-              `${option.username} - ${option.lastname?.toLocaleUpperCase()} ${option.firstname} - ${option.email}` ?? ''
+              `${option.username} - ${option.lastname?.toLocaleUpperCase()} ${option.firstname} - ${option.email}`
             }
             value={exportTable.cohort_user}
             isOptionEqualToValue={(option, value) => option.username === value.username}
@@ -634,7 +634,7 @@ const ExportTable: React.FC<ExportTableProps> = ({ exportTable, transferRequest,
           <Autocomplete
             size="small"
             noOptionsText="Aucune cohorte disponible"
-            disabled={exportTable.cohort_user === null || exportTable.checked === false}
+            disabled={exportTable.cohort_user === null || !exportTable.checked}
             getOptionLabel={(option) => option.name}
             options={cohortsOptions}
             onChange={(_, value) => _onChangeValue('cohort', value)}
@@ -653,7 +653,7 @@ const ExportTable: React.FC<ExportTableProps> = ({ exportTable, transferRequest,
           </Grid>
           <Grid item xs={4}>
             <Autocomplete
-              disabled={exportTable.checked === false}
+              disabled={!exportTable.checked}
               size="small"
               className={classes.autocomplete}
               noOptionsText={exportTable.fhir_filter_user ? 'Aucun utilisateur trouvé' : 'Recherchez un utilisateur'}
@@ -661,8 +661,7 @@ const ExportTable: React.FC<ExportTableProps> = ({ exportTable, transferRequest,
               loading={loadingOnSearchFilterUser}
               onChange={(_, value) => _onChangeValue('fhir_filter_user', value)}
               getOptionLabel={(option) =>
-                `${option.username} - ${option.lastname?.toLocaleUpperCase()} ${option.firstname} - ${option.email}` ??
-                ''
+                `${option.username} - ${option.lastname?.toLocaleUpperCase()} ${option.firstname} - ${option.email}`
               }
               value={exportTable.fhir_filter_user}
               isOptionEqualToValue={(option, value) => option.username === value.username}
@@ -690,7 +689,7 @@ const ExportTable: React.FC<ExportTableProps> = ({ exportTable, transferRequest,
               className={classes.autocomplete}
               size="small"
               noOptionsText="Aucun filtre disponible"
-              disabled={exportTable.fhir_filter_user === null || exportTable.checked === false}
+              disabled={exportTable.fhir_filter_user === null || !exportTable.checked}
               getOptionLabel={(option) => `Filtre: ${option.name}`}
               options={filtersOptions}
               onChange={(_, value) => _onChangeValue('fhir_filter', value)}

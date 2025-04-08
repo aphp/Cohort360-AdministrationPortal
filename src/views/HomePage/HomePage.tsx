@@ -63,6 +63,11 @@ const HomePage = () => {
         userRights.right_manage_export_jupyter_accesses ||
         userRights.right_export_jupyter_nominative ||
         userRights.right_export_jupyter_pseudonymized
+    },
+    {
+      name: 'Datalabs',
+      pathname: `/espace-jupyter/datalabs`,
+      rightsToSee: userRights.right_read_datalabs
     }
   ]
 

@@ -255,57 +255,21 @@ export type UserInHabilitation = {
 
 // --JUPYTER--
 
-// TODO: change to workspaces/users type
-export type WorkingEnvironment = {
-  uid: number
-  // kernels: []
-  // jupyter_machines: []
-  // ldap_groups: []
-  // ranger_hive_policy: []
-  username: string
+export type InfrastructureProvider = {
+  uuid: string
   name: string
-  firstname: string
-  lastname: string
-  mail: string
-  gid: number
-  group: string
-  home: string
-  conda_enable: boolean
-  conda_py_version: string
-  conda_r: boolean
-  ssh: boolean
-  brat_port: number
-  tensorboard_port: number
-  airflow_port: number
-  db_imagerie: boolean
-  aphp_ldap_group_dn: string
-  spark_port_start: number
-  project: number
-  // status: 'new' | 'validated' | 'not_validated' | 'aborted' | 'in progress' | 'closed'
+}
+
+export type DatalabCreation = {
+  name: string
+  infrastructure_provider: string
 }
 
 export type Datalab = {
-  created_at: string
-  deleted: string | null
-  deleted_by_cascade: boolean
-  infrastructure_provider: string
-  modified_at: string
-  name: string
   uuid: string
-}
-
-export type RangerHivePolicy = {
-  id: number
-  policy_type: 'default_user' | 'default_cse' | 'default_dsip' | 'default_bdr'
-  db?: string
-  db_tables?: string
-  db_imagerie?: string
-  db_work?: string
-}
-
-export type JupyterMachine = {
-  id: number
   name: string
+  created_at: string
+  infrastructure_provider: InfrastructureProvider
 }
 
 export type Column = {
@@ -315,19 +279,10 @@ export type Column = {
   sortableColumn?: boolean
 }
 
-export type JupyterTransferForm = {
-  user: User | null
-  cohort: Cohort | null
-  confidentiality: 'nomi' | 'pseudo'
-  workingEnvironment: WorkingEnvironment | null
-  shiftDates: 'yes' | 'no'
-  tables: string[]
-}
-
 export type DatalabTransferForm = {
   user: User | null
   confidentiality: 'nomi' | 'pseudo'
-  workingEnvironment: Datalab | null
+  datalab: Datalab | null
   shiftDates: 'yes' | 'no'
   tables: DatalabTable[]
 }
