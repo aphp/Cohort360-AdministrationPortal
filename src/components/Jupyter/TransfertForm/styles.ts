@@ -72,6 +72,17 @@ const useStyles = makeStyles()((theme) => ({
   expandIcon: {
     cursor: 'pointer',
     height: '24px'
+  },
+  warningIcon: {
+    height: 20,
+    margin: '0 5px -5px 0'
+  },
+  infoFilters: {
+    color: '#242471',
+    fontSize: '10px',
+    borderRadius: '5px',
+    backgroundColor: 'rgba(237,244,251,0.78)',
+    padding: '2px 5px'
   }
 }))
 
