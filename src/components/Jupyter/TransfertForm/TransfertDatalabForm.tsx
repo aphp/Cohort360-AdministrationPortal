@@ -18,6 +18,7 @@ import {
   Typography
 } from '@mui/material'
 import InfoIcon from '@mui/icons-material/Info'
+import WarningIcon from '@mui/icons-material/Warning'
 
 import {
   Cohort,
@@ -31,7 +32,7 @@ import {
   UserRole
 } from 'types'
 import { getUsers } from 'services/Console-Admin/usersService'
-import { getUserCohorts, getProviderFilters } from 'services/Console-Admin/cohortsService'
+import { getUserCohorts, getUserFilters } from 'services/Console-Admin/cohortsService'
 import { datalabTransfer } from 'services/Jupyter/jupyterExportService'
 import { getDatalabs } from 'services/Jupyter/datalabsService'
 import export_table from './export_tables'
@@ -78,7 +79,7 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
 
   const [expandedTableIds, setExpandedTableIds] = useState<string[]>([])
 
-  const [loadingOnSearchProvider, setLoadingOnSearchProvider] = useState(false)
+  const [loadingOnSearchUser, setLoadingOnSearchUser] = useState(false)
   const [loadingOnDatalabs, setLoadingOnDatalabs] = useState(false)
   const [loadingOnValidate, setLoadingOnValidate] = useState(false)
   const [transferRequest, setTransferRequest] = useState(defaultTransfer)
@@ -88,6 +89,7 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
   const [userSearchInput, setUserSearchInput] = useState('')
   const [datalabSearchInput, setDatalabSearchInput] = useState('')
   const [datalabs, setDatalabs] = useState<Datalab[]>([])
+  const [switchedToPseudo, setSwitchedToPseudo] = useState<boolean>(false)
 
   const debouncedUserSearchTerm = useDebounce(700, userSearchInput)
   const debouncedDatalabSearchTerm = useDebounce(700, datalabSearchInput)
@@ -103,6 +105,17 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
         cohort: null,
         fhir_filter: null
       }))
+    }
+
+    if (key === 'confidentiality' && value === 'pseudo') {
+      setSwitchedToPseudo(true)
+      _transferRequest.tables = _transferRequest.tables.map<DatalabTable>((table) => ({
+        ...table,
+        fhir_filter: null
+      }))
+    }
+    if (key === 'confidentiality' && value === 'nomi') {
+      setSwitchedToPseudo(false)
     }
     // @ts-ignore
     _transferRequest[key] = value
@@ -142,24 +155,24 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
   }
 
   useEffect(() => {
-    const _searchProviders = async () => {
+    const _searchUsers = async () => {
       try {
-        setLoadingOnSearchProvider(true)
+        setLoadingOnSearchUser(true)
 
         const usersResp = await getUsers(orderDefault, 1, debouncedUserSearchTerm)
 
         setUsersSearchResults(usersResp.users)
 
-        setLoadingOnSearchProvider(false)
+        setLoadingOnSearchUser(false)
       } catch (error) {
         console.error('Erreur lors de la recherche des utilisateurs', error)
         setUsersSearchResults([])
-        setLoadingOnSearchProvider(false)
+        setLoadingOnSearchUser(false)
       }
     }
 
     if (debouncedUserSearchTerm && debouncedUserSearchTerm?.length > 0) {
-      _searchProviders()
+      _searchUsers()
     } else {
       setUsersSearchResults([])
     }
@@ -346,7 +359,7 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
               className={classes.autocomplete}
               noOptionsText="Recherchez un utilisateur"
               options={usersSearchResults ?? []}
-              loading={loadingOnSearchProvider}
+              loading={loadingOnSearchUser}
               onChange={(_, value) => _onChangeValue('user', value)}
               getOptionLabel={(option) =>
                 `${option.username} - ${option.lastname?.toLocaleUpperCase()} ${option.firstname} - ${option.email}`
@@ -363,7 +376,7 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
                     ...params.InputProps,
                     endAdornment: (
                       <Fragment>
-                        {loadingOnSearchProvider ? <CircularProgress color="inherit" size={20} /> : null}
+                        {loadingOnSearchUser ? <CircularProgress color="inherit" size={20} /> : null}
                         {params.InputProps.endAdornment}
                       </Fragment>
                     )
@@ -406,6 +419,27 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
 
             <Typography variant="h5">Options d'export</Typography>
             <Grid container padding="8px">
+              <Grid item xs={6}>
+                <Typography variant="h6">Choix des accès</Typography>
+                <RadioGroup
+                  row
+                  sx={{ paddingLeft: '12px' }}
+                  value={transferRequest.confidentiality}
+                  onChange={(event) => _onChangeValue('confidentiality', event.target.value)}
+                >
+                  <FormControlLabel value="pseudo" control={<Radio />} label="Pseudonymisé" />
+                  <FormControlLabel value="nomi" control={<Radio />} label="Nominatif" />
+                </RadioGroup>
+                {switchedToPseudo && (
+                  <Grid item>
+                    <WarningIcon color="warning" className={classes.warningIcon} />
+                    <Typography component="span" className={classes.infoFilters}>
+                      En passant en mode <strong>Pseudonymisé</strong>, les filtres déjà sélectionnés sont
+                      réinitilisés
+                    </Typography>
+                  </Grid>
+                )}
+              </Grid>
               {transferRequest.confidentiality === 'pseudo' && (
                 <Grid item xs={6}>
                   <Typography variant="h6">Décaler les dates des évènements</Typography>
@@ -420,18 +454,6 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
                   </RadioGroup>
                 </Grid>
               )}
-              <Grid item xs={6}>
-                <Typography variant="h6">Choix des accès</Typography>
-                <RadioGroup
-                  row
-                  sx={{ paddingLeft: '12px' }}
-                  value={transferRequest.confidentiality}
-                  onChange={(event) => _onChangeValue('confidentiality', event.target.value)}
-                >
-                  <FormControlLabel value="pseudo" control={<Radio />} label="Pseudonymisé" />
-                  <FormControlLabel value="nomi" control={<Radio />} label="Nominatif" />
-                </RadioGroup>
-              </Grid>
             </Grid>
 
             <Grid container padding="8px 0 0 8px">
@@ -481,7 +503,7 @@ const ExportTable: React.FC<ExportTableProps> = ({ exportTable, transferRequest,
   const [cohortUserSearchInput, setCohortUserSearchInput] = useState('')
   const [filterUserSearchInput, setFilterUserSearchInput] = useState('')
   const debouncedCohortUserSearchTerm = useDebounce(700, cohortUserSearchInput)
-  const debouncedFilterProviderSearchTerm = useDebounce(700, filterUserSearchInput)
+  const debouncedFilterUserSearchTerm = useDebounce(700, filterUserSearchInput)
 
   const _onChangeValue = (key: 'cohort_user' | 'cohort' | 'fhir_filter_user' | 'fhir_filter', value: any) => {
     const _transferRequest = { ...transferRequest }
@@ -516,9 +538,9 @@ const ExportTable: React.FC<ExportTableProps> = ({ exportTable, transferRequest,
   }
 
   useEffect(() => {
-    const _getUserCohorts = async (provider: User | null) => {
+    const _getUserCohorts = async (user: User | null) => {
       try {
-        const cohortsResp = await getUserCohorts(provider?.username)
+        const cohortsResp = await getUserCohorts(user?.username)
 
         setCohortsOptions(cohortsResp)
       } catch (error) {
@@ -526,9 +548,9 @@ const ExportTable: React.FC<ExportTableProps> = ({ exportTable, transferRequest,
         setCohortsOptions([])
       }
     }
-    const _getProviderFilters = async (provider: User | null, resourceType: ResourceType) => {
+    const _getUserFilters = async (user: User | null, resourceType: ResourceType) => {
       try {
-        const filtersResp = await getProviderFilters(provider?.username, resourceType)
+        const filtersResp = await getUserFilters(transferRequest.confidentiality, user?.username, resourceType)
 
         setFiltersOptions(filtersResp)
       } catch (error) {
@@ -541,12 +563,12 @@ const ExportTable: React.FC<ExportTableProps> = ({ exportTable, transferRequest,
       _getUserCohorts(exportTable.cohort_user)
     }
     if (exportTable.fhir_filter_user) {
-      _getProviderFilters(exportTable.fhir_filter_user, exportTable.resourceType)
+      _getUserFilters(exportTable.fhir_filter_user, exportTable.resourceType)
     }
   }, [transferRequest.user, cohortUsersSearchResults, filterUsersSearchResults, exportTable])
 
   useEffect(() => {
-    const _searchProviders = async () => {
+    const _searchUsers = async () => {
       try {
         setLoadingOnSearchCohortUser(true)
 
@@ -562,18 +584,18 @@ const ExportTable: React.FC<ExportTableProps> = ({ exportTable, transferRequest,
     }
 
     if (debouncedCohortUserSearchTerm && debouncedCohortUserSearchTerm?.length > 0) {
-      _searchProviders()
+      _searchUsers()
     } else {
       setCohortUsersSearchResults([])
     }
   }, [debouncedCohortUserSearchTerm])
 
   useEffect(() => {
-    const _searchProviders = async () => {
+    const _searchUsers = async () => {
       try {
         setLoadingOnSearchFilterUser(true)
 
-        const usersResp = await getUsers(orderDefault, 1, debouncedFilterProviderSearchTerm)
+        const usersResp = await getUsers(orderDefault, 1, debouncedFilterUserSearchTerm)
 
         setFilterUsersSearchResults(usersResp.users)
         setLoadingOnSearchFilterUser(false)
@@ -584,12 +606,12 @@ const ExportTable: React.FC<ExportTableProps> = ({ exportTable, transferRequest,
       }
     }
 
-    if (debouncedFilterProviderSearchTerm && debouncedFilterProviderSearchTerm?.length > 0) {
-      _searchProviders()
+    if (debouncedFilterUserSearchTerm && debouncedFilterUserSearchTerm?.length > 0) {
+      _searchUsers()
     } else {
       setFilterUsersSearchResults([])
     }
-  }, [debouncedFilterProviderSearchTerm])
+  }, [debouncedFilterUserSearchTerm])
 
   return (
     <Grid item container padding="0">
