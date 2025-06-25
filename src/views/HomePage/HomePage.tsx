@@ -21,27 +21,37 @@ const HomePage = () => {
     {
       name: 'Liste des utilisateurs',
       pathname: '/console-admin/users',
-      rightsToSee: userRights.right_read_users
+      rightsToSee:
+        userRights.right_full_admin ||
+        userRights.right_manage_admin_accesses_same_level ||
+        userRights.right_manage_admin_accesses_inferior_levels ||
+        userRights.right_manage_data_accesses_same_level ||
+        userRights.right_manage_data_accesses_inferior_levels
     },
     {
       name: 'Périmètres',
       pathname: '/console-admin/perimeters',
       rightsToSee:
-        userRights.right_read_admin_accesses_same_level ||
+        userRights.right_manage_admin_accesses_same_level ||
         userRights.right_read_accesses_above_levels ||
-        userRights.right_read_admin_accesses_inferior_levels ||
-        userRights.right_read_data_accesses_same_level ||
-        userRights.right_read_data_accesses_inferior_levels
+        userRights.right_manage_admin_accesses_inferior_levels ||
+        userRights.right_manage_data_accesses_same_level ||
+        userRights.right_manage_data_accesses_inferior_levels
     },
     {
       name: 'Habilitations',
       pathname: '/console-admin/habilitations',
-      rightsToSee: true
+      rightsToSee:
+        userRights.right_full_admin ||
+        userRights.right_manage_admin_accesses_same_level ||
+        userRights.right_manage_admin_accesses_inferior_levels ||
+        userRights.right_manage_data_accesses_same_level ||
+        userRights.right_manage_data_accesses_inferior_levels
     },
     {
       name: 'Logs',
       pathname: '/console-admin/logs',
-      rightsToSee: userRights.right_read_logs
+      rightsToSee: userRights.right_full_admin
     },
     {
       name: 'Maintenance',
@@ -59,10 +69,7 @@ const HomePage = () => {
     {
       name: 'Transfert Datalab',
       pathname: `/espace-jupyter/export`,
-      rightsToSee:
-        userRights.right_manage_export_jupyter_accesses ||
-        userRights.right_export_jupyter_nominative ||
-        userRights.right_export_jupyter_pseudonymized
+      rightsToSee: userRights.right_export_jupyter_nominative || userRights.right_export_jupyter_pseudonymized
     },
     {
       name: 'Datalabs',
@@ -99,8 +106,7 @@ const HomePage = () => {
                 )
             )}
           </Grid>
-          {(userRights.right_manage_export_jupyter_accesses ||
-            userRights.right_export_jupyter_nominative ||
+          {(userRights.right_export_jupyter_nominative ||
             userRights.right_export_jupyter_pseudonymized ||
             userRights.right_read_datalabs) &&
             ENABLE_DATALABS && (

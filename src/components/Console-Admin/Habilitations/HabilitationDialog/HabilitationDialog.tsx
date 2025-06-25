@@ -151,33 +151,21 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
       const roleData = {
         name: role?.name,
         right_full_admin: role?.right_full_admin ?? false,
-        right_read_logs: role?.right_read_logs ?? false,
         right_manage_users: role?.right_manage_users ?? false,
-        right_read_users: role?.right_read_users ?? false,
         right_manage_datalabs: role?.right_manage_datalabs ?? false,
         right_read_datalabs: role?.right_read_datalabs ?? false,
-        right_read_admin_accesses_same_level: role?.right_read_admin_accesses_same_level ?? false,
         right_manage_admin_accesses_same_level: role?.right_manage_admin_accesses_same_level ?? false,
-        right_read_admin_accesses_inferior_levels: role?.right_read_admin_accesses_inferior_levels ?? false,
         right_manage_admin_accesses_inferior_levels: role?.right_manage_admin_accesses_inferior_levels ?? false,
-        right_read_data_accesses_same_level: role?.right_read_data_accesses_same_level ?? false,
         right_manage_data_accesses_same_level: role?.right_manage_data_accesses_same_level ?? false,
-        right_read_data_accesses_inferior_levels: role?.right_read_data_accesses_inferior_levels ?? false,
         right_manage_data_accesses_inferior_levels: role?.right_manage_data_accesses_inferior_levels ?? false,
         right_read_patient_nominative: role?.right_read_patient_nominative ?? false,
         right_read_patient_pseudonymized: role?.right_read_patient_pseudonymized ?? false,
-        right_read_administrative_data: role?.right_read_administrative_data ?? false,
-        right_read_medical_data: role?.right_read_medical_data ?? false,
-        right_read_treatments_data: role?.right_read_treatments_data ?? false,
         right_read_practitioner_data: role?.right_read_practitioner_data ?? false,
         right_search_patients_by_ipp: role?.right_search_patients_by_ipp ?? false,
         right_search_patients_unlimited: role?.right_search_patients_unlimited ?? false,
-        right_manage_export_jupyter_accesses: role?.right_manage_export_jupyter_accesses ?? false,
         right_export_jupyter_nominative: role?.right_export_jupyter_nominative ?? false,
         right_export_jupyter_pseudonymized: role?.right_export_jupyter_pseudonymized ?? false,
-        right_manage_export_csv_accesses: role?.right_manage_export_csv_accesses ?? false,
-        right_export_csv_nominative: role?.right_export_csv_nominative ?? false,
-        right_export_csv_pseudonymized: role?.right_export_csv_pseudonymized ?? false,
+        right_export_csv_xlsx_nominative: role?.right_export_csv_xlsx_nominative ?? false,
         right_search_opposed_patients: role?.right_search_opposed_patients ?? false,
         right_read_accesses_above_levels: role?.right_read_accesses_above_levels ?? false
       }
@@ -206,7 +194,6 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
       <DialogContent className={classes.dialog}>
         {(isEditable && editMode) || !isEditable ? (
           <Grid container direction="column">
-            <Typography variant="h6">Nom de l'habilitation:</Typography>
             <TextField
               margin="normal"
               autoFocus

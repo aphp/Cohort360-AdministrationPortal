@@ -134,15 +134,13 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
   ]
 
   const readAccessesUserRights =
-    userRights.right_read_admin_accesses_same_level ||
-    userRights.right_read_admin_accesses_inferior_levels ||
-    userRights.right_read_data_accesses_same_level ||
-    userRights.right_read_data_accesses_inferior_levels ||
-    userRights.right_manage_export_jupyter_accesses ||
-    userRights.right_manage_export_csv_accesses
+    userRights.right_manage_admin_accesses_same_level ||
+    userRights.right_manage_admin_accesses_inferior_levels ||
+    userRights.right_manage_data_accesses_same_level ||
+    userRights.right_manage_data_accesses_inferior_levels
 
   const _columns =
-    readAccessesUserRights || userRights.right_read_logs
+    readAccessesUserRights || userRights.right_full_admin
       ? [...columns, { label: 'Actions', align: 'center' } as Column]
       : [...columns]
 
@@ -243,12 +241,12 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
                     )}
                   </Tooltip>
                 </TableCell>
-                {(readAccessesUserRights || userRights.right_read_logs) && (
+                {(readAccessesUserRights || userRights.right_full_admin) && (
                   <TableCell align="center">
                     <Grid container item alignContent="center" justifyContent="space-between" wrap="nowrap">
                       {readAccessesUserRights && (
                         <>
-                          <Grid item xs={userRights.right_read_logs ? 4 : 6}>
+                          <Grid item xs={userRights.right_full_admin ? 4 : 6}>
                             {(access.actual_start_datetime || access.actual_end_datetime) &&
                               access.editable &&
                               (access.is_valid ||
@@ -267,7 +265,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
                                 </Tooltip>
                               )}
                           </Grid>
-                          <Grid item xs={userRights.right_read_logs ? 4 : 6}>
+                          <Grid item xs={userRights.right_full_admin ? 4 : 6}>
                             {access.actual_start_datetime &&
                               moment(access.actual_start_datetime).isSameOrBefore(moment(), 'day') &&
                               access.is_valid &&
@@ -304,7 +302,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
                           </Grid>
                         </>
                       )}
-                      {userRights.right_read_logs && (
+                      {userRights.right_full_admin && (
                         <Grid item xs={4}>
                           <Tooltip title="Voir les logs de l'accès">
                             <IconButton

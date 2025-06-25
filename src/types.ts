@@ -98,34 +98,22 @@ export type Profile = {
 
 export type UserRole = {
   right_full_admin: boolean | null
-  right_read_logs: boolean | null
   right_manage_users: boolean | null
-  right_read_users: boolean | null
   right_manage_datalabs: boolean | null
   right_read_datalabs: boolean | null
   right_manage_admin_accesses_same_level: boolean | null
-  right_read_admin_accesses_same_level: boolean | null
   right_manage_admin_accesses_inferior_levels: boolean | null
-  right_read_admin_accesses_inferior_levels: boolean | null
   right_manage_data_accesses_same_level: boolean | null
-  right_read_data_accesses_same_level: boolean | null
   right_manage_data_accesses_inferior_levels: boolean | null
-  right_read_data_accesses_inferior_levels: boolean | null
   right_read_patient_nominative: boolean | null
   right_read_patient_pseudonymized: boolean | null
-  right_read_administrative_data: boolean | null
-  right_read_medical_data: boolean | null
-  right_read_treatments_data: boolean | null
   right_read_practitioner_data: boolean | null
   right_search_patients_by_ipp: boolean | null
   right_search_opposed_patients: boolean | null
   right_search_patients_unlimited: boolean | null
-  right_manage_export_jupyter_accesses: boolean | null
   right_export_jupyter_nominative: boolean | null
   right_export_jupyter_pseudonymized: boolean | null
-  right_manage_export_csv_accesses: boolean | null
-  right_export_csv_nominative: boolean | null
-  right_export_csv_pseudonymized: boolean | null
+  right_export_csv_xlsx_nominative: boolean | null
   right_read_accesses_above_levels: boolean | null
 }
 
