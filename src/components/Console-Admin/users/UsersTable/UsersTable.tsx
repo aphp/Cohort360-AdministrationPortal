@@ -61,14 +61,12 @@ const UsersTable: React.FC<UsersTableProps> = ({ userRights }) => {
   ]
 
   const readAccessesUserRights =
-    userRights.right_read_admin_accesses_same_level ||
-    userRights.right_read_admin_accesses_inferior_levels ||
-    userRights.right_read_data_accesses_same_level ||
-    userRights.right_read_data_accesses_inferior_levels ||
-    userRights.right_manage_export_csv_accesses ||
-    userRights.right_manage_export_jupyter_accesses
+    userRights.right_manage_admin_accesses_same_level ||
+    userRights.right_manage_admin_accesses_inferior_levels ||
+    userRights.right_manage_data_accesses_same_level ||
+    userRights.right_manage_data_accesses_inferior_levels
 
-  const actionsUserRights = readAccessesUserRights || userRights.right_manage_users || userRights.right_read_logs
+  const actionsUserRights = readAccessesUserRights || userRights.right_manage_users || userRights.right_full_admin
 
   const _columns = actionsUserRights ? [...columns, { label: 'Actions', align: 'center' } as Column] : [...columns]
 
@@ -208,7 +206,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ userRights }) => {
                           </IconButton>
                         </Tooltip>
                       )}
-                      {userRights.right_read_logs && (
+                      {userRights.right_full_admin && (
                         <Tooltip title="Voir les logs de l'utilisateur" style={{ padding: '0 12px' }}>
                           <IconButton
                             onClick={(event) => {

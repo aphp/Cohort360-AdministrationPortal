@@ -35,9 +35,7 @@ const ProfileComponent: React.FC<ProfileComponentProps> = ({ profile, userRights
     userRights.right_manage_admin_accesses_same_level ||
     userRights.right_manage_admin_accesses_inferior_levels ||
     userRights.right_manage_data_accesses_same_level ||
-    userRights.right_manage_data_accesses_inferior_levels ||
-    userRights.right_manage_export_jupyter_accesses ||
-    userRights.right_manage_export_csv_accesses
+    userRights.right_manage_data_accesses_inferior_levels
 
   const _getAccesses = async () => {
     try {

@@ -151,8 +151,8 @@ const PerimeterHistory: React.FC = () => {
         setUserCanReadAccessFromOtherLevels(
           !!(
             getUserRightsResponse.right_read_accesses_above_levels ||
-            getUserRightsResponse.right_read_data_accesses_inferior_levels ||
-            getUserRightsResponse.right_read_admin_accesses_inferior_levels
+            getUserRightsResponse.right_manage_data_accesses_inferior_levels ||
+            getUserRightsResponse.right_manage_admin_accesses_inferior_levels
           )
         )
       } catch (error) {
@@ -223,8 +223,8 @@ const PerimeterHistory: React.FC = () => {
                       />
                     </Grid>
                   )}
-                  {(userRights.right_read_data_accesses_inferior_levels ||
-                    userRights.right_read_admin_accesses_inferior_levels) && (
+                  {(userRights.right_manage_data_accesses_inferior_levels ||
+                    userRights.right_manage_admin_accesses_inferior_levels) && (
                     <Grid display="flex" alignItems="center">
                       <Typography variant="h3">Afficher les accès sur les périmètres inférieurs</Typography>
                       <Switch

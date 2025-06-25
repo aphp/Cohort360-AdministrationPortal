@@ -338,7 +338,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                       )}
 
                       <TableCell align="right">
-                        {userRights.right_read_logs && (
+                        {userRights.right_full_admin && (
                           <Tooltip title="Voir les logs du périmètre">
                             <IconButton
                               onClick={() => {
