@@ -26,7 +26,7 @@ export const getPerimeterData = (perimeterInfos?: CareSite) => {
       title: (
         <>
           Nb utilisateurs
-          <Tooltip title="Estimation du nombre d'utilisateurs ayant un accès à un périmètre exactement">
+          <Tooltip title="Le nombre d'utilisateurs ayant accès à ce périmètre">
             <InfoIcon color="action" fontSize="small" style={{ marginLeft: 4 }} />
           </Tooltip>
         </>
@@ -37,7 +37,7 @@ export const getPerimeterData = (perimeterInfos?: CareSite) => {
       title: (
         <>
           Nb utilisateurs (inf)
-          <Tooltip title="Estimation du nombre d'utilisateurs ayant un accès à ce périmètre et/ou au moins un de ses sous périmètres">
+          <Tooltip title="Le nombre d'utilisateurs ayant accès à au moins un des sous périmètres">
             <InfoIcon color="action" fontSize="small" style={{ marginLeft: 4 }} />
           </Tooltip>
         </>
@@ -48,7 +48,7 @@ export const getPerimeterData = (perimeterInfos?: CareSite) => {
       title: (
         <>
           Nb utilisateurs (sup)
-          <Tooltip title="Estimation des utilisateurs ayant accès à ce périmètre et/ou au moins un périmètre au-dessus (parent)">
+          <Tooltip title="Le nombre d'utilisateurs ayant accès à au moins un périmètre parent">
             <InfoIcon color="action" fontSize="small" style={{ marginLeft: 4 }} />
           </Tooltip>
         </>
