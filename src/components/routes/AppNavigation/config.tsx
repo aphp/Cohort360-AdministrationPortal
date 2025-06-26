@@ -9,7 +9,7 @@ import ProfilesView from 'views/Console-Admin/Profiles/Profiles'
 import Perimeters from 'views/Console-Admin/Perimeters/Perimeters'
 import PerimeterHistory from 'views/Console-Admin/PerimeterHistory/PerimeterHistory'
 import Habilitations from 'views/Console-Admin/Habilitations/Habilitations'
-import HabilitationHistory from 'views/Console-Admin/HabilitationHistory/HabilitationHistory'
+import HabilitationUsers from 'views/Console-Admin/HabilitationUsers/HabilitationUsers'
 import Logs from 'views/Console-Admin/Logs/Logs'
 
 // import Transfert from 'views/Jupyter/Transfert/Transfert'
@@ -128,10 +128,10 @@ const configRoutes: configRoute[] = [
   {
     exact: true,
     displayPortailTopBar: true,
-    path: '/console-admin/habilitation/:habilitationId/users',
+    path: '/console-admin/habilitations/:habilitationId/users',
     name: 'Habilitation',
     isPrivate: true,
-    element: <HabilitationHistory />
+    element: <HabilitationUsers />
   },
 
   /**

@@ -12,7 +12,7 @@ import useDebounce from 'components/Console-Admin/Perimeter/use-debounce'
 
 const orderDefault = { orderBy: 'lastname', orderDirection: 'asc' } as Order
 
-const HabilitationHistory: React.FC = () => {
+const HabilitationUsers: React.FC = () => {
   const [habilitationName, setHabilitationName] = useState<string | undefined>()
   const [usersInHabilitation, setUsersInHabilitation] = useState<UserInHabilitation[] | undefined>([])
   const [loadingPage, setLoadingPage] = useState(false)
@@ -97,4 +97,4 @@ const HabilitationHistory: React.FC = () => {
   )
 }
 
-export default HabilitationHistory
+export default HabilitationUsers
