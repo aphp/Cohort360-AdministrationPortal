@@ -60,7 +60,6 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
   const [dialogOpen, setOpenDialog] = useState(false)
   const [selectedExport, setSelectedExport] = useState<Export | undefined>()
 
-
   const debouncedSearchTerm = useDebounce(500, searchInput)
 
   const columns: Column[] = [
@@ -233,17 +232,13 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
         container
         item
         justifyContent={
-          userRights.right_manage_export_jupyter_accesses ||
-          userRights.right_export_jupyter_nominative ||
-          userRights.right_export_jupyter_pseudonymized
+          userRights.right_export_jupyter_nominative || userRights.right_export_jupyter_pseudonymized
             ? 'space-between'
             : 'flex-end'
         }
         style={{ margin: '12px 0' }}
       >
-        {(userRights.right_manage_export_jupyter_accesses ||
-          userRights.right_export_jupyter_nominative ||
-          userRights.right_export_jupyter_pseudonymized) && (
+        {(userRights.right_export_jupyter_nominative || userRights.right_export_jupyter_pseudonymized) && (
           <Button
             variant="contained"
             disableElevation
