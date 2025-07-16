@@ -1,6 +1,7 @@
 import React from 'react'
 
 import {
+  CircularProgress,
   Grid,
   IconButton,
   Pagination,
@@ -28,10 +29,11 @@ interface HabilitationTableProps {
   total?: number
   order: Order
   setOrder?: (order: Order) => void
+  loading: boolean
 }
 
 const HabilitationTable: React.FC<HabilitationTableProps> = (props) => {
-  const { usersInHabilitation, page, setPage, onChangePage, total, order, setOrder } = props
+  const { usersInHabilitation, page, setPage, onChangePage, total, order, setOrder, loading } = props
   const { classes } = useStyles()
   const navigate = useNavigate()
 
@@ -76,6 +78,31 @@ const HabilitationTable: React.FC<HabilitationTableProps> = (props) => {
     }
   }
 
+  const renderTable = () =>
+    usersInHabilitation && usersInHabilitation.length > 0 ? (
+      usersInHabilitation.map((userAccess, index) => (
+        <TableRow key={index} className={classes.tableBodyRows}>
+          <TableCell align="left">
+            {userAccess.lastname.toLocaleUpperCase()} {userAccess.firstname}
+            <IconButton onClick={() => navigate(`/console-admin/user-profile/${userAccess.provider_username}`)} size="large">
+              <LaunchIcon fontSize="small" />
+            </IconButton>
+          </TableCell>
+          <TableCell>{userAccess.perimeter}</TableCell>
+          <TableCell>
+            {userAccess.start_datetime ? moment(userAccess.start_datetime).format('DD/MM/YYYY') : '-'}
+          </TableCell>
+          <TableCell>{userAccess.end_datetime ? moment(userAccess.end_datetime).format('DD/MM/YYYY') : '-'}</TableCell>
+        </TableRow>
+      ))
+    ) : (
+      <TableRow>
+        <TableCell colSpan={7}>
+          <Typography className={classes.loadingSpinnerContainer}>Aucun résultat à afficher</Typography>
+        </TableCell>
+      </TableRow>
+    )
+
   return (
     <Grid container justifyContent="flex-end">
       <TableContainer component={Paper}>
@@ -106,33 +133,16 @@ const HabilitationTable: React.FC<HabilitationTableProps> = (props) => {
           </TableHead>
 
           <TableBody>
-            {usersInHabilitation && usersInHabilitation.length > 0 ? (
-              usersInHabilitation.map((userAccess, index) => (
-                <TableRow key={index} className={classes.tableBodyRows}>
-                  <TableCell align="left">
-                    {userAccess.lastname.toLocaleUpperCase()} {userAccess.firstname}
-                    <IconButton
-                      onClick={() => navigate(`/console-admin/user-profile/${userAccess.provider_username}`)}
-                      size="large"
-                    >
-                      <LaunchIcon fontSize="small" />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell>{userAccess.perimeter}</TableCell>
-                  <TableCell>
-                    {userAccess.start_datetime ? moment(userAccess.start_datetime).format('DD/MM/YYYY') : '-'}
-                  </TableCell>
-                  <TableCell>
-                    {userAccess.end_datetime ? moment(userAccess.end_datetime).format('DD/MM/YYYY') : '-'}
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
+            {loading ? (
               <TableRow>
-                <TableCell colSpan={7}>
-                  <Typography className={classes.loadingSpinnerContainer}>Aucun résultat à afficher</Typography>
+                <TableCell colSpan={4}>
+                  <Grid container justifyContent={'center'}>
+                    <CircularProgress />
+                  </Grid>
                 </TableCell>
               </TableRow>
+            ) : (
+              renderTable()
             )}
           </TableBody>
         </Table>
