@@ -73,7 +73,6 @@ const PerimeterHistory: React.FC = () => {
   const [roles, setRoles] = useState<Role[]>([])
   const [includeParentPerimeters, setIncludeParentPerimeters] = useState<boolean>(false)
   const [includeChildPerimeters, setIncludeChildPerimeters] = useState<boolean>(false)
-  const [userCanReadAccessFromOtherLevels, setUserCanReadAccessFromOtherLevels] = useState<boolean>(false)
   const debouncedSearchTerm = useDebounce(500, searchInput)
 
   const { perimeterId } = useParams<{ perimeterId: string }>()
@@ -148,12 +147,6 @@ const PerimeterHistory: React.FC = () => {
         const getUserRightsResponse = await getUserRights()
 
         setUserRights(getUserRightsResponse)
-        setUserCanReadAccessFromOtherLevels(
-          !!(
-            getUserRightsResponse.right_manage_data_accesses_inferior_levels ||
-            getUserRightsResponse.right_manage_admin_accesses_inferior_levels
-          )
-        )
       } catch (error) {
         console.error("Erreur lors de la récupération des droits de l'utilisateur", error)
       }
@@ -206,11 +199,7 @@ const PerimeterHistory: React.FC = () => {
                 </Card>
               ))}
             </Grid>
-            <Grid
-              container
-              justifyContent='space-between'
-              className={classes.searchBar}
-            >
+            <Grid container justifyContent="space-between" className={classes.searchBar}>
               <Grid display={'flex'}>
                 <Grid display="flex" alignItems="center">
                   <Typography variant="h3">Afficher les accès sur les périmètres parents</Typography>

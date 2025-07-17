@@ -160,7 +160,6 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
         right_manage_data_accesses_inferior_levels: role?.right_manage_data_accesses_inferior_levels ?? false,
         right_read_patient_nominative: role?.right_read_patient_nominative ?? false,
         right_read_patient_pseudonymized: role?.right_read_patient_pseudonymized ?? false,
-        right_read_practitioner_data: role?.right_read_practitioner_data ?? false,
         right_search_patients_by_ipp: role?.right_search_patients_by_ipp ?? false,
         right_search_patients_unlimited: role?.right_search_patients_unlimited ?? false,
         right_export_jupyter_nominative: role?.right_export_jupyter_nominative ?? false,

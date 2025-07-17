@@ -107,7 +107,6 @@ export type UserRole = {
   right_manage_data_accesses_inferior_levels: boolean | null
   right_read_patient_nominative: boolean | null
   right_read_patient_pseudonymized: boolean | null
-  right_read_practitioner_data: boolean | null
   right_search_patients_by_ipp: boolean | null
   right_search_opposed_patients: boolean | null
   right_search_patients_unlimited: boolean | null
