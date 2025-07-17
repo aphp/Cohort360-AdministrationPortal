@@ -124,28 +124,18 @@ const Login = () => {
 
     if (
       !_userRights.right_full_admin &&
-      !_userRights.right_read_logs &&
       !_userRights.right_manage_users &&
-      !_userRights.right_read_users &&
       !_userRights.right_manage_datalabs &&
       !_userRights.right_read_datalabs &&
       !_userRights.right_manage_admin_accesses_same_level &&
-      !_userRights.right_read_admin_accesses_same_level &&
       !_userRights.right_manage_admin_accesses_inferior_levels &&
-      !_userRights.right_read_admin_accesses_inferior_levels &&
       !_userRights.right_manage_data_accesses_same_level &&
-      !_userRights.right_read_data_accesses_same_level &&
       !_userRights.right_manage_data_accesses_inferior_levels &&
-      !_userRights.right_read_data_accesses_inferior_levels &&
-      !_userRights.right_read_accesses_above_levels &&
       !_userRights.right_read_patient_nominative &&
       !_userRights.right_read_patient_pseudonymized &&
       !_userRights.right_search_opposed_patients &&
       !_userRights.right_search_patients_by_ipp &&
-      !_userRights.right_manage_export_jupyter_accesses &&
-      !_userRights.right_manage_export_csv_accesses &&
-      !_userRights.right_export_csv_nominative &&
-      !_userRights.right_export_csv_pseudonymized &&
+      !_userRights.right_export_csv_xlsx_nominative &&
       !_userRights.right_export_jupyter_nominative &&
       !_userRights.right_export_jupyter_pseudonymized
     ) {

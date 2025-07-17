@@ -47,7 +47,7 @@ const HabilitationsTable: React.FC<HabilitationsTableProps> = ({ userRights }) =
     }
   ]
 
-  if (userRights.right_full_admin || userRights.right_read_users) {
+  if (userRights.right_full_admin || userRights.right_manage_users) {
     columns.push({
       label: 'Actions',
       align: 'right'
@@ -148,13 +148,13 @@ const HabilitationsTable: React.FC<HabilitationsTableProps> = ({ userRights }) =
                       {role.name}
                     </Typography>
                   </TableCell>
-                  {(userRights.right_full_admin || userRights.right_read_users) && (
+                  {(userRights.right_full_admin || userRights.right_manage_users) && (
                     <TableCell align="right">
-                      {userRights.right_read_users && (
+                      {userRights.right_manage_users && (
                         <Tooltip title="Afficher les utilisateurs">
                           <IconButton
                             onClick={() => {
-                              navigate(`/console-admin/habilitation/${role.id}/users`)
+                              navigate(`/console-admin/habilitations/${role.id}/users`)
                             }}
                           >
                             <PeopleIcon />

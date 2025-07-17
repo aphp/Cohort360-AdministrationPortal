@@ -26,7 +26,7 @@ export const getPerimeterData = (perimeterInfos?: CareSite) => {
       title: (
         <>
           Nb utilisateurs
-          <Tooltip title="Estimation du nombre d'utilisateurs ayant un accès à un périmètre exactement">
+          <Tooltip title="Le nombre d'utilisateurs ayant accès à ce périmètre">
             <InfoIcon color="action" fontSize="small" style={{ marginLeft: 4 }} />
           </Tooltip>
         </>
@@ -37,7 +37,7 @@ export const getPerimeterData = (perimeterInfos?: CareSite) => {
       title: (
         <>
           Nb utilisateurs (inf)
-          <Tooltip title="Estimation du nombre d'utilisateurs ayant un accès à ce périmètre et/ou au moins un de ses sous périmètres">
+          <Tooltip title="Le nombre d'utilisateurs ayant accès à au moins un des sous périmètres">
             <InfoIcon color="action" fontSize="small" style={{ marginLeft: 4 }} />
           </Tooltip>
         </>
@@ -48,7 +48,7 @@ export const getPerimeterData = (perimeterInfos?: CareSite) => {
       title: (
         <>
           Nb utilisateurs (sup)
-          <Tooltip title="Estimation des utilisateurs ayant accès à ce périmètre et/ou au moins un périmètre au-dessus (parent)">
+          <Tooltip title="Le nombre d'utilisateurs ayant accès à au moins un périmètre parent">
             <InfoIcon color="action" fontSize="small" style={{ marginLeft: 4 }} />
           </Tooltip>
         </>
@@ -73,7 +73,6 @@ const PerimeterHistory: React.FC = () => {
   const [roles, setRoles] = useState<Role[]>([])
   const [includeParentPerimeters, setIncludeParentPerimeters] = useState<boolean>(false)
   const [includeChildPerimeters, setIncludeChildPerimeters] = useState<boolean>(false)
-  const [userCanReadAccessFromOtherLevels, setUserCanReadAccessFromOtherLevels] = useState<boolean>(false)
   const debouncedSearchTerm = useDebounce(500, searchInput)
 
   const { perimeterId } = useParams<{ perimeterId: string }>()
@@ -148,13 +147,6 @@ const PerimeterHistory: React.FC = () => {
         const getUserRightsResponse = await getUserRights()
 
         setUserRights(getUserRightsResponse)
-        setUserCanReadAccessFromOtherLevels(
-          !!(
-            getUserRightsResponse.right_read_accesses_above_levels ||
-            getUserRightsResponse.right_read_data_accesses_inferior_levels ||
-            getUserRightsResponse.right_read_admin_accesses_inferior_levels
-          )
-        )
       } catch (error) {
         console.error("Erreur lors de la récupération des droits de l'utilisateur", error)
       }
@@ -207,34 +199,23 @@ const PerimeterHistory: React.FC = () => {
                 </Card>
               ))}
             </Grid>
-            <Grid
-              container
-              justifyContent={userCanReadAccessFromOtherLevels ? 'space-between' : 'flex-end'}
-              className={classes.searchBar}
-            >
-              {userCanReadAccessFromOtherLevels && (
-                <Grid display={'flex'}>
-                  {userRights.right_read_accesses_above_levels && (
-                    <Grid display="flex" alignItems="center">
-                      <Typography variant="h3">Afficher les accès sur les périmètres parents</Typography>
-                      <Switch
-                        checked={includeParentPerimeters}
-                        onChange={() => setIncludeParentPerimeters(!includeParentPerimeters)}
-                      />
-                    </Grid>
-                  )}
-                  {(userRights.right_read_data_accesses_inferior_levels ||
-                    userRights.right_read_admin_accesses_inferior_levels) && (
-                    <Grid display="flex" alignItems="center">
-                      <Typography variant="h3">Afficher les accès sur les périmètres inférieurs</Typography>
-                      <Switch
-                        checked={includeChildPerimeters}
-                        onChange={() => setIncludeChildPerimeters(!includeChildPerimeters)}
-                      />
-                    </Grid>
-                  )}
+            <Grid container justifyContent="space-between" className={classes.searchBar}>
+              <Grid display={'flex'}>
+                <Grid display="flex" alignItems="center">
+                  <Typography variant="h3">Afficher les accès sur les périmètres parents</Typography>
+                  <Switch
+                    checked={includeParentPerimeters}
+                    onChange={() => setIncludeParentPerimeters(!includeParentPerimeters)}
+                  />
                 </Grid>
-              )}
+                <Grid display="flex" alignItems="center">
+                  <Typography variant="h3">Afficher les accès sur les périmètres inférieurs</Typography>
+                  <Switch
+                    checked={includeChildPerimeters}
+                    onChange={() => setIncludeChildPerimeters(!includeChildPerimeters)}
+                  />
+                </Grid>
+              </Grid>
               <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
             </Grid>
             <AccessesTable

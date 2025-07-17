@@ -93,7 +93,7 @@ const getHeadCells = (searchInput?: string, isManageable?: boolean) => {
             label: (
               <>
                 Nb utilisateurs
-                <Tooltip title="Estimation du nombre d'utilisateurs ayant un accès à un périmètre exactement">
+                <Tooltip title="Le nombre d'utilisateurs ayant accès à ce périmètre">
                   <InfoIcon color="action" fontSize="small" style={{ marginLeft: 4 }} />
                 </Tooltip>
               </>
@@ -107,7 +107,7 @@ const getHeadCells = (searchInput?: string, isManageable?: boolean) => {
             label: (
               <>
                 Nb utilisateurs (inf)
-                <Tooltip title="Estimation du nombre d'utilisateurs ayant un accès à ce périmètre et/ou au moins un de ses sous périmètres">
+                <Tooltip title="Le nombre d'utilisateurs ayant accès à au moins un des sous périmètres">
                   <InfoIcon color="action" fontSize="small" style={{ marginLeft: 4 }} />
                 </Tooltip>
               </>
@@ -121,7 +121,7 @@ const getHeadCells = (searchInput?: string, isManageable?: boolean) => {
             label: (
               <>
                 Nb utilisateurs (sup)
-                <Tooltip title="Estimation des utilisateurs ayant accès à ce périmètre et/ou au moins un périmètre au-dessus (parent)">
+                <Tooltip title="Le nombre d'utilisateurs ayant accès à au moins un périmètre parent">
                   <InfoIcon color="action" fontSize="small" style={{ marginLeft: 4 }} />
                 </Tooltip>
               </>
@@ -338,7 +338,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                       )}
 
                       <TableCell align="right">
-                        {userRights.right_read_logs && (
+                        {userRights.right_full_admin && (
                           <Tooltip title="Voir les logs du périmètre">
                             <IconButton
                               onClick={() => {

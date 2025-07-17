@@ -75,7 +75,7 @@ const ContentManagementTable: React.FC<ContentManagementTableProps> = ({
     }
   ]
 
-  if (userRights.right_full_admin || userRights.right_read_users) {
+  if (userRights.right_full_admin) {
     columns.push({
       label: 'Actions',
       align: 'right'
