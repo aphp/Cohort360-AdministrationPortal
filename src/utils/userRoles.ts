@@ -17,7 +17,6 @@ export const userDefaultRoles: UserRole = {
   right_export_csv_xlsx_nominative: false,
   right_manage_datalabs: false,
   right_read_datalabs: false,
-  right_read_accesses_above_levels: false,
   right_search_patients_unlimited: false,
   right_read_practitioner_data: false
 }
@@ -95,9 +94,6 @@ export const getUserRights = async (data?: Access[]) => {
           }
           if (access.role.right_search_patients_by_ipp) {
             _userRights.right_search_patients_by_ipp = true
-          }
-          if (access.role.right_read_accesses_above_levels) {
-            _userRights.right_read_accesses_above_levels = true
           }
         }
       }

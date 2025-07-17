@@ -150,7 +150,6 @@ const PerimeterHistory: React.FC = () => {
         setUserRights(getUserRightsResponse)
         setUserCanReadAccessFromOtherLevels(
           !!(
-            getUserRightsResponse.right_read_accesses_above_levels ||
             getUserRightsResponse.right_manage_data_accesses_inferior_levels ||
             getUserRightsResponse.right_manage_admin_accesses_inferior_levels
           )
@@ -209,32 +208,25 @@ const PerimeterHistory: React.FC = () => {
             </Grid>
             <Grid
               container
-              justifyContent={userCanReadAccessFromOtherLevels ? 'space-between' : 'flex-end'}
+              justifyContent='space-between'
               className={classes.searchBar}
             >
-              {userCanReadAccessFromOtherLevels && (
-                <Grid display={'flex'}>
-                  {userRights.right_read_accesses_above_levels && (
-                    <Grid display="flex" alignItems="center">
-                      <Typography variant="h3">Afficher les accès sur les périmètres parents</Typography>
-                      <Switch
-                        checked={includeParentPerimeters}
-                        onChange={() => setIncludeParentPerimeters(!includeParentPerimeters)}
-                      />
-                    </Grid>
-                  )}
-                  {(userRights.right_manage_data_accesses_inferior_levels ||
-                    userRights.right_manage_admin_accesses_inferior_levels) && (
-                    <Grid display="flex" alignItems="center">
-                      <Typography variant="h3">Afficher les accès sur les périmètres inférieurs</Typography>
-                      <Switch
-                        checked={includeChildPerimeters}
-                        onChange={() => setIncludeChildPerimeters(!includeChildPerimeters)}
-                      />
-                    </Grid>
-                  )}
+              <Grid display={'flex'}>
+                <Grid display="flex" alignItems="center">
+                  <Typography variant="h3">Afficher les accès sur les périmètres parents</Typography>
+                  <Switch
+                    checked={includeParentPerimeters}
+                    onChange={() => setIncludeParentPerimeters(!includeParentPerimeters)}
+                  />
                 </Grid>
-              )}
+                <Grid display="flex" alignItems="center">
+                  <Typography variant="h3">Afficher les accès sur les périmètres inférieurs</Typography>
+                  <Switch
+                    checked={includeChildPerimeters}
+                    onChange={() => setIncludeChildPerimeters(!includeChildPerimeters)}
+                  />
+                </Grid>
+              </Grid>
               <SearchBar searchInput={searchInput} onChangeInput={setSearchInput} />
             </Grid>
             <AccessesTable

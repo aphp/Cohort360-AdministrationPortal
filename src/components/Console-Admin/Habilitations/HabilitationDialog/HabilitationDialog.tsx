@@ -167,7 +167,6 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
         right_export_jupyter_pseudonymized: role?.right_export_jupyter_pseudonymized ?? false,
         right_export_csv_xlsx_nominative: role?.right_export_csv_xlsx_nominative ?? false,
         right_search_opposed_patients: role?.right_search_opposed_patients ?? false,
-        right_read_accesses_above_levels: role?.right_read_accesses_above_levels ?? false
       }
 
       if (isEditable) {

@@ -33,7 +33,6 @@ const HomePage = () => {
       pathname: '/console-admin/perimeters',
       rightsToSee:
         userRights.right_manage_admin_accesses_same_level ||
-        userRights.right_read_accesses_above_levels ||
         userRights.right_manage_admin_accesses_inferior_levels ||
         userRights.right_manage_data_accesses_same_level ||
         userRights.right_manage_data_accesses_inferior_levels

@@ -131,7 +131,6 @@ const Login = () => {
       !_userRights.right_manage_admin_accesses_inferior_levels &&
       !_userRights.right_manage_data_accesses_same_level &&
       !_userRights.right_manage_data_accesses_inferior_levels &&
-      !_userRights.right_read_accesses_above_levels &&
       !_userRights.right_read_patient_nominative &&
       !_userRights.right_read_patient_pseudonymized &&
       !_userRights.right_search_opposed_patients &&
