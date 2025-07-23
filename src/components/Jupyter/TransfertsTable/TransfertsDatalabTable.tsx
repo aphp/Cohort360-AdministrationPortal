@@ -21,16 +21,18 @@ import { ReactComponent as FilterIcon } from 'assets/icones/filter.svg'
 
 import AddIcon from '@mui/icons-material/Add'
 import RefreshIcon from '@mui/icons-material/Refresh'
+import AssignmentIcon from '@mui/icons-material/Assignment'
 
 import DataTable from 'components/DataTable/DataTable'
 import TransfertDatalabForm from 'components/Jupyter/TransfertForm/TransfertDatalabForm'
 import TransfertsFilters from 'components/Jupyter/TransfertsFilters/TransfertsFilters'
 import SearchBar from 'components/SearchBar/SearchBar'
 import CommonSnackbar from 'components/Snackbar/Snackbar'
-import { getDatalabExportsList, retryExportRequest } from 'services/Jupyter/jupyterExportService'
+import { getDatalabExportsList, getExportLogs, retryExportRequest } from 'services/Jupyter/jupyterExportService'
 
 import { Column, DatalabTransferForm, Export, ExportFilters, Order, UserRole } from 'types'
 import useStyles from './styles'
+import { extractFilename } from 'utils/download'
 
 type TransfertsDatalabTableProps = {
   userRights: UserRole
@@ -108,6 +110,8 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
   const [addTransferRequestFail, setAddTransferRequestFail] = useState(false)
   const [retryExportFail, setRetryExportFail] = useState(false)
   const [retryExportSuccess, setRetryExportSuccess] = useState(false)
+  const [downloadLogsFail, setDownloadLogsFail] = useState<boolean>(false)
+  const [downloadLogsFailMessage, setDownloadLogsFailMessage] = useState<string>('')
 
   const rowsPerPage = 20
 
@@ -223,6 +227,28 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
       _getExportsList(page)
     } else {
       setRetryExportFail(true)
+    }
+  }
+
+  const downloadLogs = async (exportRequest: Export) => {
+    try {
+      const logsResponse = await getExportLogs(exportRequest.uuid)
+      if (logsResponse) {
+        const filename = extractFilename(logsResponse.headers['content-disposition'])
+        const blob = new Blob([logsResponse.data], { type: 'application/json' })
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', filename)
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
+      }
+    } catch (error: any) {
+      const errorMessage = await error.response.data.text()
+      setDownloadLogsFailMessage(errorMessage)
+      setDownloadLogsFail(true)
     }
   }
 
@@ -368,17 +394,28 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
                     <Grid display="flex" alignItems="center">
                       {getExportsChips(exportRequest.request_job_status)}
                       {userRights.right_full_admin && exportRequest.request_job_status === 'failed' && (
-                        <Tooltip title="Relancer l'export">
-                          <IconButton
-                            color="primary"
-                            onClick={() => {
-                              setOpenDialog(true)
-                              setSelectedExport(exportRequest)
-                            }}
-                          >
-                            <RefreshIcon />
-                          </IconButton>
-                        </Tooltip>
+                        <>
+                          <Tooltip title="Relancer l'export">
+                            <IconButton
+                              color="primary"
+                              onClick={() => {
+                                setOpenDialog(true)
+                                setSelectedExport(exportRequest)
+                              }}
+                            >
+                              <RefreshIcon />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Télécharger les logs">
+                            <IconButton
+                              onClick={() => {
+                                downloadLogs(exportRequest)
+                              }}
+                            >
+                              <AssignmentIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </>
                       )}
                     </Grid>
                   </TableCell>
@@ -437,7 +474,9 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog} color="secondary">Annuler</Button>
+          <Button onClick={handleCloseDialog} color="secondary">
+            Annuler
+          </Button>
           <Button
             onClick={(event) => {
               event.stopPropagation()
@@ -486,6 +525,15 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
           }}
           severity="error"
           message={"Erreur lors de la relance de l'export."}
+        />
+      )}
+      {downloadLogsFail && (
+        <CommonSnackbar
+          onClose={() => {
+            if (downloadLogsFail) setDownloadLogsFail(false)
+          }}
+          severity="error"
+          message={`Erreur lors du téléchargement des logs: ${downloadLogsFailMessage}`}
         />
       )}
     </Grid>

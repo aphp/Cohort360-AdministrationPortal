@@ -105,3 +105,12 @@ export const retryExportRequest = async (exportId: string) => {
     console.error("Erreur lors de la relance de l'export")
   }
 }
+
+export const getExportLogs = async (exportId: string) => {
+  try {
+    return await api.get(`/exports/${exportId}/logs/`, { responseType: 'blob' })
+  } catch (error) {
+    console.error(`Erreur lors de la récupération des logs pour l'export ${exportId}`, error)
+    throw error
+  }
+}
