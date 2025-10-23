@@ -52,9 +52,9 @@ const exportTable: ExportTableType[] = [
     resourceType: ResourceType.CLAIM
   },
   {
-    id: 'note_legacy',
+    id: 'note',
     name: 'Fait - Documents cliniques',
-    label: 'note_legacy',
+    label: 'note',
     resourceType: ResourceType.DOCUMENTS
   },
   {
