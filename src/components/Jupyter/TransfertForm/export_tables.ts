@@ -45,12 +45,12 @@ const exportTable: ExportTableType[] = [
     label: 'procedure_occurrence',
     resourceType: ResourceType.PROCEDURE
   },
-  {
-    id: 'cost',
-    name: 'Fait - PMSI - GHM',
-    label: 'cost',
-    resourceType: ResourceType.CLAIM
-  },
+  // {
+  //   id: 'cost',
+  //   name: 'Fait - PMSI - GHM',
+  //   label: 'cost',
+  //   resourceType: ResourceType.CLAIM
+  // },
   {
     id: 'note',
     name: 'Fait - Documents cliniques',
