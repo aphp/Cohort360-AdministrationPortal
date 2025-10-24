@@ -434,8 +434,7 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
                   <Grid item>
                     <WarningIcon color="warning" className={classes.warningIcon} />
                     <Typography component="span" className={classes.infoFilters}>
-                      En passant en mode <strong>Pseudonymisé</strong>, les filtres déjà sélectionnés sont
-                      réinitilisés
+                      En passant en mode <strong>Pseudonymisé</strong>, les filtres déjà sélectionnés sont réinitialisés
                     </Typography>
                   </Grid>
                 )}
