@@ -247,6 +247,7 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
 
   function renderExportTable(exportTable: DatalabTable) {
     const { name, checked, subtitle, label } = exportTable
+    console.log('test export', exportTable)
 
     const isItemExpanded = expandedTableIds.includes(label)
 

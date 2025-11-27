@@ -34,15 +34,15 @@ const exportTable: ExportTableType[] = [
     resourceType: ResourceType.UNKNOWN
   },
   {
-    id: 'condition_occurrence',
+    id: 'condition',
     name: 'Fait - PMSI - Diagnostics',
-    label: 'condition_occurrence',
+    label: 'Condition',
     resourceType: ResourceType.CONDITION
   },
   {
-    id: 'procedure_occurrence',
+    id: 'procedure',
     name: 'Fait - PMSI - Actes',
-    label: 'procedure_occurrence',
+    label: 'Procedure',
     resourceType: ResourceType.PROCEDURE
   },
   // {
@@ -58,9 +58,9 @@ const exportTable: ExportTableType[] = [
     resourceType: ResourceType.DOCUMENTS
   },
   {
-    id: 'measurement',
+    id: 'Observation_Laboratory',
     name: 'Fait - Biologie',
-    label: 'measurement',
+    label: 'Observation_Laboratory',
     resourceType: ResourceType.OBSERVATION
   },
   {
