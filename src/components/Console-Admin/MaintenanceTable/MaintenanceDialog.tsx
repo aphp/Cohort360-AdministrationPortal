@@ -18,14 +18,20 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import 'moment/locale/fr'
 
-import {
-  MaintenancePhase,
-  MaintenancePhaseCreation,
-  createMaintenancePhase,
-  updateMaintenancePhase
-} from 'services/Console-Admin/maintenanceService'
-import { UserRole } from 'types'
+import type { MaintenancePhase, MaintenancePhaseCreation } from 'services/Console-Admin/maintenanceService'
+import { createMaintenancePhase, updateMaintenancePhase } from 'services/Console-Admin/maintenanceService'
+import type { UserRole } from 'types'
 import moment from 'moment'
+
+const DEFAULT_MAINTENANCE_MESSAGE_PLACEHOLDER = [
+  'Nous publierons ici chaque nouvelle information importante :',
+  '',
+  "• Début de l'interruption : jeudi 2 avril 2026 à 9 h 10",
+  '• Prochaine mise à jour : 11 h 00',
+  '',
+  'En cas de besoins, contactez le support :',
+  'id.recherche.support.dsn@aphp.fr'
+].join('\n')
 
 type MaintenanceDialogProps = {
   open: boolean
@@ -186,6 +192,7 @@ const MaintenanceDialog: React.FC<MaintenanceDialogProps> = ({
               name="message"
               value={maintenanceData.message}
               onChange={handleMaintenanceChange}
+              placeholder={DEFAULT_MAINTENANCE_MESSAGE_PLACEHOLDER}
               variant="outlined"
               multiline
               rows={4}
