@@ -164,6 +164,8 @@ export type User = {
   lastname?: string
   email?: string
   display_name?: string
+  created_by?: string | null
+  updated_by?: string | null
 }
 
 export type Log = {
