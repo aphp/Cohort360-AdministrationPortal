@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {
   Button,
+  Checkbox,
   Dialog,
   DialogActions,
   DialogContent,
@@ -24,13 +25,14 @@ import type { UserRole } from 'types'
 import moment from 'moment'
 
 const DEFAULT_MAINTENANCE_MESSAGE_PLACEHOLDER = [
+  '# Nous rencontrons actuellement un incident technique',
   'Nous publierons ici chaque nouvelle information importante :',
   '',
   "• Début de l'interruption : jeudi 2 avril 2026 à 9 h 10",
   '• Prochaine mise à jour : 11 h 00',
   '',
   'En cas de besoins, contactez le support :',
-  'id.recherche.support.dsn@aphp.fr'
+  '[id.recherche.support.dsn@aphp.fr](mailto:id.recherche.support.dsn@aphp.fr)'
 ].join('\n')
 
 type MaintenanceDialogProps = {
@@ -63,6 +65,7 @@ const MaintenanceDialog: React.FC<MaintenanceDialogProps> = ({
   const [endDate, setEndDate] = useState<Date | null>(
     selectedMaintenance.end_datetime ? new Date(selectedMaintenance.end_datetime) : null
   )
+  const [isDataSavedMessageHidden, setIsDataSavedMessageHidden] = useState(selectedMaintenance.is_data_saved_message_hidden)
 
   useEffect(() => {
     setMaintenanceData({ ...selectedMaintenance })
@@ -105,13 +108,22 @@ const MaintenanceDialog: React.FC<MaintenanceDialogProps> = ({
     }
   }
 
+  const handleDataSavedMessageHiddenChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsDataSavedMessageHidden(e.target.checked)
+    setMaintenanceData({
+      ...maintenanceData,
+      is_data_saved_message_hidden: e.target.checked
+    })
+  }
+
   const handleSubmit = async () => {
     try {
       setLoading(true)
       const maintenanceDataToSubmit = {
         ...maintenanceData,
         start_datetime: startDate ? startDate.toISOString() : '',
-        end_datetime: endDate ? endDate.toISOString() : ''
+        end_datetime: endDate ? endDate.toISOString() : '',
+        is_data_saved_message_hidden: isDataSavedMessageHidden
       }
 
       if ('id' in maintenanceData) {
@@ -198,9 +210,9 @@ const MaintenanceDialog: React.FC<MaintenanceDialogProps> = ({
               rows={4}
               error={maintenanceData.message === ''}
               helperText={
-                maintenanceData.message === ''
-                  ? "Le texte d'information aux utilisateurs est requis"
-                  : "Texte d'information aux utilisateurs"
+                (maintenanceData.message === ''
+                  ? "Le texte d'information aux utilisateurs est requis."
+                  : "Texte d'information aux utilisateurs.") + " Le format Markdown est supporté."
               }
             />
           </Grid>
@@ -254,6 +266,12 @@ const MaintenanceDialog: React.FC<MaintenanceDialogProps> = ({
                 cohortes, de les éditer ou de les supprimer, seulement de consulter les données. En maintenance
                 complète, l'application est totalement inaccessible.
               </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={<Checkbox checked={maintenanceData.is_data_saved_message_hidden} onChange={handleDataSavedMessageHiddenChange} />}
+                label="Masquer le message indiquant que les données sont sauvegardées"
+              />
             </Grid>
           </Grid>
         </Grid>
