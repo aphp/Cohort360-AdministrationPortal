@@ -61,8 +61,9 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "type": "tsc --noEmit --watch",
-    "lint": "eslint --fix --ext .jsx,.js,.ts,.tsx src/",
+    "type": "tsc --noEmit",
+    "type:watch": "tsc --noEmit --watch",
+    "lint": "eslint --ext .jsx,.js,.ts,.tsx src/",
     "fixlint": "eslint --fix --ext .jsx,.js,.ts,.tsx src/"
   },
   "browserslist": {

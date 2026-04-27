@@ -1,21 +1,25 @@
 name: commitlint
 
-on: 
+on:
   pull_request:
     branches:
-      - 'develop'
-      - 'main'
+      - develop
+      - main
+
+permissions:
+  contents: read
+  pull-requests: read
 
 jobs:
   commit-lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Install commit-lint
         run: |
-          npm install --force conventional-changelog-conventionalcommits @commitlint/config-conventional commitlint@latest
+          npm install --no-save --force conventional-changelog-conventionalcommits @commitlint/config-conventional commitlint@latest
       - name: Fix commitlint error
         run: |
           sed -i 's/"type": "module",//g' package.json
@@ -28,4 +32,4 @@ jobs:
       - name: Validate PR title with commitlint
         if: github.event_name == 'pull_request'
         run: |
-          echo "${{github.event.pull_request.title}}" | npx commitlint 
+          echo "${{github.event.pull_request.title}}" | npx commitlint
