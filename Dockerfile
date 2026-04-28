@@ -1,14 +1,16 @@
 FROM node:20 AS build
 
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci
 COPY . .
-RUN npm install
 RUN npm run build
 
 
 FROM nginx:1.25.1
 
 WORKDIR /app
-COPY --from=build build build
+COPY --from=build /app/build build
 
 # Configure the nginx inside the docker image
 COPY docker/nginx.conf /etc/nginx/conf.d/

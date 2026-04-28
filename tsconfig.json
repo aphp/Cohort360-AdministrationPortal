@@ -19,6 +19,7 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": "./src"
   },
-  "exclude": ["node_modules"],
+  "include": ["src", "vitenv.d.ts"],
+  "exclude": ["node_modules", "build"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
