@@ -33,8 +33,9 @@ jobs:
 
           for commit in $(git rev-list --reverse "$RANGE"); do
             subject="$(git log -1 --format=%s "$commit")"
+            legacy_squash_pattern='^\([^)]+\).+:'
 
-            if [[ "$subject" =~ ^\([^)]+\).+: ]]; then
+            if [[ "$subject" =~ $legacy_squash_pattern ]]; then
               echo "::notice::Skipping legacy squash commit message: $subject"
               continue
             fi
