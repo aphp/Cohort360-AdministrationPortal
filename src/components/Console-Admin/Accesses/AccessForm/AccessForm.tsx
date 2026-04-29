@@ -51,7 +51,7 @@ const defaultAccess = {
 const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRights, onSuccess, onFail, access }) => {
   const { classes } = useStyles()
 
-  const [_access, setAccess] = useState(
+  const [draftAccess, setDraftAccess] = useState(
     access
       ? {
           ...access,
@@ -60,7 +60,7 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
         }
       : defaultAccess
   )
-  const [accessPerimeter, setAccessPerimeter] = useState<ScopeTreeRow | null>(null)
+  const [accessPerimeter, setDraftAccessPerimeter] = useState<ScopeTreeRow | null>(null)
   const [dateError, setDateError] = useState('')
   const [openPerimeters, setOpenPerimeters] = useState(false)
   const [roles, setRoles] = useState([])
@@ -73,38 +73,38 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
     let error = ''
 
     if (
-      (_access?.actual_start_datetime !== null && !_access.actual_start_datetime.isValid()) ||
-      (_access?.actual_end_datetime !== null && !_access.actual_end_datetime.isValid())
+      (draftAccess?.actual_start_datetime !== null && !draftAccess.actual_start_datetime.isValid()) ||
+      (draftAccess?.actual_end_datetime !== null && !draftAccess.actual_end_datetime.isValid())
     ) {
       error = 'Les dates doivent être au format "JJ/MM/AAAA"'
     } else if (
       (!isEdition &&
-        _access?.actual_start_datetime !== null &&
-        _access.actual_start_datetime.isBefore(moment(), 'day')) ||
-      (_access?.actual_end_datetime !== null && _access.actual_end_datetime.isBefore(moment(), 'day'))
+        draftAccess?.actual_start_datetime !== null &&
+        draftAccess.actual_start_datetime.isBefore(moment(), 'day')) ||
+      (draftAccess?.actual_end_datetime !== null && draftAccess.actual_end_datetime.isBefore(moment(), 'day'))
     ) {
       error = 'Les dates renseignées ne peuvent pas être dans le passé'
     }
 
     if (
-      _access?.actual_start_datetime !== null &&
-      _access?.actual_end_datetime !== null &&
-      _access?.actual_start_datetime.isValid() &&
-      _access?.actual_end_datetime.isValid() &&
-      _access?.actual_end_datetime.isBefore(_access.actual_start_datetime)
+      draftAccess?.actual_start_datetime !== null &&
+      draftAccess?.actual_end_datetime !== null &&
+      draftAccess?.actual_start_datetime.isValid() &&
+      draftAccess?.actual_end_datetime.isValid() &&
+      draftAccess?.actual_end_datetime.isBefore(draftAccess.actual_start_datetime)
     ) {
       error = 'La date de fin ne peut pas être avant la date de début.'
     }
 
     setDateError(error)
-  }, [_access.actual_start_datetime, _access.actual_end_datetime])
+  }, [draftAccess.actual_start_datetime, draftAccess.actual_end_datetime])
 
   useEffect(() => {
     const _getAssignableRoles = async () => {
       try {
         setLoadingAssignableRoles(true)
 
-        const assignableRolesResp = await getAssignableRoles(_access.perimeter?.id)
+        const assignableRolesResp = await getAssignableRoles(draftAccess.perimeter?.id)
 
         setRoles(assignableRolesResp)
 
@@ -118,22 +118,22 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
     if (!isEdition) {
       _getAssignableRoles()
     }
-  }, [_access.perimeter])
+  }, [draftAccess.perimeter])
 
   useEffect(() => {
-    const _accessCopy = { ..._access }
-    _accessCopy['perimeter'] = accessPerimeter
-    setAccess(_accessCopy)
+    const draftAccessCopy = { ...draftAccess }
+    draftAccessCopy['perimeter'] = accessPerimeter
+    setDraftAccess(draftAccessCopy)
   }, [accessPerimeter])
 
   const _onChangeValue = (key: 'perimeter' | 'role' | 'actual_start_datetime' | 'actual_end_datetime', value: any) => {
-    const _accessCopy = _access ? { ..._access } : defaultAccess
-    _accessCopy[key] = value
-    setAccess(_accessCopy)
+    const draftAccessCopy = draftAccess ? { ...draftAccess } : defaultAccess
+    draftAccessCopy[key] = value
+    setDraftAccess(draftAccessCopy)
   }
 
   const resetDialogAndClose = () => {
-    setAccess(defaultAccess)
+    setDraftAccess(defaultAccess)
     setRoles([])
     onClose()
   }
@@ -144,25 +144,25 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
       let accessData = {} as AccessData
 
       const stringStartDate =
-        moment(_access.actual_start_datetime).isValid() &&
-        !moment(_access.actual_start_datetime).isSame(new Date(), 'day')
-          ? moment(_access.actual_start_datetime).format()
+        moment(draftAccess.actual_start_datetime).isValid() &&
+        !moment(draftAccess.actual_start_datetime).isSame(new Date(), 'day')
+          ? moment(draftAccess.actual_start_datetime).format()
           : null
 
-      const stringEndDate = moment(_access.actual_end_datetime).isValid()
-        ? moment(_access.actual_end_datetime).format()
+      const stringEndDate = moment(draftAccess.actual_end_datetime).isValid()
+        ? moment(draftAccess.actual_end_datetime).format()
         : null
 
       if (!isEdition) {
         accessData = {
           profile_id: entityId,
-          perimeter_id: _access.perimeter?.id,
-          role_id: _access.role?.id
+          perimeter_id: draftAccess.perimeter?.id,
+          role_id: draftAccess.role?.id
         }
       }
 
       if (
-        (stringStartDate && isEdition && _access.actual_start_datetime?.isAfter()) ||
+        (stringStartDate && isEdition && draftAccess.actual_start_datetime?.isAfter()) ||
         (stringStartDate && !isEdition)
       ) {
         accessData = { ...accessData, start_datetime: stringStartDate }
@@ -205,9 +205,9 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
           <>
             <Grid container justifyContent="space-between" alignItems="center" className={classes.filter}>
               <Typography variant="h6">Périmètre :</Typography>
-              {_access?.perimeter ? (
+              {draftAccess?.perimeter ? (
                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <Typography>{_access.perimeter.name}</Typography>
+                  <Typography>{draftAccess.perimeter.name}</Typography>
                   <IconButton onClick={() => setOpenPerimeters(true)} style={{ padding: '0 8px' }} size="large">
                     <EditIcon />
                   </IconButton>
@@ -250,7 +250,7 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
                     </li>
                   )}
                   renderInput={(params) => <TextField {...params} label="Sélectionner une habilitation..." />}
-                  value={_access.role}
+                  value={draftAccess.role}
                   style={{ width: '310px' }}
                 />
               )}
@@ -263,13 +263,13 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
             </Grid>
           </>
         )}
-        {(!isEdition || (isEdition && !_access.actual_start_datetime?.isBefore())) && (
+        {(!isEdition || (isEdition && !draftAccess.actual_start_datetime?.isBefore())) && (
           <Grid container justifyContent="space-between" alignItems="center" className={classes.filter}>
             <Typography variant="h6">Date de début :</Typography>
             <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={'fr'}>
               <DatePicker
                 onChange={(date) => _onChangeValue('actual_start_datetime', date)}
-                value={_access.actual_start_datetime}
+                value={draftAccess.actual_start_datetime}
                 minDate={moment().startOf('day')}
                 renderInput={(params: any) => (
                   <TextField {...params} variant="standard" error={dateError} style={{ width: 'calc(100% - 120px)' }} />
@@ -284,7 +284,7 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
           <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={'fr'}>
             <DatePicker
               onChange={(date) => _onChangeValue('actual_end_datetime', date)}
-              value={_access.actual_end_datetime}
+              value={draftAccess.actual_end_datetime}
               minDate={moment().add(1, 'days')}
               renderInput={(params: any) => (
                 <TextField {...params} variant="standard" error={dateError} style={{ width: 'calc(100% - 120px)' }} />
@@ -317,7 +317,7 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
           Annuler
         </Button>
         <Button
-          disabled={loadingValidate || !!dateError || (!isEdition && !_access.perimeter) || !_access.role}
+          disabled={loadingValidate || !!dateError || (!isEdition && !draftAccess.perimeter) || !draftAccess.role}
           onClick={onSubmit}
           color="primary"
         >
@@ -326,8 +326,8 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
       </DialogActions>
 
       <PerimetersDialog
-        perimeter={_access.perimeter ?? null}
-        onChangePerimeter={setAccessPerimeter}
+        perimeter={draftAccess.perimeter ?? null}
+        onChangePerimeter={setDraftAccessPerimeter}
         open={openPerimeters}
         onClose={() => setOpenPerimeters(false)}
         isManageable

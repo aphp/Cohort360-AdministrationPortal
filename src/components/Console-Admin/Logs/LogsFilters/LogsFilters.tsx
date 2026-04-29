@@ -66,7 +66,7 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
       }
     : null
 
-  const [_filters, setFilters] = useState(filters)
+  const [draftFilters, setDraftFilters] = useState(filters)
   const [dateError, setDateError] = useState(false)
   const [userError, setUserError] = useState(false)
   const [openPerimeters, setOpenPerimeters] = useState(false)
@@ -74,43 +74,43 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
   const [loadingOnValidate, setLoadingOnValidate] = useState(false)
 
   useEffect(() => {
-    if (moment(_filters.afterDate).isAfter(_filters.beforeDate)) {
+    if (moment(draftFilters.afterDate).isAfter(draftFilters.beforeDate)) {
       setDateError(true)
     } else {
       setDateError(false)
     }
-  }, [_filters])
+  }, [draftFilters])
 
   useEffect(() => {
     const sevenInt = /^\d{3,7}$/
 
-    if (_filters.user && !_filters.user.match(sevenInt)) {
+    if (draftFilters.user && !draftFilters.user.match(sevenInt)) {
       setUserError(true)
     } else {
       setUserError(false)
     }
-  }, [_filters])
+  }, [draftFilters])
 
   const _onChangeValue = (
     key: 'url' | 'user' | 'afterDate' | 'beforeDate' | 'statusCode' | 'httpMethod',
     value: any
   ) => {
-    const _filtersCopy = { ..._filters }
-    _filtersCopy[key] = value
+    const draftFiltersCopy = { ...draftFilters }
+    draftFiltersCopy[key] = value
 
-    setFilters(_filtersCopy)
+    setDraftFilters(draftFiltersCopy)
   }
 
   const onSubmit = () => {
     setLoadingOnValidate(true)
-    const _filtersCopy = {
-      ..._filters,
+    const draftFiltersCopy = {
+      ...draftFilters,
       perimeter: {
         perimeterId: selectedPerimeter?.id ?? null,
         perimeterName: selectedPerimeter?.name ?? null
       }
     }
-    onChangeFilters(_filtersCopy)
+    onChangeFilters(draftFiltersCopy)
     onClose()
     setLoadingOnValidate(false)
   }
@@ -127,7 +127,7 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
             onChange={(event, value) => _onChangeValue('url', value)}
             renderOption={(props, option) => <li {...props}>{option.label}</li>}
             renderInput={(params) => <TextField {...params} label="Sélectionner l'URL" />}
-            value={_filters.url}
+            value={draftFilters.url}
             style={{ margin: '1em' }}
           />
         </Grid>
@@ -137,7 +137,7 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
             margin="normal"
             autoFocus
             placeholder="Identifiant APH"
-            value={_filters.user}
+            value={draftFilters.user}
             onChange={(event) => _onChangeValue('user', event.target.value)}
             error={userError}
             helperText={userError && "L'identifiant APH ne doit contenir que des chiffres (entre 3 et 7 maximum)."}
@@ -153,7 +153,7 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
             onChange={(event, value) => _onChangeValue('statusCode', value)}
             renderOption={(props, option) => <li {...props}>{option}</li>}
             renderInput={(params) => <TextField {...params} label="Sélectionner les codes de statut" />}
-            value={_filters.statusCode}
+            value={draftFilters.statusCode}
             style={{ margin: '1em' }}
           />
         </Grid>
@@ -165,7 +165,7 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
             onChange={(event, value) => _onChangeValue('httpMethod', value)}
             renderOption={(props, option) => <li {...props}>{option}</li>}
             renderInput={(params) => <TextField {...params} label="Sélectionner les méthodes HTTP" />}
-            value={_filters.httpMethod}
+            value={draftFilters.httpMethod}
             style={{ margin: '1em' }}
           />
         </Grid>
@@ -179,7 +179,7 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
               <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={'fr'}>
                 <DatePicker
                   onChange={(date) => _onChangeValue('afterDate', date ?? null)}
-                  value={_filters.afterDate}
+                  value={draftFilters.afterDate}
                   renderInput={(params: any) => (
                     <TextField
                       {...params}
@@ -200,7 +200,7 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
               <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={'fr'}>
                 <DatePicker
                   onChange={(date) => _onChangeValue('beforeDate', date ?? null)}
-                  value={_filters.beforeDate}
+                  value={draftFilters.beforeDate}
                   renderInput={(params: any) => (
                     <TextField
                       {...params}
