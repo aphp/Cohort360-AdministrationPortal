@@ -33,7 +33,7 @@ type fetchUsersArgs = {
 }
 const fetchUsers = createAsyncThunk<fetchUsersReturn, fetchUsersArgs, { state: UsersState }>(
   'users/fetchUsers',
-  async ({ page = 1, searchInput, order }, { getState, dispatch }) => {
+  async ({ page = 1, searchInput, order }) => {
     try {
       const usersResp = await getUsers(order, page, searchInput)
 

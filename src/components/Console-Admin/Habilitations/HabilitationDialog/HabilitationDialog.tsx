@@ -170,10 +170,12 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
 
       if (isEditable) {
         const roleEditResp = await submitEditRoles(roleData, role?.id)
-        roleEditResp ? onEditRoleSuccess(true) : onEditRoleFail(true)
+        if (roleEditResp) onEditRoleSuccess(true)
+        else onEditRoleFail(true)
       } else {
         const createRoleResp = await createRoles(roleData)
-        createRoleResp ? onAddRoleSuccess(true) : onAddRoleFail(true)
+        if (createRoleResp) onAddRoleSuccess(true)
+        else onAddRoleFail(true)
       }
 
       setLoadingOnValidate(false)
@@ -181,7 +183,8 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
     } catch (error) {
       console.error(`Erreur lors de ${isEditable ? "l'édition" : 'la création'} de l'habilitation`, error)
       setLoadingOnValidate(false)
-      isEditable ? onEditRoleFail(true) : onAddRoleFail(true)
+      if (isEditable) onEditRoleFail(true)
+      else onAddRoleFail(true)
       onClose()
     }
   }

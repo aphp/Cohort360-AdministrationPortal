@@ -181,7 +181,7 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
 
   const handleDeleteChip = (
     filter: 'exportType' | 'request_job_status' | 'insert_datetime_gte' | 'insert_datetime_lte',
-    value?: {} | string | null
+    value?: object | string | null
   ) => {
     switch (filter) {
       case 'exportType':

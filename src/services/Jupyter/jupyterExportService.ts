@@ -1,7 +1,7 @@
 import api from 'services/api'
 import { ExportFilters, Order } from 'types'
 
-export const jupyterTransfer = async (transferRequestData: {}) => {
+export const jupyterTransfer = async (transferRequestData: object) => {
   try {
     const createProfile = await api.post(`/exports/`, transferRequestData)
     return createProfile.status === 201
@@ -11,7 +11,7 @@ export const jupyterTransfer = async (transferRequestData: {}) => {
   }
 }
 
-export const datalabTransfer = async (transferRequestData: {}) => {
+export const datalabTransfer = async (transferRequestData: object) => {
   try {
     const exportResponse = await api.post(`/exports/`, transferRequestData)
     return exportResponse.status === 201

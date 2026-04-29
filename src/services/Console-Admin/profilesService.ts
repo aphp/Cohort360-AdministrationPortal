@@ -33,7 +33,7 @@ export const getAccesses = async (profileId: number, page: number, order: Order)
   }
 }
 
-export const getValidAccesses = async (username: string) => {
+export const getValidAccesses = async (_username: string) => {
   const accessesResp = await api.get(`/accesses/accesses/my-accesses/`)
 
   if (accessesResp.status !== 200) {
