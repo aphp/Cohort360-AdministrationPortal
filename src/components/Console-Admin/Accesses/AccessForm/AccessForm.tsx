@@ -60,7 +60,7 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
         }
       : defaultAccess
   )
-  const [accessPerimeter, setDraftAccessPerimeter] = useState<ScopeTreeRow | null>(null)
+  const [accessPerimeter, setAccessPerimeter] = useState<ScopeTreeRow | null>(null)
   const [dateError, setDateError] = useState('')
   const [openPerimeters, setOpenPerimeters] = useState(false)
   const [roles, setRoles] = useState([])
@@ -327,7 +327,7 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
 
       <PerimetersDialog
         perimeter={draftAccess.perimeter ?? null}
-        onChangePerimeter={setDraftAccessPerimeter}
+        onChangePerimeter={setAccessPerimeter}
         open={openPerimeters}
         onClose={() => setOpenPerimeters(false)}
         isManageable
