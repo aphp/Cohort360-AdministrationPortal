@@ -161,7 +161,7 @@ const Login = () => {
   }
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
-    event.key === 'Enter' ? _onSubmit(event) : null
+    if (event.key === 'Enter') _onSubmit(event)
   }
 
   useEffect(() => {

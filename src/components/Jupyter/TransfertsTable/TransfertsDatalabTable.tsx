@@ -242,7 +242,7 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
         link.setAttribute('download', filename)
         document.body.appendChild(link)
         link.click()
-        document.body.removeChild(link)
+        link.remove()
         globalThis.URL.revokeObjectURL(url)
       }
     } catch (error: any) {

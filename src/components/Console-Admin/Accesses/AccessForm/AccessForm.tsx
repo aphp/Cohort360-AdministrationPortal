@@ -190,7 +190,7 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
       setLoadingValidate(false)
       resetDialogAndClose()
     } catch (error) {
-      console.error(`Erreur lors de ${isEdition ? "l'édition" : 'la création'} d'un accès`)
+      console.error(`Erreur lors de ${isEdition ? "l'édition" : 'la création'} d'un accès`, error)
       setLoadingValidate(false)
       resetDialogAndClose()
       onFail(true)

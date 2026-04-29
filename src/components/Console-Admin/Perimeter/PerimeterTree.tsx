@@ -277,7 +277,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                               }}
                               size="large"
                             >
-                              {openPopulation.find((perimeter_id) => _row.id === perimeter_id) ? (
+                              {openPopulation.includes(_row.id) ? (
                                 <KeyboardArrowDownIcon />
                               ) : (
                                 <KeyboardArrowRightIcon />

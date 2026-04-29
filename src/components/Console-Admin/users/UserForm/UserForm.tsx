@@ -79,7 +79,7 @@ const UserForm: React.FC<UserFormProps> = ({
 
   useEffect(() => {
     const name = /^([ \u00c0-\u01ffa-zA-Z'-])+$/
-    const aphpMail = RegExp(MAIL_REGEX)
+    const aphpMail = new RegExp(MAIL_REGEX)
 
     if (user.username && !user.username.match(USERNAME_REGEX)) {
       setUsernameError(true)

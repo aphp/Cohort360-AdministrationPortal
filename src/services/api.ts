@@ -31,7 +31,7 @@ api.interceptors.response.use(
       localStorage.clear()
       globalThis.location.href = '/'
     }
-    return Promise.reject(error)
+    throw error
   }
 )
 

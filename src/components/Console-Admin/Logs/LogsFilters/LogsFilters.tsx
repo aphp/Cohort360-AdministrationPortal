@@ -82,7 +82,7 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({ filters, onChangeFilters, onC
   }, [_filters])
 
   useEffect(() => {
-    const sevenInt = /^[0-9]{3,7}$/
+    const sevenInt = /^\d{3,7}$/
 
     if (_filters.user && !_filters.user.match(sevenInt)) {
       setUserError(true)

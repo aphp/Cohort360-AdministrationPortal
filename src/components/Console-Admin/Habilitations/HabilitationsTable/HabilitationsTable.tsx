@@ -63,8 +63,8 @@ const HabilitationsTable: React.FC<HabilitationsTableProps> = ({ userRights }) =
   const [addRoleFail, setAddRoleFail] = useState(false)
   const [editRoleSuccess, setEditRoleSuccess] = useState(false)
   const [editRoleFail, setEditRoleFail] = useState(false)
-  const [deleteRoleSuccess, setRoleToDeleteSuccess] = useState(false)
-  const [deleteRoleFail, setRoleToDeleteFail] = useState(false)
+  const [deleteRoleSuccess, setDeleteRoleSuccess] = useState(false)
+  const [deleteRoleFail, setDeleteRoleFail] = useState(false)
 
   useEffect(() => {
     _getRoles()
@@ -94,14 +94,14 @@ const HabilitationsTable: React.FC<HabilitationsTableProps> = ({ userRights }) =
       const terminateAccessResp = await deleteRole(roleToDelete?.id)
 
       if (terminateAccessResp) {
-        setRoleToDeleteSuccess(true)
+        setDeleteRoleSuccess(true)
       } else {
-        setRoleToDeleteFail(true)
+        setDeleteRoleFail(true)
       }
       setRoleToDelete(null)
     } catch (error) {
       console.error("Erreur lors de la suppression de l'habilitation", error)
-      setRoleToDeleteFail(true)
+      setDeleteRoleFail(true)
       setRoleToDelete(null)
     }
   }
@@ -213,7 +213,7 @@ const HabilitationsTable: React.FC<HabilitationsTableProps> = ({ userRights }) =
           onClose={() => {
             if (addRoleSuccess) setAddRoleSuccess(false)
             if (editRoleSuccess) setEditRoleSuccess(false)
-            if (deleteRoleSuccess) setRoleToDeleteSuccess(false)
+            if (deleteRoleSuccess) setDeleteRoleSuccess(false)
           }}
           severity="success"
           message={`L'habilitation a bien été ${
@@ -226,7 +226,7 @@ const HabilitationsTable: React.FC<HabilitationsTableProps> = ({ userRights }) =
           onClose={() => {
             if (addRoleFail) setAddRoleFail(false)
             if (editRoleFail) setEditRoleFail(false)
-            if (deleteRoleFail) setRoleToDeleteFail(false)
+            if (deleteRoleFail) setDeleteRoleFail(false)
           }}
           severity="error"
           message={`Erreur lors de ${

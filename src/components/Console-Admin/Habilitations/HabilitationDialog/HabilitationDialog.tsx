@@ -208,7 +208,7 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
         )}
         <div className={classes.cardsGrid}>
           {rightsCategories.map((category) => (
-            <div className={classes.card}>
+            <div key={category.name} className={classes.card}>
               <Grid display="flex" justifyContent="space-between" alignItems="center">
                 <Typography variant="h6">{category.name}</Typography>
                 {category.is_global ? (
@@ -218,7 +218,7 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
                 )}
               </Grid>
               {category.rights.map((right) => (
-                <div className={classes.cardItem}>
+                <div key={right.name} className={classes.cardItem}>
                   <span style={{ paddingTop: isEditable ? '2px' : '5px' }}>{right.label}</span>
                   <div>
                     {(isEditable && editMode) || !isEditable ? (
@@ -228,7 +228,7 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
                           // @ts-ignore
                           _onChangeValue(right.name, event.target.checked)
                         }
-                        disabled={disabledRights.some((r) => r === right.name)}
+                        disabled={disabledRights.includes(right.name)}
                       />
                     ) : role[right.name] ? (
                       <CheckCircleIcon style={{ color: '#BDEA88' }} />

@@ -3,7 +3,7 @@ export const extractFilename = (contentDisposition: string): string => {
   const matches = filenameRegex.exec(contentDisposition)
   let default_filename = 'export_logs.json'
   if (matches?.[1]) {
-    default_filename = matches[1].replace(/['"]/g, '')
+    default_filename = matches[1].replaceAll(/['"]/g, '')
   }
   return default_filename
 }

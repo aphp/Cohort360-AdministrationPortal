@@ -51,7 +51,7 @@ export const getExportsList = async (
       total: exportsResp.data.count ?? 0
     }
   } catch (error) {
-    console.error('Erreur lors de la récupération de la liste des exports')
+    console.error('Erreur lors de la récupération de la liste des exports', error)
     return {
       list: [],
       total: 0
@@ -89,7 +89,7 @@ export const getDatalabExportsList = async (
       total: exportsResp.data.count ?? 0
     }
   } catch (error) {
-    console.error('Erreur lors de la récupération de la liste des exports')
+    console.error('Erreur lors de la récupération de la liste des exports', error)
     return {
       list: [],
       total: 0
@@ -102,7 +102,7 @@ export const retryExportRequest = async (exportId: string) => {
     const retryResponse = await api.post(`/exports/${exportId}/retry/`)
     return retryResponse.status === 200
   } catch (error) {
-    console.error("Erreur lors de la relance de l'export")
+    console.error("Erreur lors de la relance de l'export", error)
   }
 }
 

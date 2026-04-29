@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-interface autoLogoutState {
+interface AutoLogoutState {
   isOpen: boolean
 }
 
-const initialState = { isOpen: false } as autoLogoutState
+const initialState: AutoLogoutState = { isOpen: false }
 
 const autoLogoutSlice = createSlice({
   name: 'autoLogout',
