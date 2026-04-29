@@ -1,21 +1,25 @@
 name: commitlint
 
-on: 
+on:
   pull_request:
     branches:
-      - 'develop'
-      - 'main'
+      - develop
+      - main
+
+permissions:
+  contents: read
+  pull-requests: read
 
 jobs:
   commit-lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Install commit-lint
         run: |
-          npm install --force conventional-changelog-conventionalcommits @commitlint/config-conventional commitlint@latest
+          npm install --no-save conventional-changelog-conventionalcommits @commitlint/config-conventional commitlint@latest
       - name: Fix commitlint error
         run: |
           sed -i 's/"type": "module",//g' package.json
@@ -24,8 +28,21 @@ jobs:
         run: npx commitlint --from HEAD~1 --to HEAD --verbose
       - name: Validate PR commits with commitlint
         if: github.event_name == 'pull_request'
-        run: npx commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
+        run: |
+          RANGE="${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }}..${{ github.event.pull_request.head.sha }}"
+
+          for commit in $(git rev-list --reverse "$RANGE"); do
+            subject="$(git log -1 --format=%s "$commit")"
+            legacy_squash_pattern='^\([^)]+\).+:'
+
+            if [[ "$subject" =~ $legacy_squash_pattern ]]; then
+              echo "::notice::Skipping legacy squash commit message: $subject"
+              continue
+            fi
+
+            git log -1 --format=%B "$commit" | npx commitlint --verbose
+          done
       - name: Validate PR title with commitlint
         if: github.event_name == 'pull_request'
         run: |
-          echo "${{github.event.pull_request.title}}" | npx commitlint 
+          echo "${{github.event.pull_request.title}}" | npx commitlint

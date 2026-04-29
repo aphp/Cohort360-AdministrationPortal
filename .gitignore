@@ -1,6 +1,6 @@
 node_modules/
 build/
-
+*.tsbuildinfo
 yarn-error.log
 .env
 
