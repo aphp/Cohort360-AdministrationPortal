@@ -118,7 +118,7 @@ const Login = () => {
   }
 
   const buildUserRights = async (user: any) => {
-    const accesses = await getValidAccesses(user.username)
+    const accesses = await getValidAccesses()
     const _userRights = await getUserRights(accesses)
     dispatch(loginAction(buildPartialUser(user, _userRights)))
 
