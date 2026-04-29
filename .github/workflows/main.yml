@@ -5,8 +5,7 @@ on:
     branches:
       - develop
       - main
-    tags:
-      - '**'
+      - release/**
   pull_request:
 
 permissions:
@@ -54,7 +53,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   publish:
-    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/')
     needs: quality
     runs-on: ubuntu-latest
 
@@ -65,9 +64,35 @@ jobs:
       - name: Check correct tag and version
         run: |
           VERSION=$(node -p "require('./package.json').version")
-          CI_COMMIT_TAG=$(git tag --points-at HEAD | head -n 1)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-          if [ "$CI_COMMIT_TAG" != "" ] && [ "$CI_COMMIT_TAG" != "$VERSION" ] && case "$VERSION" in *SNAPSHOT) false;; *) true;; esac; then echo "The version is not the same as the tag name"; exit 1; else echo "Publishing version $VERSION"; fi
+
+          if [[ "$GITHUB_REF" = "refs/heads/main" ]]; then
+            echo "Publishing main version $VERSION"
+            exit 0
+          fi
+
+          RELEASE_VERSION="${GITHUB_REF#refs/heads/release/}"
+
+          if [[ "$RELEASE_VERSION" = "$GITHUB_REF" ]]; then
+            echo "Publish is only allowed from main or release/* branches"
+            exit 1
+          fi
+
+          if [[ "$VERSION" != "$RELEASE_VERSION" ]]; then
+            echo "The package.json version must match the release branch name"
+            echo "Branch version: $RELEASE_VERSION"
+            echo "Package version: $VERSION"
+            exit 1
+          fi
+
+          case "$VERSION" in
+            *SNAPSHOT)
+              echo "Release branches must not publish SNAPSHOT versions"
+              exit 1
+              ;;
+          esac
+
+          echo "Publishing version $VERSION"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
