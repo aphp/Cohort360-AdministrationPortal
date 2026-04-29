@@ -115,7 +115,6 @@ export type UserRole = {
   right_export_csv_xlsx_nominative: boolean | null
 }
 
-
 export type Role = {
   id?: number
   insert_datetime?: string | null

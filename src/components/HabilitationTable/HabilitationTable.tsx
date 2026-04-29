@@ -84,7 +84,10 @@ const HabilitationTable: React.FC<HabilitationTableProps> = (props) => {
         <TableRow key={index} className={classes.tableBodyRows}>
           <TableCell align="left">
             {userAccess.lastname.toLocaleUpperCase()} {userAccess.firstname}
-            <IconButton onClick={() => navigate(`/console-admin/user-profile/${userAccess.provider_username}`)} size="large">
+            <IconButton
+              onClick={() => navigate(`/console-admin/user-profile/${userAccess.provider_username}`)}
+              size="large"
+            >
               <LaunchIcon fontSize="small" />
             </IconButton>
           </TableCell>
