@@ -53,7 +53,7 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
   const [rightsCategories, setRightsCategories] = useState<RightsCategory[]>([])
   const [rightsDependencies, setRightsDependencies] = useState<RightsDependency[]>([])
 
-  const isEditable = selectedRole?.id ? true : false
+  const isEditable = Boolean(selectedRole?.id)
 
   const getRightCategories = async () => {
     try {
@@ -67,8 +67,8 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
   const buildRightsDependencies = (_rightsCategories: RightsCategory[]) => {
     setRightsCategories(_rightsCategories)
     const _rightsDependencies: RightsDependency[] = []
-    _rightsCategories.map((category) => {
-      category.rights.map((right) => {
+    _rightsCategories.forEach((category) => {
+      category.rights.forEach((right) => {
         if (right.depends_on) {
           _rightsDependencies.push({ dependent: right.name, dependency: right.depends_on })
         }

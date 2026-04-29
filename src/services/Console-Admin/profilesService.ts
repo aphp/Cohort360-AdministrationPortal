@@ -1,4 +1,4 @@
-import { AccessData, Order, Profile, User } from 'types'
+import { AccessData, Order, Profile } from 'types'
 import api from '../api'
 
 export const getProfile = async (user_id?: string) => {

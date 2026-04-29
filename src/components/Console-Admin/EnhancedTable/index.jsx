@@ -133,19 +133,19 @@ export default function EnhancedTable(props) {
             headCells={props.headCells}
           />
           <TableBody>
-            {noPagination !== true
-              ? stableSort(rows, getComparator(order, orderBy))
+            {noPagination === true
+              ? stableSort(rows, getComparator(order, orderBy)).map((item, index) => (
+                  <React.Fragment key={index}>
+                    {props.children(item, index, selected, handleClick, onClickRow)}
+                  </React.Fragment>
+                ))
+              : stableSort(rows, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((item, index) => (
                     <React.Fragment key={index}>
                       {props.children(item, index, selected, handleClick, onClickRow)}
                     </React.Fragment>
-                  ))
-              : stableSort(rows, getComparator(order, orderBy)).map((item, index) => (
-                  <React.Fragment key={index}>
-                    {props.children(item, index, selected, handleClick, onClickRow)}
-                  </React.Fragment>
-                ))}
+                  ))}
             {emptyRows > 0 && (
               <TableRow style={{ height: 76 * emptyRows }}>
                 <TableCell colSpan={props.headCells ? props.headCells.length + 1 : 0} />

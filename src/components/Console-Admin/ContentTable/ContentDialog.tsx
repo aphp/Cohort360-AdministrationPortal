@@ -17,8 +17,15 @@ import EditIcon from '@mui/icons-material/Edit'
 import useStyles from './styles'
 import { ContentManagementLabels, UserRole, WebContent, WebContentCreation, WebContentTypes } from 'types'
 import { createContent, updateContent } from 'services/Console-Admin/contentsService'
-import { listsPlugin, ListsToggle, MDXEditor, Separator } from '@mdxeditor/editor'
-import { headingsPlugin, BoldItalicUnderlineToggles, toolbarPlugin } from '@mdxeditor/editor'
+import {
+  listsPlugin,
+  ListsToggle,
+  MDXEditor,
+  Separator,
+  headingsPlugin,
+  BoldItalicUnderlineToggles,
+  toolbarPlugin
+} from '@mdxeditor/editor'
 
 import '@mdxeditor/editor/style.css'
 
@@ -57,7 +64,7 @@ const ContentDialog: React.FC<ContentDialogProps> = ({
   const [content, setContent] = useState<WebContentCreation | WebContent>(selectedContent)
   const [loadingOnValidate, setLoadingOnValidate] = useState(false)
 
-  const isEditable = (selectedContent as any)?.id ? true : false
+  const isEditable = Boolean((selectedContent as any)?.id)
   const [editMode, setEditMode] = useState(isEditable)
 
   const _onChangeValue = (key: keyof WebContentCreation, value: any) => {

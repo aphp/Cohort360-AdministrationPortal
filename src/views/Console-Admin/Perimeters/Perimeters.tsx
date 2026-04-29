@@ -15,7 +15,7 @@ const Perimeters: React.FC = () => {
   const navigate = useNavigate()
   const [userRights, setUserRights] = useState(userDefaultRoles)
 
-  const [selectedItem, onChangeSelectedItem] = useState<ScopeTreeRow | null>(null)
+  const [selectedItem, setSelectedItem] = useState<ScopeTreeRow | null>(null)
   const [searchInput, setSearchInput] = useState('')
   const [loading, setLoading] = useState(true)
 
@@ -55,7 +55,7 @@ const Perimeters: React.FC = () => {
               <Paper style={{ width: '100%', marginTop: 12, marginBottom: 100 }}>
                 <PerimeterTree
                   defaultSelectedItems={selectedItem}
-                  onChangeSelectedItem={onChangeSelectedItem}
+                  onChangeSelectedItem={setSelectedItem}
                   searchInput={searchInput}
                   userRights={userRights}
                 />

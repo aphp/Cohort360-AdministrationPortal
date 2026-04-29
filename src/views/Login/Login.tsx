@@ -9,7 +9,7 @@ import {
   TextField,
   Typography
 } from '@mui/material'
-import React, { KeyboardEvent as ReactKeyboardEvent, SyntheticEvent, UIEvent, useEffect, useRef, useState } from 'react'
+import React, { SyntheticEvent, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
@@ -64,7 +64,7 @@ const Login = () => {
   const [noRights, setNoRights] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [display_jwt_form, setDisplay_jwt_form] = useState(false)
-  const urlParams = new URLSearchParams(window.location.search)
+  const urlParams = new URLSearchParams(globalThis.location.search)
   const oidcCode = urlParams.get('code')
 
   useEffect(() => {
@@ -152,7 +152,7 @@ const Login = () => {
 
   const oidcLogin = (event: SyntheticEvent) => {
     event.preventDefault()
-    window.location.href =
+    globalThis.location.href =
       `${OIDC_PROVIDER_URL}?state=${OIDC_STATE}&` +
       `client_id=${OIDC_CLIENT_ID}&` +
       `redirect_uri=${OIDC_REDIRECT_URI}&` +

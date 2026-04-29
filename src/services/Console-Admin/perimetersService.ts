@@ -84,7 +84,7 @@ export const getPerimetersChildren = async (
   const children = await api.get(`/accesses/perimeters/${perimeter.id}/children/`)
   if (!children) return []
 
-  const childrenData: any[] = children && children.data && children.status === 200 ? children.data.results : []
+  const childrenData: any[] = children?.data && children.status === 200 ? children.data.results : []
 
   let _childrenData: ScopeTreeRow[] = []
 

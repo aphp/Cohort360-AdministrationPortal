@@ -128,7 +128,7 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
       'tables',
       transferRequest.tables.map<DatalabTable>((table) => ({
         ...table,
-        checked: table.label !== 'person' ? transferRequest.tables.length !== checkedTables.length : true
+        checked: table.label === 'person' ? true : transferRequest.tables.length !== checkedTables.length
       }))
     )
   }

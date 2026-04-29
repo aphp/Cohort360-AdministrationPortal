@@ -152,7 +152,7 @@ const HabilitationTable: React.FC<HabilitationTableProps> = (props) => {
           className={classes.pagination}
           count={Math.ceil((total ?? 0) / (rowsPerPage ?? 100))}
           shape="circular"
-          onChange={(event, page: number) => (onChangePage ? onChangePage(page) : setPage && setPage(page))}
+          onChange={(event, page: number) => (onChangePage ? onChangePage(page) : setPage?.(page))}
           page={page}
         />
       )}

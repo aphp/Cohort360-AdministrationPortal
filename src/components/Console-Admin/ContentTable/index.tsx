@@ -87,14 +87,14 @@ const ContentManagementTable: React.FC<ContentManagementTableProps> = ({
 
   const [contents, setContents] = useState<WebContent[] | null>(null)
 
-  const [_deleteContent, setDeleteContent] = useState<WebContent | null>(null)
+  const [contentToDelete, setContentToDelete] = useState<WebContent | null>(null)
 
   const [addContentSuccess, setAddContentSuccess] = useState(false)
   const [addContentFail, setAddContentFail] = useState(false)
   const [editContentSuccess, setEditContentSuccess] = useState(false)
   const [editContentFail, setEditContentFail] = useState(false)
-  const [deleteContentSuccess, setDeleteContentSuccess] = useState(false)
-  const [deleteContentFail, setDeleteContentFail] = useState(false)
+  const [deleteContentSuccess, setContentToDeleteSuccess] = useState(false)
+  const [deleteContentFail, setContentToDeleteFail] = useState(false)
 
   useEffect(() => {
     _getContents()
@@ -104,7 +104,7 @@ const ContentManagementTable: React.FC<ContentManagementTableProps> = ({
     if (addContentSuccess) _getContents()
     if (editContentSuccess) _getContents()
     if (deleteContentSuccess) _getContents()
-  }, [addContentSuccess, editContentSuccess, _deleteContent])
+  }, [addContentSuccess, editContentSuccess, contentToDelete])
 
   const _getContents = async () => {
     try {
@@ -121,19 +121,19 @@ const ContentManagementTable: React.FC<ContentManagementTableProps> = ({
 
   const handleDeleteContent = async () => {
     try {
-      if (!_deleteContent) return
-      const terminateAccessResp = await deleteContent(_deleteContent.id)
+      if (!contentToDelete) return
+      const terminateAccessResp = await deleteContent(contentToDelete.id)
 
       if (terminateAccessResp) {
-        setDeleteContentSuccess(true)
+        setContentToDeleteSuccess(true)
       } else {
-        setDeleteContentFail(true)
+        setContentToDeleteFail(true)
       }
-      setDeleteContent(null)
+      setContentToDelete(null)
     } catch (error) {
       console.error('Erreur lors de la suppression du contenu', error)
-      setDeleteContentFail(true)
-      setDeleteContent(null)
+      setContentToDeleteFail(true)
+      setContentToDelete(null)
     }
   }
 
@@ -170,8 +170,7 @@ const ContentManagementTable: React.FC<ContentManagementTableProps> = ({
             </TableCell>
           </TableRow>
         ) : (
-          contents &&
-          contents.map((content: WebContent) => {
+          contents?.map((content: WebContent) => {
             return (
               content && (
                 <TableRow key={content.id} className={classes.tableBodyRows} hover>
@@ -198,7 +197,7 @@ const ContentManagementTable: React.FC<ContentManagementTableProps> = ({
                       <Tooltip title="Supprimer le contenu">
                         <IconButton
                           onClick={() => {
-                            setDeleteContent(content)
+                            setContentToDelete(content)
                           }}
                           size="large"
                         >
@@ -232,13 +231,13 @@ const ContentManagementTable: React.FC<ContentManagementTableProps> = ({
         />
       )}
 
-      {_deleteContent && (
-        <Dialog open onClose={() => setDeleteContent(null)}>
+      {contentToDelete && (
+        <Dialog open onClose={() => setContentToDelete(null)}>
           <DialogContent>
             <Typography>{labels.deleteMessage}</Typography>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setDeleteContent(null)} color="secondary">
+            <Button onClick={() => setContentToDelete(null)} color="secondary">
               Annuler
             </Button>
             <Button onClick={handleDeleteContent}>Confirmer</Button>
@@ -251,7 +250,7 @@ const ContentManagementTable: React.FC<ContentManagementTableProps> = ({
           onClose={() => {
             if (addContentSuccess) setAddContentSuccess(false)
             if (editContentSuccess) setEditContentSuccess(false)
-            if (deleteContentSuccess) setDeleteContentSuccess(false)
+            if (deleteContentSuccess) setContentToDeleteSuccess(false)
           }}
           severity="success"
           message={`Le contenu a bien été ${
@@ -264,7 +263,7 @@ const ContentManagementTable: React.FC<ContentManagementTableProps> = ({
           onClose={() => {
             if (addContentFail) setAddContentFail(false)
             if (editContentFail) setEditContentFail(false)
-            if (deleteContentFail) setDeleteContentFail(false)
+            if (deleteContentFail) setContentToDeleteFail(false)
           }}
           severity="error"
           message={`Erreur lors de ${

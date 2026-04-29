@@ -54,17 +54,17 @@ const HabilitationsTable: React.FC<HabilitationsTableProps> = ({ userRights }) =
     })
   }
 
-  const [_roles, setRoles] = useState<Role[] | null>(null)
+  const [roles, setRoles] = useState<Role[] | null>(null)
   const [loading, setLoading] = useState(false)
-  const [_deleteRole, setDeleteRole] = useState<Role | null>(null)
+  const [roleToDelete, setRoleToDelete] = useState<Role | null>(null)
   const [selectedRole, setSelectedRole] = useState<Role | null>(null)
 
   const [addRoleSuccess, setAddRoleSuccess] = useState(false)
   const [addRoleFail, setAddRoleFail] = useState(false)
   const [editRoleSuccess, setEditRoleSuccess] = useState(false)
   const [editRoleFail, setEditRoleFail] = useState(false)
-  const [deleteRoleSuccess, setDeleteRoleSuccess] = useState(false)
-  const [deleteRoleFail, setDeleteRoleFail] = useState(false)
+  const [deleteRoleSuccess, setRoleToDeleteSuccess] = useState(false)
+  const [deleteRoleFail, setRoleToDeleteFail] = useState(false)
 
   useEffect(() => {
     _getRoles()
@@ -74,7 +74,7 @@ const HabilitationsTable: React.FC<HabilitationsTableProps> = ({ userRights }) =
     if (addRoleSuccess) _getRoles()
     if (editRoleSuccess) _getRoles()
     if (deleteRoleSuccess) _getRoles()
-  }, [addRoleSuccess, editRoleSuccess, _deleteRole])
+  }, [addRoleSuccess, editRoleSuccess, roleToDelete])
 
   const _getRoles = async () => {
     try {
@@ -91,18 +91,18 @@ const HabilitationsTable: React.FC<HabilitationsTableProps> = ({ userRights }) =
 
   const handleDeleteRole = async () => {
     try {
-      const terminateAccessResp = await deleteRole(_deleteRole?.id)
+      const terminateAccessResp = await deleteRole(roleToDelete?.id)
 
       if (terminateAccessResp) {
-        setDeleteRoleSuccess(true)
+        setRoleToDeleteSuccess(true)
       } else {
-        setDeleteRoleFail(true)
+        setRoleToDeleteFail(true)
       }
-      setDeleteRole(null)
+      setRoleToDelete(null)
     } catch (error) {
       console.error("Erreur lors de la suppression de l'habilitation", error)
-      setDeleteRoleFail(true)
-      setDeleteRole(null)
+      setRoleToDeleteFail(true)
+      setRoleToDelete(null)
     }
   }
 
@@ -131,8 +131,7 @@ const HabilitationsTable: React.FC<HabilitationsTableProps> = ({ userRights }) =
             </TableCell>
           </TableRow>
         ) : (
-          _roles &&
-          _roles.map((role: Role) => {
+          roles?.map((role: Role) => {
             return (
               role && (
                 <TableRow key={role.id} className={classes.tableBodyRows} hover>
@@ -165,7 +164,7 @@ const HabilitationsTable: React.FC<HabilitationsTableProps> = ({ userRights }) =
                         <Tooltip title="Supprimer l'habilitation">
                           <IconButton
                             onClick={() => {
-                              setDeleteRole(role)
+                              setRoleToDelete(role)
                             }}
                             size="large"
                           >
@@ -195,13 +194,13 @@ const HabilitationsTable: React.FC<HabilitationsTableProps> = ({ userRights }) =
         />
       )}
 
-      {_deleteRole && (
-        <Dialog open onClose={() => setDeleteRole(null)}>
+      {roleToDelete && (
+        <Dialog open onClose={() => setRoleToDelete(null)}>
           <DialogContent>
-            <Typography>Êtes-vous sûr(e) de vouloir supprimer l'habilitation {_deleteRole?.name} ?</Typography>
+            <Typography>Êtes-vous sûr(e) de vouloir supprimer l'habilitation {roleToDelete?.name} ?</Typography>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setDeleteRole(null)} color="secondary">
+            <Button onClick={() => setRoleToDelete(null)} color="secondary">
               Annuler
             </Button>
             <Button onClick={handleDeleteRole}>Confirmer</Button>
@@ -214,7 +213,7 @@ const HabilitationsTable: React.FC<HabilitationsTableProps> = ({ userRights }) =
           onClose={() => {
             if (addRoleSuccess) setAddRoleSuccess(false)
             if (editRoleSuccess) setEditRoleSuccess(false)
-            if (deleteRoleSuccess) setDeleteRoleSuccess(false)
+            if (deleteRoleSuccess) setRoleToDeleteSuccess(false)
           }}
           severity="success"
           message={`L'habilitation a bien été ${
@@ -227,7 +226,7 @@ const HabilitationsTable: React.FC<HabilitationsTableProps> = ({ userRights }) =
           onClose={() => {
             if (addRoleFail) setAddRoleFail(false)
             if (editRoleFail) setEditRoleFail(false)
-            if (deleteRoleFail) setDeleteRoleFail(false)
+            if (deleteRoleFail) setRoleToDeleteFail(false)
           }}
           severity="error"
           message={`Erreur lors de ${

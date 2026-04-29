@@ -59,7 +59,7 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
   const [searchInput, setSearchInput] = useState('')
   const [filters, setFilters] = useState(defaultFilters)
   const [openFilters, setOpenFilters] = useState(false)
-  const [dialogOpen, setOpenDialog] = useState(false)
+  const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedExport, setSelectedExport] = useState<Export | undefined>()
 
   const debouncedSearchTerm = useDebounce(500, searchInput)
@@ -217,7 +217,7 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
   }, [addTransferRequestSuccess])
 
   const handleCloseDialog = () => {
-    setOpenDialog(false)
+    setDialogOpen(false)
   }
 
   const retryExport = async (exportRequest: Export) => {
@@ -236,14 +236,14 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
       if (logsResponse) {
         const filename = extractFilename(logsResponse.headers['content-disposition'])
         const blob = new Blob([logsResponse.data], { type: 'application/json' })
-        const url = window.URL.createObjectURL(blob)
+        const url = globalThis.URL.createObjectURL(blob)
         const link = document.createElement('a')
         link.href = url
         link.setAttribute('download', filename)
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
-        window.URL.revokeObjectURL(url)
+        globalThis.URL.revokeObjectURL(url)
       }
     } catch (error: any) {
       const errorMessage = await error.response.data.text()
@@ -364,12 +364,12 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
                 <TableRow key={index} className={classes.tableBodyRows} hover>
                   <TableCell align="center">{exportRequest.cohort_id ?? '-'}</TableCell>
                   <TableCell align="center">
-                    {exportRequest.cohort_name !== '' ? exportRequest.cohort_name : '-'}
+                    {exportRequest.cohort_name === '' ? '-' : exportRequest.cohort_name}
                   </TableCell>
                   <TableCell align="center">
-                    {exportRequest.patients_count !== '' ? exportRequest.patients_count : '-'}
+                    {exportRequest.patients_count === '' ? '-' : exportRequest.patients_count}
                   </TableCell>
-                  <TableCell align="center">{exportRequest.owner !== '' ? exportRequest.owner : '-'}</TableCell>
+                  <TableCell align="center">{exportRequest.owner === '' ? '-' : exportRequest.owner}</TableCell>
                   <TableCell align="center">
                     {exportRequest.output_format === 'csv'
                       ? 'CSV'
@@ -378,7 +378,7 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
                         : 'XLSX'}
                   </TableCell>
                   <TableCell align="center">
-                    {exportRequest.target_datalab !== '' ? exportRequest.target_datalab : '-'}
+                    {exportRequest.target_datalab === '' ? '-' : exportRequest.target_datalab}
                   </TableCell>
                   <TableCell align="center">
                     <Tooltip title={exportRequest.target_name ?? '-'}>
@@ -399,7 +399,7 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
                             <IconButton
                               color="primary"
                               onClick={() => {
-                                setOpenDialog(true)
+                                setDialogOpen(true)
                                 setSelectedExport(exportRequest)
                               }}
                             >

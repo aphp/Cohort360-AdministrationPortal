@@ -210,8 +210,7 @@ const MaintenanceTable: React.FC<MaintenanceTableProps> = ({ userRights }) => {
             </TableCell>
           </TableRow>
         ) : (
-          maintenances &&
-          maintenances.map((maintenance: MaintenancePhase) => {
+          maintenances?.map((maintenance: MaintenancePhase) => {
             return (
               maintenance && (
                 <TableRow key={maintenance.id} className={classes.tableBodyRows} hover>

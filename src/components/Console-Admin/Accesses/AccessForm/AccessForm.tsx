@@ -205,7 +205,7 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
           <>
             <Grid container justifyContent="space-between" alignItems="center" className={classes.filter}>
               <Typography variant="h6">Périmètre :</Typography>
-              {_access && _access.perimeter ? (
+              {_access?.perimeter ? (
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <Typography>{_access.perimeter.name}</Typography>
                   <IconButton onClick={() => setOpenPerimeters(true)} style={{ padding: '0 8px' }} size="large">
@@ -240,13 +240,9 @@ const AccessForm: React.FC<AccessFormProps> = ({ open, onClose, entityId, userRi
                       <Grid container justifyContent="space-between" alignItems="center">
                         <Typography>{option.name}</Typography>
                         <Tooltip
-                          title={
-                            option &&
-                            option.help_text &&
-                            option?.help_text.map((text: string, index: number) => (
-                              <Typography key={index}>{text}</Typography>
-                            ))
-                          }
+                          title={option?.help_text?.map((text: string, index: number) => (
+                            <Typography key={index}>{text}</Typography>
+                          ))}
                         >
                           <InfoIcon color="action" fontSize="small" className={classes.infoIcon} />
                         </Tooltip>
