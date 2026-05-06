@@ -18,9 +18,12 @@ import { renderWithProviders } from 'test/renderWithProviders'
 beforeEach(() => localStorage.clear())
 
 describe('ContentManagement view', () => {
-  it('renders the content table after loading rights', async () => {
+  it('renders the title, both tabs, and the active tab content table after loading', async () => {
     renderWithProviders(<ContentManagement />)
+    expect(screen.getByText('Gestion des contenus')).toBeInTheDocument()
+    expect(screen.getByRole('tab', { name: /Actualités/i })).toBeInTheDocument()
+    expect(screen.getByRole('tab', { name: /Messages/i })).toBeInTheDocument()
     await waitForElementToBeRemoved(() => screen.queryByRole('progressbar'))
-    expect(screen.getAllByTestId('content-table').length).toBeGreaterThan(0)
+    expect(screen.getByTestId('content-table')).toBeInTheDocument()
   })
 })

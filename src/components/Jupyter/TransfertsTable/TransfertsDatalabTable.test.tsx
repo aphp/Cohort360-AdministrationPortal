@@ -23,8 +23,8 @@ import { userDefaultRoles } from 'utils/userRoles'
 beforeEach(() => localStorage.clear())
 
 describe('TransfertsDatalabTable', () => {
-  it('renders the export list fetched from the service', async () => {
+  it('renders the export list with a status chip matching the fetched data', async () => {
     renderWithProviders(<TransfertsDatalabTable userRights={userDefaultRoles} />)
-    await waitFor(() => expect(screen.queryAllByRole('row').length).toBeGreaterThan(0))
+    await waitFor(() => expect(screen.getByText('Confirmé')).toBeInTheDocument())
   })
 })

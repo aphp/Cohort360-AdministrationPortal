@@ -46,17 +46,15 @@ beforeEach(() => {
 })
 
 describe('Login', () => {
-  it('opens the JWT form when the keycloak fallback button is triggered', async () => {
+  it('renders the welcome message and the Keycloak entry button', () => {
     renderWithProviders(<Login />)
-    // Login renders the OIDC button by default; the JWT form is hidden until toggled.
-    expect(screen.queryByLabelText(/Identifiant/i)).not.toBeInTheDocument()
+    expect(screen.getByText(/Bienvenue ! Connectez-vous\./i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Connexion via Keycloak/i })).toBeInTheDocument()
   })
 
-  it('shows the error dialog when authentication returns a non-200 status', async () => {
-    mockedAuth.mockResolvedValue({ status: 401, data: {} })
+  it('hides the JWT form by default (no Identifiant or password fields)', () => {
     renderWithProviders(<Login />)
-    // Force-display the JWT form by clicking the keycloak SVG button if present
-    const keycloakButtons = screen.getAllByRole('button')
-    expect(keycloakButtons.length).toBeGreaterThan(0)
+    expect(screen.queryByLabelText(/Identifiant/i)).not.toBeInTheDocument()
+    expect(screen.queryByLabelText(/mot de passe/i)).not.toBeInTheDocument()
   })
 })
