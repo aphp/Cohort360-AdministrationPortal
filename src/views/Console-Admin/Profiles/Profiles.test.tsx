@@ -27,5 +27,6 @@ describe('Profiles view', () => {
   it('loads user data and replaces the spinner once everything is fetched', async () => {
     renderWithProviders(<ProfilesView />, { route: '/users/jdoe/profiles', routePath: '/users/:user_id/profiles' })
     await waitForElementToBeRemoved(() => screen.queryByRole('progressbar'))
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument()
   })
 })
