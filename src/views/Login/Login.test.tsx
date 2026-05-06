@@ -2,6 +2,20 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
+vi.mock('../../constants', async () => {
+  const actual = await vi.importActual<typeof import('../../constants')>('../../constants')
+  return {
+    ...actual,
+    CODE_DISPLAY_JWT: 'a,b,c',
+    OIDC_PROVIDER_URL: 'https://oidc.test',
+    OIDC_REDIRECT_URI: 'https://app.test/callback',
+    OIDC_RESPONSE_TYPE: 'code',
+    OIDC_CLIENT_ID: 'client',
+    OIDC_SCOPE: 'openid',
+    OIDC_STATE: 'state'
+  }
+})
+
 vi.mock('services/authentication', () => ({
   authenticate: vi.fn(),
   authenticateWithOIDC: vi.fn()
