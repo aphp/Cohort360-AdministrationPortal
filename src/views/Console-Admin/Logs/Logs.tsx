@@ -28,7 +28,7 @@ const filtersDefault = {
 const Logs: React.FC = () => {
   const { classes } = useStyles()
 
-  const search = window.location.search
+  const search = globalThis.location.search
   const user = new URLSearchParams(search).get('user')
   const access = new URLSearchParams(search).get('access')
   const perimeterId = new URLSearchParams(search).get('perimeterId')

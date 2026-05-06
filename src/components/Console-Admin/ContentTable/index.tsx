@@ -87,7 +87,7 @@ const ContentManagementTable: React.FC<ContentManagementTableProps> = ({
 
   const [contents, setContents] = useState<WebContent[] | null>(null)
 
-  const [_deleteContent, setDeleteContent] = useState<WebContent | null>(null)
+  const [contentToDelete, setContentToDelete] = useState<WebContent | null>(null)
 
   const [addContentSuccess, setAddContentSuccess] = useState(false)
   const [addContentFail, setAddContentFail] = useState(false)
@@ -104,7 +104,7 @@ const ContentManagementTable: React.FC<ContentManagementTableProps> = ({
     if (addContentSuccess) _getContents()
     if (editContentSuccess) _getContents()
     if (deleteContentSuccess) _getContents()
-  }, [addContentSuccess, editContentSuccess, _deleteContent])
+  }, [addContentSuccess, editContentSuccess, contentToDelete])
 
   const _getContents = async () => {
     try {
@@ -121,19 +121,19 @@ const ContentManagementTable: React.FC<ContentManagementTableProps> = ({
 
   const handleDeleteContent = async () => {
     try {
-      if (!_deleteContent) return
-      const terminateAccessResp = await deleteContent(_deleteContent.id)
+      if (!contentToDelete) return
+      const terminateAccessResp = await deleteContent(contentToDelete.id)
 
       if (terminateAccessResp) {
         setDeleteContentSuccess(true)
       } else {
         setDeleteContentFail(true)
       }
-      setDeleteContent(null)
+      setContentToDelete(null)
     } catch (error) {
       console.error('Erreur lors de la suppression du contenu', error)
       setDeleteContentFail(true)
-      setDeleteContent(null)
+      setContentToDelete(null)
     }
   }
 
@@ -170,8 +170,7 @@ const ContentManagementTable: React.FC<ContentManagementTableProps> = ({
             </TableCell>
           </TableRow>
         ) : (
-          contents &&
-          contents.map((content: WebContent) => {
+          contents?.map((content: WebContent) => {
             return (
               content && (
                 <TableRow key={content.id} className={classes.tableBodyRows} hover>
@@ -198,7 +197,7 @@ const ContentManagementTable: React.FC<ContentManagementTableProps> = ({
                       <Tooltip title="Supprimer le contenu">
                         <IconButton
                           onClick={() => {
-                            setDeleteContent(content)
+                            setContentToDelete(content)
                           }}
                           size="large"
                         >
@@ -222,7 +221,6 @@ const ContentManagementTable: React.FC<ContentManagementTableProps> = ({
           withMarkdown={withMarkdown}
           contentTypes={contentTypes}
           allowedContentTypes={allowedContentTypes}
-          allowedPages={pages}
           selectedContent={selectedContent}
           onClose={() => setSelectedContent(null)}
           onAddContentSuccess={setAddContentSuccess}
@@ -232,13 +230,13 @@ const ContentManagementTable: React.FC<ContentManagementTableProps> = ({
         />
       )}
 
-      {_deleteContent && (
-        <Dialog open onClose={() => setDeleteContent(null)}>
+      {contentToDelete && (
+        <Dialog open onClose={() => setContentToDelete(null)}>
           <DialogContent>
             <Typography>{labels.deleteMessage}</Typography>
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setDeleteContent(null)} color="secondary">
+            <Button onClick={() => setContentToDelete(null)} color="secondary">
               Annuler
             </Button>
             <Button onClick={handleDeleteContent}>Confirmer</Button>

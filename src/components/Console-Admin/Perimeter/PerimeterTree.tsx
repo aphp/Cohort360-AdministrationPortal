@@ -44,8 +44,9 @@ type ScopeTreeProps = {
 
 const getHeadCells = (searchInput?: string, isManageable?: boolean) => {
   return [
-    ...(!searchInput
-      ? [
+    ...(searchInput
+      ? []
+      : [
           {
             id: '',
             align: 'left',
@@ -53,8 +54,7 @@ const getHeadCells = (searchInput?: string, isManageable?: boolean) => {
             disableOrderBy: true,
             label: ''
           }
-        ]
-      : []),
+        ]),
     {
       id: '',
       align: 'left',
@@ -83,8 +83,9 @@ const getHeadCells = (searchInput?: string, isManageable?: boolean) => {
       disableOrderBy: true,
       label: 'Nb de patients'
     },
-    ...(!isManageable
-      ? [
+    ...(isManageable
+      ? []
+      : [
           {
             id: CareSiteOrder.COUNT_ALLOWED_USERS,
             align: 'center',
@@ -127,8 +128,7 @@ const getHeadCells = (searchInput?: string, isManageable?: boolean) => {
               </>
             )
           }
-        ]
-      : []),
+        ]),
     {
       id: '',
       align: 'center',
@@ -149,10 +149,10 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
   const { classes } = useStyles()
   const navigate = useNavigate()
 
-  const [openPopulation, onChangeOpenPopulations] = useState<string[]>([])
+  const [openPopulation, setOpenPopulation] = useState<string[]>([])
   const [rootRows, setRootRows] = useState<ScopeTreeRow[]>([])
   const [loading, setLoading] = useState(true)
-  const [selectedItems, setSelectedItem] = useState(defaultSelectedItems)
+  const [selectedItems, setSelectedItems] = useState(defaultSelectedItems)
 
   const practitioner = useAppSelector((state) => state.me)
 
@@ -165,7 +165,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
 
   const _init = async () => {
     setLoading(true)
-    onChangeOpenPopulations([])
+    setOpenPopulation([])
     await fetchScopeTree()
     setLoading(false)
   }
@@ -187,23 +187,20 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
     }
   }, [debouncedSearchTerm])
 
-  useEffect(() => setSelectedItem(defaultSelectedItems), [defaultSelectedItems])
+  useEffect(() => setSelectedItems(defaultSelectedItems), [defaultSelectedItems])
 
   /**
    * This function is called when a user clicks on chevron
    *
    */
   const _clickToDeploy = async (rowId: string) => {
-    let _openPopulation = openPopulation ? openPopulation : []
+    let _openPopulation = openPopulation ?? []
     let _rootRows = rootRows ? [...rootRows] : []
     const index = _openPopulation.indexOf(rowId)
 
-    if (index !== -1) {
-      _openPopulation = _openPopulation.filter((perimeter_id) => perimeter_id !== rowId)
-      onChangeOpenPopulations(_openPopulation)
-    } else {
+    if (index === -1) {
       _openPopulation = [..._openPopulation, rowId]
-      onChangeOpenPopulations(_openPopulation)
+      setOpenPopulation(_openPopulation)
 
       const replaceChildren = async (items: ScopeTreeRow[]) => {
         for (const item of items) {
@@ -221,6 +218,9 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
 
       _rootRows = await replaceChildren(_rootRows)
       setRootRows(_rootRows)
+    } else {
+      _openPopulation = _openPopulation.filter((perimeter_id) => perimeter_id !== rowId)
+      setOpenPopulation(_openPopulation)
     }
   }
 
@@ -277,7 +277,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                               }}
                               size="large"
                             >
-                              {openPopulation.find((perimeter_id) => _row.id === perimeter_id) ? (
+                              {openPopulation.includes(_row.id) ? (
                                 <KeyboardArrowDownIcon />
                               ) : (
                                 <KeyboardArrowRightIcon />
@@ -366,8 +366,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
                 <React.Fragment key={Math.random()}>
                   {_displayLine(_row, level)}
                   {openPopulation.find((perimeter_id) => _row.id === perimeter_id) &&
-                    _row.children &&
-                    _row.children.map((child: ScopeTreeRow) => _displayChildren(child, level + 1))}
+                    _row.children?.map((child: ScopeTreeRow) => _displayChildren(child, level + 1))}
                 </React.Fragment>
               )
             }
@@ -376,8 +375,7 @@ const ScopeTree: React.FC<ScopeTreeProps> = ({
               <React.Fragment key={Math.random()}>
                 {_displayLine(row, 0)}
                 {openPopulation.find((perimeter_id) => row.id === perimeter_id) &&
-                  row.children &&
-                  row.children.map((child: ScopeTreeRow) => _displayChildren(child, 1))}
+                  row.children?.map((child: ScopeTreeRow) => _displayChildren(child, 1))}
               </React.Fragment>
             )
           }}

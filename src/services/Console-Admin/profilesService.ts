@@ -1,4 +1,4 @@
-import { AccessData, Order, Profile, User } from 'types'
+import { AccessData, Order, Profile } from 'types'
 import api from '../api'
 
 export const getProfile = async (user_id?: string) => {
@@ -33,7 +33,7 @@ export const getAccesses = async (profileId: number, page: number, order: Order)
   }
 }
 
-export const getValidAccesses = async (username: string) => {
+export const getValidAccesses = async () => {
   const accessesResp = await api.get(`/accesses/accesses/my-accesses/`)
 
   if (accessesResp.status !== 200) {

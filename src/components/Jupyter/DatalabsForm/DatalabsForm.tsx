@@ -61,31 +61,29 @@ const DatalabsForm: React.FC<DatalabsFormProps> = ({
       <Dialog open maxWidth="sm" fullWidth onClose={onClose}>
         <DialogTitle>Ajout d'un datalab</DialogTitle>
         <DialogContent>
-          <>
-            <Grid container direction="column">
-              <Typography variant="h6">Intitulé</Typography>
-              <TextField
-                margin="normal"
-                autoFocus
-                placeholder="ex: cse123456"
-                value={datalab.name}
-                onChange={(event) => _onChangeValue('name', event.target.value)}
-                style={{ margin: '1em' }}
-              />
-            </Grid>
-            <Grid container direction="column">
-              <Typography variant="h6">Fournisseur d'infrastructure</Typography>
-              <Autocomplete
-                options={infrastructureProviders}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, value) => _onChangeValue('infrastructure_provider', value)}
-                renderOption={(props, option) => <li {...props}>{option.name}</li>}
-                renderInput={(params) => <TextField {...params} />}
-                value={datalab.infrastructure_provider}
-                style={{ margin: '1em' }}
-              />
-            </Grid>
-          </>
+          <Grid container direction="column">
+            <Typography variant="h6">Intitulé</Typography>
+            <TextField
+              margin="normal"
+              autoFocus
+              placeholder="ex: cse123456"
+              value={datalab.name}
+              onChange={(event) => _onChangeValue('name', event.target.value)}
+              style={{ margin: '1em' }}
+            />
+          </Grid>
+          <Grid container direction="column">
+            <Typography variant="h6">Fournisseur d'infrastructure</Typography>
+            <Autocomplete
+              options={infrastructureProviders}
+              getOptionLabel={(option) => option.name}
+              onChange={(event, value) => _onChangeValue('infrastructure_provider', value)}
+              renderOption={(props, option) => <li {...props}>{option.name}</li>}
+              renderInput={(params) => <TextField {...params} />}
+              value={datalab.infrastructure_provider}
+              style={{ margin: '1em' }}
+            />
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} color="secondary">

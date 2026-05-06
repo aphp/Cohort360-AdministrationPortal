@@ -60,42 +60,42 @@ const statusOptions = [
 const TransfertsFilters: React.FC<TransfertsFiltersProps> = ({ filters, onChangeFilters, onClose }) => {
   const { classes } = useStyles()
 
-  const [_filters, setFilters] = useState(filters)
+  const [draftFilters, setDraftFilters] = useState(filters)
   const [dateError, setDateError] = useState(false)
   const [loadingOnValidate, setLoadingOnValidate] = useState(false)
 
   useEffect(() => {
-    if (moment(_filters.insert_datetime_gte).isAfter(_filters.insert_datetime_lte)) {
+    if (moment(draftFilters.insert_datetime_gte).isAfter(draftFilters.insert_datetime_lte)) {
       setDateError(true)
     } else {
       setDateError(false)
     }
-  }, [_filters])
+  }, [draftFilters])
 
   const _onChangeValue = (
     key: 'exportType' | 'insert_datetime_gte' | 'insert_datetime_lte' | 'request_job_status',
     value: any
   ) => {
-    const _filtersCopy = { ..._filters }
-    _filtersCopy[key] = value
+    const draftFiltersCopy = { ...draftFilters }
+    draftFiltersCopy[key] = value
 
-    setFilters(_filtersCopy)
+    setDraftFilters(draftFiltersCopy)
   }
 
   const onSubmit = () => {
     setLoadingOnValidate(true)
-    const _insert_datetime_gte = moment(_filters.insert_datetime_gte).isValid()
-      ? moment(_filters.insert_datetime_gte).format('YYYY-MM-DD h:mm:ss')
+    const _insert_datetime_gte = moment(draftFilters.insert_datetime_gte).isValid()
+      ? moment(draftFilters.insert_datetime_gte).format('YYYY-MM-DD h:mm:ss')
       : null
-    const _insert_datetime_lte = moment(_filters.insert_datetime_lte).isValid()
-      ? moment(_filters.insert_datetime_lte).format('YYYY-MM-DD h:mm:ss')
+    const _insert_datetime_lte = moment(draftFilters.insert_datetime_lte).isValid()
+      ? moment(draftFilters.insert_datetime_lte).format('YYYY-MM-DD h:mm:ss')
       : null
-    const _filtersCopy = {
-      ..._filters,
+    const draftFiltersCopy = {
+      ...draftFilters,
       insert_datetime_gte: _insert_datetime_gte,
       insert_datetime_lte: _insert_datetime_lte
     }
-    onChangeFilters(_filtersCopy)
+    onChangeFilters(draftFiltersCopy)
     onClose()
     setLoadingOnValidate(false)
   }
@@ -113,7 +113,7 @@ const TransfertsFilters: React.FC<TransfertsFiltersProps> = ({ filters, onChange
             onChange={(event, value) => _onChangeValue('exportType', value)}
             renderOption={(props, option) => <li {...props}>{option.display}</li>}
             renderInput={(params) => <TextField {...params} label="Sélectionner un ou plusieurs type de transfert" />}
-            value={_filters.exportType}
+            value={draftFilters.exportType}
             style={{ margin: '1em' }}
           />
         </Grid>
@@ -127,7 +127,7 @@ const TransfertsFilters: React.FC<TransfertsFiltersProps> = ({ filters, onChange
             onChange={(event, value) => _onChangeValue('request_job_status', value)}
             renderOption={(props, option) => <li {...props}>{option.display}</li>}
             renderInput={(params) => <TextField {...params} label="Sélectionner un ou plusieurs statut" />}
-            value={_filters.request_job_status}
+            value={draftFilters.request_job_status}
             style={{ margin: '1em' }}
           />
         </Grid>
@@ -142,7 +142,7 @@ const TransfertsFilters: React.FC<TransfertsFiltersProps> = ({ filters, onChange
               <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={'fr'}>
                 <DatePicker
                   onChange={(date) => _onChangeValue('insert_datetime_gte', date ?? null)}
-                  value={_filters.insert_datetime_gte}
+                  value={draftFilters.insert_datetime_gte}
                   renderInput={(params: any) => (
                     <TextField
                       {...params}
@@ -163,7 +163,7 @@ const TransfertsFilters: React.FC<TransfertsFiltersProps> = ({ filters, onChange
               <LocalizationProvider dateAdapter={AdapterMoment} adapterLocale={'fr'}>
                 <DatePicker
                   onChange={(date) => _onChangeValue('insert_datetime_lte', date ?? null)}
-                  value={_filters.insert_datetime_lte}
+                  value={draftFilters.insert_datetime_lte}
                   renderInput={(params: any) => (
                     <TextField
                       {...params}
