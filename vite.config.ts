@@ -17,7 +17,20 @@ export default defineConfig(() => {
       globals: true,
       environment: 'jsdom',
       setupFiles: ['./src/setupTests.ts'],
-      css: false
+      css: false,
+      coverage: {
+        provider: 'v8',
+        reporter: ['text', 'lcov'],
+        reportsDirectory: './coverage',
+        include: ['src/**/*.{ts,tsx}'],
+        exclude: [
+          'src/**/*.test.{ts,tsx}',
+          'src/setupTests.ts',
+          'src/react-app-env.d.ts',
+          'src/index.tsx',
+          'src/assets/**'
+        ]
+      }
     }
   }
 })
