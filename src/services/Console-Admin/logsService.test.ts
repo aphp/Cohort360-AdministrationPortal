@@ -10,7 +10,7 @@ import { getLogs } from './logsService'
 const get = api.get as ReturnType<typeof vi.fn>
 beforeEach(() => get.mockReset())
 
-const baseFilters = {
+const baseFilters: any = {
   url: null,
   user: null,
   statusCode: [],
@@ -19,7 +19,7 @@ const baseFilters = {
   beforeDate: null,
   access: null,
   perimeter: { perimeterId: null }
-} as never
+}
 
 describe('getLogs', () => {
   it('returns logs + total with no filters', async () => {

@@ -26,7 +26,11 @@ export const getExportStatusChipProps = (status: Export['request_job_status']): 
 
 export type FilterKey = 'exportType' | 'request_job_status' | 'insert_datetime_gte' | 'insert_datetime_lte'
 
-export const removeFilterValue = (filters: ExportFilters, filter: FilterKey, value?: object | string | null): ExportFilters => {
+export const removeFilterValue = (
+  filters: ExportFilters,
+  filter: FilterKey,
+  value?: object | string | null
+): ExportFilters => {
   switch (filter) {
     case 'exportType':
       return { ...filters, exportType: filters.exportType.filter((elem) => elem !== value) }
