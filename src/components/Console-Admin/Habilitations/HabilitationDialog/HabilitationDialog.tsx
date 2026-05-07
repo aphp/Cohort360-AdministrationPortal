@@ -21,6 +21,12 @@ import useStyles from './styles'
 import { createRoles, submitEditRoles } from 'services/Console-Admin/rolesService'
 import { Role, RoleKeys, UserRole, RightsCategory, RightsDependency } from 'types'
 import api from '../../../../services/api'
+import {
+  computeRightsDependencies,
+  computeDisabledRightsAfterToggle,
+  computeInitialDisabledRights,
+  buildRolePayload
+} from './helpers'
 
 type HabilitationDialogProps = {
   open: boolean
@@ -66,15 +72,7 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
 
   const buildRightsDependencies = (_rightsCategories: RightsCategory[]) => {
     setRightsCategories(_rightsCategories)
-    const _rightsDependencies: RightsDependency[] = []
-    _rightsCategories.forEach((category) => {
-      category.rights.forEach((right) => {
-        if (right.depends_on) {
-          _rightsDependencies.push({ dependent: right.name, dependency: right.depends_on })
-        }
-      })
-    })
-    setRightsDependencies(_rightsDependencies)
+    setRightsDependencies(computeRightsDependencies(_rightsCategories))
   }
 
   useEffect(() => {
@@ -90,31 +88,7 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
   }, [role])
 
   const toggleDependentRights = (role: any, right: RoleKeys, value: boolean) => {
-    let disabled_rights = [...disabledRights]
-    if (right === 'right_full_admin') {
-      for (const r in role) {
-        if (r.includes('right_') && r !== right) {
-          role[r] = value
-          if (value) {
-            disabled_rights.push(r)
-          } else {
-            disabled_rights = disabled_rights.filter((dr) => dr !== r)
-          }
-        }
-      }
-    } else {
-      rightsDependencies.map((r) => {
-        if (r.dependency === right) {
-          if (value) {
-            role[r.dependent] = value
-            disabled_rights.push(r.dependent)
-          } else {
-            disabled_rights = disabled_rights.filter((dr) => dr !== r.dependent)
-          }
-        }
-      })
-    }
-    setDisabledRights(disabled_rights)
+    setDisabledRights(computeDisabledRightsAfterToggle(role, right, value, rightsDependencies, disabledRights))
   }
 
   const _onChangeValue = (key: RoleKeys, value: any) => {
@@ -127,46 +101,14 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
 
   const enterEditMode = (role: any) => {
     setEditMode(true)
-    const disabled_rights = [...disabledRights]
-    if (role['right_full_admin']) {
-      for (const prop in role) {
-        if (prop.includes('right_') && prop !== 'right_full_admin') {
-          disabled_rights.push(prop)
-        }
-      }
-    } else {
-      rightsDependencies.map((e) => {
-        if (role[e.dependency]) {
-          disabled_rights.push(e.dependent)
-        }
-      })
-    }
-    setDisabledRights(disabled_rights)
+    setDisabledRights([...disabledRights, ...computeInitialDisabledRights(role, rightsDependencies)])
   }
 
   const onSubmit = async () => {
     try {
       setLoadingOnValidate(true)
 
-      const roleData = {
-        name: role?.name,
-        right_full_admin: role?.right_full_admin ?? false,
-        right_manage_users: role?.right_manage_users ?? false,
-        right_manage_datalabs: role?.right_manage_datalabs ?? false,
-        right_read_datalabs: role?.right_read_datalabs ?? false,
-        right_manage_admin_accesses_same_level: role?.right_manage_admin_accesses_same_level ?? false,
-        right_manage_admin_accesses_inferior_levels: role?.right_manage_admin_accesses_inferior_levels ?? false,
-        right_manage_data_accesses_same_level: role?.right_manage_data_accesses_same_level ?? false,
-        right_manage_data_accesses_inferior_levels: role?.right_manage_data_accesses_inferior_levels ?? false,
-        right_read_patient_nominative: role?.right_read_patient_nominative ?? false,
-        right_read_patient_pseudonymized: role?.right_read_patient_pseudonymized ?? false,
-        right_search_patients_by_ipp: role?.right_search_patients_by_ipp ?? false,
-        right_search_patients_unlimited: role?.right_search_patients_unlimited ?? false,
-        right_export_jupyter_nominative: role?.right_export_jupyter_nominative ?? false,
-        right_export_jupyter_pseudonymized: role?.right_export_jupyter_pseudonymized ?? false,
-        right_export_csv_xlsx_nominative: role?.right_export_csv_xlsx_nominative ?? false,
-        right_search_opposed_patients: role?.right_search_opposed_patients ?? false
-      }
+      const roleData = buildRolePayload(role)
 
       if (isEditable) {
         const roleEditResp = await submitEditRoles(roleData, role?.id)

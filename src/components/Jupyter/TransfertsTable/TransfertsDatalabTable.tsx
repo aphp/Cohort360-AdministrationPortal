@@ -33,6 +33,7 @@ import { getDatalabExportsList, getExportLogs, retryExportRequest } from 'servic
 import { Column, DatalabTransferForm, Export, ExportFilters, Order, UserRole } from 'types'
 import useStyles from './styles'
 import { extractFilename } from 'utils/download'
+import { getExportStatusChipProps, removeFilterValue } from './helpers'
 
 type TransfertsDatalabTableProps = {
   userRights: UserRole
@@ -134,42 +135,7 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
   }
 
   const getExportsChips = (status: Export['request_job_status']) => {
-    const chipProps = {
-      label: 'Inconnu',
-      backgroundColor: '#dc3545',
-      color: '#FFF'
-    }
-
-    switch (status) {
-      case 'finished':
-        chipProps['label'] = 'Terminé'
-        chipProps['backgroundColor'] = '#28A745'
-        break
-      case 'validated':
-        chipProps['label'] = 'Confirmé'
-        chipProps['backgroundColor'] = '#FFC107'
-        chipProps['color'] = '#153D8A'
-        break
-      case 'new':
-      case 'pending':
-      case 'started':
-        chipProps['label'] = 'En cours'
-        chipProps['backgroundColor'] = '#FFC107'
-        chipProps['color'] = '#153D8A'
-        break
-      case 'denied':
-        chipProps['label'] = 'Refusé'
-        break
-      case 'cancelled':
-        chipProps['label'] = 'Annulé'
-        break
-      case 'failed':
-        chipProps['label'] = 'Erreur'
-        break
-      default:
-        break
-    }
-
+    const chipProps = getExportStatusChipProps(status)
     return (
       <Chip
         label={chipProps.label}
@@ -183,20 +149,7 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
     filter: 'exportType' | 'request_job_status' | 'insert_datetime_gte' | 'insert_datetime_lte',
     value?: object | string | null
   ) => {
-    switch (filter) {
-      case 'exportType':
-        setFilters({ ...filters, [filter]: filters[filter].filter((elem) => elem !== value) })
-        break
-      case 'request_job_status':
-        setFilters({ ...filters, [filter]: filters[filter].filter((elem) => elem !== value) })
-        break
-      case 'insert_datetime_gte':
-      case 'insert_datetime_lte':
-        setFilters({ ...filters, [filter]: null })
-        break
-      default:
-        break
-    }
+    setFilters(removeFilterValue(filters, filter, value))
   }
 
   const onChangePage = (value: number) => {
