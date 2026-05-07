@@ -1,7 +1,7 @@
 import api from 'services/api'
 import { ExportFilters, Order } from 'types'
 
-export const jupyterTransfer = async (transferRequestData: {}) => {
+export const jupyterTransfer = async (transferRequestData: object) => {
   try {
     const createProfile = await api.post(`/exports/`, transferRequestData)
     return createProfile.status === 201
@@ -11,7 +11,7 @@ export const jupyterTransfer = async (transferRequestData: {}) => {
   }
 }
 
-export const datalabTransfer = async (transferRequestData: {}) => {
+export const datalabTransfer = async (transferRequestData: object) => {
   try {
     const exportResponse = await api.post(`/exports/`, transferRequestData)
     return exportResponse.status === 201
@@ -51,7 +51,7 @@ export const getExportsList = async (
       total: exportsResp.data.count ?? 0
     }
   } catch (error) {
-    console.error('Erreur lors de la récupération de la liste des exports')
+    console.error('Erreur lors de la récupération de la liste des exports', error)
     return {
       list: [],
       total: 0
@@ -89,7 +89,7 @@ export const getDatalabExportsList = async (
       total: exportsResp.data.count ?? 0
     }
   } catch (error) {
-    console.error('Erreur lors de la récupération de la liste des exports')
+    console.error('Erreur lors de la récupération de la liste des exports', error)
     return {
       list: [],
       total: 0
@@ -102,7 +102,7 @@ export const retryExportRequest = async (exportId: string) => {
     const retryResponse = await api.post(`/exports/${exportId}/retry/`)
     return retryResponse.status === 200
   } catch (error) {
-    console.error("Erreur lors de la relance de l'export")
+    console.error("Erreur lors de la relance de l'export", error)
   }
 }
 

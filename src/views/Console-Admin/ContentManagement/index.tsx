@@ -41,7 +41,7 @@ const ContentManagement = () => {
 
     _getUserRights()
     _getContentTypes()
-    }, []) // eslint-disable-line
+  }, [])
 
   return (
     <Grid container direction="column">

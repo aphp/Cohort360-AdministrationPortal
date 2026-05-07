@@ -57,6 +57,18 @@ const UsersTable: React.FC<UsersTableProps> = ({ userRights }) => {
       code: 'email',
       align: 'center',
       sortableColumn: true
+    },
+    {
+      label: 'Créé par',
+      code: 'created_by',
+      align: 'center',
+      sortableColumn: true
+    },
+    {
+      label: 'Modifié par',
+      code: 'updated_by',
+      align: 'center',
+      sortableColumn: true
     }
   ]
 
@@ -145,7 +157,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ userRights }) => {
       >
         {loading ? (
           <TableRow>
-            <TableCell colSpan={7}>
+            <TableCell colSpan={9}>
               <div className={classes.loadingSpinnerContainer}>
                 <CircularProgress size={50} />
               </div>
@@ -153,7 +165,7 @@ const UsersTable: React.FC<UsersTableProps> = ({ userRights }) => {
           </TableRow>
         ) : !usersList || usersList?.length === 0 ? (
           <TableRow>
-            <TableCell colSpan={7}>
+            <TableCell colSpan={9}>
               <Typography className={classes.loadingSpinnerContainer}>Aucun résultat à afficher</Typography>
             </TableCell>
           </TableRow>
@@ -177,6 +189,8 @@ const UsersTable: React.FC<UsersTableProps> = ({ userRights }) => {
                   <TableCell align="center">{user.lastname?.toLocaleUpperCase()}</TableCell>
                   <TableCell align="center">{user.firstname}</TableCell>
                   <TableCell align="center">{user.email ?? '-'}</TableCell>
+                  <TableCell align="center">{user.created_by ?? '-'}</TableCell>
+                  <TableCell align="center">{user.updated_by ?? '-'}</TableCell>
                   {actionsUserRights && (
                     <TableCell align="center">
                       {readAccessesUserRights && (

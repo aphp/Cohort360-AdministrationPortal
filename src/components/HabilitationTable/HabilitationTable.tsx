@@ -84,7 +84,10 @@ const HabilitationTable: React.FC<HabilitationTableProps> = (props) => {
         <TableRow key={index} className={classes.tableBodyRows}>
           <TableCell align="left">
             {userAccess.lastname.toLocaleUpperCase()} {userAccess.firstname}
-            <IconButton onClick={() => navigate(`/console-admin/user-profile/${userAccess.provider_username}`)} size="large">
+            <IconButton
+              onClick={() => navigate(`/console-admin/user-profile/${userAccess.provider_username}`)}
+              size="large"
+            >
               <LaunchIcon fontSize="small" />
             </IconButton>
           </TableCell>
@@ -152,7 +155,7 @@ const HabilitationTable: React.FC<HabilitationTableProps> = (props) => {
           className={classes.pagination}
           count={Math.ceil((total ?? 0) / (rowsPerPage ?? 100))}
           shape="circular"
-          onChange={(event, page: number) => (onChangePage ? onChangePage(page) : setPage && setPage(page))}
+          onChange={(event, page: number) => (onChangePage ? onChangePage(page) : setPage?.(page))}
           page={page}
         />
       )}

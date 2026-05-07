@@ -10,7 +10,7 @@ const PrivateRoute: React.FC = () => {
   const me = useAppSelector((state) => state.me)
   const location = useLocation()
 
-  const [allowRedirect, setRedirection] = useState(false)
+  const [allowRedirect, setAllowRedirect] = useState(false)
 
   if (!me || (!me && !authToken)) {
     if (allowRedirect === true) return <Navigate to="/" replace />
@@ -27,7 +27,7 @@ const PrivateRoute: React.FC = () => {
           <Button
             onClick={() => {
               localStorage.setItem('old-path', location.pathname)
-              setRedirection(true)
+              setAllowRedirect(true)
             }}
             color="primary"
             autoFocus

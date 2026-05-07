@@ -21,7 +21,7 @@ const ProfilesView: React.FC = () => {
 
   const { user_id } = useParams<{ user_id: string }>()
 
-  const _user_id = user_id ? user_id : ''
+  const _user_id = user_id ?? ''
 
   useEffect(() => {
     const _getRoles = async () => {
