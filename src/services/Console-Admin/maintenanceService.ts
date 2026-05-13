@@ -7,6 +7,7 @@ export type MaintenancePhaseCreation = {
   type: 'partial' | 'full'
   start_datetime: string
   end_datetime: string
+  is_data_saved_message_hidden: boolean
 }
 
 export type MaintenancePhase = MaintenancePhaseCreation & {
