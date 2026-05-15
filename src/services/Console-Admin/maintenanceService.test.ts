@@ -29,7 +29,8 @@ const phase = {
   message: 'm',
   type: 'partial' as const,
   start_datetime: '2026-01-01',
-  end_datetime: '2026-01-02'
+  end_datetime: '2026-01-02',
+  is_data_saved_message_hidden: false
 }
 
 describe('listMaintenancePhases', () => {
