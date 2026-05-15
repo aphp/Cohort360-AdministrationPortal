@@ -65,7 +65,9 @@ const MaintenanceDialog: React.FC<MaintenanceDialogProps> = ({
   const [endDate, setEndDate] = useState<Date | null>(
     selectedMaintenance.end_datetime ? new Date(selectedMaintenance.end_datetime) : null
   )
-  const [isDataSavedMessageHidden, setIsDataSavedMessageHidden] = useState(selectedMaintenance.is_data_saved_message_hidden)
+  const [isDataSavedMessageHidden, setIsDataSavedMessageHidden] = useState(
+    selectedMaintenance.is_data_saved_message_hidden
+  )
 
   useEffect(() => {
     setMaintenanceData({ ...selectedMaintenance })
@@ -212,7 +214,7 @@ const MaintenanceDialog: React.FC<MaintenanceDialogProps> = ({
               helperText={
                 (maintenanceData.message === ''
                   ? "Le texte d'information aux utilisateurs est requis."
-                  : "Texte d'information aux utilisateurs.") + " Le format Markdown est supporté."
+                  : "Texte d'information aux utilisateurs.") + ' Le format Markdown est supporté.'
               }
             />
           </Grid>
@@ -269,7 +271,12 @@ const MaintenanceDialog: React.FC<MaintenanceDialogProps> = ({
             </Grid>
             <Grid item xs={12}>
               <FormControlLabel
-                control={<Checkbox checked={maintenanceData.is_data_saved_message_hidden} onChange={handleDataSavedMessageHiddenChange} />}
+                control={
+                  <Checkbox
+                    checked={maintenanceData.is_data_saved_message_hidden}
+                    onChange={handleDataSavedMessageHiddenChange}
+                  />
+                }
                 label="Masquer le message indiquant que les données sont sauvegardées"
               />
             </Grid>
