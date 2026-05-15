@@ -3,7 +3,12 @@
 #
 # Contournement temporaire quality gate : workflow_dispatch possible — la branche / SHA sélectionnés
 # dans l’UI Actions sont buildés et poussés. À retirer une fois Sonar stabilisé sur ce repo.
-name: cohort360-administrationportal-publish
+name: Publish Docker administration portal
+
+run-name: >-
+  ${{ github.event_name == 'workflow_dispatch'
+      && format('Manual publish administration portal - {0} - {1}', github.ref_name, github.sha)
+      || format('Publish Docker administration portal - {0} - {1}', github.event.workflow_run.head_branch, github.event.workflow_run.display_title) }}
 
 on:
   workflow_run:
@@ -17,6 +22,9 @@ on:
 
 jobs:
   publish:
+    name: >-
+      Build and push administration portal Docker image
+      - ${{ github.event_name == 'workflow_dispatch' && github.ref_name || github.event.workflow_run.head_branch }}
     runs-on: ubuntu-latest
     if: >
       github.event_name == 'workflow_dispatch'
