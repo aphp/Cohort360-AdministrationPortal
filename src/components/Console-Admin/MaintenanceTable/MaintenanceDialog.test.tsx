@@ -9,6 +9,7 @@ vi.mock('services/Console-Admin/maintenanceService', () => ({
 import MaintenanceDialog from './MaintenanceDialog'
 import { renderWithProviders } from 'test/renderWithProviders'
 import { userDefaultRoles } from 'utils/userRoles'
+import type { MaintenancePhaseCreation } from 'services/Console-Admin/maintenanceService'
 
 const callbacks = {
   onClose: vi.fn(),
@@ -23,8 +24,9 @@ const baseMaintenance = {
   message: '',
   type: 'partial' as const,
   start_datetime: '',
-  end_datetime: ''
-}
+  end_datetime: '',
+  is_data_saved_message_hidden: false
+} as MaintenancePhaseCreation
 
 describe('MaintenanceDialog', () => {
   it('renders the dialog when open', () => {

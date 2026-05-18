@@ -183,7 +183,8 @@ const MaintenanceTable: React.FC<MaintenanceTableProps> = ({ userRights }) => {
                 message: '',
                 type: 'partial',
                 start_datetime: new Date().toISOString(),
-                end_datetime: new Date(Date.now() + 3600000).toISOString()
+                end_datetime: new Date(Date.now() + 3600000).toISOString(),
+                is_data_saved_message_hidden: false
               })
             }
           >
