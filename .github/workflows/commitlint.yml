@@ -34,7 +34,18 @@ jobs:
         run: |
           git fetch origin "$BASE_REF"
           FROM=$(git merge-base "origin/$BASE_REF" "$HEAD_SHA")
-          npx commitlint --from "$FROM" --to "$HEAD_SHA" --verbose
+
+          for commit in $(git rev-list --reverse "$FROM..$HEAD_SHA"); do
+            subject="$(git log -1 --format=%s "$commit")"
+            legacy_squash_pattern='^\([^)]+\).+:'
+
+            if [[ "$subject" =~ $legacy_squash_pattern ]]; then
+              echo "::notice::Skipping legacy squash commit message: $subject"
+              continue
+            fi
+
+            git log -1 --format=%B "$commit" | npx commitlint --verbose
+          done
 
       - name: Validate PR title with commitlint
         run: |
