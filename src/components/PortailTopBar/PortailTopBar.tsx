@@ -27,7 +27,7 @@ const PortailTopBar: React.FC = () => {
   const [anchorElConsole, setAnchorElConsole] = useState(null)
   const [anchorElJupyter, setAnchorElJupyter] = useState(null)
 
-  const pathname = globalThis.location.pathname
+  const pathname = window.location.pathname
   const userRights = me?.userRights ?? userDefaultRoles
 
   const consolePages = [

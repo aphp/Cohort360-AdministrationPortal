@@ -17,25 +17,10 @@ import EditIcon from '@mui/icons-material/Edit'
 import useStyles from './styles'
 import { ContentManagementLabels, UserRole, WebContent, WebContentCreation, WebContentTypes } from 'types'
 import { createContent, updateContent } from 'services/Console-Admin/contentsService'
-import {
-  listsPlugin,
-  ListsToggle,
-  MDXEditor,
-  Separator,
-  headingsPlugin,
-  BoldItalicUnderlineToggles,
-  toolbarPlugin
-} from '@mdxeditor/editor'
+import { listsPlugin, ListsToggle, MDXEditor, Separator } from '@mdxeditor/editor'
+import { headingsPlugin, BoldItalicUnderlineToggles, toolbarPlugin } from '@mdxeditor/editor'
 
 import '@mdxeditor/editor/style.css'
-
-const MarkdownToolbarContents = () => (
-  <>
-    <BoldItalicUnderlineToggles />
-    <Separator />
-    <ListsToggle />
-  </>
-)
 
 type ContentDialogProps = {
   userRights: UserRole
@@ -43,6 +28,7 @@ type ContentDialogProps = {
   open: boolean
   contentTypes: WebContentTypes
   allowedContentTypes: Array<string>
+  allowedPages: Array<string>
   withMarkdown: boolean
   selectedContent: WebContentCreation | WebContent
   onClose: () => void
@@ -71,7 +57,7 @@ const ContentDialog: React.FC<ContentDialogProps> = ({
   const [content, setContent] = useState<WebContentCreation | WebContent>(selectedContent)
   const [loadingOnValidate, setLoadingOnValidate] = useState(false)
 
-  const isEditable = 'id' in selectedContent && Boolean(selectedContent.id)
+  const isEditable = (selectedContent as any)?.id ? true : false
   const [editMode, setEditMode] = useState(isEditable)
 
   const _onChangeValue = (key: keyof WebContentCreation, value: any) => {
@@ -143,7 +129,19 @@ const ContentDialog: React.FC<ContentDialogProps> = ({
             <div className={classes.markdownWrapper}>
               <MDXEditor
                 markdown={content.content}
-                plugins={[headingsPlugin(), listsPlugin(), toolbarPlugin({ toolbarContents: MarkdownToolbarContents })]}
+                plugins={[
+                  headingsPlugin(),
+                  listsPlugin(),
+                  toolbarPlugin({
+                    toolbarContents: () => (
+                      <>
+                        <BoldItalicUnderlineToggles />
+                        <Separator />
+                        <ListsToggle />
+                      </>
+                    )
+                  })
+                ]}
                 onChange={(value) => _onChangeValue('content', value)}
               />
             </div>
@@ -200,7 +198,7 @@ const ContentDialog: React.FC<ContentDialogProps> = ({
             defaultValue={0}
             value={content.metadata?.order}
             onChange={(event) =>
-              _onChangeValue('metadata', { ...content.metadata, order: Number.parseInt(event.target.value) })
+              _onChangeValue('metadata', { ...content.metadata, order: parseInt(event.target.value) })
             }
             style={{ margin: '1em' }}
           />
