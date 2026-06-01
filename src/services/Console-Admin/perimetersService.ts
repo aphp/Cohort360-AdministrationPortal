@@ -58,7 +58,7 @@ const parseChildren = (children?: Perimeter[]) => {
   let _childrenData = children.map<ScopeTreeRow>((child) => {
     return {
       ...child,
-      name: `${child.names?.source_value} - ${child.names?.name}` ?? '',
+      name: `${child.names?.source_value} - ${child.names?.name}`,
       type: child.type ?? '',
       children: [loadingItem]
     }
@@ -84,14 +84,14 @@ export const getPerimetersChildren = async (
   const children = await api.get(`/accesses/perimeters/${perimeter.id}/children/`)
   if (!children) return []
 
-  const childrenData: any[] = children && children.data && children.status === 200 ? children.data.results : []
+  const childrenData: any[] = children?.data && children.status === 200 ? children.data.results : []
 
   let _childrenData: ScopeTreeRow[] = []
 
   for (const child of childrenData) {
     const scopeRow: ScopeTreeRow = child as ScopeTreeRow
 
-    scopeRow.name = `${child.names.source_value} - ${child.names.name}` ?? ''
+    scopeRow.name = `${child.names.source_value} - ${child.names.name}`
     scopeRow.children = getSubItem === true ? await getPerimetersChildren(child as ScopeTreeRow) : [loadingItem]
     _childrenData = [..._childrenData, scopeRow]
   }

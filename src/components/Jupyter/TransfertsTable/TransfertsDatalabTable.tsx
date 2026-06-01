@@ -33,6 +33,7 @@ import { getDatalabExportsList, getExportLogs, retryExportRequest } from 'servic
 import { Column, DatalabTransferForm, Export, ExportFilters, Order, UserRole } from 'types'
 import useStyles from './styles'
 import { extractFilename } from 'utils/download'
+import { getExportStatusChipProps, removeFilterValue } from './helpers'
 
 type TransfertsDatalabTableProps = {
   userRights: UserRole
@@ -59,7 +60,7 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
   const [searchInput, setSearchInput] = useState('')
   const [filters, setFilters] = useState(defaultFilters)
   const [openFilters, setOpenFilters] = useState(false)
-  const [dialogOpen, setOpenDialog] = useState(false)
+  const [dialogOpen, setDialogOpen] = useState(false)
   const [selectedExport, setSelectedExport] = useState<Export | undefined>()
 
   const debouncedSearchTerm = useDebounce(500, searchInput)
@@ -134,42 +135,7 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
   }
 
   const getExportsChips = (status: Export['request_job_status']) => {
-    const chipProps = {
-      label: 'Inconnu',
-      backgroundColor: '#dc3545',
-      color: '#FFF'
-    }
-
-    switch (status) {
-      case 'finished':
-        chipProps['label'] = 'Terminé'
-        chipProps['backgroundColor'] = '#28A745'
-        break
-      case 'validated':
-        chipProps['label'] = 'Confirmé'
-        chipProps['backgroundColor'] = '#FFC107'
-        chipProps['color'] = '#153D8A'
-        break
-      case 'new':
-      case 'pending':
-      case 'started':
-        chipProps['label'] = 'En cours'
-        chipProps['backgroundColor'] = '#FFC107'
-        chipProps['color'] = '#153D8A'
-        break
-      case 'denied':
-        chipProps['label'] = 'Refusé'
-        break
-      case 'cancelled':
-        chipProps['label'] = 'Annulé'
-        break
-      case 'failed':
-        chipProps['label'] = 'Erreur'
-        break
-      default:
-        break
-    }
-
+    const chipProps = getExportStatusChipProps(status)
     return (
       <Chip
         label={chipProps.label}
@@ -181,22 +147,9 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
 
   const handleDeleteChip = (
     filter: 'exportType' | 'request_job_status' | 'insert_datetime_gte' | 'insert_datetime_lte',
-    value?: {} | string | null
+    value?: object | string | null
   ) => {
-    switch (filter) {
-      case 'exportType':
-        setFilters({ ...filters, [filter]: filters[filter].filter((elem) => elem !== value) })
-        break
-      case 'request_job_status':
-        setFilters({ ...filters, [filter]: filters[filter].filter((elem) => elem !== value) })
-        break
-      case 'insert_datetime_gte':
-      case 'insert_datetime_lte':
-        setFilters({ ...filters, [filter]: null })
-        break
-      default:
-        break
-    }
+    setFilters(removeFilterValue(filters, filter, value))
   }
 
   const onChangePage = (value: number) => {
@@ -217,7 +170,7 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
   }, [addTransferRequestSuccess])
 
   const handleCloseDialog = () => {
-    setOpenDialog(false)
+    setDialogOpen(false)
   }
 
   const retryExport = async (exportRequest: Export) => {
@@ -236,14 +189,14 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
       if (logsResponse) {
         const filename = extractFilename(logsResponse.headers['content-disposition'])
         const blob = new Blob([logsResponse.data], { type: 'application/json' })
-        const url = window.URL.createObjectURL(blob)
+        const url = globalThis.URL.createObjectURL(blob)
         const link = document.createElement('a')
         link.href = url
         link.setAttribute('download', filename)
         document.body.appendChild(link)
         link.click()
-        document.body.removeChild(link)
-        window.URL.revokeObjectURL(url)
+        link.remove()
+        globalThis.URL.revokeObjectURL(url)
       }
     } catch (error: any) {
       const errorMessage = await error.response.data.text()
@@ -364,12 +317,12 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
                 <TableRow key={index} className={classes.tableBodyRows} hover>
                   <TableCell align="center">{exportRequest.cohort_id ?? '-'}</TableCell>
                   <TableCell align="center">
-                    {exportRequest.cohort_name !== '' ? exportRequest.cohort_name : '-'}
+                    {exportRequest.cohort_name === '' ? '-' : exportRequest.cohort_name}
                   </TableCell>
                   <TableCell align="center">
-                    {exportRequest.patients_count !== '' ? exportRequest.patients_count : '-'}
+                    {exportRequest.patients_count === '' ? '-' : exportRequest.patients_count}
                   </TableCell>
-                  <TableCell align="center">{exportRequest.owner !== '' ? exportRequest.owner : '-'}</TableCell>
+                  <TableCell align="center">{exportRequest.owner === '' ? '-' : exportRequest.owner}</TableCell>
                   <TableCell align="center">
                     {exportRequest.output_format === 'csv'
                       ? 'CSV'
@@ -378,7 +331,7 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
                         : 'XLSX'}
                   </TableCell>
                   <TableCell align="center">
-                    {exportRequest.target_datalab !== '' ? exportRequest.target_datalab : '-'}
+                    {exportRequest.target_datalab === '' ? '-' : exportRequest.target_datalab}
                   </TableCell>
                   <TableCell align="center">
                     <Tooltip title={exportRequest.target_name ?? '-'}>
@@ -399,7 +352,7 @@ const TransfertsDatalabTable: React.FC<TransfertsDatalabTableProps> = ({ userRig
                             <IconButton
                               color="primary"
                               onClick={() => {
-                                setOpenDialog(true)
+                                setDialogOpen(true)
                                 setSelectedExport(exportRequest)
                               }}
                             >

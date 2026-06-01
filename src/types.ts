@@ -115,7 +115,6 @@ export type UserRole = {
   right_export_csv_xlsx_nominative: boolean | null
 }
 
-
 export type Role = {
   id?: number
   insert_datetime?: string | null
@@ -364,26 +363,6 @@ export type SavedFiltersResults = {
   previous: string | null
   results: SavedFilter[]
 }
-
-// export enum RessourceType {
-//   REQUEST = 'Request',
-//   IPP_LIST = 'IPPList',
-//   PATIENT = 'Patient',
-//   ENCOUNTER = 'Encounter',
-//   DOCUMENTS = 'DocumentReference',
-//   PMSI = 'pmsi',
-//   CONDITION = 'Condition',
-//   PROCEDURE = 'Procedure',
-//   CLAIM = 'Claim',
-//   MEDICATION = 'Medication',
-//   MEDICATION_REQUEST = 'MedicationRequest',
-//   MEDICATION_ADMINISTRATION = 'MedicationAdministration',
-//   BIO_MICRO = 'biologie_microbiologie',
-//   OBSERVATION = 'Observation',
-//   MICROBIOLOGIE = 'microbiologie',
-//   PHYSIOLOGIE = 'physiologie',
-//   IMAGING = 'ImagingStudy'
-// }
 
 export enum ResourceType {
   UNKNOWN = 'Unknown',

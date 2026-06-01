@@ -183,7 +183,8 @@ const MaintenanceTable: React.FC<MaintenanceTableProps> = ({ userRights }) => {
                 message: '',
                 type: 'partial',
                 start_datetime: new Date().toISOString(),
-                end_datetime: new Date(Date.now() + 3600000).toISOString()
+                end_datetime: new Date(Date.now() + 3600000).toISOString(),
+                is_data_saved_message_hidden: false
               })
             }
           >
@@ -210,8 +211,7 @@ const MaintenanceTable: React.FC<MaintenanceTableProps> = ({ userRights }) => {
             </TableCell>
           </TableRow>
         ) : (
-          maintenances &&
-          maintenances.map((maintenance: MaintenancePhase) => {
+          maintenances?.map((maintenance: MaintenancePhase) => {
             return (
               maintenance && (
                 <TableRow key={maintenance.id} className={classes.tableBodyRows} hover>

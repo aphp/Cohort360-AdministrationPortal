@@ -46,56 +46,13 @@ export const getUserRights = async (data?: Access[]) => {
       userRightsResponse = await getMyAccesses()
     }
 
-    if (userRightsResponse && userRightsResponse.length > 0) {
+    if (userRightsResponse?.length > 0) {
+      const rightKeys = Object.keys(userDefaultRoles) as Array<keyof UserRole>
       for (const access of userRightsResponse) {
-        if (access.is_valid) {
-          if (access.role.right_full_admin) {
-            _userRights.right_full_admin = true
-          }
-          if (access.role.right_manage_users) {
-            _userRights.right_manage_users = true
-          }
-          if (access.role.right_manage_admin_accesses_same_level) {
-            _userRights.right_manage_admin_accesses_same_level = true
-          }
-          if (access.role.right_manage_admin_accesses_inferior_levels) {
-            _userRights.right_manage_admin_accesses_inferior_levels = true
-          }
-          if (access.role.right_manage_data_accesses_same_level) {
-            _userRights.right_manage_data_accesses_same_level = true
-          }
-          if (access.role.right_manage_data_accesses_inferior_levels) {
-            _userRights.right_manage_data_accesses_inferior_levels = true
-          }
-          if (access.role.right_read_patient_nominative) {
-            _userRights.right_read_patient_nominative = true
-          }
-          if (access.role.right_read_patient_pseudonymized) {
-            _userRights.right_read_patient_pseudonymized = true
-          }
-          if (access.role.right_export_jupyter_nominative) {
-            _userRights.right_export_jupyter_nominative = true
-          }
-          if (access.role.right_export_jupyter_pseudonymized) {
-            _userRights.right_export_jupyter_pseudonymized = true
-          }
-          if (access.role.right_export_csv_xlsx_nominative) {
-            _userRights.right_export_csv_xlsx_nominative = true
-          }
-          if (access.role.right_read_datalabs) {
-            _userRights.right_read_datalabs = true
-          }
-          if (access.role.right_manage_datalabs) {
-            _userRights.right_manage_datalabs = true
-          }
-          if (access.role.right_search_opposed_patients) {
-            _userRights.right_search_opposed_patients = true
-          }
-          if (access.role.right_search_patients_by_ipp) {
-            _userRights.right_search_patients_by_ipp = true
-          }
-          if (access.role.right_search_patients_unlimited) {
-            _userRights.right_search_patients_unlimited = true
+        if (!access.is_valid) continue
+        for (const key of rightKeys) {
+          if (access.role[key]) {
+            _userRights[key] = true
           }
         }
       }
@@ -103,7 +60,7 @@ export const getUserRights = async (data?: Access[]) => {
 
     return _userRights
   } catch (error) {
-    console.error("Erreur lors de la récupération des droits de l'utilisateur")
+    console.error("Erreur lors de la récupération des droits de l'utilisateur", error)
     return userDefaultRoles
   }
 }
