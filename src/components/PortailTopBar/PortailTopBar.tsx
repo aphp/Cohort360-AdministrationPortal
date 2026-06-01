@@ -63,7 +63,7 @@ const PortailTopBar: React.FC = () => {
     {
       name: 'Logs',
       pathname: '/console-admin/logs',
-      rightsToSee: userRights.right_full_admin
+      rightsToSee: userRights.right_full_admin || userRights.right_read_logs
     },
     {
       name: 'Maintenance',

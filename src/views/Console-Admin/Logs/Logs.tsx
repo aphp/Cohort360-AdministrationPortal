@@ -128,7 +128,7 @@ const Logs: React.FC = () => {
               </Grid>
             ) : (
               <>
-                {userRights.right_full_admin && (
+                {(userRights.right_full_admin || userRights.right_read_logs) && (
                   <Button
                     variant="contained"
                     disableElevation
