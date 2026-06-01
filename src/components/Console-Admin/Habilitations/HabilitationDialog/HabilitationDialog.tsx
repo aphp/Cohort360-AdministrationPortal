@@ -21,12 +21,6 @@ import useStyles from './styles'
 import { createRoles, submitEditRoles } from 'services/Console-Admin/rolesService'
 import { Role, RoleKeys, UserRole, RightsCategory, RightsDependency } from 'types'
 import api from '../../../../services/api'
-import {
-  computeRightsDependencies,
-  computeDisabledRightsAfterToggle,
-  computeInitialDisabledRights,
-  buildRolePayload
-} from './helpers'
 
 type HabilitationDialogProps = {
   open: boolean
@@ -59,7 +53,7 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
   const [rightsCategories, setRightsCategories] = useState<RightsCategory[]>([])
   const [rightsDependencies, setRightsDependencies] = useState<RightsDependency[]>([])
 
-  const isEditable = Boolean(selectedRole?.id)
+  const isEditable = selectedRole?.id ? true : false
 
   const getRightCategories = async () => {
     try {
@@ -72,7 +66,15 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
 
   const buildRightsDependencies = (_rightsCategories: RightsCategory[]) => {
     setRightsCategories(_rightsCategories)
-    setRightsDependencies(computeRightsDependencies(_rightsCategories))
+    const _rightsDependencies: RightsDependency[] = []
+    _rightsCategories.map((category) => {
+      category.rights.map((right) => {
+        if (right.depends_on) {
+          _rightsDependencies.push({ dependent: right.name, dependency: right.depends_on })
+        }
+      })
+    })
+    setRightsDependencies(_rightsDependencies)
   }
 
   useEffect(() => {
@@ -88,7 +90,31 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
   }, [role])
 
   const toggleDependentRights = (role: any, right: RoleKeys, value: boolean) => {
-    setDisabledRights(computeDisabledRightsAfterToggle(role, right, value, rightsDependencies, disabledRights))
+    let disabled_rights = [...disabledRights]
+    if (right === 'right_full_admin') {
+      for (const r in role) {
+        if (r.includes('right_') && r !== right) {
+          role[r] = value
+          if (value) {
+            disabled_rights.push(r)
+          } else {
+            disabled_rights = disabled_rights.filter((dr) => dr !== r)
+          }
+        }
+      }
+    } else {
+      rightsDependencies.map((r) => {
+        if (r.dependency === right) {
+          if (value) {
+            role[r.dependent] = value
+            disabled_rights.push(r.dependent)
+          } else {
+            disabled_rights = disabled_rights.filter((dr) => dr !== r.dependent)
+          }
+        }
+      })
+    }
+    setDisabledRights(disabled_rights)
   }
 
   const _onChangeValue = (key: RoleKeys, value: any) => {
@@ -101,23 +127,53 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
 
   const enterEditMode = (role: any) => {
     setEditMode(true)
-    setDisabledRights([...disabledRights, ...computeInitialDisabledRights(role, rightsDependencies)])
+    const disabled_rights = [...disabledRights]
+    if (role['right_full_admin']) {
+      for (const prop in role) {
+        if (prop.includes('right_') && prop !== 'right_full_admin') {
+          disabled_rights.push(prop)
+        }
+      }
+    } else {
+      rightsDependencies.map((e) => {
+        if (role[e.dependency]) {
+          disabled_rights.push(e.dependent)
+        }
+      })
+    }
+    setDisabledRights(disabled_rights)
   }
 
   const onSubmit = async () => {
     try {
       setLoadingOnValidate(true)
 
-      const roleData = buildRolePayload(role)
+      const roleData = {
+        name: role?.name,
+        right_full_admin: role?.right_full_admin ?? false,
+        right_manage_users: role?.right_manage_users ?? false,
+        right_manage_datalabs: role?.right_manage_datalabs ?? false,
+        right_read_datalabs: role?.right_read_datalabs ?? false,
+        right_manage_admin_accesses_same_level: role?.right_manage_admin_accesses_same_level ?? false,
+        right_manage_admin_accesses_inferior_levels: role?.right_manage_admin_accesses_inferior_levels ?? false,
+        right_manage_data_accesses_same_level: role?.right_manage_data_accesses_same_level ?? false,
+        right_manage_data_accesses_inferior_levels: role?.right_manage_data_accesses_inferior_levels ?? false,
+        right_read_patient_nominative: role?.right_read_patient_nominative ?? false,
+        right_read_patient_pseudonymized: role?.right_read_patient_pseudonymized ?? false,
+        right_search_patients_by_ipp: role?.right_search_patients_by_ipp ?? false,
+        right_search_patients_unlimited: role?.right_search_patients_unlimited ?? false,
+        right_export_jupyter_nominative: role?.right_export_jupyter_nominative ?? false,
+        right_export_jupyter_pseudonymized: role?.right_export_jupyter_pseudonymized ?? false,
+        right_export_csv_xlsx_nominative: role?.right_export_csv_xlsx_nominative ?? false,
+        right_search_opposed_patients: role?.right_search_opposed_patients ?? false,
+      }
 
       if (isEditable) {
         const roleEditResp = await submitEditRoles(roleData, role?.id)
-        if (roleEditResp) onEditRoleSuccess(true)
-        else onEditRoleFail(true)
+        roleEditResp ? onEditRoleSuccess(true) : onEditRoleFail(true)
       } else {
         const createRoleResp = await createRoles(roleData)
-        if (createRoleResp) onAddRoleSuccess(true)
-        else onAddRoleFail(true)
+        createRoleResp ? onAddRoleSuccess(true) : onAddRoleFail(true)
       }
 
       setLoadingOnValidate(false)
@@ -125,8 +181,7 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
     } catch (error) {
       console.error(`Erreur lors de ${isEditable ? "l'édition" : 'la création'} de l'habilitation`, error)
       setLoadingOnValidate(false)
-      if (isEditable) onEditRoleFail(true)
-      else onAddRoleFail(true)
+      isEditable ? onEditRoleFail(true) : onAddRoleFail(true)
       onClose()
     }
   }
@@ -153,7 +208,7 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
         )}
         <div className={classes.cardsGrid}>
           {rightsCategories.map((category) => (
-            <div key={category.name} className={classes.card}>
+            <div className={classes.card}>
               <Grid display="flex" justifyContent="space-between" alignItems="center">
                 <Typography variant="h6">{category.name}</Typography>
                 {category.is_global ? (
@@ -163,7 +218,7 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
                 )}
               </Grid>
               {category.rights.map((right) => (
-                <div key={right.name} className={classes.cardItem}>
+                <div className={classes.cardItem}>
                   <span style={{ paddingTop: isEditable ? '2px' : '5px' }}>{right.label}</span>
                   <div>
                     {(isEditable && editMode) || !isEditable ? (
@@ -173,7 +228,7 @@ const HabilitationDialog: React.FC<HabilitationDialogProps> = ({
                           // @ts-ignore
                           _onChangeValue(right.name, event.target.checked)
                         }
-                        disabled={disabledRights.includes(right.name)}
+                        disabled={disabledRights.some((r) => r === right.name)}
                       />
                     ) : role[right.name] ? (
                       <CheckCircleIcon style={{ color: '#BDEA88' }} />

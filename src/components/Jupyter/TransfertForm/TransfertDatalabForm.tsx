@@ -57,7 +57,7 @@ const defaultTransfer: DatalabTransferForm = {
   shiftDates: 'no',
   tables: export_table.map<DatalabTable>((table) => ({
     ...table,
-    checked: table.label === 'patient',
+    checked: table.label === 'person',
     fhir_filter: null,
     fhir_filter_user: null,
     cohort: null,
@@ -128,7 +128,7 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
       'tables',
       transferRequest.tables.map<DatalabTable>((table) => ({
         ...table,
-        checked: table.label === 'patient' ? true : transferRequest.tables.length !== checkedTables.length
+        checked: table.label !== 'person' ? transferRequest.tables.length !== checkedTables.length : true
       }))
     )
   }
@@ -205,7 +205,7 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
     try {
       setLoadingOnValidate(true)
 
-      const canExport = transferRequest.tables.find((table) => table.label === 'patient')?.cohort !== null
+      const canExport = transferRequest.tables.find((table) => table.label === 'person')?.cohort !== null
 
       if (canExport) {
         const transferData = {
@@ -256,7 +256,7 @@ const TransferDatalabForm: React.FC<TransferDatalabFormProps> = ({
         <ExportTableAccordionSummary
           expandIcon={
             <Checkbox
-              disabled={label === 'patient'}
+              disabled={label === 'person'}
               checked={checked}
               className={classes.checkbox}
               onClick={(e) => {

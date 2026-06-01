@@ -68,8 +68,7 @@ export default [
           singleQuote: true,
           semi: false,
           trailingComma: 'none',
-          printWidth: 120,
-          endOfLine: 'auto'
+          printWidth: 120
         }
       ],
 
