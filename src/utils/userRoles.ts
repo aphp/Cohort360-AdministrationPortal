@@ -17,7 +17,8 @@ export const userDefaultRoles: UserRole = {
   right_export_csv_xlsx_nominative: false,
   right_manage_datalabs: false,
   right_read_datalabs: false,
-  right_search_patients_unlimited: false
+  right_search_patients_unlimited: false,
+  right_read_logs: false
 }
 
 export const getMyAccesses = async () => {
