@@ -113,6 +113,7 @@ export type UserRole = {
   right_export_jupyter_nominative: boolean | null
   right_export_jupyter_pseudonymized: boolean | null
   right_export_csv_xlsx_nominative: boolean | null
+  right_read_logs: boolean | null
 }
 
 export type Role = {
