@@ -12,7 +12,6 @@ import Habilitations from 'views/Console-Admin/Habilitations/Habilitations'
 import HabilitationUsers from 'views/Console-Admin/HabilitationUsers/HabilitationUsers'
 import Logs from 'views/Console-Admin/Logs/Logs'
 
-// import Transfert from 'views/Jupyter/Transfert/Transfert'
 import TransfertDatalab from 'views/Jupyter/Transfert/TransfertDatalab'
 import ContentManagement from 'views/Console-Admin/ContentManagement'
 import MaintenanceManagement from 'views/Console-Admin/Maintenance'

@@ -77,7 +77,7 @@ const PerimeterHistory: React.FC = () => {
 
   const { perimeterId } = useParams<{ perimeterId: string }>()
 
-  const _perimeterId = perimeterId ? perimeterId : ''
+  const _perimeterId = perimeterId ?? ''
 
   const perimeterData = getPerimeterData(perimeterInfos)
 
