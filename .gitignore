@@ -1,11 +1,8 @@
 node_modules/
 build/
-coverage/
-*.tsbuildinfo
+
 yarn-error.log
 .env
 
 # intellij
 .idea/
-
-coverage/

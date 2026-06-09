@@ -27,7 +27,7 @@ const PortailTopBar: React.FC = () => {
   const [anchorElConsole, setAnchorElConsole] = useState(null)
   const [anchorElJupyter, setAnchorElJupyter] = useState(null)
 
-  const pathname = globalThis.location.pathname
+  const pathname = window.location.pathname
   const userRights = me?.userRights ?? userDefaultRoles
 
   const consolePages = [
@@ -63,7 +63,7 @@ const PortailTopBar: React.FC = () => {
     {
       name: 'Logs',
       pathname: '/console-admin/logs',
-      rightsToSee: userRights.right_full_admin || userRights.right_read_logs
+      rightsToSee: userRights.right_full_admin
     },
     {
       name: 'Maintenance',

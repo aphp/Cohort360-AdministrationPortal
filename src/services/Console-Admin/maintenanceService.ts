@@ -7,7 +7,6 @@ export type MaintenancePhaseCreation = {
   type: 'partial' | 'full'
   start_datetime: string
   end_datetime: string
-  is_data_saved_message_hidden: boolean
 }
 
 export type MaintenancePhase = MaintenancePhaseCreation & {
@@ -22,12 +21,10 @@ export type PaginatedResponse<T> = {
   results: T[]
 }
 
-const defaultListOrder: Order = { orderBy: 'start_datetime', orderDirection: 'desc' }
-
 export const listMaintenancePhases = async (
   page: number = 1,
   pageSize: number = 20,
-  order: Order = defaultListOrder
+  order: Order = { orderBy: 'start_datetime', orderDirection: 'desc' }
 ): Promise<{ results: MaintenancePhase[]; total: number }> => {
   try {
     const orderingDirection = order.orderDirection === 'desc' ? '-' : ''

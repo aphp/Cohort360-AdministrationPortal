@@ -89,7 +89,7 @@ const DataTable: React.FC<DataTableProps> = ({
           className={classes.pagination}
           count={Math.ceil((total ?? 0) / (rowsPerPage ?? 100))}
           shape="circular"
-          onChange={(event, page: number) => (onChangePage ? onChangePage(page) : setPage?.(page))}
+          onChange={(event, page: number) => (onChangePage ? onChangePage(page) : setPage && setPage(page))}
           page={page}
         />
       )}

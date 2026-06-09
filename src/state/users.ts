@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Order, User } from 'types'
 
 import { getUsers } from 'services/Console-Admin/usersService'
+// import { editProfile } from 'services/Console-Admin/usersHistoryService'
 
 export type UsersState = {
   usersList: User[]
@@ -33,7 +34,7 @@ type fetchUsersArgs = {
 }
 const fetchUsers = createAsyncThunk<fetchUsersReturn, fetchUsersArgs, { state: UsersState }>(
   'users/fetchUsers',
-  async ({ page = 1, searchInput, order }) => {
+  async ({ page = 1, searchInput, order }, { getState, dispatch }) => {
     try {
       const usersResp = await getUsers(order, page, searchInput)
 
@@ -50,9 +51,42 @@ const fetchUsers = createAsyncThunk<fetchUsersReturn, fetchUsersArgs, { state: U
   }
 )
 
+// type editProviderReturn = {
+//   isSuccess: boolean
+// }
+// type editProviderArgs = {
+//   loadingOnValidate: boolean
+//   userHistoryId: string
+//   selectedUser: Provider
+// }
+// const editProvider = createAsyncThunk<editProviderReturn, editProviderArgs, { state: UsersState }>(
+//   'users/editProvider',
+//   async ({ loadingOnValidate, userHistoryId, selectedUser }, { getState, dispatch }) => {
+//     try {
+//       const editProviderResp = await editProfile(userHistoryId, selectedUser)
+
+//       if (editProviderResp) {
+//         dispatch(fetchUsers())
+//       }
+
+//       return {
+//         loading: false,
+//         isSuccess: editProviderResp
+//       }
+//     } catch (error) {
+//       console.error(error)
+//       throw error
+//     }
+//   }
+// )
+
+// 2 nouveaux extra reducers:
+// edit et add
+// contrainte: dispatcher dans les reducers pour mettre à jour la liste
+
 const usersSlice = createSlice({
   name: 'users',
-  initialState,
+  initialState: initialState as UsersState,
   reducers: {
     setSelectedUser: (state: UsersState, action: PayloadAction<User>) => {
       const selectedUser = action.payload
@@ -73,6 +107,10 @@ const usersSlice = createSlice({
       usersList: [],
       selectedUser: { username: '' }
     }))
+    // builder.addCase(fetchUsers.pending, (state) => ({ ...state, loading: true }))
+    // builder.addCase(editProvider.fulfilled, (state, action) => ({
+    //   isSuccess: action.payload.isSuccess
+    // }))
   }
 })
 

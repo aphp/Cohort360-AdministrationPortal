@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useIdleTimer } from 'react-idle-timer'
 import { useNavigate } from 'react-router-dom'
 
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material'
+
+import axios from 'axios'
 
 import { close as closeAction, open as openAction } from 'state/autoLogout'
 import { useAppDispatch, useAppSelector } from 'state'
@@ -22,6 +24,8 @@ const AutoLogoutContainer = () => {
   const { isOpen } = useAppSelector((state) => ({
     isOpen: state.autoLogout.isOpen
   }))
+
+  const [refreshInterval, setRefreshInterval] = useState()
 
   const handleOnIdle = () => {
     logout()
