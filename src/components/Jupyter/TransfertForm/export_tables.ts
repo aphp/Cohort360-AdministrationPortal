@@ -10,9 +10,9 @@ export type ExportTableType = {
 
 const exportTable: ExportTableType[] = [
   {
-    id: 'patient',
+    id: 'person',
     name: 'Patient',
-    label: 'patient',
+    label: 'person',
     resourceType: ResourceType.PATIENT
   },
   {

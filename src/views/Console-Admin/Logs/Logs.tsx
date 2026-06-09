@@ -28,7 +28,7 @@ const filtersDefault = {
 const Logs: React.FC = () => {
   const { classes } = useStyles()
 
-  const search = globalThis.location.search
+  const search = window.location.search
   const user = new URLSearchParams(search).get('user')
   const access = new URLSearchParams(search).get('access')
   const perimeterId = new URLSearchParams(search).get('perimeterId')
@@ -128,7 +128,7 @@ const Logs: React.FC = () => {
               </Grid>
             ) : (
               <>
-                {(userRights.right_full_admin || userRights.right_read_logs) && (
+                {userRights.right_full_admin && (
                   <Button
                     variant="contained"
                     disableElevation

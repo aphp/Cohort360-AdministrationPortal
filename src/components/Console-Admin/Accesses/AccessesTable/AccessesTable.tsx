@@ -346,7 +346,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
         />
       )}
 
-      <Dialog open={Boolean(deleteAccess)} onClose={() => setDeleteAccess(null)}>
+      <Dialog open={deleteAccess ? true : false} onClose={() => setDeleteAccess(null)}>
         <DialogContent>
           <Typography>
             Êtes-vous sûr(e) de vouloir {terminateAccess ? 'clôturer' : 'supprimer'} cet accès sur le périmètre{' '}

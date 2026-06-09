@@ -12,7 +12,7 @@ const api = axios.create({
 api.interceptors.request.use((config) => {
   const oidcAuthState = localStorage.getItem('oidcAuth')
   const token = localStorage.getItem(ACCESS_TOKEN)
-  if (config?.headers) {
+  if (config && config.headers) {
     config.headers.Authorization = `Bearer ${token}`
     config.headers.authorizationMethod = oidcAuthState === 'true' ? 'OIDC' : 'JWT'
   }
@@ -29,9 +29,9 @@ api.interceptors.response.use(
       (error?.response?.status === 403 && error.config.url.includes('/auth/refresh/'))
     ) {
       localStorage.clear()
-      globalThis.location.href = '/'
+      window.location.href = '/'
     }
-    throw error
+    return Promise.reject(error)
   }
 )
 
