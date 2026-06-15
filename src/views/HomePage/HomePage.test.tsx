@@ -39,6 +39,12 @@ describe('HomePage', () => {
     expect(screen.getByRole('button', { name: /Logs/i })).toBeInTheDocument()
   })
 
+  it('shows the Logs button when the user only has the read logs right', () => {
+    renderWithProviders(<HomePage />, { preloadedState: { me: meWith({ right_read_logs: true }) } })
+    expect(screen.getByRole('button', { name: /Logs/i })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /Maintenance/i })).not.toBeInTheDocument()
+  })
+
   it('navigates to the chosen page when its button is clicked', async () => {
     navigate.mockClear()
     renderWithProviders(<HomePage />, { preloadedState: { me: meWith({ right_full_admin: true }) } })
