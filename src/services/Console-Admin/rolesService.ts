@@ -72,12 +72,15 @@ export const getRoleUser = async (roleId: string): Promise<string | undefined> =
   return `${getRoleResp.data.name}`
 }
 
+const LIMIT = 20
+
 export const getUsersRole = async (role_id: string, order: Order, page?: number, searchInput?: string) => {
   const searchFilter = searchInput ? `&filter_by_name=${searchInput}` : ''
+  const offset = ((page ?? 1) - 1) * LIMIT
   const getRoleUserResp = await api.get(
-    `/accesses/roles/${role_id}/users/?page=${page}&order=${order.orderDirection === 'desc' ? '-' : ''}${
-      order.orderBy
-    }${searchFilter}`
+    `/accesses/roles/${role_id}/users/?limit=${LIMIT}&offset=${offset}&order=${
+      order.orderDirection === 'desc' ? '-' : ''
+    }${order.orderBy}${searchFilter}`
   )
   if (getRoleUserResp.status === 204) getRoleUserResp.data = []
 

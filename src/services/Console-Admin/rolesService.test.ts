@@ -106,8 +106,10 @@ describe('getRoleUser', () => {
 describe('getUsersRole', () => {
   it('returns accesses + total on success', async () => {
     get.mockResolvedValue({ status: 200, data: { results: [{ id: 1 }], count: 1 } })
-    const res = await getUsersRole('5', { orderBy: 'username', orderDirection: 'desc' }, 1, 'foo')
-    expect(get).toHaveBeenCalledWith('/accesses/roles/5/users/?page=1&order=-username&filter_by_name=foo')
+    const res = await getUsersRole('5', { orderBy: 'username', orderDirection: 'desc' }, 2, 'foo')
+    expect(get).toHaveBeenCalledWith(
+      '/accesses/roles/5/users/?limit=20&offset=20&order=-username&filter_by_name=foo'
+    )
     expect(res).toEqual({ accesses: [{ id: 1 }], total: 1 })
   })
 
