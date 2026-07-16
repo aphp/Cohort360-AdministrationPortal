@@ -8,6 +8,7 @@ import useStyles from './styles'
 import { useNavigate } from 'react-router-dom'
 import { useAppSelector } from 'state'
 import { userDefaultRoles } from 'utils/userRoles'
+import { getConsolePages, getJupyterPages } from 'utils/navigationPages'
 import { ENABLE_DATALABS } from '../../constants'
 
 const HomePage = () => {
@@ -17,65 +18,9 @@ const HomePage = () => {
   const { me } = useAppSelector((state) => ({ me: state.me }))
   const userRights = me?.userRights ?? userDefaultRoles
 
-  const consolePages = [
-    {
-      name: 'Liste des utilisateurs',
-      pathname: '/console-admin/users',
-      rightsToSee:
-        userRights.right_full_admin ||
-        userRights.right_manage_admin_accesses_same_level ||
-        userRights.right_manage_admin_accesses_inferior_levels ||
-        userRights.right_manage_data_accesses_same_level ||
-        userRights.right_manage_data_accesses_inferior_levels
-    },
-    {
-      name: 'Périmètres',
-      pathname: '/console-admin/perimeters',
-      rightsToSee:
-        userRights.right_manage_admin_accesses_same_level ||
-        userRights.right_manage_admin_accesses_inferior_levels ||
-        userRights.right_manage_data_accesses_same_level ||
-        userRights.right_manage_data_accesses_inferior_levels
-    },
-    {
-      name: 'Habilitations',
-      pathname: '/console-admin/habilitations',
-      rightsToSee:
-        userRights.right_full_admin ||
-        userRights.right_manage_admin_accesses_same_level ||
-        userRights.right_manage_admin_accesses_inferior_levels ||
-        userRights.right_manage_data_accesses_same_level ||
-        userRights.right_manage_data_accesses_inferior_levels
-    },
-    {
-      name: 'Logs',
-      pathname: '/console-admin/logs',
-      rightsToSee: userRights.right_full_admin || userRights.right_read_logs
-    },
-    {
-      name: 'Maintenance',
-      pathname: '/console-admin/maintenance',
-      rightsToSee: userRights.right_full_admin
-    },
-    {
-      name: 'Contenus',
-      pathname: '/console-admin/contents',
-      rightsToSee: userRights.right_full_admin
-    }
-  ]
+  const consolePages = getConsolePages(userRights, 'Liste des utilisateurs')
 
-  const jupyterPages = [
-    {
-      name: 'Transfert Datalab',
-      pathname: `/espace-jupyter/export`,
-      rightsToSee: userRights.right_export_jupyter_nominative || userRights.right_export_jupyter_pseudonymized
-    },
-    {
-      name: 'Datalabs',
-      pathname: `/espace-jupyter/datalabs`,
-      rightsToSee: userRights.right_read_datalabs
-    }
-  ]
+  const jupyterPages = getJupyterPages(userRights)
 
   return (
     <Grid container direction="column" alignItems="center">
