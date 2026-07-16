@@ -10,6 +10,7 @@ import PortailLogo from 'assets/images/portail-white.png'
 import { useAppSelector } from 'state'
 import { logout as logoutAction } from 'state/me'
 import { userDefaultRoles } from 'utils/userRoles'
+import { getConsolePages, getJupyterPages } from 'utils/navigationPages'
 import { logout as logoutRoute } from 'services/authentication'
 
 import useStyles from './styles'
@@ -30,65 +31,9 @@ const PortailTopBar: React.FC = () => {
   const pathname = globalThis.location.pathname
   const userRights = me?.userRights ?? userDefaultRoles
 
-  const consolePages = [
-    {
-      name: 'Utilisateurs',
-      pathname: '/console-admin/users',
-      rightsToSee:
-        userRights.right_full_admin ||
-        userRights.right_manage_admin_accesses_same_level ||
-        userRights.right_manage_admin_accesses_inferior_levels ||
-        userRights.right_manage_data_accesses_same_level ||
-        userRights.right_manage_data_accesses_inferior_levels
-    },
-    {
-      name: 'Périmètres',
-      pathname: '/console-admin/perimeters',
-      rightsToSee:
-        userRights.right_manage_admin_accesses_same_level ||
-        userRights.right_manage_admin_accesses_inferior_levels ||
-        userRights.right_manage_data_accesses_same_level ||
-        userRights.right_manage_data_accesses_inferior_levels
-    },
-    {
-      name: 'Habilitations',
-      pathname: '/console-admin/habilitations',
-      rightsToSee:
-        userRights.right_full_admin ||
-        userRights.right_manage_admin_accesses_same_level ||
-        userRights.right_manage_admin_accesses_inferior_levels ||
-        userRights.right_manage_data_accesses_same_level ||
-        userRights.right_manage_data_accesses_inferior_levels
-    },
-    {
-      name: 'Logs',
-      pathname: '/console-admin/logs',
-      rightsToSee: userRights.right_full_admin || userRights.right_read_logs
-    },
-    {
-      name: 'Maintenance',
-      pathname: '/console-admin/maintenance',
-      rightsToSee: userRights.right_full_admin
-    },
-    {
-      name: 'Contenus',
-      pathname: '/console-admin/contents',
-      rightsToSee: userRights.right_full_admin
-    }
-  ]
+  const consolePages = getConsolePages(userRights)
 
-  const jupyterPages = [
-    {
-      name: 'Transfert Datalab',
-      pathname: `/espace-jupyter/export`,
-      rightsToSee: userRights.right_export_jupyter_nominative || userRights.right_export_jupyter_pseudonymized
-    },
-    {
-      name: 'Datalabs',
-      pathname: `/espace-jupyter/datalabs`,
-      rightsToSee: userRights.right_read_datalabs
-    }
-  ]
+  const jupyterPages = getJupyterPages(userRights)
 
   const handleClickConsoleAdmin = (event: any) => {
     setAnchorElConsole(event.currentTarget)
