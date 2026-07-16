@@ -74,18 +74,22 @@ export const getRoleUser = async (roleId: string): Promise<string | undefined> =
 
 const LIMIT = 20
 
-export const getUsersRole = async (role_id: string, order: Order, page?: number, searchInput?: string) => {
-  const searchFilter = searchInput ? `&filter_by_name=${searchInput}` : ''
+const buildUsersRoleQuery = (order: Order, page?: number, searchInput?: string): string => {
   const offset = ((page ?? 1) - 1) * LIMIT
-  const getRoleUserResp = await api.get(
-    `/accesses/roles/${role_id}/users/?limit=${LIMIT}&offset=${offset}&order=${
-      order.orderDirection === 'desc' ? '-' : ''
-    }${order.orderBy}${searchFilter}`
-  )
-  if (getRoleUserResp.status === 204) getRoleUserResp.data = []
+  const orderParam = `${order.orderDirection === 'desc' ? '-' : ''}${order.orderBy}`
+  const params = [`limit=${LIMIT}`, `offset=${offset}`, `order=${orderParam}`]
+  if (searchInput) params.push(`filter_by_name=${searchInput}`)
+  return params.join('&')
+}
+
+export const getUsersRole = async (role_id: string, order: Order, page?: number, searchInput?: string) => {
+  const query = buildUsersRoleQuery(order, page, searchInput)
+  const getRoleUserResp = await api.get(`/accesses/roles/${role_id}/users/?${query}`)
+
+  const data = getRoleUserResp.status === 204 ? {} : getRoleUserResp.data
 
   return {
-    accesses: getRoleUserResp.data.results ?? [],
-    total: getRoleUserResp.data.count ?? 0
+    accesses: data.results ?? [],
+    total: data.count ?? 0
   }
 }
