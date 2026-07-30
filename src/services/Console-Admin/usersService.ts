@@ -49,7 +49,7 @@ export const getUser = async (username: string) => {
   }
 }
 
-export const editUser = async (userId: string, userData: {}) => {
+export const editUser = async (userId: string, userData: object) => {
   try {
     const editUserResp = await api.patch(`/users/${userId}/`, userData)
 

@@ -10,9 +10,9 @@ export type ExportTableType = {
 
 const exportTable: ExportTableType[] = [
   {
-    id: 'person',
+    id: 'Patient',
     name: 'Patient',
-    label: 'person',
+    label: 'patient',
     resourceType: ResourceType.PATIENT
   },
   {
@@ -98,6 +98,12 @@ const exportTable: ExportTableType[] = [
     name: 'Fait - Imagerie - Séries',
     label: 'imaging_series',
     resourceType: ResourceType.IMAGING
+  },
+  {
+    id: 'death_date_insee',
+    name: 'Fait - Décès - INSEE',
+    label: 'death_date_insee',
+    resourceType: ResourceType.UNKNOWN
   }
 ]
 

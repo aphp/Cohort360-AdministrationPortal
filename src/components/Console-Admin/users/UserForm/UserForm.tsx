@@ -79,7 +79,7 @@ const UserForm: React.FC<UserFormProps> = ({
 
   useEffect(() => {
     const name = /^([ \u00c0-\u01ffa-zA-Z'-])+$/
-    const aphpMail = RegExp(MAIL_REGEX)
+    const aphpMail = new RegExp(MAIL_REGEX)
 
     if (user.username && !user.username.match(USERNAME_REGEX)) {
       setUsernameError(true)
@@ -118,7 +118,8 @@ const UserForm: React.FC<UserFormProps> = ({
 
         const editUserResp = await editUser(user.username, userData)
 
-        editUserResp ? onEditUserSuccess(true) : onEditUserFail(true)
+        if (editUserResp) onEditUserSuccess(true)
+        else onEditUserFail(true)
       } else {
         const userData = {
           firstname: user.firstname,
@@ -128,7 +129,8 @@ const UserForm: React.FC<UserFormProps> = ({
         }
         const createUserResp = await submitCreateUser(userData)
 
-        createUserResp ? onAddUserSuccess(true) : onAddUserFail(true)
+        if (createUserResp) onAddUserSuccess(true)
+        else onAddUserFail(true)
       }
 
       setLoadingOnValidate(false)
@@ -137,7 +139,8 @@ const UserForm: React.FC<UserFormProps> = ({
       onClose()
     } catch (error) {
       console.error(`Erreur lors de ${isEdition ? "l'édition" : 'la création'} de l'utilisateur`, error)
-      isEdition ? onEditUserFail(true) : onAddUserFail(true)
+      if (isEdition) onEditUserFail(true)
+      else onAddUserFail(true)
 
       setUser(defaultUser)
       setLoadingOnValidate(false)

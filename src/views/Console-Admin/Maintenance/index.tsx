@@ -25,7 +25,7 @@ const MaintenanceManagement = () => {
     }
 
     _getUserRights()
-    }, []) // eslint-disable-line
+  }, [])
 
   return (
     <Grid container direction="column">

@@ -10,7 +10,7 @@ export const logout = createAction('LOGOUT')
 
 const meSlice = createSlice({
   name: 'me',
-  initialState: initialState as MeState,
+  initialState,
   reducers: {
     login: (state: MeState, action: PayloadAction<MeState>) => {
       return action.payload
