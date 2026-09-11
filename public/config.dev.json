@@ -1,0 +1,268 @@
+{
+    "core": {
+        "codeSystems": {
+            "docStatus": "http://hl7.org/fhir/CodeSystem/composition-status"
+        },
+        "extensions": {
+            "codeHierarchy": "https://terminology.eds.aphp.fr/fhir/StructureDefinition/hierarchy-path-id",
+            "conceptMapHierarchy": "https://terminology.eds.aphp.fr/fhir/StructureDefinition/group-source-hierarchy-path",
+            "patientLastEnconterUrl": "https://terminology.eds.aphp.fr/fhir/StructureDefinition/last-encounter",
+            "patientTotalAgeDaysExtensionUrl": "https://terminology.eds.aphp.fr/fhir/StructureDefinition/total-age-day",
+            "patientTotalAgeMonthsExtensionUrl": "https://terminology.eds.aphp.fr/fhir/StructureDefinition/total-age-month"
+        },
+        "perimeterSourceTypeHierarchy": [
+            "AP-HP",
+            "Groupe hospitalier (GH)",
+            "GHU",
+            "Hôpital",
+            "Pôle/DMU",
+            "Unité Fonctionnelle (UF)"
+        ],
+        "valueSets": {
+            "demographicGender": {
+                "url": "https://terminology.eds.aphp.fr/fhir/CodeSystem/aphp-orbis-patient-genre"
+            },
+            "encounterAdmission": {
+                "url": "https://terminology.eds.aphp.fr/fhir/CodeSystem/aphp-orbis-visit-type-admission"
+            },
+            "encounterAdmissionMode": {
+                "url": "https://terminology.eds.aphp.fr/fhir/CodeSystem/aphp-orbis-visit-motif-admission"
+            },
+            "encounterDestination": {
+                "url": "https://terminology.eds.aphp.fr/fhir/CodeSystem/aphp-orbis-visit-destination"
+            },
+            "encounterEntryMode": {
+                "url": "https://terminology.eds.aphp.fr/fhir/CodeSystem/aphp-orbis-visit-mode-entree"
+            },
+            "encounterExitMode": {
+                "url": "https://terminology.eds.aphp.fr/fhir/CodeSystem/aphp-orbis-visit-mode-sortie"
+            },
+            "encounterExitType": {
+                "url": "https://terminology.eds.aphp.fr/fhir/CodeSystem/aphp-orbis-visit-type-sortie"
+            },
+            "encounterFileStatus": {
+                "url": "https://terminology.eds.aphp.fr/fhir/CodeSystem/aphp-orbis-visite-status"
+            },
+            "encounterProvenance": {
+                "url": "https://terminology.eds.aphp.fr/fhir/CodeSystem/aphp-orbis-visit-provenance"
+            },
+            "encounterSejourType": {
+                "url": "https://terminology.eds.aphp.fr/fhir/CodeSystem/aphp-orbis-type-sejour"
+            },
+            "encounterStatus": {
+                "url": "http://hl7.org/fhir/CodeSystem/encounter-status"
+            },
+            "encounterVisitType": {
+                "url": "https://terminology.eds.aphp.fr/fhir/CodeSystem/aphp-orbis-visit-type"
+            }
+        }
+    },
+    "features": {
+        "claim": {
+            "enabled": true,
+            "valueSets": {
+                "claimHierarchy": {
+                    "url": "https://terminology.eds.aphp.fr/fhir/CodeSystem/aphp-orbis-ghm"
+                }
+            }
+        },
+        "cohort": {
+            "enabled": true,
+            "shortCohortLimit": 20000
+        },
+        "condition": {
+            "enabled": true,
+            "extensions": {
+               "orbisStatus": "https://terminology.eds.aphp.fr/fhir/StructureDefinition/DiagnosisType"
+            },
+            "filters": {
+                "sources": {
+                   "arem": "https://aphp.fr/ig/fhir/eds/Endpoint/arem",
+                    "orbis": "https://dedalus.com/Orbis"
+                }
+            },
+            "valueSets": {
+                "conditionHierarchy": {
+                    "url": "https://terminology.eds.aphp.fr/fhir/CodeSystem/itm-cim10"
+                },
+                "conditionStatus": {
+                    "url": "https://terminology.eds.aphp.fr/fhir/CodeSystem/DiagnosisType"
+                }
+            }
+        },
+        "contact": {
+            "enabled": false
+        },
+        "diagnosticReport": {
+            "enabled": false,
+            "useStudyParam": false
+        },
+        "export": {
+            "enabled": true,
+            "exportLinesLimit": 300000,
+            "exportTables": "patient, person, iris, visit_occurrence, visit_detail, condition, procedure, cost, note, drug_exposure_prescription, drug_exposure_administration, Observation_Laboratory, care_site, fact_relationship, imaging_study, imaging_series, QuestionnaireResponse"
+        },
+        "feasabilityReport": {
+            "enabled": true
+        },
+        "imaging": {
+            "enabled": true,
+            "extensions": {
+                "imagingStudyUid": "https://terminology.eds.aphp.fr/imaging/studyUid",
+                "seriesProtocolUrl": "https://terminology.eds.aphp.fr/fhir/StructureDefinition/series-protocol-name"
+            },
+            "valueSets": {
+                "imagingModalities": {
+                    "url": "https://dicom.nema.org/medical/dicom/current/output/chtml/part16/sect_CID_33.html"
+                }
+            }
+        },
+        "locationMap": {
+            "enabled": true,
+            "extensions": {
+                "locationShapeUrl": "https://terminology.eds.aphp.fr/fhir/StructureDefinition/shape",
+                "locationCount": "https://terminology.eds.aphp.fr/fhir/StructureDefinition/count"
+            }
+        },
+        "medication": {
+            "enabled": true,
+            "valueSets": {
+                "medicationAdministrations": {
+                    "url": "https://terminology.eds.aphp.fr/fhir/CodeSystem/aphp-orbis-medicament-voie-administration"
+                },
+                "medicationAtc": {
+                    "url": "https://terminology.eds.aphp.fr/fhir/CodeSystem/atc"
+                },
+                "medicationAtcOrbis": {
+                    "url": "https://terminology.eds.aphp.fr/fhir/CodeSystem/aphp-orbis-medicament-atc-article"
+                },
+                "medicationPrescriptionTypes": {
+                    "url": "https://terminology.eds.aphp.fr/fhir/CodeSystem/aphp-medicament-type-prescription"
+                },
+                "medicationUcd": {
+                    "url": "https://terminology.eds.aphp.fr/fhir/CodeSystem/smt-medicament-ucd"
+                }
+            }
+        },
+        "observation": {
+            "enabled": true,
+            "valueSets": {
+                "biologyHierarchyAnabio": {
+                    "url": "https://terminology.eds.aphp.fr/fhir/CodeSystem/aphp-itm-anabio"
+                },
+                "biologyHierarchyLoinc": {
+                    "url": "https://terminology.eds.aphp.fr/fhir/CodeSystem/aphp-itm-loinc"
+                }
+            }
+        },
+        "procedure": {
+            "enabled": true,
+            "filters": {
+                "sources": {
+                    "arem": "https://aphp.fr/ig/fhir/eds/Endpoint/arem",
+                    "orbis": "https://dedalus.com/Orbis"
+                }
+            },
+            "valueSets": {
+                "procedureHierarchy": {
+                    "url": "https://www.atih.sante.fr/plateformes-de-transmission-et-logiciels/logiciels-espace-de-telechargement/id_lot/3550"
+                }
+            }
+        },
+        "questionnaires": {
+            "enabled": true,
+            "valueSets": {
+                "analgesieType": {
+                    "url": "https://aphp.fr/ig/fhir/eds/ValueSet/aphp-eds-aph-mat-type-anesth-vs"
+                },
+                "birthDeliveryWay": {
+                    "url": "https://aphp.fr/ig/fhir/eds/ValueSet/aphp-eds-aph-mat-voie-acc-vs"
+                },
+                "cSectionModality": {
+                    "url": "https://aphp.fr/ig/fhir/eds/ValueSet/aphp-eds-aph-mat-cesarienne-vs"
+                },
+                "childBirthMode": {
+                    "url": "https://aphp.fr/ig/fhir/eds/ValueSet/aphp-eds-aph-mat-mode-travail2-vs"
+                },
+                "chirurgicalGesture": {
+                    "url": "https://aphp.fr/ig/fhir/eds/ValueSet/aphp-eds-aph-mat-hos-type-geste-chir-fo-vs"
+                },
+                "conditionPerineum": {
+                    "url": "https://aphp.fr/ig/fhir/eds/ValueSet/aphp-eds-aph-mat-perinee-vs"
+                },
+                "exitDiagnostic": {
+                    "url": "https://aphp.fr/ig/fhir/eds/ValueSet/aphp-eds-aph-mat-hos-diagnostic-sortie-vs"
+                },
+                "exitFeedingMode": {
+                    "url": "https://aphp.fr/ig/fhir/eds/ValueSet/aphp-eds-aph-mat-allaitement-vs"
+                },
+                "exitPlaceType": {
+                    "url": "https://aphp.fr/ig/fhir/eds/ValueSet/aphp-eds-aph-mat-hos-lieu-sortie-sn-vs"
+                },
+                "feedingType": {
+                   "url": "https://aphp.fr/ig/fhir/eds/ValueSet/aphp-eds-aph-mat-allaitement-vs"
+                },
+                "imgIndication": {
+                    "url": "https://aphp.fr/ig/fhir/eds/ValueSet/aphp-eds-aph-mat-indications-img-vs"
+                },
+                "instrumentType": {
+                    "url": "https://aphp.fr/ig/fhir/eds/ValueSet/aphp-eds-aph-mat-type-instru-vs"
+                },
+                "laborOrCesareanEntry": {
+                    "url": "https://aphp.fr/ig/fhir/eds/ValueSet/aphp-eds-aph-mat-hos-pres-entree-trav-vs"
+                },
+                "maternalRisks": {
+                    "url": "https://aphp.fr/ig/fhir/eds/ValueSet/aphp-eds-aph-mat-risq-atcd-mat-vs"
+                },
+                "maturationModality": {
+                    "url": "https://aphp.fr/ig/fhir/eds/ValueSet/aphp-eds-aph-mat-hos-mod-mat-cervicale-vs"
+                },
+                "maturationReason": {
+                    "url": "https://aphp.fr/ig/fhir/eds/ValueSet/aphp-eds-aph-mat-maturation-vs"
+                },
+                "obstetricalGestureDuringLabor": {
+                    "url": "https://aphp.fr/ig/fhir/eds/ValueSet/aphp-eds-aph-mat-hos-geste-manoeuv-obst-vs"
+                },
+                "pathologyDuringLabor": {
+                    "url": "https://aphp.fr/ig/fhir/eds/ValueSet/aphp-eds-aph-mat-patho-vs"
+                },
+                "pregnancyMode": {
+                    "url": "https://aphp.fr/ig/fhir/eds/ValueSet/aphp-eds-aph-mat-obt-gross-vs"
+                },
+                "presentationAtDelivery": {
+                    "url": "https://aphp.fr/ig/fhir/eds/ValueSet/aphp-eds-aph-mat-hos-present-accoucheme-vs"
+                },
+                "risksOrComplicationsOfPregnancy": {
+                    "url": "https://aphp.fr/ig/fhir/eds/ValueSet/aphp-eds-aph-mat-risq-gross-vs"
+                },
+                "risksRelatedToObstetricHistory": {
+                    "url": "https://aphp.fr/ig/fhir/eds/ValueSet/aphp-eds-aph-mat-risq-atcd-obs-vs"
+                }
+            }
+        },
+        "onboarding": {
+            "enabled": true,
+            "allowedAphCodes": []
+        }
+    },
+    "labels": {
+        "exploration": "Exploration"
+    },
+    "system": {
+        "backendUrl": "/api/back",
+        "codeDisplayJWT": "ArrowUp,ArrowUp,ArrowDown,ArrowDown",
+        "jToolUsers": [],
+        "mailSupport": "",
+        "oidc": {
+            "clientId": "cohort-noprod",
+            "issuer": "https://auth.eds.aphp.fr/auth/realms/ID-Interne/protocol/openid-connect/auth/",
+            "redirectUri": "https://cohort-develop-ext-k8s.eds.aphp.fr",
+            "responseType": "code",
+            "scope": "openid",
+            "state": "mlTPASu3bwdFmFUSK4G4ImecrsKW9pQ7SDdf7uB"
+        },
+        "userTrackingBlacklist": [],
+        "wsProtocol": "ws://"
+    }
+}
+ 
