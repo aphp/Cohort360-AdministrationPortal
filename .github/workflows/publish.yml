@@ -1,5 +1,5 @@
-# Déclenché après cohort360-administrationportal-test (push sur main/develop/release/**), même SHA.
-# Tags : main → :${version}+:latest, develop → :develop, release/* (suffixe = version package.json) → :ver-rc+:ver-rc.<sha>
+# Déclenché après cohort360-administrationportal-test (push sur main/develop/release/**/hotfix/**), même SHA.
+# Tags : main → :${version}+:latest, develop → :develop+:develop-<sha>, release/* (suffixe = version package.json) et hotfix/* (suffixe = version) → :ver-rc+:ver-rc.<sha>
 #
 # Contournement temporaire quality gate : workflow_dispatch possible — la branche / SHA sélectionnés
 # dans l’UI Actions sont buildés et poussés. À retirer une fois Sonar stabilisé sur ce repo.
@@ -18,6 +18,7 @@ on:
       - main
       - develop
       - 'release/**'
+      - 'hotfix/**'
   workflow_dispatch: # TODO: supprimer quand la quality gate Sonar est OK sur ce repo
 
 jobs:
@@ -47,7 +48,6 @@ jobs:
         run: |
           set -euo pipefail
           VERSION=$(jq -r .version package.json)
-          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
           SHORT_SHA="${GIT_SHA:0:7}"
 
           if [[ "$HEAD_BRANCH" == release/* ]]; then
@@ -58,14 +58,24 @@ jobs:
             fi
           fi
 
+          if [[ "$HEAD_BRANCH" == hotfix/* ]]; then
+            # Le suffixe de branche fait foi : package.json n'est bumpé qu'au go MEP.
+            VERSION="${HEAD_BRANCH#hotfix/}"
+            if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "::error title=Version invalide::Le suffixe de branche hotfix '${VERSION}' doit être de la forme X.Y.Z."
+              exit 1
+            fi
+          fi
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+
           case "$HEAD_BRANCH" in
             main)
               echo "IMAGE_TAGS=${DOCKER_REPO}:${VERSION},${DOCKER_REPO}:latest" >> "$GITHUB_ENV"
               ;;
             develop)
-              echo "IMAGE_TAGS=${DOCKER_REPO}:develop" >> "$GITHUB_ENV"
+              echo "IMAGE_TAGS=${DOCKER_REPO}:develop,${DOCKER_REPO}:develop-${SHORT_SHA}" >> "$GITHUB_ENV"
               ;;
-            release/*)
+            release/*|hotfix/*)
               echo "IMAGE_TAGS=${DOCKER_REPO}:${VERSION}-rc,${DOCKER_REPO}:${VERSION}-rc.${SHORT_SHA}" >> "$GITHUB_ENV"
               ;;
             *)
