@@ -31,6 +31,7 @@ import moment from 'moment'
 import { onDeleteOrTerminateAccess } from 'services/Console-Admin/profilesService'
 import DataTable from 'components/DataTable/DataTable'
 import CommonSnackbar from 'components/Snackbar/Snackbar'
+import { perimeterDisplay } from 'utils/perimeters'
 
 type AccessesTableProps = {
   displayName?: boolean
@@ -206,7 +207,7 @@ const AccessesTable: React.FC<AccessesTableProps> = ({
                   </TableCell>
                 )}
                 <TableCell align={'left'}>
-                  {access.perimeter?.names?.source_value} - {access.perimeter?.names?.name}
+                  {perimeterDisplay(access.perimeter?.names?.source_value, access.perimeter?.names?.name)}
                 </TableCell>
                 <TableCell align="center">
                   <div className={classes.roleColumn}>
