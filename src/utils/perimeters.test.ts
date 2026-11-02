@@ -14,4 +14,8 @@ describe('perimeterDisplay', () => {
   it('returns an empty string when there is neither code nor name', () => {
     expect(perimeterDisplay(null, undefined)).toBe('')
   })
+
+  it('returns only the code when the name is missing', () => {
+    expect(perimeterDisplay('H01', null)).toBe('H01')
+  })
 })

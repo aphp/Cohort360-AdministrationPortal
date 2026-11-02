@@ -5,7 +5,5 @@
  * @param name - The perimeter name
  * @returns The label to display
  */
-export const perimeterDisplay = (source_value: string | null | undefined, name: string | null | undefined): string => {
-  if (!source_value) return name ?? ''
-  return `${source_value} - ${name ?? ''}`
-}
+export const perimeterDisplay = (source_value: string | null | undefined, name: string | null | undefined): string =>
+  [source_value, name].filter(Boolean).join(' - ')
