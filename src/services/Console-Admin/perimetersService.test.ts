@@ -158,4 +158,13 @@ describe('getScopePerimeters', () => {
     expect(res.map((r) => r.name)).toEqual(['a - A', 'b - B'])
     expect(loader).toHaveBeenCalledTimes(1)
   })
+
+  it('shows only the name of perimeters without a code', async () => {
+    const loader = vi.fn().mockResolvedValue([
+      { id: '1', source_value: null, name: 'Root', children: [{ id: '11', names: { source_value: null, name: 'Child' }, type: 't' }] }
+    ])
+    const res = await getScopePerimeters(loader)
+    expect(res[0].name).toBe('Root')
+    expect(res[0].children.map((c) => c.name)).toEqual(['Child'])
+  })
 })

@@ -1,6 +1,7 @@
 import { ROOT_PERIMETER_TYPE } from '../../constants'
 import api from '../api'
 import { CareSite, Order, Perimeter, ScopeTreeRow } from 'types'
+import { perimeterDisplay } from 'utils/perimeters'
 
 const loadingItem: ScopeTreeRow = {
   id: 'loading',
@@ -31,7 +32,7 @@ export const getScopePerimeters = async (getPerimeters: any) => {
 
   for (const perimeter of perimetersResult) {
     const scopeRow: ScopeTreeRow = perimeter as ScopeTreeRow
-    scopeRow.name = `${perimeter.source_value} - ${perimeter.name}`
+    scopeRow.name = perimeterDisplay(perimeter.source_value, perimeter.name)
     scopeRow.children =
       perimeter.children?.length > 0
         ? parseChildren(perimeter.children)
@@ -58,7 +59,7 @@ const parseChildren = (children?: Perimeter[]) => {
   let _childrenData = children.map<ScopeTreeRow>((child) => {
     return {
       ...child,
-      name: `${child.names?.source_value} - ${child.names?.name}`,
+      name: perimeterDisplay(child.names?.source_value, child.names?.name),
       type: child.type ?? '',
       children: [loadingItem]
     }
@@ -91,7 +92,7 @@ export const getPerimetersChildren = async (
   for (const child of childrenData) {
     const scopeRow: ScopeTreeRow = child as ScopeTreeRow
 
-    scopeRow.name = `${child.names.source_value} - ${child.names.name}`
+    scopeRow.name = perimeterDisplay(child.names.source_value, child.names.name)
     scopeRow.children = getSubItem === true ? await getPerimetersChildren(child as ScopeTreeRow) : [loadingItem]
     _childrenData = [..._childrenData, scopeRow]
   }
