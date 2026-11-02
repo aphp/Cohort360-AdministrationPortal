@@ -6,6 +6,6 @@
  * @returns The label to display
  */
 export const perimeterDisplay = (source_value: string | null | undefined, name: string | null | undefined): string => {
-  const label = name ?? ''
-  return source_value ? `${source_value} - ${label}` : label
+  if (!source_value) return name ?? ''
+  return `${source_value} - ${name ?? ''}`
 }
