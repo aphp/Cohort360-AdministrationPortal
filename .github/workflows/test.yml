@@ -13,6 +13,7 @@ on:
       - main
       - 'release/**'
       - 'hotfix/**'
+      - 'feature/bc-**'
 
 jobs:
   pr-target-guard:

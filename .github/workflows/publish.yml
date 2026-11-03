@@ -19,6 +19,7 @@ on:
       - develop
       - 'release/**'
       - 'hotfix/**'
+      - 'feature/bc-**'
   workflow_dispatch: # TODO: supprimer quand la quality gate Sonar est OK sur ce repo
 
 jobs:
@@ -74,6 +75,9 @@ jobs:
               ;;
             develop)
               echo "IMAGE_TAGS=${DOCKER_REPO}:develop,${DOCKER_REPO}:develop-${SHORT_SHA}" >> "$GITHUB_ENV"
+              ;;
+            feature/bc-**)
+              echo "IMAGE_TAGS=${DOCKER_REPO}:${HEAD_BRANCH#feature/}-${SHORT_SHA}" >> "$GITHUB_ENV"
               ;;
             release/*|hotfix/*)
               echo "IMAGE_TAGS=${DOCKER_REPO}:${VERSION}-rc,${DOCKER_REPO}:${VERSION}-rc.${SHORT_SHA}" >> "$GITHUB_ENV"
