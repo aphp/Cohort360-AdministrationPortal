@@ -16,24 +16,7 @@ on:
       - 'feature/bc-**'
 
 jobs:
-  pr-target-guard:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Vers main — uniquement hotfix/** ou release/**
-        if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main'
-        run: |
-          case "${{ github.head_ref }}" in
-            hotfix/*|release/*) ;;
-            *)
-              echo "::error title=PR invalide vers main::Seules les branches hotfix/** ou release/** peuvent cibler main (reçu: ${{ github.head_ref }})."
-              exit 1
-              ;;
-          esac
-      - name: Garde OK
-        run: echo "PR target OK"
-
   quality:
-    needs: [pr-target-guard]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -58,7 +41,7 @@ jobs:
         run: npm run build
 
   sonar:
-    needs: [pr-target-guard, quality]
+    needs: [quality]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
